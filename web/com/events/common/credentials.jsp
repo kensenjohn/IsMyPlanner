@@ -1,0 +1,159 @@
+<%@ page import="com.events.common.ParseUtil" %>
+<%@ page import="com.events.common.Constants" %>
+<jsp:include page="/com/events/common/header_top.jsp">
+    <jsp:param name="page_title" value=""/>
+</jsp:include>
+<jsp:include page="/com/events/common/header_bottom.jsp"/>
+<body>
+    <div class="page_wrap">
+        <jsp:include page="/com/events/common/top_nav.jsp"/>
+        <jsp:include page="/com/events/common/menu_bar.jsp"/>
+        <div class="breadcrumb_format">
+            <div class="container">
+                <div class="page-title">Login or Register</div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    &nbsp;
+                </div>
+            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="credential">
+                            <div class="widget">
+                                <div class="content">
+                                    <h4>Login</h4>
+                                    <form method="post" id="frm_login" action="/proc_login.aeve">
+                                        <div class="form-group">
+                                            <label for="loginEmail" class="form_label">Email address</label><span class="required"> *</span>
+                                            <input type="email" class="form-control" id="loginEmail" name="loginEmail" placeholder="Enter email">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="loginPassword"  class="form_label">Password</label><span class="required"> *</span>
+                                            <input type="password" class="form-control" id="loginPassword" name="loginPassword" placeholder="Password">
+                                        </div>
+                                        <button type="button" class="btn  btn-filled" id="btn_login">Sign In</button>
+                                        <a href="/com/events/common/credentials.jsp">Forgot Your Password?</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="credential">
+                            <div class="widget">
+                                <div class="content">
+                                    <h4>Register</h4>
+                                    <form method="post"  id="frm_register" action="/proc_register.aeve">
+                                        <div class="form-group">
+                                            <label for="registerEmail" class="form_label">Email address</label> <span class="required"> *</span>
+                                            <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder="Enter email">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="registerFirstName" class="form_label">First Name</label><span class="required"> *</span>
+                                                    <input type="text" class="form-control" id="registerFirstName" name="registerFirstName" placeholder="First Name">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="registerLastName" class="form_label">Last Name</label><span class="required"> *</span>
+                                                    <input type="text" class="form-control" id="registerLastName" name="registerLastName" placeholder="Last Name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="registerPassword"  class="form_label">Password</label><span class="required"> *</span>
+                                                    <input type="password" class="form-control" id="registerPassword" name="registerPassword" placeholder="Password">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="registerVerifyPassword"  class="form_label">Verify Password</label><span class="required"> *</span>
+                                                    <input type="password" class="form-control" id="registerVerifyPassword" name="registerVerifyPassword" placeholder="Verify Password">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label for="registerIsPlanner" class="form_label">
+                                                <input type="checkbox" id="registerIsPlanner" name = "registerIsPlanner" disabled checked>
+                                                I am a planner
+                                            </label>
+                                        </div>
+                                        <button type="button" class="btn  btn-filled"  id="btn_register">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</body>
+<%
+    String sRedirectAfterLoginReg = ParseUtil.checkNullObject(session.getAttribute(Constants.AFTER_LOGIN_REDIRECT));
+%>
+<form id="frm_passthru" action="<%=Constants.DASHBOARD_LINK%>">
+
+</form>
+<script   type="text/javascript">
+    $(window).load(function() {
+        $('#btn_login').click(function(){
+            loginUser(getResult);
+        });
+        $('#btn_register').click(function(){
+            registerUser(getResult);
+        });
+    });
+    function loginUser( callbackmethod) {
+        var actionUrl = "/proc_login.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_login").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function registerUser( callbackmethod) {
+        var actionUrl = "/proc_register.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_register").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function getResult(jsonResult)
+    {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                var varIsMessageExist = varResponseObj.is_message_exist;
+                if(varIsMessageExist == true) {
+                    var jsonResponseMessage = varResponseObj.messages;
+                    var varArrErrorMssg = jsonResponseMessage.error_mssg;
+                    displayMssgBoxMessages(varArrErrorMssg, true);
+                }
+
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                //TODO : Add cookie creation in case of "Remember Me" is selected
+                $('#frm_passthru').submit();
+                //displayMssgBoxAlert('User was logged in successfully', false);
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                }
+            } else {
+                alert("Please try again later 1.");
+            }
+        } else {
+            alert("Response is nullr 3.");
+        }
+    }
+    function setUserCookie(cookieName, cookieValue) {
+        var exdays = 1;
+        var exdate=new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        var c_value=escape(cookieValue) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString())
+                + ("; path=/");
+
+        document.cookie=cookieName + "=" + c_value;
+    }
+</script>
+<jsp:include page="/com/events/common/footer_top.jsp"/>
+<jsp:include page="/com/events/common/footer_bottom.jsp"/>

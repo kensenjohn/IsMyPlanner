@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+           version="2.5">
+
+    <servlet>
+        <servlet-name>Process Login</servlet-name>
+        <servlet-class>com.events.proc.users.ProcLogin</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Login</servlet-name>
+        <url-pattern>/proc_login.aeve</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Process Register</servlet-name>
+        <servlet-class>com.events.proc.users.ProcRegister</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Register</servlet-name>
+        <url-pattern>/proc_register.aeve</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Process Save Clients</servlet-name>
+        <servlet-class>com.events.proc.clients.ProcSaveClient</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Clients</servlet-name>
+        <url-pattern>/proc_save_clients.aeve</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Process Load Clients</servlet-name>
+        <servlet-class>com.events.proc.clients.ProcLoadClients</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Clients</servlet-name>
+        <url-pattern>/proc_load_clients.aeve</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Process Get Client Details</servlet-name>
+        <servlet-class>com.events.proc.clients.ProcGetClientDetails</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Get Client Details</servlet-name>
+        <url-pattern>/proc_get_client_details.aeve</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Process Save Event</servlet-name>
+        <servlet-class>com.events.proc.event.ProcSaveEvent</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Event</servlet-name>
+        <url-pattern>/proc_save_event.aeve</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Process Load Event</servlet-name>
+        <servlet-class>com.events.proc.event.ProcLoadEvent</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Event</servlet-name>
+        <url-pattern>/proc_load_event.aeve</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Process Delete Event</servlet-name>
+        <servlet-class>com.events.proc.event.ProcDeleteEvent</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Event</servlet-name>
+        <url-pattern>/proc_delete_event.aeve</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>Process Load All Events</servlet-name>
+        <servlet-class>com.events.proc.event.ProcLoadAllEvents</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load All Events</servlet-name>
+        <url-pattern>/proc_load_all_events.aeve</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Process Load All Guests</servlet-name>
+        <servlet-class>com.events.proc.event.guest.ProcLoadAllGuests</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load All Guests</servlet-name>
+        <url-pattern>/proc_load_all_guests.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Guests</servlet-name>
+        <servlet-class>com.events.proc.event.guest.ProcSaveGuest</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Guests</servlet-name>
+        <url-pattern>/proc_save_guest.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Guest</servlet-name>
+        <servlet-class>com.events.proc.event.guest.ProcLoadGuest</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Guest</servlet-name>
+        <url-pattern>/proc_load_guest.aeve</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Process Upload Excel</servlet-name>
+        <servlet-class>com.events.proc.upload.ProcUploadExcel</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Upload Excel</servlet-name>
+        <url-pattern>/proc_upload_excel.aeve</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>Process Guest Creation Job</servlet-name>
+        <servlet-class>com.events.proc.job.ProcGuestCreateJob</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Guest Creation Job</servlet-name>
+        <url-pattern>/proc_guest_create_job.aeve</url-pattern>
+    </servlet-mapping>
+
+
+    <filter>
+        <filter-name>Data Secure Filter</filter-name>
+        <filter-class>com.events.common.security.DataSecureFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Data Secure Filter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>*.eve</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>Check Credentials Filter </filter-name>
+        <filter-class>com.events.common.security.CheckCredentialFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Check Credentials Filter </filter-name>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>*.eve</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>Dispatching Filter </filter-name>
+        <filter-class>com.events.common.security.DispatchingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Dispatching Filter </filter-name>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>*.eve</url-pattern>
+    </filter-mapping>
+</web-app>
