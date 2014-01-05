@@ -1,0 +1,13 @@
+drivers=com.mysql.jdbc.Driver
+db_env=eventadmin|eventhost
+eventadmin.url=jdbc:mysql://localhost:3306/eventadmin?uniCode=true&characterEncoding=UTF-8
+eventadmin.user=appadmin
+eventadmin.password=FD3C08EEE89Ftestmystrength
+eventadmin.initConn=1
+eventadmin.maxConn=45
+
+eventhost.url=jdbc:mysql://localhost:3306/eventhost?uniCode=true&characterEncoding=UTF-8
+eventhost.user=appadmin
+eventhost.password=FD3C08EEE89Ftestmystrength
+eventhost.initConn=1
+eventhost.maxConn=45

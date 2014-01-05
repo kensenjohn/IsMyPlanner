@@ -1,0 +1,45 @@
+is_filter_enabled=true
+reload_filter_param_interval_in_minutes=5
+delimiter=|
+potential_unsafe_words=script|javascript|onload|onclick|onmouse|onmousedown|onmousemove|onmouseover|onmouseout|onmouseup|onchange|onblur|onfocus|onsubmit|onkeyup|onkeydown|onkeypress|onerror|expression|alert|vbscript|confirm|pholcidcallback
+definite_unsafe_words=/*|*/|';|";|'%3b|"%3b|">|'>|<|>
+
+
+#matches for every event ex: onerror= | onerror%3D | onerror &#0000061; | onerror &#61 | onerror &#61; | onerror &#x3d | onerror &#x3d; | onerror \x3d | onerror \\\\\\\u003d
+regex.onload=(onload(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onclick=(onclick(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onmouse=(onmouse(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onmousedown=(onmousedown(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onmousemove=(onmousemove(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onmouseover=(onmouseover(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onmouseout=(onmouseout(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onmouseup=(onmouseup(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onchange=(onchange(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onblur=(onblur(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onfocus=(onfocus(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onsubmit=(onsubmit(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onkeyup=(onkeyup(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onkeydown=(onkeydown(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onkeypress=(onkeypress(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+regex.onerror=(onerror(\\s|%20)*(=|%3D|(&|&amp;)#[0]{0,5}(61|X3D)[;]{0,1}|(\\\\|%5c)+x3D|(\\\\|%5c)+u003D))
+
+#matches <script> </script  <script  <script/>
+regex.script=((<|%3C)(\\s|%20)*(%2F|&#47;|&#x2f;){0,1}(\\s|%20)*script(\\s|%20)*(>|%3E)*)
+
+#matches javascript:
+regex.javascript=(javascript(\\s|%20)*(/|:|%3A|&#x3a;|&#58;|/))
+
+#matches vbscript:
+regex.vbscript=(vbscript(\\s|%20)*(/|:|%3A|&#x3a;|&#58;|/))
+
+#matches :expression(
+regex.expression=((:|%3A|&#x3a;|&#58;)(\\s|%20)*expression(\\s|%20)*(\\(|%28|&#x28;|&#40;))
+
+#matches alert(
+regex.alert=(alert(\\s|%20)*(\\(|%28|&#x28;|&#40;))
+
+#matches confirm(
+regex.confirm=(confirm(\\s|%20)*(\\(|%28|&#x28;|&#40;))
+
+#matched pholcidCallback(
+regex.pholcidcallback=(pholcidCallback(\\s|%20)*(\\(|%28|&#x28;|&#40;))

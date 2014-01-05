@@ -1,0 +1,6 @@
+environment=vm
+event_admin_db=eventadmin
+event_host_db=eventhost
+copyright_year=2013
+copyright_company=Smarasoft Inc
+file_upload_location=/usr/uploadloc
