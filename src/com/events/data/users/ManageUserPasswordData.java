@@ -3,10 +3,7 @@ package com.events.data.users;
 import com.events.bean.users.PasswordBean;
 import com.events.bean.users.PasswordRequestBean;
 import com.events.bean.users.UserBean;
-import com.events.common.Configuration;
-import com.events.common.Constants;
-import com.events.common.DateSupport;
-import com.events.common.ParseUtil;
+import com.events.common.*;
 import com.events.common.db.DBDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +26,8 @@ public class ManageUserPasswordData {
 
     public Integer insertPassword(PasswordRequestBean passwordRequestBean) {
         int numOfRowsInserted = 0;
-        if( passwordRequestBean!=null ) {
+        if( passwordRequestBean!=null  && !Utility.isNullOrEmpty(passwordRequestBean.getPassword()) && !Utility.isNullOrEmpty(passwordRequestBean.getUserId()) &&
+                passwordRequestBean.getPasswordStatus()!=null  ) {
             String sQuery = "INSERT INTO GTPASSWORD ( PASSWORDID,PASSWORD,FK_USERID,   CREATEDATE,HUMANCREATEDATE,PASSWORD_STATUS) VALUES(?,?,?,  ?,?,?)";
             ArrayList<Object> aParams = DBDAO.createConstraint(passwordRequestBean.getPasswordId(),passwordRequestBean.getHashedPassword(),passwordRequestBean.getUserId(),
                     DateSupport.getEpochMillis(),DateSupport.getUTCDateTime(),passwordRequestBean.getPasswordStatus().getStatus());
@@ -43,7 +41,17 @@ public class ManageUserPasswordData {
     }
 
     public Integer updatePassword(PasswordRequestBean passwordRequestBean) {
-        return 0;
+        int numOfRowsInserted = 0;
+        if( passwordRequestBean!=null  && !Utility.isNullOrEmpty(passwordRequestBean.getPassword()) && !Utility.isNullOrEmpty(passwordRequestBean.getUserId()) &&
+                passwordRequestBean.getPasswordStatus()!=null  ) {
+            String sQuery = "UPDATE GTPASSWORD SET PASSWORD = ?,PASSWORD_STATUS=?,CREATEDATE =?,    HUMANCREATEDATE=? WHERE FK_USERID =?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(passwordRequestBean.getHashedPassword(), passwordRequestBean.getPasswordStatus().getStatus(),
+                    DateSupport.getEpochMillis(),DateSupport.getUTCDateTime(), passwordRequestBean.getUserId());
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB,"ManageUserPasswordData.java", "updatePassword() ");
+        } else {
+            appLogging.error("Invalid  request to update password " + ParseUtil.checkNullObject(passwordRequestBean));
+        }
+        return numOfRowsInserted;
     }
 
     public PasswordBean getPassword(PasswordRequestBean passwordRequestBean) {

@@ -73,7 +73,8 @@ public class ManageUserPassword {
 
     public Integer updatePassword( PasswordRequestBean passwordRequest ) throws ManagePasswordException {
         Integer iNumOfRows = 0;
-        if( passwordRequest!=null && !"".equalsIgnoreCase(passwordRequest.getPassword())) {
+        if( passwordRequest!=null && !Utility.isNullOrEmpty(passwordRequest.getPassword()) && !Utility.isNullOrEmpty(passwordRequest.getUserId()) &&
+                passwordRequest.getPasswordStatus()!=null ) {
             passwordRequest.setHashedPassword(generatePasswordHash(passwordRequest.getPassword()));
 
             ManageUserPasswordData manageUserPasswordData = new ManageUserPasswordData();
@@ -102,5 +103,11 @@ public class ManageUserPassword {
             }
         }
         return isAuthenticated;
+    }
+
+    public void sendResetPasswordLink( PasswordRequestBean passwordRequest) {
+        if(passwordRequest!=null && !Utility.isNullOrEmpty(passwordRequest.getEmailAddress())) {
+
+        }
     }
 }

@@ -1,15 +1,14 @@
 package com.events.proc.users;
 
-import com.events.bean.users.PasswordRequestBean;
-import com.events.bean.users.UserBean;
-import com.events.bean.users.UserInfoBean;
-import com.events.bean.users.UserRequestBean;
+import com.events.bean.users.*;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
 import com.events.users.AccessUsers;
+import com.events.users.CookieUser;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,11 +38,11 @@ public class ProcLogin  extends HttpServlet {
         RespConstants.Status responseStatus = RespConstants.Status.ERROR;
 
         try {
-            boolean isInsecureParamUsed = ParseUtil.sTob((ParseUtil.checkNullObject(request.getAttribute(Constants.INSECURE_PARAMS_ERROR))));
             if( !DataSecurityChecker.isInsecureInputResponse(request) ) {
 
                 String sEmail = ParseUtil.checkNull(request.getParameter("loginEmail"));
                 String sPassword = ParseUtil.checkNull(request.getParameter("loginPassword"));
+                boolean isRememberMe = ParseUtil.sTob(request.getParameter("loginRememberMe"));
 
                 //appLogging.info("Username : " + sUsername + " Password : " + sPassword );
                 if("".equalsIgnoreCase(sEmail) || "".equalsIgnoreCase(sPassword)) {
@@ -73,6 +72,19 @@ public class ProcLogin  extends HttpServlet {
                             UserInfoBean userInfoBean = accessUsers.getUserInfoFromInfoId(userRequestBean);
                             userBean.setUserInfoBean( userInfoBean );
                             request.getSession().setAttribute(Constants.USER_LOGGED_IN_BEAN,userBean);
+
+
+                            if(isRememberMe) {
+                                CookieRequestBean cookieRequestBean = new CookieRequestBean();
+                                cookieRequestBean.setUserId( userBean.getUserId() );
+
+                                CookieUser cookieUser = new CookieUser();
+                                CookieUserResponseBean cookieUserResponseBean = cookieUser.saveCookieUser(cookieRequestBean);
+                                if(cookieUserResponseBean!=null && !Utility.isNullOrEmpty(cookieUserResponseBean.getCookieUserId())){
+                                    jsonResponseObj.put("cookieuser_id",cookieUserResponseBean.getCookieUserId());
+                                }
+                            }
+
                         } else {
                             appLogging.info("Invalid password used : "  + sEmail  );
                             Text errorText = new ErrorText("Please use a valid email and password to login","err_mssg") ;

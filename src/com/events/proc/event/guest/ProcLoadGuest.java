@@ -43,7 +43,6 @@ public class ProcLoadGuest  extends HttpServlet {
                 if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
                     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
                     String sGuestGroupId = ParseUtil.checkNull(request.getParameter("guestGroupId"));
-                    appLogging.info("event Id used : " + sEventId + " sGuestGroupId : " + sGuestGroupId );
                     if(!Utility.isNullOrEmpty(sEventId) && !Utility.isNullOrEmpty(sGuestGroupId)) {
                         GuestRequestBean guestRequestBean = new GuestRequestBean();
                         guestRequestBean.setEventId( sEventId );

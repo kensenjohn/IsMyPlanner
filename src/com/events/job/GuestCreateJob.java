@@ -51,7 +51,6 @@ public class GuestCreateJob {
         if(guestCreateJobRequestBean!=null) {
             GuestCreateJobData guestCreateJobData = new GuestCreateJobData();
             Integer iNumOfRows = guestCreateJobData.updateGuestCreationJob(guestCreateJobRequestBean);
-            appLogging.info(" Upodate guestCreateJobResponseBean iNumOfRows : " + iNumOfRows);
             if(iNumOfRows>0){
                 guestCreateJobResponseBean.setGuestCreateJobId( guestCreateJobRequestBean.getGuestCreateJobId() );
             }
@@ -64,7 +63,6 @@ public class GuestCreateJob {
         if(guestCreateJobRequestBean!=null) {
             GuestCreateJobData guestCreateJobData = new GuestCreateJobData();
             GuestCreateJobBean guestCreateJobBean = guestCreateJobData.getGuestCreateJobBeanByEvent(guestCreateJobRequestBean);
-            appLogging.info(" Getting info guestCreateJobBean : " + guestCreateJobBean);
             guestCreateJobResponseBean.setGuestCreateJobBean( guestCreateJobBean );
         }
         return guestCreateJobResponseBean;

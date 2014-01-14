@@ -34,8 +34,14 @@
                                             <label for="loginPassword"  class="form_label">Password</label><span class="required"> *</span>
                                             <input type="password" class="form-control" id="loginPassword" name="loginPassword" placeholder="Password">
                                         </div>
+                                        <div class="checkbox">
+                                            <label for="loginRememberMe" class="form_label">
+                                                <input type="checkbox" id="loginRememberMe" name = "loginRememberMe">
+                                                Remember Me
+                                            </label>
+                                        </div>
                                         <button type="button" class="btn  btn-filled" id="btn_login">Sign In</button>
-                                        <a href="/com/events/common/credentials.jsp">Forgot Your Password?</a>
+                                        <a href="/com/events/common/forgot.jsp">Forgot Your Password?</a>
                                     </form>
                                 </div>
                             </div>
@@ -132,12 +138,16 @@
 
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
-                //TODO : Add cookie creation in case of "Remember Me" is selected
-                $('#frm_passthru').submit();
                 //displayMssgBoxAlert('User was logged in successfully', false);
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
+                    var varCookieUserId = jsonResponseObj.cookieuser_id;
+
+                    if(varCookieUserId!='' && varCookieUserId!=undefined){
+                        setUserCookie('<%=Constants.COOKIEUSER_ID%>',varCookieUserId);
+                    }
                 }
+                $('#frm_passthru').submit();
             } else {
                 alert("Please try again later 1.");
             }
@@ -149,8 +159,7 @@
         var exdays = 1;
         var exdate=new Date();
         exdate.setDate(exdate.getDate() + exdays);
-        var c_value=escape(cookieValue) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString())
-                + ("; path=/");
+        var c_value= cookieValue + ((exdays==null) ? "" : "; expires="+exdate.toUTCString()) + ("; path=/");
 
         document.cookie=cookieName + "=" + c_value;
     }

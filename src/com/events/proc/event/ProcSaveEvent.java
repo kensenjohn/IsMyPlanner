@@ -62,15 +62,8 @@ public class ProcSaveEvent   extends HttpServlet {
                     String sClientEmail = ParseUtil.checkNull(request.getParameter("clientEmail"));
                     boolean isEventClientCorporate = ParseUtil.sTob(request.getParameter("isClientCorporate"));
 
-
-                    appLogging.info("sEventName : " + sEventName + " sEventDate : " + sEventDay + " sEventTime : "
-                            + sEventTime + " sEventTimeZone : " + sEventTimeZone + " sEventClient : " + sEventClient +
-                            " sClientName : " + sClientName + " sClientEmail : " + sClientEmail  );
-
                     if( sEventClient!=null && "create_client".equalsIgnoreCase(sEventClient )
                             && ("".equalsIgnoreCase(sClientName) || "".equalsIgnoreCase(sClientEmail))  ) {
-                        appLogging.info("Cannot create new client because of not client name or client email : " +
-                                " sClientEmail - " + ParseUtil.checkNull(sClientName) + " sClientEmail - "  + ParseUtil.checkNull(sClientEmail) );
                         Text errorText = new ErrorText("Please enter a valid Client Name and Client Email","err_mssg") ;
                         arrErrorText.add(errorText);
 
@@ -78,18 +71,17 @@ public class ProcSaveEvent   extends HttpServlet {
                     } else if ( "".equalsIgnoreCase(sEventName) || "".equalsIgnoreCase(sEventDay)
                             || "".equalsIgnoreCase(sEventTime) || "".equalsIgnoreCase(sEventTimeZone) || "".equalsIgnoreCase(sEventClient) ) {
 
-                        appLogging.info("Missing required parameters  ");
                         Text errorText = new ErrorText("Please enter a valid Client Name and Client Email","err_mssg") ;
                         arrErrorText.add(errorText);
                         responseStatus = RespConstants.Status.ERROR;
                     } else if (vendorBean ==null || (vendorBean!=null && "".equalsIgnoreCase(vendorBean.getVendorId()))) {
-                        appLogging.info("Vendor could be identified.  ");
                         Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please login and try again.","err_mssg") ;
                         arrErrorText.add(errorText);
                         responseStatus = RespConstants.Status.ERROR;
                     } else {
 
                         EventRequestBean eventRequestBean = new EventRequestBean();
+                        eventRequestBean.setEventId(sEventId);
                         eventRequestBean.setEventName( sEventName );
                         eventRequestBean.setEventDay(sEventDay);
                         eventRequestBean.setEventTime( sEventTime );

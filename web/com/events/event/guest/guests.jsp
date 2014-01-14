@@ -77,25 +77,6 @@
                     </table>
                 </div>
             </div>
-            <div class="row">
-                <form id="fileupload" action="/proc_upload_excel.aeve" method="POST" enctype="multipart/form-data">
-                <div class="col-md-4">
-
-                        <input type="file" name="files[]" class="fileinput-button btn btn-default">
-                </div>
-                <div class="col-md-1" >
-                    <div id="btn_upload">
-
-                    </div>
-                </div>
-
-                </form>
-                <div class="col-md-2">
-                    <div id="progress">
-                        <div class="bar" style="width: 0%;"></div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -104,9 +85,6 @@
     <input type="hidden" id="event_id"  name="event_id" value="<%=sEventId%>">
 </form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script src="/js/upload/jquery.iframe-transport.js"></script>
-<script src="/js/upload/jquery.fileupload.js"></script>
 <script src="/js/event/event_info.js"></script>
 <script src="/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
@@ -166,12 +144,13 @@
             var varEveryEventGuestBean = everyEventGuestList[i];
             var varEveryEventGuestTableRow = $('<tr id="row_'+varEveryEventGuestBean.event_guestgroup_id+'" ></tr>');
             var varRsvpStatus = varEveryEventGuestBean.rsvp_seats;
-            if( varEveryEventGuestTableRow.has_responded == false ) {
-                varRsvpStatus = '<span id="rsvp_status"  class="label label-warning">Not Responded</span>';
+            if( varEveryEventGuestBean.has_responded == false ) {
+                varRsvpStatus = '<span id="rsvp_status"  class="label label-warning">No Response</span>';
             }
-            if( varEveryEventGuestTableRow.will_not_attend == true ) {
-                varRsvpStatus = '<span id="rsvp_status"  class="label label-warning">Will Not Attend</span>';
+            if( varEveryEventGuestBean.will_not_attend == true ) {
+                varRsvpStatus = '<span id="rsvp_status"  class="label label-default">Will Not Attend</span>';
             }
+
             varEveryEventGuestTableRow.append(
                     '<td>'+varEveryEventGuestBean.group_name+'</td>'+
                     '<td>'+varEveryEventGuestBean.invited_seats+'</td>' +
@@ -183,35 +162,6 @@
             $('#every_guest_rows').append(varEveryEventGuestTableRow);
         }
     }
-    $(function () {
-        $('#fileupload').fileupload({
-            dataType: 'json',
-            replaceFileInput: false,
-            add: function (e, data) {
-                $('#btn_upload').empty();
-                var varUploadButton = $('<button/>').attr("id","upload_button").addClass("btn btn-default").appendTo($('#btn_upload'));
-                $('#upload_button').append( $('<span/>').addClass("glyphicon glyphicon-upload"));
-                $("#upload_button").text('Upload');
-
-                data.context = varUploadButton.click(function () {
-                            data.context = $('<p/>').text('Uploading...').replaceAll($(this));
-                            data.submit();
-                        });
-
-            },
-            done: function (e, data) {
-                data.context.text('Upload finished.');
-            },
-            progressall: function (e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#progress .bar').css(
-                        'width',
-                        progress + '%'
-                );
-            }
-        });
-    });
-
     function initializeTable(){
 
         objEveryEventTable =  $('#every_guest_table').dataTable({

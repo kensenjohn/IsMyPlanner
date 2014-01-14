@@ -299,4 +299,32 @@ public class UserInfoBean {
         return jsonObject;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("UserInfoBean{");
+        sb.append("isUserInfoExists=").append(isUserInfoExists);
+        sb.append(", userInfoId='").append(userInfoId).append('\'');
+        sb.append(", firstName='").append(firstName).append('\'');
+        sb.append(", lastName='").append(lastName).append('\'');
+        sb.append(", address1='").append(address1).append('\'');
+        sb.append(", address2='").append(address2).append('\'');
+        sb.append(", city='").append(city).append('\'');
+        sb.append(", state='").append(state).append('\'');
+        sb.append(", country='").append(country).append('\'');
+        sb.append(", ipAddress='").append(ipAddress).append('\'');
+        sb.append(", isTemporary='").append(isTemporary).append('\'');
+        sb.append(", deleteRow='").append(deleteRow).append('\'');
+        sb.append(", createDate=").append(createDate);
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", cellPhone='").append(cellPhone).append('\'');
+        sb.append(", phoneNum='").append(phoneNum).append('\'');
+        sb.append(", humanCellPhone='").append(humanCellPhone).append('\'');
+        sb.append(", humanPhoneNum='").append(humanPhoneNum).append('\'');
+        sb.append(", humanCreateDate='").append(humanCreateDate).append('\'');
+        sb.append(", timezone='").append(timezone).append('\'');
+        sb.append(", company='").append(company).append('\'');
+        sb.append(", zipcode='").append(zipcode).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

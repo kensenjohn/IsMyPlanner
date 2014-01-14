@@ -13,6 +13,9 @@ public class Constants {
     public final static String CONFIG_LOGS = "ConfigLogging";
     public final static String DB_LOGS = "DBLogging";
     public final static String DBERROR_LOGS = "DBErrorLogging";
+    public final static String EMAILER_LOGS = "EmailerLogging";
+    public final static String SCHEDULER_LOGS = "SchedulerLogging";
+
 
     // Prop Files
     public final static String PROP_FILE_PATH = "/etc/events/props/";
@@ -20,6 +23,12 @@ public class Constants {
     public final static String APPLICATION_PROP = PROP_FILE_PATH + "application.prop";
     public final static String ANALYTICS_PROP = PROP_FILE_PATH + "analytics.prop";
     public final static String UNSAFE_INPUT_PROP = PROP_FILE_PATH + "unsafe_input.prop";
+    public final static String SCHEDULER_PROCESS_PROP = PROP_FILE_PATH + "scheduler_processor.prop";
+    public final static String EMAILER_PROP = PROP_FILE_PATH + "emailer.prop";
+
+    public final static String PROP_ENABLE_EMAIL_SENDER_THREAD = "enable_email_sender_thread";
+    public final static String PROP_ENABLE_EMAIL_CREATOR_THREAD = "enable_email_creator_thread";
+    public final static String PROP_EMAIL_SCHEDULE_PICKUPTIME_PADDING = "schedule_email_pickuptime_padding";
 
     public static String EVENTADMIN_DB = "event_admin_db";
     public static String EVENTHOST_DB = "event_host_db";
@@ -36,8 +45,13 @@ public class Constants {
     public final static String DASHBOARD_LINK = "/com/events/dashboard.jsp";
     public final static String J_RESP_SUCCESS = "success";
     public static String DEFAULT_TIMEZONE = "UTC";
+    public final static String COOKIEUSER_ID = "cu_id";
 
     public final static String UPLOAD_LOCATION = "file_upload_location";
+    public final static String PRODUCT_NAME="product_name";
+    public final static String DOMAIN="domain";
+    public final static Long HOURS24_IN_MILLISEC = (24*60*60*1000L);
+
 
     public enum TIME_UNIT {  SECONDS,MINUTES, HOURS, DAYS, MONTHS,YEARS; }
 
@@ -147,5 +161,120 @@ public class Constants {
         public String getStatus() {
             return this.status;
         }
+    }
+
+    public enum AMAZON {
+        ACCESS_KEY("amazon.access_key"), SECRET_KEY("amazon.secret_key");
+
+        private String propName = Constants.EMPTY;
+
+        AMAZON(String propName) {
+            this.propName = propName;
+        }
+
+        public String getPropName() {
+            return this.propName;
+        }
+    }
+
+    public enum SCHEDULER{
+        SEND_EMAIL_STARTUP_DELAY("send_email.startup_delay"),SEND_EMAIL_DELAY_BETWEEN_CALL("send_email.delay_between_call"),
+        CREATE_EMAIL_STARTUP_DELAY("create_email.startup_delay"),CREATE_EMAIL_DELAY_BETWEEN_CALL("create_email.delay_between_call");
+
+        private String propName = Constants.EMPTY;
+
+        SCHEDULER(String propName) {
+            this.propName = propName;
+        }
+
+        public String getPropName() {
+            return this.propName;
+        }
+    }
+
+    public enum EMAIL_STATUS {
+        NEW("NEW"), PICKED_TO_SEND("PICKED"), ERROR("ERROR"), SENT("SENT");
+
+        private String emailStatus = "";
+
+        EMAIL_STATUS(String emailStatus) {
+            this.emailStatus = emailStatus;
+        }
+
+        public String getStatus() {
+            return this.emailStatus;
+        }
+    }
+
+    public enum SCHEDULER_STATUS  {
+        NEW_SCHEDULE("NEW_SCHEDULE"),
+        PICKED_TO_PROCESS("PICKED_TO_PROCESS"),
+        COMPLETE("COMPLETE"),
+        ERROR("ERROR");
+
+        private String status = "";
+        SCHEDULER_STATUS( String status )  {
+            this.status = status;
+        }
+
+        public String getStatus() {
+            return this.status;
+        }
+    }
+
+    public enum SCHEDULE_PICKUP_TYPE {
+        NEW_RECORDS("NEW_RECORDS"),
+        OLD_RECORDS("OLD_RECORDS"),
+        CURRENT_RECORD("CURRENT_RECORDS");
+
+        private String scedhuledPickupType = "";
+        SCHEDULE_PICKUP_TYPE(String scedhuledPickupType)
+        {
+            this.scedhuledPickupType = scedhuledPickupType;
+        }
+
+        public String getScheduledPickupType()
+        {
+            return this.scedhuledPickupType;
+        }
+
+    }
+
+    public enum EMAIL_TEMPLATE {
+        REGISTRATION("REGISTRATION"),
+        NEWPASSWORD("NEWPASSWORD"),
+        NEWTELNUMBERPURCHASE("NEWTELNUMBERPURCHASE"),
+        RSVP_CONFIRMATION_EMAIL("RSVP_CONFIRMATION"),
+        SEATING_CONFIRMATION_EMAIL("SEATING_CONFIRMATION"),
+        RSVPRESPONSEDEMO("RSVPRESPONSEDEMO"),
+        RSVPRESPONSE("RSVPRESPONSE");
+
+        private String emailTemplate = "";
+
+        EMAIL_TEMPLATE(String emailTemplate) {
+            this.emailTemplate = emailTemplate;
+        }
+
+        public String getEmailTemplate() {
+            return this.emailTemplate;
+        }
+    }
+
+    public enum SEND_EMAIL_RULES{
+        ALL_INVITED("ALL_INVITED"), DID_NOT_RESPOND("DID_NOT_RESPOND"), ALL_WHO_RESPONDED("ALL_WHO_RESPONDED"),
+        WILL_ATTEND("WILL_ATTEND"), WILL_NOT_ATTEND("WILL_NOT_ATTEND"), RSVP_THANKYOU("RSVP_THANKYOU"), NO_RULE_SELECTED("NO_RULE_SELECTED");
+        private String rule = Constants.EMPTY;
+
+        SEND_EMAIL_RULES(String rule) {
+            this.rule = rule;
+        }
+
+        public String getRule() {
+            return this.rule;
+        }
+    }
+
+    public enum EventEmailFeatureType {
+        send_email_rule,email_send_day,email_send_time,email_send_timezone,email_send_status,action,none;
     }
 }

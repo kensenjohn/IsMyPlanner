@@ -27,7 +27,7 @@ public class AccessUserData {
     public UserBean getUserDataByEmail(UserRequestBean userRequestBean) {
         UserBean userBean = new UserBean();
         if(userRequestBean!=null) {
-            String sQuery  = "SELECT U.* FROM GTUSER U, GTUSERINFO UI WHERE UI.EMAIL = ? AND U.FK_USERINFOID = UI.USERINFOID";
+            String sQuery  = "SELECT U.*,UI.* FROM GTUSER U, GTUSERINFO UI WHERE UI.EMAIL = ? AND U.FK_USERINFOID = UI.USERINFOID";
             ArrayList<Object> aParams = DBDAO.createConstraint(userRequestBean.getEmail());
 
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessUserData.java", "getUserDataByEmail()");

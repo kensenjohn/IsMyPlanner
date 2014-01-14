@@ -12,7 +12,7 @@
             data: dataString ,
             success: callBackMethod,
             error:function(a,b,c) {
-                displayMssgBoxMessages('Oops!! Something went wrong. Please try again later (003) - ' + a.responseText + ' = ' + b + " = " + c, true);
+                displayMssgBoxAlert('Oops!! Something went wrong. Please try again later (ajx-007) - ' + a.responseText + ' = ' + b + " = " + c, true);
             }
         });
     }
@@ -36,15 +36,18 @@
         if(varArrMessages!=undefined) {
             var varMssg = '';
             var isFirst = true;
-            for(var i = 0; i<varArrMessages.length; i++) {
-                if(isFirst == false) {
-                    varMssg = varMssg + '\n';
+            if(varArrMessages instanceof Array){
+                for(var i = 0; i<varArrMessages.length; i++) {
+                    if(isFirst == false) {
+                        varMssg = varMssg + '\n';
+                    }
+                    varMssg = varMssg + varArrMessages[i].text;
                 }
-                varMssg = varMssg + varArrMessages[i].text;
             }
-
-            if(varMssg!='') {
+            if(varMssg!='' && varMssg!=undefined) {
                 displayMssgBoxAlert(varMssg,isError);
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (alrt-007)',isError);
             }
         }
     }
@@ -73,5 +76,20 @@
                         }
                 }
         );
+    }
+
+    function displayAjaxError(varResponseObj) {
+        var varIsMessageExist = varResponseObj.is_message_exist;
+        if(varIsMessageExist == true) {
+            var jsonResponseMessage = varResponseObj.messages;
+            var varArrErrorMssg = jsonResponseMessage.error_mssg;
+            if(varArrErrorMssg!=undefined ) {
+                displayMssgBoxMessages(varArrErrorMssg, true);
+            } else {
+                displayMssgBoxMessages('Oops!! We were unable to process your request. Please try again later.(procCGC 001)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later.(procCGC 002)', true);
+        }
     }
 </script>

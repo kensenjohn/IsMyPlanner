@@ -2,6 +2,7 @@ package com.events.bean.users;
 
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import com.events.common.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,7 +45,7 @@ public class UserBean {
             userType = Constants.USER_TYPE.ADMIN;
         }
 
-        if (this.userInfoId != null && !"".equalsIgnoreCase(this.userInfoId)) {
+        if (!Utility.isNullOrEmpty(this.userInfoId)) {
             this.userInfoBean = new UserInfoBean(hmAdminRes);
 
             if (this.userInfoBean.isUserInfoExists()) {

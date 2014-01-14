@@ -70,28 +70,40 @@ public class ProcSaveGuest   extends HttpServlet {
                     String sGuestCountry = ParseUtil.checkNull(request.getParameter("guestCountry"));
                     String sGuestPostalCode = ParseUtil.checkNull(request.getParameter("guestPostalCode"));
 
-                    int sGuestInvitedSeats = ParseUtil.sToI(request.getParameter("guestInvitedSeats"));
-                    int sGuestRSVPSeats = ParseUtil.sToI(request.getParameter("guestRSVP"));
-                    boolean willNotAttend = ParseUtil.sTob(request.getParameter("guestInvitedSeats"));
+                    int iGuestInvitedSeats = ParseUtil.sToI(request.getParameter("guestInvitedSeats"));
+                    int iGuestRSVPSeats = ParseUtil.sToI(request.getParameter("guestRSVP"));
+                    boolean guestWillNotAttend = ParseUtil.sTob(request.getParameter("guestWillNotAttend"));
+
+                    String sGuestRSVP = ParseUtil.checkNull( request.getParameter("guestRSVP") );
+                    if( "0".equalsIgnoreCase(sGuestRSVP)) {
+                        guestWillNotAttend = true; // Guest has entered 0 so this can be identified as "Will not Attend".
+                    }
+                    if(guestWillNotAttend){
+                        iGuestRSVPSeats = 0;
+                    }
+
 
                     if( Utility.isNullOrEmpty(sEventId) ) {
-                        appLogging.info("Invalid Event ID request in Proc Page sEventId " + sEventId );
+                        appLogging.warn("Invalid Event ID request in Proc Page sEventId " + sEventId );
                         Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEvent - 002)","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
-                    } else if( Utility.isNullOrEmpty(sGuestFirstName) || sGuestInvitedSeats<=0) {
-                        appLogging.info("Please fill in all required fields");
-                        Text errorText = new ErrorText("Please fill in all required fields","status_mssg") ;
+                    } else if( Utility.isNullOrEmpty(sGuestFirstName)) {
+                        Text errorText = new ErrorText("Please fill in the First Name of the guest required fields","status_mssg") ;
                         arrErrorText.add(errorText);
                         responseStatus = RespConstants.Status.ERROR;
-                    } else if(sGuestInvitedSeats<sGuestRSVPSeats || sGuestRSVPSeats<=0 ) {
+                    }  else if( iGuestInvitedSeats<=0) {
+                        Text errorText = new ErrorText("Guest must be Invited to at least one seat. Invited Seats must be greater than 0.","status_mssg") ;
+                        arrErrorText.add(errorText);
+                        responseStatus = RespConstants.Status.ERROR;
+                    } else if(guestWillNotAttend==false && (iGuestInvitedSeats<iGuestRSVPSeats || iGuestRSVPSeats<0) ) {
+                        // guest has not indicated that they will not attend. Then RSVP should be set correctly.
                         appLogging.info("Invalid RSVP number used");
-                        Text errorText = new ErrorText("Please fill in all required fields","status_mssg") ;
+                        Text errorText = new ErrorText("Invalid RSVP seats entered. Please user a number from 0 to " +iGuestInvitedSeats+".","status_mssg") ;
                         arrErrorText.add(errorText);
                         responseStatus = RespConstants.Status.ERROR;
-                    }
-                    else {
+                    } else {
                         if(Utility.isNullOrEmpty(sGuestGroupName)){
                             sGuestGroupName = ParseUtil.checkNull(ParseUtil.checkNull(sGuestFirstName) + " " + ParseUtil.checkNull(sGuestLastName));
                         }
@@ -116,10 +128,10 @@ public class ProcSaveGuest   extends HttpServlet {
                         guestRequestBean.setPhone1(sGuestPhone1);
                         guestRequestBean.setPhone2(sGuestPhone2);
 
-                        guestRequestBean.setInvitedSeats(sGuestInvitedSeats);
-                        guestRequestBean.setRsvpSeats(sGuestRSVPSeats);
+                        guestRequestBean.setInvitedSeats(iGuestInvitedSeats);
+                        guestRequestBean.setRsvpSeats(iGuestRSVPSeats);
 
-                        guestRequestBean.setNotAttending(willNotAttend);
+                        guestRequestBean.setNotAttending(guestWillNotAttend);
 
 
                         BuildGuest buildGuest = new BuildGuest();

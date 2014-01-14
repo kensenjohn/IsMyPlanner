@@ -2,11 +2,15 @@ package com.events.users;
 
 import com.events.bean.users.*;
 import com.events.common.Constants;
+import com.events.common.DateSupport;
 import com.events.common.ParseUtil;
+import com.events.common.Utility;
 import com.events.common.exception.users.EditUserException;
 import com.events.data.users.AccessUserData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.Cookie;
 
 /**
  * Created with IntelliJ IDEA.
@@ -70,5 +74,40 @@ public class AccessUsers {
             isUserAuthenticated = manageUserPassword.isUserPasswordAuthenticated( passwordRequestBean );
         }
         return isUserAuthenticated;
+    }
+
+    public UserBean getLoggedInUserBean(Cookie[] cookies) {
+        UserBean userBean = new UserBean();
+        if(cookies!=null) {
+            for(int cookieCount = 0; cookieCount < cookies.length; cookieCount++)  {
+                Cookie cookie1 = cookies[cookieCount];
+                if (Constants.COOKIEUSER_ID.equals(cookie1.getName())) {
+                    String sCookieUserId = ParseUtil.checkNull(cookie1.getValue());
+
+                    CookieRequestBean cookieRequestBean = new CookieRequestBean();
+                    cookieRequestBean.setCookieUserId(sCookieUserId);
+
+                    CookieUser cookieUser = new CookieUser();
+                    CookieUserResponseBean cookieUserResponseBean = cookieUser.getCookieUser(cookieRequestBean);
+
+                    if(cookieUserResponseBean!=null && !Utility.isNullOrEmpty(cookieUserResponseBean.getCookieUserId())) {
+                        CookieUserBean cookieUserBean =  cookieUserResponseBean.getCookieUserBean();
+
+                        if( (DateSupport.getEpochMillis() - cookieUserBean.getCreateDate()) < (12*60*60*1000)  ) {
+                            UserRequestBean userRequestBean = new UserRequestBean();
+                            userRequestBean.setUserId(cookieUserBean.getUserId() );
+
+                            AccessUsers accessUsers = new AccessUsers();
+                            userBean = accessUsers.getUserById(userRequestBean);
+
+                            userRequestBean.setUserInfoId( userBean.getUserInfoId() );
+                            UserInfoBean userInfoBean = accessUsers.getUserInfoFromInfoId(userRequestBean);
+                            userBean.setUserInfoBean( userInfoBean );
+                        }
+                    }
+                }
+            }
+        }
+        return userBean;
     }
 }

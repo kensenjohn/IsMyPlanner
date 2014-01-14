@@ -4,3 +4,9 @@ event_host_db=eventhost
 copyright_year=2013
 copyright_company=Smarasoft Inc
 file_upload_location=/usr/uploadloc
+
+amazon.access_key=
+amazon.secret_key=
+
+product_name=Ever Plan
+domain=localhost

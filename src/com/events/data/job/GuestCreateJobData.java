@@ -57,9 +57,9 @@ public class GuestCreateJobData {
 
     public GuestCreateJobBean getGuestCreateJobBeanByEvent(GuestCreateJobRequestBean guestCreateJobRequestBean) {
         GuestCreateJobBean guestCreateJobBean = new GuestCreateJobBean();
-        if(guestCreateJobRequestBean!=null && !Utility.isNullOrEmpty(guestCreateJobRequestBean.getGuestCreateJobId())) {
-            String sQuery = "SELECT * FROM GTGUESTCREATEJOB  WHERE FK_EVENTID = ? AND FK_UPLOADID = ?";
-            ArrayList<Object> aParams = DBDAO.createConstraint( guestCreateJobRequestBean.getEventId() , guestCreateJobRequestBean.getUploadId());
+        if(guestCreateJobRequestBean!=null ) {
+            String sQuery = "SELECT * FROM GTGUESTCREATEJOB  WHERE FK_EVENTID = ? ";
+            ArrayList<Object> aParams = DBDAO.createConstraint( guestCreateJobRequestBean.getEventId());
 
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "GuestCreateJobData.java", "getGuestCreateJobBeanByEvent()");
             if(arrResult!=null) {

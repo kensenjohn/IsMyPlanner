@@ -5,10 +5,12 @@ import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.exception.PropertyFileException;
+import org.owasp.esapi.ESAPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
 
@@ -35,15 +37,12 @@ public class DataSecureFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servReq, ServletResponse servResp, FilterChain filterChain) throws IOException, ServletException {
         boolean isUnsafeParametersDetected = true;
-        appLogging.info("DataSecurity Invoked");
-        Map<String, String[]> reqParams = servReq.getParameterMap();
+        HttpServletRequest httpRequest = (HttpServletRequest)  servReq;
+        Map<String, String[]> reqParams = httpRequest.getParameterMap();
         if( dataSecurityRequestBean!=null) {
             if( reqParams!=null && !reqParams.isEmpty() ) {
                 try {
                     if( DataSecurityChecker.isDataSecurityRequestBeanOld(dataSecurityRequestBean) ) {
-
-                        appLogging.info("The DataSecurityRequestBean was reloaded");
-                        appLogging.debug("After reload : "  + dataSecurityRequestBean);
                         dataSecurityRequestBean = DataSecurityChecker.loadDataSecurityRequestBean();
                     }
                     if( dataSecurityRequestBean.isFilterEnabled() ) {
@@ -56,6 +55,8 @@ public class DataSecureFilter implements Filter {
                                         break;
                                     }
                                 }
+                            } else {
+                                appLogging.info("Request balue array is empty");
                             }
                         }
                     } else {
@@ -74,6 +75,8 @@ public class DataSecureFilter implements Filter {
                 isUnsafeParametersDetected = false;   // There are no parameters, so no exception was/
             }
 
+        } else {
+            appLogging.info("DataSecurity Bean is null");
         }
 
         if(isUnsafeParametersDetected) {

@@ -105,15 +105,15 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <label for="guestInvitedSeats" class="form_label">Invited Seats</label><span class="required"> *</span>
-                                    <input type="text" class="form-control" id="guestInvitedSeats" name="guestInvitedSeats" placeholder="Invited Seats">
+                                    <input type="text" class="form-control" id="guestInvitedSeats" name="guestInvitedSeats" placeholder="Invited Seats (Number)">
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="guestRSVP" class="form_label">RSVP Seats</label> <span id="rsvp_status"  class="label label-warning">Not Responded</span>
-                                    <input type="text" class="form-control" id="guestRSVP" name="guestRSVP" placeholder="RSVP">
+                                    <label for="guestRSVP" class="form_label">RSVP Seats</label> <span id="rsvp_status"  class="label label-warning">No Response</span>
+                                    <input type="text" class="form-control" id="guestRSVP" name="guestRSVP" placeholder="RSVP Seats  (Number)">
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="willNotAttend" class="form_label"></label><br>
-                                    <input type="checkbox" id="willNotAttend" name = "willNotAttend">
+                                    <label for="guestWillNotAttend" class="form_label"></label><br>
+                                    <input type="checkbox" id="guestWillNotAttend" name = "guestWillNotAttend">
                                     Will Not Attend
                                 </div>
                             </div>
@@ -244,6 +244,10 @@
         $('#btn_save_guest').click(function(){
             saveGuest(getResult);
         });
+        $('#btn_upload_guests').click(function(){
+            $('#frm_load_guest').attr("action","/com/events/event/guest/upload_guests.jsp");
+            $('#frm_load_guest').submit();
+        });
     });
     function loadGuestInfo( callbackmethod ) {
         var actionUrl = "/proc_load_guest.aeve";
@@ -289,7 +293,12 @@
                 if(varIsMessageExist == true) {
                     var jsonResponseMessage = varResponseObj.messages;
                     var varArrErrorMssg = jsonResponseMessage.error_mssg;
-                    displayMssgBoxMessages(varArrErrorMssg, true);
+                    if(varArrErrorMssg!=undefined) {
+                        displayMssgBoxMessages(varArrErrorMssg, true);
+                    } else {
+                        displayMssgBoxMessages('Oops!! We were unable to process your request. Please try again later.', true);
+                    }
+
                 }
 
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
@@ -321,6 +330,16 @@
             $('#eventGuestGroupId').val(varEventGuestGroup.event_guestgroup_id);
             $('#guestInvitedSeats').val(varEventGuestGroup.invite_seats);
             $('#guestRSVP').val(varEventGuestGroup.rsvp_seats);
+
+            if( !varEventGuestGroup.has_responded ) {
+                $('#rsvp_status').removeClass().text('No Response').addClass("label label-warning"); //No Response
+            } else {
+                $('#rsvp_status').removeClass().text('');
+            }
+            if( varEventGuestGroup.will_not_attend ) {
+                $('#guestWillNotAttend').prop('checked', true);
+                $('#rsvp_status').removeClass().text('Will Not Attend').addClass("label label-default"); //No Response
+            }
         }
         var varGuestGroup = jsonResponseObj.guest_group;
         if(varGuestGroup!=undefined) {

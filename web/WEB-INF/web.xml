@@ -6,6 +6,19 @@
            version="2.5">
 
     <servlet>
+        <servlet-name>ConnectorServlet</servlet-name>
+        <servlet-class>
+            net.fckeditor.connector.ConnectorServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ConnectorServlet</servlet-name>
+        <url-pattern>
+            /fckeditor/editor/filemanager/connectors/*
+        </url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>Process Login</servlet-name>
         <servlet-class>com.events.proc.users.ProcLogin</servlet-class>
     </servlet>
@@ -121,14 +134,73 @@
         <url-pattern>/proc_upload_excel.aeve</url-pattern>
     </servlet-mapping>
 
-
     <servlet>
-        <servlet-name>Process Guest Creation Job</servlet-name>
-        <servlet-class>com.events.proc.job.ProcGuestCreateJob</servlet-class>
+        <servlet-name>Process Send Reset Password Link</servlet-name>
+        <servlet-class>com.events.proc.users.ProcSendResetPasswordLink</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Process Guest Creation Job</servlet-name>
-        <url-pattern>/proc_guest_create_job.aeve</url-pattern>
+        <servlet-name>Process Send Reset Password Link</servlet-name>
+        <url-pattern>/proc_send_reset_password.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Reset Password</servlet-name>
+        <servlet-class>com.events.proc.users.ProcResetPassword</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Reset Password</servlet-name>
+        <url-pattern>/proc_reset_password.aeve</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Process Load All Event Emails</servlet-name>
+        <servlet-class>com.events.proc.email.ProcLoadAllEventEmails</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load All Event Emails</servlet-name>
+        <url-pattern>/proc_load_all_eventemails.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Email</servlet-name>
+        <servlet-class>com.events.proc.email.ProcSaveEmail</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Email</servlet-name>
+        <url-pattern>/proc_save_email.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Email</servlet-name>
+        <servlet-class>com.events.proc.email.ProcDeleteEmail</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Email</servlet-name>
+        <url-pattern>/proc_delete_eventemail.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Email</servlet-name>
+        <servlet-class>com.events.proc.email.ProcLoadEmail</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Email</servlet-name>
+        <url-pattern>/proc_load_eventemail.aeve</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>Process Load Guest Creation Job Records</servlet-name>
+        <servlet-class>com.events.proc.job.ProcLoadGuestCreationJobRecords</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Guest Creation Job Records</servlet-name>
+        <url-pattern>/proc_load_guestcreationjob_records.aeve</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Process Edit Guest Creation Job Records</servlet-name>
+        <servlet-class>com.events.proc.job.ProcEditGuestCreationJobRecords</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Edit Guest Creation Job Records</servlet-name>
+        <url-pattern>/proc_edit_guestcreationjob_records.aeve</url-pattern>
     </servlet-mapping>
 
 
@@ -139,7 +211,7 @@
     <filter-mapping>
         <filter-name>Data Secure Filter</filter-name>
         <url-pattern>*.jsp</url-pattern>
-        <url-pattern>*.eve</url-pattern>
+        <url-pattern>*.aeve</url-pattern>
     </filter-mapping>
     <filter>
         <filter-name>Check Credentials Filter </filter-name>

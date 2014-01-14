@@ -3,6 +3,8 @@ package com.events.bean.job;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -106,5 +108,26 @@ public class GuestCreateJobBean {
         sb.append(", humanCreateDate='").append(humanCreateDate).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+    /*
+        private String guestCreateJobId = Constants.EMPTY;
+    private String uploadId = Constants.EMPTY;
+    private String eventId = Constants.EMPTY;
+    private String userId = Constants.EMPTY;
+    private Constants.JOB_STATUS jobStatus = Constants.JOB_STATUS.PRELIM_STATE;
+     */
+    public JSONObject toJson() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("guestcreatejob_id", this.guestCreateJobId );
+            jsonObject.put("upload_id", this.uploadId );
+            jsonObject.put("event_id", this.eventId );
+            jsonObject.put("user_id", this.userId );
+            jsonObject.put("job_status", jobStatus!=null?jobStatus.getStatus():"" );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }

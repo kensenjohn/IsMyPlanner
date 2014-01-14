@@ -32,7 +32,8 @@ public class GuestCreateJobResponseBean {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("GuestCreateJobResponseBean{");
-        sb.append("guestCreateJobBean=").append(guestCreateJobBean);
+        sb.append("guestCreateJobId='").append(guestCreateJobId).append('\'');
+        sb.append(", guestCreateJobBean=").append(guestCreateJobBean);
         sb.append('}');
         return sb.toString();
     }

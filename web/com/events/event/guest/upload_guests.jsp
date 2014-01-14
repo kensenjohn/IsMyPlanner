@@ -65,11 +65,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
-                    &nbsp;
+                <div class="col-md-1">
                 </div>
-            </div>
-            <div class="row">
                 <form id="fileupload" action="/proc_upload_excel.aeve" method="POST" enctype="multipart/form-data">
                     <div class="col-md-4">
 
@@ -89,6 +86,13 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-5">
+                    <span id="guestcreaterecord_file_status"></span>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-12">
                     &nbsp;
                 </div>
@@ -98,12 +102,19 @@
                     &nbsp;
                 </div>
             </div>
-            <div class="row" id="btn_process_excel" style="display:none;">
+            <div class="row" id="btn_process_guest_excel" style="display:none;">
                 <div class="col-md-5">
                     <h4>Step 3 :
                         <button  type="button" class="btn  btn-filled" id="btn_process_guest">
                             <span><span class="glyphicon glyphicon-plus"></span> Create Guests From Uploaded Excel</span>
                         </button></h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-5">
+                    <span id="guestcreaterecord_button_status"></span>
                 </div>
             </div>
         </div>
@@ -124,6 +135,7 @@
     var varEventId = '<%=sEventId%>';
     $(window).load(function() {
         loadEventInfo(populateEventInfo,varEventId);
+        loadGuestCreateJobRecord(populateGuestCreateJob);
     });
     $(function () {
         $('#fileupload').fileupload({
@@ -147,6 +159,7 @@
                     var varDataResult = data.result[0];
                     $('#upload_id').val(varDataResult.upload_id);
                     $('#job_status').val('<%=Constants.JOB_STATUS.PRELIM_STATE.getStatus()%>');
+                    $('#guestcreaterecord_file_status').text('Currently uploaded file : ' + varDataResult.name );
                 }
                 createGuestsCreationJob( processCreateGuestCreationJob ); //this will create a job record with - Prelim status
             },
@@ -159,8 +172,14 @@
             }
         });
     });
+    function loadGuestCreateJobRecord(callbackmethod) {
+        var actionUrl = "/proc_load_guestcreationjob_records.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_process_excel").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
     function activateGuestsCreationJob(callbackmethod) {
-        var actionUrl = "/proc_load_all_guests.aeve";
+        var actionUrl = "/proc_edit_guestcreationjob_records.aeve";
         var methodType = "POST";
         var dataString = $("#frm_process_excel").serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
@@ -169,46 +188,10 @@
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
-                var varIsMessageExist = varResponseObj.is_message_exist;
-                if(varIsMessageExist == true) {
-                    var jsonResponseMessage = varResponseObj.messages;
-                    var varArrErrorMssg = jsonResponseMessage.error_mssg;
-                    displayMssgBoxMessages(varArrErrorMssg, true);
-                }
-
-            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
-                var varIsPayloadExist = varResponseObj.is_payload_exist;
-                displayMssgBoxMessages('You will be emailed after the excel gets processed.', false);
-                $('#btn_process_excel').show();
-            } else {
-                alert("Please try again later 1.");
-            }
-        } else {
-            alert("Response is null 3.");
-        }
-    }
-    function processCreateGuestCreationJob(jsonResult) {
-        if(jsonResult!=undefined) {
-            var varResponseObj = jsonResult.response;
-            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
-                var varIsMessageExist = varResponseObj.is_message_exist;
-                if(varIsMessageExist == true) {
-                    var jsonResponseMessage = varResponseObj.messages;
-                    var varArrErrorMssg = jsonResponseMessage.error_mssg;
-                    displayMssgBoxMessages(varArrErrorMssg, true);
-                }
-
+                displayAjaxError(varResponseObj);
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 $('#btn_process_excel').show();
-
-                $('#btn_process_guest').click(function(){
-
-                    $('#job_status').val('<%=Constants.JOB_STATUS.READY_TO_PICK.getStatus()%>');
-                    activateGuestsCreationJob(processActivateGuestCreationJob);   //this will create a job record with - Ready To Pick status
-                });
-
-                displayMssgBoxMessages('Upload button can be shown - 001 ', false);
             } else {
                 alert("Please try again later 1.");
             }
@@ -218,9 +201,75 @@
     }
 
     function createGuestsCreationJob(callbackmethod) {
-        var actionUrl = "/proc_guest_create_job.aeve";
+        var actionUrl = "/proc_edit_guestcreationjob_records.aeve";
         var methodType = "POST";
         var dataString = $("#frm_process_excel").serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function processCreateGuestCreationJob(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                $('#btn_process_guest_excel').show();
+                //$('#guestcreaterecord_button_status').text('Your guests from the excel will be created soon.');
+                invokeActivateGuestsCreation();
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
+    }
+    function populateGuestCreateJob(jsonResult){
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    if(jsonResponseObj!=undefined) {
+                        var varFileName = jsonResponseObj.file_name;
+                        var varUploadId = jsonResponseObj.upload_id;
+                        var varJobStatus = jsonResponseObj.job_status;
+                        if(varFileName!=undefined && varFileName!='') {
+                            $('#guestcreaterecord_file_status').text('Currently uploaded file : ' + varFileName );
+                        }
+                        if(varUploadId!=undefined && varUploadId!='') {
+                            $('#upload_id').val(varUploadId);
+                        }
+                        if(varJobStatus!=undefined && varJobStatus!='') {
+                            $('#job_status').val(varJobStatus);
+                        }
+
+                        if(varJobStatus == '<%=Constants.JOB_STATUS.PRELIM_STATE.getStatus()%>' ) {
+                            $('#btn_process_guest_excel').show();
+                            invokeActivateGuestsCreation();
+                        }
+
+                        if(varJobStatus == '<%=Constants.JOB_STATUS.READY_TO_PICK.getStatus()%>' ) {
+                            $('#guestcreaterecord_button_status').text('Your guests from the excel will be created soon.');
+                        }
+                    }
+                }
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
+    }
+
+    function invokeActivateGuestsCreation(){
+        $('#btn_process_guest_excel').click(function(){
+            $('#job_status').val('<%=Constants.JOB_STATUS.READY_TO_PICK.getStatus()%>');
+            displayMssgBoxAlert('You will be emailed after the excel gets processed.', false);
+            activateGuestsCreationJob(processActivateGuestCreationJob);   //this will create a job record with - Ready To Pick status
+
+        });
     }
 </script>

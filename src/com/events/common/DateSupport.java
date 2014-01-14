@@ -195,7 +195,7 @@ public class DateSupport {
 
     public static TimeZone getTimeZone( String sTimeZone ) {
         TimeZone dateTimeZone = DateTimeZone.UTC.toTimeZone();
-        if(!Utility.isNullOrEmpty(sTimeZone)) {
+        if(!Utility.isNullOrEmpty(sTimeZone) && !Constants.DEFAULT_TIMEZONE.equalsIgnoreCase(sTimeZone)) {
             Constants.TIME_ZONE  timeZones = Constants.TIME_ZONE.valueOf(sTimeZone);
             dateTimeZone = DateTimeZone.forID(timeZones.getJavaTimeZone()).toTimeZone();
         }

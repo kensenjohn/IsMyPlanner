@@ -10,6 +10,7 @@ import com.events.common.Constants;
  * To change this template use File | Settings | File Templates.
  */
 public class PasswordRequestBean {
+    private String emailAddress = Constants.EMPTY;
     private String passwordId = Constants.EMPTY;
     private String password = Constants.EMPTY;
     private String hashedPassword = Constants.EMPTY;
@@ -56,12 +57,24 @@ public class PasswordRequestBean {
         this.passwordStatus = passwordStatus;
     }
 
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
     @Override
     public String toString() {
-        return "PasswordRequestBean{" +
-                "password=xxxxxxxx'"  + '\'' +
-                ", hashedPassword=xxxxxxxx'"  + '\'' +
-                ", userid='" + userId + '\'' +
-                '}';
+        final StringBuilder sb = new StringBuilder("PasswordRequestBean{");
+        sb.append("emailAddress='").append(emailAddress).append('\'');
+        sb.append(", passwordId='").append(passwordId).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", hashedPassword='").append(hashedPassword).append('\'');
+        sb.append(", userId='").append(userId).append('\'');
+        sb.append(", passwordStatus=").append(passwordStatus);
+        sb.append('}');
+        return sb.toString();
     }
 }

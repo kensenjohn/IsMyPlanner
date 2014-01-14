@@ -28,7 +28,7 @@
                         }
                 %>
                         <li><a href="/com/events/common/credentials.jsp">Hi <%=sName%></a></li>
-                        <li><a href="/com/events/common/credentials.jsp">Logout</a></li>
+                        <li><a href="/com/events/common/logout.jsp">Logout</a></li>
                 <%
                     } else {
                 %>
