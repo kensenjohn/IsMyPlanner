@@ -11,9 +11,12 @@ import com.events.common.Constants;
  * To change this template use File | Settings | File Templates.
  */
 public class EventEmailRequestBean {
+    public enum ACTION {
+        ONLY_SAVE_SETTING,SCHEDULE_ENABLED;
+    }
+
     private EventEmailBean eventEmailBean = new EventEmailBean();
     private DateObject eventEmailScheduleDate = new DateObject();
-    private boolean isSendEmailNow = false;
     private Constants.SEND_EMAIL_RULES sendEmailRules = Constants.SEND_EMAIL_RULES.NO_RULE_SELECTED;
     private String eventEmailId = Constants.EMPTY;
     private String eventId = Constants.EMPTY;
@@ -22,6 +25,16 @@ public class EventEmailRequestBean {
     private String emailSendTime = Constants.EMPTY;
     private String emailSendTimeZone = Constants.EMPTY;
 
+    private  ACTION userAction = ACTION.ONLY_SAVE_SETTING;
+
+
+    public ACTION getUserAction() {
+        return userAction;
+    }
+
+    public void setUserAction(ACTION userAction) {
+        this.userAction = userAction;
+    }
 
     public String getEmailSendDay() {
         return emailSendDay;
@@ -63,14 +76,6 @@ public class EventEmailRequestBean {
         this.eventEmailScheduleDate = eventEmailScheduleDate;
     }
 
-    public boolean isSendEmailNow() {
-        return isSendEmailNow;
-    }
-
-    public void setSendEmailNow(boolean sendEmailNow) {
-        isSendEmailNow = sendEmailNow;
-    }
-
     public Constants.SEND_EMAIL_RULES getSendEmailRules() {
         return sendEmailRules;
     }
@@ -100,7 +105,6 @@ public class EventEmailRequestBean {
         final StringBuilder sb = new StringBuilder("EventEmailRequestBean{");
         sb.append("eventEmailBean=").append(eventEmailBean);
         sb.append(", eventEmailScheduleDate=").append(eventEmailScheduleDate);
-        sb.append(", isSendEmailNow=").append(isSendEmailNow);
         sb.append(", sendEmailRules=").append(sendEmailRules);
         sb.append(", eventEmailId='").append(eventEmailId).append('\'');
         sb.append(", eventId='").append(eventId).append('\'');

@@ -2,6 +2,8 @@ package com.events.bean.vendors;
 
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -17,6 +19,7 @@ public class VendorBean {
     // MODIFIEDDATE BIGINT(20) NOT NULL DEFAULT 0, HUMANMODIFIEDDATE VARCHAR(45) , DEL_ROW INT(1) NOT NULL DEFAULT 0,
     private String vendorId = Constants.EMPTY;
     private String vendorName = "Hey!! I Am New!!";
+    private String folder = Constants.EMPTY;
     private Long createDate = 0L;
     private String humanCreateDate = Constants.EMPTY;
     private Long modifiedDate = 0L;
@@ -30,6 +33,7 @@ public class VendorBean {
         this.humanCreateDate = ParseUtil.checkNull(hmVendorRes.get("HUMANCREATEDATE"));
         this.modifiedDate = ParseUtil.sToL(hmVendorRes.get("MODIFIEDDATE"));
         this.humanModifiedDate = ParseUtil.checkNull(hmVendorRes.get("HUMANMODIFIEDDATE"));
+        this.folder = ParseUtil.checkNull(hmVendorRes.get("FOLDER"));
     }
 
     public String getVendorId() {
@@ -80,15 +84,38 @@ public class VendorBean {
         this.humanModifiedDate = humanModifiedDate;
     }
 
+    public String getFolder() {
+        return folder;
+    }
+
+    public void setFolder(String folder) {
+        this.folder = folder;
+    }
+
     @Override
     public String toString() {
-        return "VendorBean{" +
-                "vendorId='" + vendorId + '\'' +
-                ", vendorName='" + vendorName + '\'' +
-                ", createDate=" + createDate +
-                ", humanCreateDate='" + humanCreateDate + '\'' +
-                ", modifiedDate=" + modifiedDate +
-                ", humanModifiedDate='" + humanModifiedDate + '\'' +
-                '}';
+        final StringBuilder sb = new StringBuilder("VendorBean{");
+        sb.append("vendorId='").append(vendorId).append('\'');
+        sb.append(", vendorName='").append(vendorName).append('\'');
+        sb.append(", folder='").append(folder).append('\'');
+        sb.append(", createDate=").append(createDate);
+        sb.append(", humanCreateDate='").append(humanCreateDate).append('\'');
+        sb.append(", modifiedDate=").append(modifiedDate);
+        sb.append(", humanModifiedDate='").append(humanModifiedDate).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public JSONObject toJson() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("vendor_id", this.vendorId );
+            jsonObject.put("vendor_name", this.vendorName );
+            jsonObject.put("folder", this.folder );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }

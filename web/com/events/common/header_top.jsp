@@ -12,7 +12,6 @@
     <meta name="author" content="Smarasoft Inc" />
 
     <link rel="icon"  type="image/png" href="/img/favicon.png">
-    <link type="text/css" rel="stylesheet" href="/css/style.css" />
         <%
     Configuration appConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     String sProductName = com.events.common.ParseUtil.checkNull( appConfig.get("product_name")) +" " ;

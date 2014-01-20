@@ -4,6 +4,8 @@ event_host_db=eventhost
 copyright_year=2013
 copyright_company=Smarasoft Inc
 file_upload_location=/usr/uploadloc
+image_upload_location=/usr/uploadloc/images/
+image_host=http://localhost:9000
 
 amazon.access_key=
 amazon.secret_key=

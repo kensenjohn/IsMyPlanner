@@ -1,6 +1,6 @@
 package com.events.data.email;
 
-import com.events.bean.common.email.EmailScheduleBean;
+import com.events.bean.common.email.EmailSchedulerBean;
 import com.events.bean.common.email.EventEmailBean;
 import com.events.bean.common.email.EventEmailRequestBean;
 import com.events.bean.common.email.EveryEventEmailRequestBean;
@@ -61,10 +61,9 @@ public class EventEmailData {
 
     public EventEmailBean getEventEmail(EventEmailRequestBean eventEmailRequestBean) {
         EventEmailBean eventEmailBean = new EventEmailBean();
-        if(eventEmailRequestBean!=null && !Utility.isNullOrEmpty(eventEmailRequestBean.getEventId())){
+        if(eventEmailRequestBean!=null && !Utility.isNullOrEmpty(eventEmailRequestBean.getEventEmailId())){
             String sQuery = "SELECT * FROM GTEVENTEMAIL WHERE EVENTEMAILID = ? AND DEL_ROW = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint(eventEmailRequestBean.getEventEmailId(), "0");
-
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(  EVENTADMIN_DB , sQuery, aParams, true, sourceFile, "getEventEmail()");
             if(arrResult!=null && !arrResult.isEmpty() ) {
                 for( HashMap<String, String> hmResult : arrResult ) {
@@ -80,7 +79,6 @@ public class EventEmailData {
         if(everyEventEmailRequestBean!=null && !Utility.isNullOrEmpty(everyEventEmailRequestBean.getEventId())){
             String sQuery = "SELECT * FROM GTEVENTEMAIL WHERE FK_EVENTID = ? AND DEL_ROW = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint(everyEventEmailRequestBean.getEventId(), "0");
-            appLogging.debug("Query : " + sQuery + " aPArams : "+ aParams);
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(  EVENTADMIN_DB , sQuery, aParams, true, sourceFile, "getAllEventEmails()");
             if(arrResult!=null && !arrResult.isEmpty() ) {
                 for( HashMap<String, String> hmResult : arrResult ) {

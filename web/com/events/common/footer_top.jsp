@@ -18,7 +18,6 @@
     }
     function displayMssgBoxAlert(varMessage, isError) {
         var varTitle = 'Status';
-        var varType = 'info';
         if(isError) {
             varTitle = 'Error';
             varType = 'error';

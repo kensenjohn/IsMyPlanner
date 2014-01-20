@@ -29,7 +29,6 @@ public class EmailSenderThread implements Runnable {
                 MailSender mailSender = new AmazonEmailSend();
                 MailSenderService mailingService = new MailSenderService(mailSender);
                 mailingService.invokeMailSender();
-                schedulerLogging.info("Invoking single mail complete");
             }
         } catch (Exception e) {
             schedulerLogging.error("Error while invoking the mailman service " + ExceptionHandler.getStackTrace(e));

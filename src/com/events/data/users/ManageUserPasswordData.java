@@ -64,7 +64,6 @@ public class ManageUserPasswordData {
 
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "ManageUserPasswordData.java", "getPassword()");
 
-            appLogging.error("sQuery :  " + sQuery + " aParams : " + aParams + " arrResult : " + arrResult);
             if(arrResult!=null) {
                 for(HashMap<String, String> hmResult : arrResult ) {
                     passwordBean = new PasswordBean(hmResult);

@@ -97,7 +97,10 @@ public class BuildEvent {
         EventResponseBean eventResponseBean =  new EventResponseBean();
         if(eventRequestBean!=null){
             BuildEventData buildEventData = new BuildEventData();
-            buildEventData.updateEvent(eventRequestBean);
+            Integer iNumOfRows = buildEventData.updateEvent(eventRequestBean);
+            if(iNumOfRows>0) {
+                eventResponseBean.setEventId( eventRequestBean.getEventId() );
+            }
         }
         return eventResponseBean;
     }

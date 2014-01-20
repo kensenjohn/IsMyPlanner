@@ -25,4 +25,13 @@ public class AccessVendors {
         }
         return vendorBean;
     }
+
+    public VendorBean getVendor(VendorRequestBean vendorRequestBean) {
+        VendorBean vendorBean = new VendorBean();
+        if(vendorRequestBean!=null && !"".equalsIgnoreCase(vendorRequestBean.getVendorId()) ) {
+            AccessVendorData accessVendorData = new AccessVendorData();
+            vendorBean = accessVendorData.getVendor(vendorRequestBean);
+        }
+        return vendorBean;
+    }
 }

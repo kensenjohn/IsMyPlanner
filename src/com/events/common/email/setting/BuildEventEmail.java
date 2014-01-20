@@ -34,15 +34,16 @@ public class BuildEventEmail {
                 sendEmailRuleFeatureBean.setFeatureType(Constants.EventEmailFeatureType.send_email_rule );
                 sendEmailRuleFeatureBean.setValue( eventEmailRequestBean.getSendEmailRules().getRule());
 
-                EventEmailFeatureBean emailStatusFeatureBean = new EventEmailFeatureBean();
-                emailStatusFeatureBean.setEventEmailId(eventEmailBean.getEventEmailId());
-                emailStatusFeatureBean.setFeatureType(Constants.EventEmailFeatureType.email_send_status );
-                emailStatusFeatureBean.setValue( "Scheduled");
-
                 EventEmailFeature eventEmailFeature = new EventEmailFeature();
                 Integer iNumOfSendRuleRow = eventEmailFeature.setFeatureValue(sendEmailRuleFeatureBean);
-                eventEmailFeature.setFeatureValue(emailStatusFeatureBean);
 
+                if(eventEmailRequestBean!=null) {
+                    EventEmailFeatureBean userActionFeatureBean = new EventEmailFeatureBean();
+                    userActionFeatureBean.setEventEmailId(eventEmailBean.getEventEmailId());
+                    userActionFeatureBean.setFeatureType(Constants.EventEmailFeatureType.action );
+                    userActionFeatureBean.setValue( eventEmailRequestBean.getUserAction().toString() );
+                    eventEmailFeature.setFeatureValue( userActionFeatureBean );
+                }
 
                 if(!Utility.isNullOrEmpty(eventEmailRequestBean.getEmailSendDay())) {
                     EventEmailFeatureBean emailSendDayFeatureBean = new EventEmailFeatureBean();

@@ -26,13 +26,11 @@ public class MailSenderService {
     }
 
     public void invokeMailSender() {
-        emailerLogging.debug("Start execution of mail send service.");
         ArrayList<EmailQueueBean> arrEmailQueueBean = getAllNewEmails();
         if (arrEmailQueueBean != null && !arrEmailQueueBean.isEmpty()) {
             emailerLogging.debug("Number of emails " + arrEmailQueueBean.size());
             for (EmailQueueBean emailQueueBean : arrEmailQueueBean) {
-                emailerLogging.debug("EmailQueueBean going to email : "
-                        + emailQueueBean);
+                emailerLogging.debug("EmailQueueBean going to email : " + emailQueueBean);
                 Integer iNumOfRecs = setEmailStatus(emailQueueBean,
                         Constants.EMAIL_STATUS.PICKED_TO_SEND);
                 emailerLogging.debug("Picked to send records : " + iNumOfRecs);

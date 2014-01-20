@@ -124,23 +124,23 @@ public class DateSupport {
         return afterMinus.getMillis();
     }
 
-    public static Long subtractTime(Long epochDate, Integer iNumOfTimeUnits, Constants.TIME_UNIT timeUnit )
+    public static Long subtractTime(Long epochDate, int iNumOfTimeUnits, Constants.TIME_UNIT timeUnit )
     {
         // DateTime srcTime = new DateTime(epochDate);
-        DateTime afterAddition = new DateTime(epochDate);
-        if(Constants.TIME_UNIT.SECONDS.equals(timeUnit))
-        {
-            afterAddition = afterAddition.minusSeconds( iNumOfTimeUnits );
+        DateTime srcTime = new DateTime(epochDate);
+        Long lAfterSubstractionTime = srcTime.getMillis();
+
+        if(Constants.TIME_UNIT.SECONDS.equals(timeUnit)) {
+            DateTime afterSubtraction = srcTime.minusSeconds( iNumOfTimeUnits );
+            lAfterSubstractionTime =  afterSubtraction.getMillis();
+        } else if( Constants.TIME_UNIT.MINUTES.equals(timeUnit) ) {
+            DateTime afterSubtraction = srcTime.minusMinutes( iNumOfTimeUnits );
+            lAfterSubstractionTime =  afterSubtraction.getMillis();
+        } else if( Constants.TIME_UNIT.HOURS.equals(timeUnit) ) {
+            DateTime afterSubtraction = srcTime.minusHours( iNumOfTimeUnits );
+            lAfterSubstractionTime =  afterSubtraction.getMillis();
         }
-        else if( Constants.TIME_UNIT.MINUTES.equals(timeUnit) )
-        {
-            afterAddition = afterAddition.minusMinutes( iNumOfTimeUnits );
-        }
-        else if( Constants.TIME_UNIT.HOURS.equals(timeUnit) )
-        {
-            afterAddition = afterAddition.minusHours( iNumOfTimeUnits );
-        }
-        return afterAddition.getMillis();
+        return lAfterSubstractionTime;
     }
 
     public static Long addTime(Long epochDate, Integer iNumOfTimeUnits, Constants.TIME_UNIT timeUnit )

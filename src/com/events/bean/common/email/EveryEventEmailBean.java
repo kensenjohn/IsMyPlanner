@@ -17,7 +17,7 @@ public class EveryEventEmailBean {
     private String name = Constants.EMPTY;
     private String sendDate = Constants.EMPTY;
     private String sendRule = Constants.EMPTY;
-    private String status = Constants.EMPTY;
+    private String status = "NA";
 
     public String getEventId() {
         return eventId;

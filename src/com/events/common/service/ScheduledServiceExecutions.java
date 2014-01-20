@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class ScheduledServiceExecutions implements ServletContextListener {
     Configuration configSchedulerProc = Configuration.getInstance(Constants.SCHEDULER_PROCESS_PROP);
     private static final Logger schedulerLogging = LoggerFactory.getLogger(Constants.SCHEDULER_LOGS);
+    private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
 
     private ScheduledExecutorService emailSenderThread;
@@ -50,6 +51,14 @@ public class ScheduledServiceExecutions implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (emailSenderThread != null) {
+            emailSenderThread.shutdownNow();
+            schedulerLogging.info("emailSenderThread  : shut down ");
+        }
+
+        if(emailCreatorThread!=null) {
+            emailCreatorThread.shutdownNow();
+            schedulerLogging.info("emailCreatorThread  : shut down ");
+        }
     }
 }

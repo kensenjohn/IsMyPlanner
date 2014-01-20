@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -26,11 +28,13 @@ public class DataSecureFilter implements Filter {
     private Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
     private DataSecurityRequestBean dataSecurityRequestBean = new DataSecurityRequestBean();
+    private HashMap<String,String> hmNonFilterParam = new HashMap<String, String>();
 
     @Override
     public void destroy() {
         appLogging.info("Killing the Security Filter");
         dataSecurityRequestBean = null;
+        hmNonFilterParam = null;
 
     }
 
@@ -47,16 +51,22 @@ public class DataSecureFilter implements Filter {
                     }
                     if( dataSecurityRequestBean.isFilterEnabled() ) {
                         for( Map.Entry<String,String[]> mapRequestParams : reqParams.entrySet() ) {
-                            String[] sRequestValueArray = mapRequestParams.getValue();
-                            if( sRequestValueArray!=null && sRequestValueArray.length > 0) {
-                                for( String sInputData : sRequestValueArray ) {
-                                    isUnsafeParametersDetected = DataSecurityChecker.isStringSafe(sInputData,dataSecurityRequestBean);
-                                    if(isUnsafeParametersDetected) {
-                                        break;
+                            if( !mapRequestParams.getKey().equalsIgnoreCase( hmNonFilterParam.get(mapRequestParams.getKey()) )) {
+                                String[] sRequestValueArray = mapRequestParams.getValue();
+                                if( sRequestValueArray!=null && sRequestValueArray.length > 0) {
+                                    for( String sInputData : sRequestValueArray ) {
+                                        isUnsafeParametersDetected = DataSecurityChecker.isStringSafe(sInputData,dataSecurityRequestBean);
+                                        if(isUnsafeParametersDetected) {
+                                            break;
+                                        }
                                     }
+                                } else {
+                                    appLogging.info("Request value array is empty");
                                 }
-                            } else {
-                                appLogging.info("Request balue array is empty");
+                            }
+
+                            if(isUnsafeParametersDetected) {
+                                break;
                             }
                         }
                     } else {
@@ -93,7 +103,14 @@ public class DataSecureFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
         servletContext = filterConfig.getServletContext();
         appLogging.info("Initializing the DataSecurityRequestBean");
+        hmNonFilterParam = new HashMap<String, String>();
         try {
+            Enumeration<String> initParam = filterConfig.getInitParameterNames();
+
+            while (initParam.hasMoreElements()) {
+                String sParamKey = initParam.nextElement();
+                hmNonFilterParam.put(sParamKey, filterConfig.getInitParameter(sParamKey));
+            }
             dataSecurityRequestBean = DataSecurityChecker.bootstrapDataSecurityRequestBean();
             appLogging.info("After Bootstrapping : " + dataSecurityRequestBean);
         } catch (PropertyFileException e) {

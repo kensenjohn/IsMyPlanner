@@ -4,7 +4,7 @@ import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.email.creator.EmailCreator;
-import com.events.common.email.creator.EmailCreatorService;
+import com.events.common.email.creator.EmailCreatorBaseService;
 import com.events.common.email.creator.MailCreator;
 import com.events.common.exception.ExceptionHandler;
 import org.slf4j.Logger;
@@ -25,15 +25,11 @@ public class EmailCreatorThread implements Runnable {
     public void run() {
         try {
             boolean isEmailCreatorEnabled = ParseUtil.sTob(emailerConfig.get(Constants.PROP_ENABLE_EMAIL_CREATOR_THREAD));
-            if(isEmailCreatorEnabled)
-            {
+            if(isEmailCreatorEnabled) {
                 MailCreator emailCreator = new EmailCreator();
-                EmailCreatorService emailCreatorService = new EmailCreatorService( emailCreator );
+                EmailCreatorBaseService emailCreatorService = new EmailCreatorBaseService( emailCreator );
                 emailCreatorService.invokeEmailCreator();
-                schedulerLogging.info("Invoking email creator complete");
-            }
-            else
-            {
+            } else {
                 schedulerLogging.info("Email creator not enabled");
             }
         } catch (Exception e) {

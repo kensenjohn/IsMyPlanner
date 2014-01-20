@@ -32,7 +32,6 @@ public class AmazonEmailSend implements MailSender {
     private final String AMAZON_ACCESS_SECRET = applicationConfig.get(Constants.AMAZON.SECRET_KEY.getPropName());
 
     public AmazonEmailSend() {
-        emailerLogging.info("Amazon email send");
     }
 
     @Override

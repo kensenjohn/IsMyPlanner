@@ -200,7 +200,6 @@
         objEveryEventEmailTable =  $('#every_event_email_table').dataTable({
             "bPaginate": false,
             "bInfo": false,
-
             "aoColumns": [
                 null,
                 null,

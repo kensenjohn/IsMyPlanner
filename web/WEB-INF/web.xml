@@ -4,20 +4,13 @@
            xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
            version="2.5">
+    <listener>
+        <listener-class>
+            com.events.common.service.ScheduledServiceExecutions
+        </listener-class>
+    </listener>
 
-    <servlet>
-        <servlet-name>ConnectorServlet</servlet-name>
-        <servlet-class>
-            net.fckeditor.connector.ConnectorServlet
-        </servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ConnectorServlet</servlet-name>
-        <url-pattern>
-            /fckeditor/editor/filemanager/connectors/*
-        </url-pattern>
-    </servlet-mapping>
+
     <servlet>
         <servlet-name>Process Login</servlet-name>
         <servlet-class>com.events.proc.users.ProcLogin</servlet-class>
@@ -133,6 +126,14 @@
         <servlet-name>Process Upload Excel</servlet-name>
         <url-pattern>/proc_upload_excel.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Upload Image</servlet-name>
+        <servlet-class>com.events.proc.upload.ProcUploadImage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Upload Image</servlet-name>
+        <url-pattern>/proc_upload_image.aeve</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>Process Send Reset Password Link</servlet-name>
@@ -183,6 +184,14 @@
         <servlet-name>Process Load Email</servlet-name>
         <url-pattern>/proc_load_eventemail.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Send Test Email</servlet-name>
+        <servlet-class>com.events.proc.email.ProcSendTestEmail</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Send Test Email</servlet-name>
+        <url-pattern>/proc_send_test_eventemail.aeve</url-pattern>
+    </servlet-mapping>
 
 
     <servlet>
@@ -204,9 +213,39 @@
     </servlet-mapping>
 
 
+    <servlet>
+        <servlet-name>Process Save Vendor Landing Page Manager</servlet-name>
+        <servlet-class>com.events.proc.vendors.ProcSaveVendorLandingPage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Vendor Landing Page Manager</servlet-name>
+        <url-pattern>/proc_save_vendor_landingpage_manager.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Vendor Landing Page Manager</servlet-name>
+        <servlet-class>com.events.proc.vendors.ProcLoadVendorLandingPage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Vendor Landing Page Manager</servlet-name>
+        <url-pattern>/proc_load_vendor_landingpage_manager.aeve</url-pattern>
+    </servlet-mapping>
+
+
     <filter>
         <filter-name>Data Secure Filter</filter-name>
         <filter-class>com.events.common.security.DataSecureFilter</filter-class>
+        <init-param>
+            <param-name>email_body</param-name>
+            <param-value>email_body</param-value>
+        </init-param>
+        <init-param>
+            <param-name>landingPage_facebook</param-name>
+            <param-value>landingPage_facebook</param-value>
+        </init-param>
+        <init-param>
+            <param-name>landingPage_pinterest</param-name>
+            <param-value>landingPage_pinterest</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>Data Secure Filter</filter-name>

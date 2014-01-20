@@ -79,9 +79,6 @@ public class EmailSchedulerData {
                 sQuery = sQuery + " AND SCHEDULEDSENDDATE = ? ";
                 aParams.add(lStartTime);
             }
-
-
-
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, true, sourceFile, "getArrEmailSchedule()");
             if(arrResult!=null && !arrResult.isEmpty() ) {
                 for( HashMap<String, String> hmResult : arrResult ) {
@@ -99,7 +96,7 @@ public class EmailSchedulerData {
         Integer iNumberOfRows = 0;
         if(emailRequestSchedulerBean!=null) {
             String sQuery = "UPDATE GTEMAILSCHEDULE SET SCHEDULEDSENDDATE = ? , HUMANSCHEDULEDSENDDATE = ? , SCHEDULE_STATUS = ? , " +
-                    "  FK_EMAILTEMPLATEID = ? WHERE EMAILSCHEDULEID = ? AND FK_EVENTID = ? AND FK_ADMINID = ?";
+                    "  FK_EVENTEMAILID = ? WHERE EMAILSCHEDULEID = ? AND FK_EVENTID = ? AND FK_USERID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint( emailRequestSchedulerBean.getScheduledSendDate(), emailRequestSchedulerBean.getHumanScheduledSendDate() ,
                     emailRequestSchedulerBean.getScheduleStatus(), emailRequestSchedulerBean.getEventEmailId(), emailRequestSchedulerBean.getEmailScheduleId(),
                     emailRequestSchedulerBean.getEventId() , emailRequestSchedulerBean.getUserId() );

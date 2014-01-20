@@ -73,8 +73,10 @@ public class ProcLoadAllEventEmails extends HttpServlet {
                 }
 
             } else {
-                appLogging.info("Insecure Parameters used in this Proc Page " + Utility.dumpRequestParameters(request).toString() );
-                responseObject = DataSecurityChecker.getInsecureInputResponse( this.getClass().getName() );
+                appLogging.info("Insecure Parameters used in this Proc Page " + Utility.dumpRequestParameters(request).toString()  + " --> " + this.getClass().getName());
+                Text errorText = new ErrorText("Please use valid parameters. We have identified insecure parameters in your form.","account_num") ;
+                arrErrorText.add(errorText);
+                responseStatus = RespConstants.Status.ERROR;
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );

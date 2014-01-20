@@ -37,7 +37,15 @@ public class BuildEventData {
     }
 
     public Integer updateEvent(EventRequestBean eventRequestBean) {
-        return 0;
+        Integer numOfRowsInserted = 0;
+        if(eventRequestBean!=null) {
+            String sQuery = "UPDATE GTEVENT SET EVENTNAME = ?, EVENTDATE = ?,HUMANEVENTDATE= ?,     FK_CLIENTID = ?   WHERE   EVENTID=? ";
+            ArrayList<Object> aParams = DBDAO.createConstraint( eventRequestBean.getEventName(),
+                    eventRequestBean.getEventDate(),eventRequestBean.getEventHumanDate(),eventRequestBean.getEventClient(),
+                    eventRequestBean.getEventId() );
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildClientData.java", "updateEvent() ");
+        }
+        return numOfRowsInserted;
     }
 
     public Integer toggleEventDelete(EventRequestBean eventRequestBean) {

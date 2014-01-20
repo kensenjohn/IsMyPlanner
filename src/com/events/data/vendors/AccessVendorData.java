@@ -40,4 +40,21 @@ public class AccessVendorData {
         }
         return vendorBean;
     }
+
+    public VendorBean getVendor(VendorRequestBean vendorRequestBean) {
+        VendorBean vendorBean = new VendorBean();
+
+        if(vendorRequestBean!=null) {
+            String sQuery  = "SELECT * FROM  GTVENDOR V WHERE V.VENDORID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(vendorRequestBean.getVendorId() );
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessVendorData.java", "getVendor()");
+            if(arrResult!=null) {
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    vendorBean = new VendorBean(hmResult);
+                }
+            }
+        }
+        return vendorBean;
+    }
 }

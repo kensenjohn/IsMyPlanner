@@ -55,9 +55,6 @@ public class ProcSaveEmail extends HttpServlet {
                     String sEmailBody = ESAPI.encoder().decodeForHTML(ParseUtil.checkNull(request.getParameter("email_body")));
                     String sEmailSendRule = ParseUtil.checkNull(request.getParameter("email_send_rules"));
 
-
-                    boolean isSendEmailNow = ParseUtil.sTob(request.getParameter("send_email_now"));
-
                     boolean isEmailSendScheduleEnabled = ParseUtil.sTob(request.getParameter("email_schedule_enabled"));
                     String sEmailSendDay = ParseUtil.checkNull(request.getParameter("email_send_day"));
                     String sEmailSendTime = ParseUtil.checkNull(request.getParameter("email_send_time"));
@@ -97,11 +94,15 @@ public class ProcSaveEmail extends HttpServlet {
                         EventEmailRequestBean eventEmailRequestBean = new EventEmailRequestBean();
                         eventEmailRequestBean.setEventEmailBean(tmpEventEmailBean);
                         eventEmailRequestBean.setEventEmailScheduleDate(eventEmailScheduleDate);
-                        eventEmailRequestBean.setSendEmailNow(isSendEmailNow);
                         eventEmailRequestBean.setSendEmailRules( Constants.SEND_EMAIL_RULES.valueOf(sEmailSendRule));
                         eventEmailRequestBean.setEmailSendDay( sEmailSendDay );
                         eventEmailRequestBean.setEmailSendTime( sEmailSendTime);
                         eventEmailRequestBean.setEmailSendTimeZone( sEmailSendTimeZone );
+                        if(isEmailSendScheduleEnabled) {
+                            eventEmailRequestBean.setUserAction( EventEmailRequestBean.ACTION.SCHEDULE_ENABLED);
+                        } else {
+                            eventEmailRequestBean.setUserAction( EventEmailRequestBean.ACTION.ONLY_SAVE_SETTING);
+                        }
 
                         BuildEventEmail buildEventEmail = new BuildEventEmail();
                         EventEmailBean eventEmailBean = buildEventEmail.saveEventEmail(eventEmailRequestBean);
@@ -110,22 +111,14 @@ public class ProcSaveEmail extends HttpServlet {
 
                             EmailSchedulerRequestBean emailSchedulerRequestBean = new EmailSchedulerRequestBean();
                             emailSchedulerRequestBean.setEventEmailBean( eventEmailBean );
-                            if( isEmailSendScheduleEnabled || isSendEmailNow ) {
+                            if( isEmailSendScheduleEnabled) {
                                 emailSchedulerRequestBean.setScheduledSendDate( eventEmailScheduleDate.getMillis() );
                                 emailSchedulerRequestBean.setScheduledSendHumanDate(eventEmailScheduleDate.getFormattedTime());
                             }
 
-
-                            if(isSendEmailNow) {
-                                Long lSendNowTime = DateSupport.addTime( DateSupport.getEpochMillis(), 5, Constants.TIME_UNIT.MINUTES  );
-                                String sSendNowHumanTime = DateSupport.getTimeByZone(lSendNowTime, DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE).getID() , Constants.DATE_PATTERN_TZ);
-                                emailSchedulerRequestBean.setScheduledSendDate(lSendNowTime);
-                                emailSchedulerRequestBean.setScheduledSendHumanDate(sSendNowHumanTime);
-                            }
                             emailSchedulerRequestBean.setSchedulerStatus(Constants.SCHEDULER_STATUS.NEW_SCHEDULE);
 
-
-
+                            appLogging.info("Save Email Send Schedule :  " + emailSchedulerRequestBean.getScheduledSendHumanDate() + " by userid : " + loggedInUserBean.getUserId() );
                             BuildEmailScheduler buildEmailScheduler = new BuildEmailScheduler();
                             buildEmailScheduler.saveSchedule( emailSchedulerRequestBean );
 
@@ -150,8 +143,10 @@ public class ProcSaveEmail extends HttpServlet {
                 }
 
             } else {
-                appLogging.info("Insecure Parameters used in this Proc Page " + Utility.dumpRequestParameters(request).toString() );
-                responseObject = DataSecurityChecker.getInsecureInputResponse( this.getClass().getName() );
+                appLogging.info("Insecure Parameters used in this Proc Page " + Utility.dumpRequestParameters(request).toString()  + " --> " + this.getClass().getName());
+                Text errorText = new ErrorText("Please use valid parameters. We have identified insecure parameters in your form.","account_num") ;
+                arrErrorText.add(errorText);
+                responseStatus = RespConstants.Status.ERROR;
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );

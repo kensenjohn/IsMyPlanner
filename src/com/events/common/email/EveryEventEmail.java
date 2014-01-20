@@ -31,10 +31,12 @@ public class EveryEventEmail {
             ArrayList<EventEmailBean> arrEventEmailBean = eventEmailData.getAllEventEmails(everyEventEmailRequestBean);
             if(arrEventEmailBean!=null && !arrEventEmailBean.isEmpty()) {
                 HashMap<String,ArrayList<EventEmailFeatureBean> > hmEveryEventEmailFeatureBean = getFeatures( arrEventEmailBean );
+                HashMap<String,EmailSchedulerBean> hmEveryEmailSchdeulerBean =  getEmailSchedulerBean(arrEventEmailBean);
 
                 everyEventEmailResponseBean.setArrEventEmailBean(arrEventEmailBean);
                 everyEventEmailResponseBean.setNumOfEventEmails(arrEventEmailBean.size());
                 everyEventEmailResponseBean.setHmEveryEventEmailFeatureBean(hmEveryEventEmailFeatureBean);
+                everyEventEmailResponseBean.setHmEveryEmailSchdeulerBean(hmEveryEmailSchdeulerBean);
             }
         }
         return everyEventEmailResponseBean;
@@ -51,7 +53,6 @@ public class EveryEventEmail {
             arrEventEmailFeatureBean.add( accessEventEmail.getEventEmailFeatureTypeBean(Constants.EventEmailFeatureType.email_send_day) );
             arrEventEmailFeatureBean.add( accessEventEmail.getEventEmailFeatureTypeBean(Constants.EventEmailFeatureType.email_send_time) );
             arrEventEmailFeatureBean.add( accessEventEmail.getEventEmailFeatureTypeBean(Constants.EventEmailFeatureType.email_send_timezone) );
-            arrEventEmailFeatureBean.add( accessEventEmail.getEventEmailFeatureTypeBean(Constants.EventEmailFeatureType.email_send_status) );
             arrEventEmailFeatureBean.add( accessEventEmail.getEventEmailFeatureTypeBean(Constants.EventEmailFeatureType.action) );
 
             for(EventEmailBean eventEmailBean : arrEventEmailBean) {
@@ -67,6 +68,19 @@ public class EveryEventEmail {
         return hmEveryEventEmailFeatureBean;
     }
 
+    public HashMap<String,EmailSchedulerBean>  getEmailSchedulerBean(ArrayList<EventEmailBean> arrEventEmailBean) {
+        HashMap<String,EmailSchedulerBean> hmEveryEmailSchdeulerBean = new HashMap<String, EmailSchedulerBean>();
+        if(arrEventEmailBean!=null && !arrEventEmailBean.isEmpty()) {
+            AccessEventEmail accessEventEmail = new AccessEventEmail();
+            for(EventEmailBean eventEmailBean : arrEventEmailBean) {
+                EmailSchedulerBean emailSchedulerBean = accessEventEmail.getEventEmailSchedule(eventEmailBean);
+
+                hmEveryEmailSchdeulerBean.put(eventEmailBean.getEventEmailId(),emailSchedulerBean );
+            }
+        }
+        return hmEveryEmailSchdeulerBean;
+    }
+
     public JSONObject getEveryEventEmailJson(EveryEventEmailResponseBean everyEventEmailResponseBean) {
         JSONObject jsonEveryEventEmailObject = new JSONObject();
         if(everyEventEmailResponseBean!=null && everyEventEmailResponseBean.getNumOfEventEmails() >0 ){
@@ -74,6 +88,7 @@ public class EveryEventEmail {
             ArrayList<EventEmailBean> arrEventEmailBean = everyEventEmailResponseBean.getArrEventEmailBean();
             if(arrEventEmailBean!=null && !arrEventEmailBean.isEmpty()) {
                 HashMap<String,ArrayList<EventEmailFeatureBean> > hmEveryEventEmailFeatureBean = everyEventEmailResponseBean.getHmEveryEventEmailFeatureBean();
+                HashMap<String,EmailSchedulerBean> hmEveryEmailSchdeulerBean = everyEventEmailResponseBean.getHmEveryEmailSchdeulerBean();
                 Integer iTrackNumOfEventEmails = 0;
                 for(EventEmailBean eventEmailBean : arrEventEmailBean) {
                     EveryEventEmailBean everyEventEmailBean = new EveryEventEmailBean();
@@ -88,7 +103,6 @@ public class EveryEventEmail {
                             String sSendTime =  Constants.EMPTY;
                             String sSendTimeZone =  Constants.EMPTY;
                             String sSendRule =  Constants.EMPTY;
-                            String sStatus =  Constants.EMPTY;
                             for( EventEmailFeatureBean eventEmailFeatureBean : arrEventEmailFeatures )  {
 
                                 String sValue = ParseUtil.checkNull(eventEmailFeatureBean.getValue());
@@ -98,18 +112,20 @@ public class EveryEventEmail {
                                 } else if(Constants.EventEmailFeatureType.email_send_time.toString().equalsIgnoreCase(sFeatureName)) {
                                     sSendTime = sValue;
                                 } else if(Constants.EventEmailFeatureType.email_send_timezone.toString().equalsIgnoreCase(sFeatureName)) {
-                                    sSendTimeZone = sValue;
-                                } else if(Constants.EventEmailFeatureType.email_send_status.toString().equalsIgnoreCase(sFeatureName)) {
-                                    sStatus = sValue;
+                                    sSendTimeZone = Constants.TIME_ZONE.valueOf(sValue).getTimeZoneDisplay();
                                 } else if(Constants.EventEmailFeatureType.send_email_rule.toString().equalsIgnoreCase(sFeatureName)) {
-                                    sSendRule = sValue;
+                                    sSendRule = Constants.SEND_EMAIL_RULES.valueOf(sValue).getDescription();
                                 }
                             }
                             everyEventEmailBean.setSendDate(sSendDay + " " + sSendTime + " " + sSendTimeZone);
                             everyEventEmailBean.setSendRule(  sSendRule);
-                            everyEventEmailBean.setStatus( sStatus );
                         }
                     }
+                    EmailSchedulerBean emailSchedulerBean = hmEveryEmailSchdeulerBean.get(eventEmailBean.getEventEmailId());
+                    if(emailSchedulerBean!=null && !Utility.isNullOrEmpty(emailSchedulerBean.getEmailScheduleId()))  {
+                        everyEventEmailBean.setStatus( Constants.SCHEDULER_STATUS.valueOf( emailSchedulerBean.getScheduleStatus()).getDescription());
+                    }
+
                     jsonEveryEventEmailObject.put(iTrackNumOfEventEmails.toString(),everyEventEmailBean.toJson());
                     iTrackNumOfEventEmails++;
                 }

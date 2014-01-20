@@ -1,13 +1,11 @@
 package com.events.proc.email;
 
-import com.events.bean.common.email.EventEmailBean;
-import com.events.bean.common.email.EventEmailFeatureBean;
-import com.events.bean.common.email.EventEmailRequestBean;
-import com.events.bean.common.email.EventEmailResponseBean;
+import com.events.bean.common.email.*;
 import com.events.bean.users.UserBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
+import com.events.common.email.scheduler.AccessEmailScheduler;
 import com.events.common.email.setting.AccessEventEmail;
 import com.events.common.email.setting.EventEmailFeature;
 import com.events.common.exception.ExceptionHandler;
@@ -65,7 +63,6 @@ public class ProcLoadEmail extends HttpServlet {
                                 arrEventEmailFeatureBean.add( accessEventEmail.getEventEmailFeatureTypeBean(Constants.EventEmailFeatureType.email_send_day) );
                                 arrEventEmailFeatureBean.add( accessEventEmail.getEventEmailFeatureTypeBean(Constants.EventEmailFeatureType.email_send_time) );
                                 arrEventEmailFeatureBean.add( accessEventEmail.getEventEmailFeatureTypeBean(Constants.EventEmailFeatureType.email_send_timezone) );
-                                arrEventEmailFeatureBean.add( accessEventEmail.getEventEmailFeatureTypeBean(Constants.EventEmailFeatureType.email_send_status) );
                                 arrEventEmailFeatureBean.add( accessEventEmail.getEventEmailFeatureTypeBean(Constants.EventEmailFeatureType.action) );
 
 
@@ -76,6 +73,14 @@ public class ProcLoadEmail extends HttpServlet {
                                 if(arrMultipleFeatureBean!=null && !arrMultipleFeatureBean.isEmpty()) {
                                     for(EventEmailFeatureBean eventEmailFeatureBean : arrMultipleFeatureBean ){
                                         jsonResponseObj.put(eventEmailFeatureBean.getFeatureName(),eventEmailFeatureBean.getValue());
+                                    }
+                                }
+
+                                // Email Schedule
+                                {
+                                    EmailSchedulerBean emailSchedulerBean = accessEventEmail.getEventEmailSchedule( eventEmailBean );
+                                    if(emailSchedulerBean!=null && !Utility.isNullOrEmpty(emailSchedulerBean.getEmailScheduleId())) {
+                                        jsonResponseObj.put("schedule_status",emailSchedulerBean.getScheduleStatus());
                                     }
                                 }
 
@@ -112,8 +117,10 @@ public class ProcLoadEmail extends HttpServlet {
                 }
 
             } else {
-                appLogging.info("Insecure Parameters used in this Proc Page " + Utility.dumpRequestParameters(request).toString() );
-                responseObject = DataSecurityChecker.getInsecureInputResponse( this.getClass().getName() );
+                appLogging.info("Insecure Parameters used in this Proc Page " + Utility.dumpRequestParameters(request).toString()  + " --> " + this.getClass().getName());
+                Text errorText = new ErrorText("Please use valid parameters. We have identified insecure parameters in your form.","account_num") ;
+                arrErrorText.add(errorText);
+                responseStatus = RespConstants.Status.ERROR;
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );

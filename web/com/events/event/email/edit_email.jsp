@@ -1,9 +1,7 @@
 <%@ page import="com.events.common.ParseUtil" %>
-<%@ page import="net.fckeditor.FCKeditor" %>
 <%@ page import="com.events.common.Utility" %>
 <%@ page import="com.events.common.Constants" %>
 <%@ page import="org.owasp.esapi.ESAPI" %>
-<%@ taglib uri="http://java.fckeditor.net" prefix="FCK" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -96,16 +94,7 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-9">
-                                    <label class="form_label">Body</label><span class="required"> *</span>
-                                    <%
-                                        FCKeditor fckEditor = new FCKeditor(request, "email_body");
-                                        fckEditor.setBasePath ("/com/events/common/fckeditor");
-                                        fckEditor.setToolbarSet("SmarasoftDefault");
-                                        fckEditor.setConfig("SkinPath","/com/events/common/fckeditor/editor/skins/silver/");
-                                        //fckEditor.setValue("This is some <strong>sample text</strong>. You are using <a href=\"http://www.fckeditor.net\">FCKeditor</a>.");
-                                        fckEditor.setValue( " New Email ");
-                                        out.println(fckEditor);
-                                    %>
+                                    <textarea id="email_body" name="email_body"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -161,8 +150,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row">
-                                        <div class="col-md-2">
-                                            Send Email on
+                                        <div class="col-md-4">
+                                            <span id="email_schedule_txt">Send Email on </span>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -216,11 +205,6 @@
                             <span class="glyphicon glyphicon-calendar">&nbsp;</span> <span id="txtEmailScheduleButton">Schedule a Time to Send</span>
                         </button>
                     </div>
-                    <div class="col-md-2">
-                        <button  type="button" class="btn  btn-default" id="btn_send_now">
-                            <span><span class="glyphicon glyphicon-send"></span> Send Now</span>
-                        </button>
-                    </div>
                 </div>
             </div>
             <div class="row">
@@ -249,6 +233,8 @@
                         </button>
                     </div>
                 </div>
+                <input type="hidden" name="event_email_id" value="">
+                <input type="hidden" name="event_id" value="<%=ESAPI.encoder().encodeForHTML(sEventId)%>"/>
             </form>
         </div>
     </div>
@@ -263,16 +249,28 @@
 <script src="/js/datepicker/picker.date.js"></script>
 <script src="/js/datepicker/picker.time.js"></script>
 <script src="/js/datepicker/legacy.js"></script>
+<script src="/js/tinymce/tinymce.min.js"></script>
 <script src="/js/event/event_info.js"></script>
 <script type="text/javascript">
     var varEventId = '<%=sEventId%>';
     var varEventEmailId = '<%=sEventEmailId%>';
     var createNewEmail = <%=isCreateNewEmail%>;
+
+    tinymce.init({
+        selector: "#email_body",
+        theme: "modern",
+        plugins: [
+            "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+            "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+            "save table contextmenu directionality emoticons template paste textcolor uploadimage"
+        ]
+    });
+
     $(window).load(function() {
         $('#emailDay').pickadate()
         $('#emailTime').pickatime({
             // Time intervals
-            interval: 15,
+            interval: 5,
             // Minimum and Max time to be shown
             min: [6,00],
             max: [23,59]
@@ -286,7 +284,7 @@
             }else{
                 $('#email_schedule_enabled').val('false');
                 $('#emailSchedule').hide("slow");
-                $("#txtEmailScheduleButton").text("Send In The Future");
+                $("#txtEmailScheduleButton").text("Schedule a Time to Send");
             }
         });
         $( "input[name='email_send_rules']").click( function(){
@@ -299,9 +297,40 @@
 
         $('#btn_save_email').click( function(){
             $('#send_email_now').val(false);
+            tinyMCE.triggerSave();
             saveEmail(processSaveEmailResult);
         });
+        if(createNewEmail == false && varEventEmailId!='') {
+            loadEventEmailInfo(populateEventEmailInfo,varEventId, varEventEmailId);
+        }
+
+        $('#btn_send_test_email').click(function(){
+            sendTestEmail( getResult);
+        });
     });
+
+    function sendTestEmail(callbackmethod, varEventId, varEventEmailId ) {
+        var actionUrl = "/proc_send_test_eventemail.aeve";
+        var methodType = "POST";
+        var dataString = $('#frm_test_email').serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+
+    function getResult(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                displayMssgBoxAlert('The test email will be sent out in the next few minutes.', false);
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
+    }
+
     function loadEventEmailInfo(callbackmethod, varEventId, varEventEmailId ) {
         var actionUrl = "/proc_load_eventemail.aeve";
         var methodType = "POST";
@@ -323,16 +352,32 @@
                     var varEventEmailBean = jsonResponseObj.event_email_bean;
                     if(varEventEmailBean!=undefined) {
 
+                        $('#frm_test_email input[name=event_email_id]').val(varEventEmailBean.event_email_id); // to send test emails
+
                         $('#event_email_id').val(varEventEmailBean.event_email_id);
                         $('#emailSubject').val(varEventEmailBean.email_subject);
                         $('#emailFrom').val(varEventEmailBean.from_address_email);
 
-                        var fckEmailEditor = FCKeditorAPI.GetInstance('email_body') ;
-                        fckEmailEditor.SetHTML( varEventEmailBean.html_body );
+                        tinyMCE.activeEditor.setContent(varEventEmailBean.html_body )
                         $('#emailDay').val(jsonResponseObj.email_send_day);
                         $('#emailTime').val(jsonResponseObj.email_send_time);
                         $('#eventTimeZone').val(jsonResponseObj.email_send_timezone);
                         $('input[value='+jsonResponseObj.send_email_rule+']').prop("checked",true);
+
+                        if( jsonResponseObj.action  == 'SCHEDULE_ENABLED' ) {
+                            $('#email_schedule_enabled').val('true');
+                            $('#emailSchedule').show();
+                            $("#txtEmailScheduleButton").text("Remove Schedule");
+                        } else {
+                            $('#email_schedule_enabled').val('false');
+                            $('#emailSchedule').hide();
+                            $("#txtEmailScheduleButton").text("Schedule a Time to Send");
+                        }
+
+                        if( jsonResponseObj.schedule_status  == 'COMPLETE'  ) {
+                            $('#email_schedule_txt').text('Email was Sent on');
+                        }
+
                     }
                 }
             } else {
@@ -343,17 +388,9 @@
         }
     }
 
-    function FCKeditor_OnComplete( editorInstance ) {
-        if(createNewEmail == false && varEventEmailId!='') {
-            loadEventEmailInfo(populateEventEmailInfo,varEventId, varEventEmailId);
-        }
-    }
-
     function saveEmail( callbackmethod) {
         var actionUrl = "/proc_save_email.aeve";
         var methodType = "POST";
-        var oEditor = FCKeditorAPI.GetInstance('email_body') ;
-        $('#email_body').val( oEditor.GetHTML() );
         var dataString = $('#frm_edit_email').serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }

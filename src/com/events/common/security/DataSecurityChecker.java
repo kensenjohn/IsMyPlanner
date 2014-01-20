@@ -1,10 +1,7 @@
 package com.events.common.security;
 
 import com.events.bean.security.DataSecurityRequestBean;
-import com.events.common.Configuration;
-import com.events.common.Constants;
-import com.events.common.DateSupport;
-import com.events.common.ParseUtil;
+import com.events.common.*;
 import com.events.common.exception.PropertyFileException;
 import com.events.json.ErrorText;
 import com.events.json.RespConstants;
@@ -133,7 +130,7 @@ public class DataSecurityChecker {
 
     private static ArrayList<String> identifyInputWordsFromList ( String sInput , ArrayList<String> arrWords ) {
         ArrayList<String> arrWordsFromInput = new ArrayList<String>();
-        if( sInput!=null && !"".equalsIgnoreCase(sInput) && arrWords !=null && !arrWords.isEmpty() ) {
+        if( !Utility.isNullOrEmpty(sInput) && arrWords !=null && !arrWords.isEmpty() ) {
             for(String sEachWord : arrWords  ) {
                 if (sInput.indexOf( sEachWord ) > -1) {
                     arrWordsFromInput.add( sEachWord );

@@ -42,12 +42,15 @@ public class Constants {
     public final static String EMPTY = "";
     public final static String AFTER_LOGIN_REDIRECT = "AFTER_LOGIN_REDIRECT";
     public final static String USER_LOGGED_IN_BEAN = "USER_LOGGED_IN_BEAN";
-    public final static String DASHBOARD_LINK = "/com/events/dashboard.jsp";
+    public final static String DASHBOARD_LINK = "/com/events/dashboard/dashboard.jsp";
     public final static String J_RESP_SUCCESS = "success";
     public static String DEFAULT_TIMEZONE = "UTC";
     public final static String COOKIEUSER_ID = "cu_id";
 
     public final static String UPLOAD_LOCATION = "file_upload_location";
+    public final static String IMAGE_LOCATION = "image_upload_location";
+    public final static String IMAGE_HOST = "image_host";
+
     public final static String PRODUCT_NAME="product_name";
     public final static String DOMAIN="domain";
     public final static Long HOURS24_IN_MILLISEC = (24*60*60*1000L);
@@ -207,18 +210,24 @@ public class Constants {
     }
 
     public enum SCHEDULER_STATUS  {
-        NEW_SCHEDULE("NEW_SCHEDULE"),
-        PICKED_TO_PROCESS("PICKED_TO_PROCESS"),
-        COMPLETE("COMPLETE"),
-        ERROR("ERROR");
+        NEW_SCHEDULE("NEW_SCHEDULE","Scheduled"),
+        PICKED_TO_PROCESS("PICKED_TO_PROCESS","Currently Being Sent"),
+        COMPLETE("COMPLETE","Sent"),
+        ERROR("ERROR","Send Failed.");
 
         private String status = "";
-        SCHEDULER_STATUS( String status )  {
+        private String description = Constants.EMPTY;
+        SCHEDULER_STATUS( String status, String description )  {
             this.status = status;
+            this.description = description;
         }
 
         public String getStatus() {
             return this.status;
+        }
+
+        public String getDescription() {
+            return this.description;
         }
     }
 
@@ -261,20 +270,29 @@ public class Constants {
     }
 
     public enum SEND_EMAIL_RULES{
-        ALL_INVITED("ALL_INVITED"), DID_NOT_RESPOND("DID_NOT_RESPOND"), ALL_WHO_RESPONDED("ALL_WHO_RESPONDED"),
-        WILL_ATTEND("WILL_ATTEND"), WILL_NOT_ATTEND("WILL_NOT_ATTEND"), RSVP_THANKYOU("RSVP_THANKYOU"), NO_RULE_SELECTED("NO_RULE_SELECTED");
+        ALL_INVITED("ALL_INVITED","everyone invited"), DID_NOT_RESPOND("DID_NOT_RESPOND","Did Not Respond"), ALL_WHO_RESPONDED("ALL_WHO_RESPONDED","All Who Responded"),
+        WILL_ATTEND("WILL_ATTEND","Will Attend"), WILL_NOT_ATTEND("WILL_NOT_ATTEND","Will Not Attend"), RSVP_THANKYOU("RSVP_THANKYOU","RSVP Thank You"), NO_RULE_SELECTED("NO_RULE_SELECTED","NA");
         private String rule = Constants.EMPTY;
-
-        SEND_EMAIL_RULES(String rule) {
+        private String description = Constants.EMPTY;
+        SEND_EMAIL_RULES(String rule,String description) {
             this.rule = rule;
+            this.description = description;
         }
 
         public String getRule() {
             return this.rule;
         }
+
+        public String getDescription() {
+            return this.description;
+        }
     }
 
     public enum EventEmailFeatureType {
-        send_email_rule,email_send_day,email_send_time,email_send_timezone,email_send_status,action,none;
+        send_email_rule,email_send_day,email_send_time,email_send_timezone,action,none;
+    }
+
+    public enum VENDOR_LANDINGPAGE_FEATURETYPE {
+        logo,landingpagephoto,facebook_url,pinterest_url,none;
     }
 }

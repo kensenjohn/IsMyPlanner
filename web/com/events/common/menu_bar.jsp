@@ -27,7 +27,7 @@
                                 <span class="glyphicon glyphicon-plus"></span><a>  Create Event </a>
                             </button>
                         </li>
-                        <li class="<%=sDashBoardLinkCurrentlyActive%>"><a href="/com/events/dashboard.jsp">Dashboard</a></li>
+                        <li class="<%=sDashBoardLinkCurrentlyActive%>"><a href="/com/events/dashboard/dashboard.jsp">Dashboard</a></li>
                         <li class="<%=sClientLinkCurrentlyActive%>"><a href="/com/events/clients/clients.jsp">Clients</a></li>
                         <li class="<%=sEventLinkCurrentlyActive%>"><a href="/com/events/event/events.jsp">Events</a></li>
                     </ul>
