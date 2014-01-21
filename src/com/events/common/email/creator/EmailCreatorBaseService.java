@@ -1,16 +1,17 @@
 package com.events.common.email.creator;
 
 import com.events.bean.common.email.*;
-import com.events.bean.event.guest.EveryEventGuestGroupBean;
-import com.events.bean.event.guest.GuestGroupEmailBean;
-import com.events.bean.event.guest.GuestRequestBean;
-import com.events.bean.event.guest.GuestResponseBean;
+import com.events.bean.event.guest.*;
+import com.events.bean.event.guest.response.GuestWebResponseBean;
+import com.events.bean.event.guest.response.WebRespRequest;
+import com.events.bean.event.guest.response.WebRespResponse;
 import com.events.common.*;
 import com.events.common.email.setting.AccessEventEmail;
 import com.events.common.email.setting.EventEmailFeature;
 import com.events.data.email.EmailSchedulerData;
 import com.events.data.email.EmailServiceData;
 import com.events.event.guest.AccessGuest;
+import com.events.event.guest.GuestWebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -238,6 +239,73 @@ public class EmailCreatorBaseService extends MailCreatorBase {
     }
 
     private String replaceGuestText(String sSourceText, EventEmailBean eventEmailBean, EveryEventGuestGroupBean everyEventGuestGroupBean ){
+        if(!Utility.isNullOrEmpty(sSourceText)) {
+            GuestResponseBean guestResponseBean = getGuest(eventEmailBean, everyEventGuestGroupBean);
+            GuestBean guestBean = guestResponseBean.getGuestBean();
+
+            if( sSourceText.contains( Constants.EMAIL_TEMPLATE_TEXT.GUEST_GIVEN_NAME.toString()) ) {
+                if ( sSourceText.contains( Constants.EMAIL_TEMPLATE_TEXT.GUEST_GIVEN_NAME.toString()) ) {
+                    sSourceText = sSourceText.replaceAll("\\{__GUEST_GIVEN_NAME__\\}", ParseUtil.checkNull(everyEventGuestGroupBean.getGroupName()));
+                }
+            }
+            if( sSourceText.contains( Constants.EMAIL_TEMPLATE_TEXT.GUEST_FIRST_NAME.toString()) ||
+                    sSourceText.contains( Constants.EMAIL_TEMPLATE_TEXT.GUEST_LAST_NAME.toString()) ) {
+                sSourceText = replaceGuestBeanTemplates(sSourceText,guestBean );
+            }
+
+            if( sSourceText.contains(  Constants.EMAIL_TEMPLATE_TEXT.GUEST_RSVP_LINK.toString() )) {
+                emailerLogging.info(" RSVP Link template exists");
+                WebRespRequest webRespRequest = new WebRespRequest();
+                webRespRequest.setEventId( eventEmailBean.getEventId() );
+                webRespRequest.setGuestGroupId( guestResponseBean.getGuestGroupId() );
+                webRespRequest.setGuestWebResponseType( Constants.GUEST_WEBRESPONSE_TYPE.RSVP);
+                GuestWebResponse guestWebResponse = new GuestWebResponse();
+                WebRespResponse webRespResponse = guestWebResponse.createGuestWebResponse( webRespRequest );
+                emailerLogging.info(" webRespResponse : " + webRespResponse);
+                if(webRespResponse!=null && webRespResponse.getGuestWebResponseBean()!=null && !Utility.isNullOrEmpty(webRespResponse.getGuestWebResponseBean().getGuestWebResponseId()) ) {
+                    GuestWebResponseBean guestWebResponseBean =  webRespResponse.getGuestWebResponseBean();
+
+                    sSourceText = sSourceText.replaceAll("\\{__GUEST_RSVP_LINK__\\}", "http://" + guestWebResponseBean.getLinkDomain() +"/r/rsvp.jsp?id="+guestWebResponseBean.getLinkId() ) ;
+                }
+            }
+        }
+
+        return sSourceText;
+    }
+
+    private GuestResponseBean getGuest( EventEmailBean eventEmailBean, EveryEventGuestGroupBean everyEventGuestGroupBean ){
+        GuestResponseBean guestResponseBean = new GuestResponseBean();
+        if(eventEmailBean!=null && !Utility.isNullOrEmpty(eventEmailBean.getEventEmailId()) &&
+                everyEventGuestGroupBean!=null && !Utility.isNullOrEmpty(everyEventGuestGroupBean.getGuestGroupId() )) {
+            GuestRequestBean guestRequestBean = new GuestRequestBean();
+            guestRequestBean.setEventId(eventEmailBean.getEventId());
+            guestRequestBean.setGuestGroupId(everyEventGuestGroupBean.getGuestGroupId());
+
+            AccessGuest accessGuest = new AccessGuest();
+            guestResponseBean = accessGuest.loadGuest(guestRequestBean);
+        }
+        return guestResponseBean;
+    }
+
+    private String replaceGuestBeanTemplates(String sSourceText , GuestBean guestBean) {
+
+        if(!Utility.isNullOrEmpty(sSourceText) ) {
+            if ( sSourceText.contains( Constants.EMAIL_TEMPLATE_TEXT.GUEST_FIRST_NAME.toString()) ) {
+                String sFirstName = Constants.EMPTY;
+                if( guestBean!=null ){
+                    sFirstName = ParseUtil.checkNull(guestBean.getFirstName());
+                }
+                sSourceText = sSourceText.replaceAll("\\{__GUEST_FIRST_NAME__\\}", sFirstName );
+            }
+
+            if ( sSourceText.contains( Constants.EMAIL_TEMPLATE_TEXT.GUEST_LAST_NAME.toString()) ) {
+                String sLastName = Constants.EMPTY;
+                if( guestBean!=null ){
+                    sLastName = ParseUtil.checkNull(guestBean.getLastName());
+                }
+                sSourceText = sSourceText.replaceAll("\\{__GUEST_LAST_NAME__\\}", sLastName );
+            }
+        }
         return sSourceText;
     }
 }

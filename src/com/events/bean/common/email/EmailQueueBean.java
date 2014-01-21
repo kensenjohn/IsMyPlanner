@@ -160,4 +160,12 @@ public class EmailQueueBean extends EmailObject{
     public void setBccAddressName(String bccAddressName) {
         this.bccAddressName = bccAddressName;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("EmailQueueBean{");
+        sb.append("emailQueueId='").append(emailQueueId).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

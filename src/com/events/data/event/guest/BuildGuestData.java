@@ -41,8 +41,6 @@ public class BuildGuestData {
     public Integer insertGuest(GuestRequestBean guestRequestBean) {
         Integer numOfRowsInserted = 0;
         if( guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestId())  && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId()) ) {
-            // GTGUEST( GUESTID  VARCHAR(45) NOT NULL, FK_GUESTGROUPID VARCHAR(45) NOT NULL, FIRST_NAME  TEXT NOT NULL,
-            //  MIDDLE_NAME  TEXT NOT NULL, LAST_NAME  TEXT NOT NULL, COMPANY VARCHAR(45), DEL_ROW INT(1) NOT NULL DEFAULT 0
             String sQuery = "INSERT into GTGUEST(GUESTID,FK_GUESTGROUPID,FIRST_NAME,      MIDDLE_NAME,LAST_NAME,COMPANY ) VALUES " +
                     " (?,?,?,    ?,?,?)";
             ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getGuestId(),guestRequestBean.getGuestGroupId(), guestRequestBean.getFirstName(),

@@ -61,17 +61,7 @@
                 <%}%>
             <div class="row">
                 <div class="col-md-12">
-                    &nbsp;
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
                     <h3><span id="email_title">New Email</span></h3>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    &nbsp;
                 </div>
             </div>
             <div class="row">
@@ -260,10 +250,11 @@
         selector: "#email_body",
         theme: "modern",
         plugins: [
-            "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+            "advlist autolink link lists charmap print preview hr anchor pagebreak spellchecker",
             "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
             "save table contextmenu directionality emoticons template paste textcolor uploadimage"
-        ]
+        ],
+        toolbar1: "preview | insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link uploadimage"
     });
 
     $(window).load(function() {
@@ -356,6 +347,7 @@
 
                         $('#event_email_id').val(varEventEmailBean.event_email_id);
                         $('#emailSubject').val(varEventEmailBean.email_subject);
+                        $('#email_title').text(varEventEmailBean.email_subject);
                         $('#emailFrom').val(varEventEmailBean.from_address_email);
 
                         tinyMCE.activeEditor.setContent(varEventEmailBean.html_body )
@@ -407,6 +399,7 @@
                     var varEventEmailBean = jsonResponseObj.event_email_bean;
                     if(varEventEmailBean!=undefined) {
                         $('#event_email_id').val(varEventEmailBean.event_email_id);
+                        $('#email_title').text( $('#emailSubject').val() );
                         displayMssgBoxAlert('Your changes were successfully saved.', false);
                     }
                 }

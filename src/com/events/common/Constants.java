@@ -295,4 +295,44 @@ public class Constants {
     public enum VENDOR_LANDINGPAGE_FEATURETYPE {
         logo,landingpagephoto,facebook_url,pinterest_url,none;
     }
+
+    public enum EMAIL_TEMPLATE_TEXT {
+        GUEST_GROUP_NAME("Guest's Group Name","{__GUEST_GROUP_NAME__}","Show the guest's group name eg. The Rainer Family."),
+        GUEST_GIVEN_NAME("Guest's Given Name","{__GUEST_GIVEN_NAME__}","Show the first name or last name. Gives first preference to first name."),
+        GUEST_FIRST_NAME("Guest's First Name","{__GUEST_FIRST_NAME__}","Show only first name. Will be blank if name is not present."),
+        GUEST_LAST_NAME("Guest's Last Name","{__GUEST_LAST_NAME__}","Show only last name. Will be blank if name is not present."),
+
+        GUEST_RSVP_LINK("Guest's RSVP Link","{__GUEST_RSVP_LINK__}","Link for guest to RSVP.");
+
+        private String name = Constants.EMPTY;
+        private String template = Constants.EMPTY;
+        private String description = Constants.EMPTY;
+
+        EMAIL_TEMPLATE_TEXT( String name, String template, String description) {
+            this.name = name;
+            this.template = template;
+            this.description = description;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getTemplate() {
+            return template;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+    }
+
+    public enum GUEST_WEBRESPONSE_TYPE {
+        RSVP,none;
+    }
+    public enum GUEST_WEB_RESPONSE_STATUS {
+        NEW,COMPLETED_RESPONSE, ERROR, NONE;
+    }
+
+    public static final String  APPLICATION_DOMAIN = "application_domain";
 }
