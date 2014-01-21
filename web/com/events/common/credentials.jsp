@@ -21,7 +21,7 @@
             </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="credential">
+                        <div class="boxedcontent">
                             <div class="widget">
                                 <div class="content">
                                     <h4>Login</h4>
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="credential">
+                        <div class="boxedcontent">
                             <div class="widget">
                                 <div class="content">
                                     <h4>Register</h4>

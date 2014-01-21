@@ -355,24 +355,28 @@ fieldset[disabled] .btn-filled.active {
     font-weight: 300;
     font-family: 'Open Sans', sans-serif;
 }
-.credential {
+.boxedcontent {
     background-color: #f9f9f9;
 }
-.credential .widget {
+.boxedcontent .widget {
     background-color: #f9f9f9;
     margin: 0 auto;
     border: 1px solid #d9d9d9;
 }
-.credential .widget .content {
+.boxedcontent .widget .content {
     padding: 30px;
     padding-top: 10px;
     padding-bottom: 15px;
 }
 
-.credential .widget .content .form {
+.boxedcontent .widget .content .form {
     padding: 30px;
     padding-top: 10px;
     padding-bottom: 15px;
+}
+
+.error_background {
+    background-color:#F7D0D4;
 }
 
 .form-control {

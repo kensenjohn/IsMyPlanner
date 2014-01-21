@@ -257,7 +257,7 @@ public class EmailCreatorBaseService extends MailCreatorBase {
                 emailerLogging.info(" RSVP Link template exists");
                 WebRespRequest webRespRequest = new WebRespRequest();
                 webRespRequest.setEventId( eventEmailBean.getEventId() );
-                webRespRequest.setGuestGroupId( guestResponseBean.getGuestGroupId() );
+                webRespRequest.setGuestGroupId( guestBean.getGuestGroupId() );
                 webRespRequest.setGuestWebResponseType( Constants.GUEST_WEBRESPONSE_TYPE.RSVP);
                 GuestWebResponse guestWebResponse = new GuestWebResponse();
                 WebRespResponse webRespResponse = guestWebResponse.createGuestWebResponse( webRespRequest );

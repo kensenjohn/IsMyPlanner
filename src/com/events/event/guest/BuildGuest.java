@@ -123,4 +123,18 @@ public class BuildGuest {
         }
         return guestResponseBean;
     }
+
+    public GuestResponseBean updateEventGuestGroupRSVP(GuestRequestBean guestRequestBean) {
+        GuestResponseBean guestResponseBean = new GuestResponseBean();
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId()) && !Utility.isNullOrEmpty(guestRequestBean.getEventId())
+                && !Utility.isNullOrEmpty(guestRequestBean.getEventGuestGroupId()) ){
+            appLogging.info("Invoked this here");
+            BuildGuestData buildGuestData = new BuildGuestData();
+            Integer iNumOfRows = buildGuestData.updateEventGuestGroupRSVP(guestRequestBean);
+            if(iNumOfRows>0){
+                guestResponseBean.setGuestGroupId( guestRequestBean.getGuestGroupId() );
+            }
+        }
+        return guestResponseBean;
+    }
 }

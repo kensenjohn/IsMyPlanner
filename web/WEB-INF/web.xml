@@ -230,6 +230,15 @@
         <url-pattern>/proc_load_vendor_landingpage_manager.aeve</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Process Guest Web Response RSVP</servlet-name>
+        <servlet-class>com.events.proc.event.guest.ProcGuestWebResponseRSVP</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Guest Web Response RSVP</servlet-name>
+        <url-pattern>/proc_guest_webresponse_rsvp.aeve</url-pattern>
+    </servlet-mapping>
+
 
     <filter>
         <filter-name>Data Secure Filter</filter-name>

@@ -133,8 +133,27 @@ public class BuildGuestData {
                     guestRequestBean.isHasResponded()?"1":"0",DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(),
                     guestRequestBean.getEventGuestGroupId(),guestRequestBean.getGuestGroupId(),guestRequestBean.getEventId());
 
-            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildGuestData.java", "insertEventGuestGroup() ");
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildGuestData.java", "updateEventGuestGroup() ");
 
+        }
+        return numOfRowsInserted;
+    }
+
+    public Integer updateEventGuestGroupRSVP(GuestRequestBean guestRequestBean){
+        Integer numOfRowsInserted = 0;
+        if( guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getEventGuestGroupId()) && !Utility.isNullOrEmpty(guestRequestBean.getEventId())
+                && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId()) ) {
+
+            String sQuery = "UPDATE GTEVENTGUESTGROUP SET RSVP_SEATS =?,WILL_NOT_ATTEND=?,    " +
+                    " HAS_RESPONDED=?,CREATEDATE=?,HUMANCREATEDATE=?  WHERE " +
+                    " EVENTGUESTGROUPID=? AND FK_GUESTGROUPID=? AND FK_EVENTID=?";
+
+            ArrayList<Object> aParams = DBDAO.createConstraint( guestRequestBean.getRsvpSeats(),guestRequestBean.isNotAttending()?"1":"0",
+                    guestRequestBean.isHasResponded()?"1":"0",DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(),
+                    guestRequestBean.getEventGuestGroupId(),guestRequestBean.getGuestGroupId(),guestRequestBean.getEventId());
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildGuestData.java", "updateEventGuestGroupRSVP() ");
+
+            appLogging.info("numOfRowsInserted : " + numOfRowsInserted +" Invoked this here" + sQuery + " aParams " + aParams);
         }
         return numOfRowsInserted;
     }
