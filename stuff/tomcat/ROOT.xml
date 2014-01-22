@@ -1,0 +1,28 @@
+<Context path="/" antiResourceLocking="false" >
+    <Resource name="jdbc/eventadmin"  auth="Container"
+              type="javax.sql.DataSource"
+              username="appadmin"
+              password="FD3C08EEE89Ftestmystrength"
+              driverClassName="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://localhost:3306/eventadmin?autoReconnect=true"
+              maxActive="15"  maxIdle="3"
+              testWhileIdle="true"
+              testOnBorrow="true"
+              testOnReturn="false"
+              validationQuery="SELECT 1"
+              validationInterval="30000"
+              timeBetweenEvictionRunsMillis="30000"/>
+    <Resource name="jdbc/eventhost"  auth="Container"
+              type="javax.sql.DataSource"
+              username="appadmin"
+              password="FD3C08EEE89Ftestmystrength"
+              driverClassName="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://localhost:3306/eventhost?autoReconnect=true"
+              maxActive="15"  maxIdle="3"
+              testWhileIdle="true"
+              testOnBorrow="true"
+              testOnReturn="false"
+              validationQuery="SELECT 1"
+              validationInterval="30000"
+              timeBetweenEvictionRunsMillis="30000"/>
+</Context>
