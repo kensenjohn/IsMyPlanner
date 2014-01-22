@@ -41,6 +41,7 @@ public class BuildVendors {
     public VendorBean registerVendor()  throws EditVendorException  {
         VendorBean vendorBean = new VendorBean();
         vendorBean.setVendorId(Utility.getNewGuid());
+        vendorBean.setFolder( Utility.getNewGuid() );
 
         Integer iNumOfVendorRecords = createVendor( vendorBean );
         if(iNumOfVendorRecords<=0){

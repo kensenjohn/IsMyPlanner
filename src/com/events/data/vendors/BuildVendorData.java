@@ -24,11 +24,13 @@ public class BuildVendorData {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     public Integer insertVendor(VendorBean vendorBean) {
-        String sQuery = "INSERT INTO GTVENDOR ( VENDORID,VENDORNAME,CREATEDATE,    HUMANCREATEDATE,MODIFIEDDATE,HUMANMODIFIEDDATE)"
-                + " VALUES ( ?,?,?, ?,?,?)";
+        String sQuery = "INSERT INTO GTVENDOR ( VENDORID,VENDORNAME,CREATEDATE,    HUMANCREATEDATE,MODIFIEDDATE,HUMANMODIFIEDDATE,   " +
+                "    FOLDER)"
+                + " VALUES ( ?,?,?,   ?,?,?,   ?)";
         ArrayList<Object> aParams = DBDAO.createConstraint(
                 vendorBean.getVendorId(), vendorBean.getVendorName(), DateSupport.getEpochMillis(),
-                DateSupport.getUTCDateTime(), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime());
+                DateSupport.getUTCDateTime(), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(),
+                vendorBean.getFolder());
 
         int numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildVendorData.java", "insertVendor() ");
 

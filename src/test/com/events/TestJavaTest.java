@@ -1,4 +1,4 @@
-package test.com.events;
+package com.events;
 
 import com.events.TestJava;
 import junit.framework.Assert;

@@ -126,11 +126,11 @@ public class DBPool {
             conn = ds.getConnection();
 
         } catch (SQLException e) {
-            dbErrorLogging.error(ExceptionHandler.getStackTrace(e));
+            dbErrorLogging.error(ParseUtil.checkNull(sResource) + "  " + ExceptionHandler.getStackTrace(e));
         } catch (NamingException e) {
-            dbErrorLogging.error(ExceptionHandler.getStackTrace(e));
+            dbErrorLogging.error(ParseUtil.checkNull(sResource) + "  " + ExceptionHandler.getStackTrace(e));
         } catch (Exception e) {
-            dbErrorLogging.error(ExceptionHandler.getStackTrace(e));
+            dbErrorLogging.error(ParseUtil.checkNull(sResource) + "  " + ExceptionHandler.getStackTrace(e));
         }
 
         return conn;
@@ -142,8 +142,7 @@ public class DBPool {
             try {
                 conn.close();
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                dbErrorLogging.error( ExceptionHandler.getStackTrace(e) );
             }
         }
     }
