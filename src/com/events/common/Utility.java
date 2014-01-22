@@ -74,4 +74,17 @@ public class Utility {
         }
         return strRequestParams;
     }
+
+    public static String getImageUploadHost() {
+        Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+        String imageHost = ParseUtil.checkNull(applicationConfig.get(Constants.IMAGE_HOST));
+        return imageHost;
+    }
+
+    public static String getFileUploadHost() {
+        Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+        String fileHost = ParseUtil.checkNull(applicationConfig.get(Constants.FILE_HOST));
+        return fileHost;
+    }
+
 }

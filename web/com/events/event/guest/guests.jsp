@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-md-3">
                     <button  type="button" class="btn  btn-default" id="btn_upload_guests">
-                        <span><span class="glyphicon glyphicon-upload"></span> Upload Guests From Excel</span>
+                        <span><span class="glyphicon glyphicon-upload"></span> Upload Guests From CSV</span>
                     </button>
                 </div>
                 <div class="col-md-7">
@@ -160,6 +160,8 @@
                             '&nbsp;&nbsp;&nbsp;'+
                             '<a id="'+varEveryEventGuestBean.guestgroup_id+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>'+'</td>');
             $('#every_guest_rows').append(varEveryEventGuestTableRow);
+
+            //TODO add delete functionality for guest. See example in events.jsp
         }
     }
     function initializeTable(){

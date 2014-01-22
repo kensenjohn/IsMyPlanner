@@ -55,8 +55,6 @@ public class BuildGuestData {
     public Integer insertGuestPhone(GuestRequestBean guestRequestBean, String sPhoneNum) {
         Integer numOfRowsInserted = 0;
         if( guestRequestBean!=null && !Utility.isNullOrEmpty(sPhoneNum)  && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId()) ) {
-            // GTGUESTGROUPPHONE ( GUESTGROUPPHONEID  VARCHAR(45) NOT NULL, FK_GUESTGROUPID VARCHAR(45) NOT NULL,
-            //  FK_GUESTID   VARCHAR(45), PHONE_NUM VARCHAR(50) NOT NULL, PRIMARY_CONTACT
             String sQuery = "INSERT into GTGUESTGROUPPHONE(GUESTGROUPPHONEID,FK_GUESTGROUPID,FK_GUESTID,      PHONE_NUM,PRIMARY_CONTACT) VALUES " +
                     " (?,?,?,    ?,?)";
             ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getGuestGroupPhoneId(),guestRequestBean.getGuestGroupId(),guestRequestBean.getGuestId(),
@@ -105,9 +103,6 @@ public class BuildGuestData {
         Integer numOfRowsInserted = 0;
         if( guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getEventGuestGroupId()) && !Utility.isNullOrEmpty(guestRequestBean.getEventId())
                 && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId()) ) {
-            // GTEVENTGUESTGROUP ( EVENTGUESTGROUPID VARCHAR(45) NOT NULL, FK_EVENTID VARCHAR(45) NOT NULL, FK_GUESTGROUPID
-            // VARCHAR(45) NOT NULL,TOTAL_INVITED_SEATS INT(11), RSVP_SEATS INT(11), WILL_ATTEND INT(1) NOT NULL DEFAULT 0,
-            // HAS_RESPONDED INT(1) NOT NULL DEFAULT 0, CREATEDATE BIGINT(20) NOT NULL DEFAULT 0 , HUMANCREATEDATE VARCHAR(45)
             String sQuery = "INSERT into GTEVENTGUESTGROUP(EVENTGUESTGROUPID,FK_GUESTGROUPID,FK_EVENTID,     TOTAL_INVITED_SEATS,RSVP_SEATS,WILL_NOT_ATTEND," +
                     "HAS_RESPONDED,CREATEDATE,HUMANCREATEDATE ) VALUES " +
                     " (?,?,?,    ?,?,?,    ?,?,?)";

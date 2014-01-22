@@ -2,6 +2,7 @@ package com.events.proc.upload;
 
 import com.events.bean.upload.UploadRequestBean;
 import com.events.bean.upload.UploadResponseBean;
+import com.events.bean.users.UserBean;
 import com.events.common.*;
 import com.events.common.exception.ExceptionHandler;
 
@@ -31,7 +32,7 @@ import java.util.List;
  * Time: 5:52 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcUploadExcel extends HttpServlet {
+public class ProcUploadCSV extends HttpServlet {
     Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
@@ -57,20 +58,28 @@ public class ProcUploadExcel extends HttpServlet {
         PrintWriter writer = response.getWriter();
         response.setContentType("application/json");
         JSONArray json = new JSONArray();
+
+        String fileUploadHost = Utility.getFileUploadHost();
+        UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
+        String fileUploadLocation = applicationConfig.get(Constants.FILE_UPLOAD_LOCATION);
+
+        Folder folder = new Folder();
+        String sUserFolderName = folder.getFolderForUser(loggedInUserBean, fileUploadLocation);
+
+        String sFolderPath = fileUploadLocation + "/" + sUserFolderName ;
         try {
             List<FileItem> items = uploadHandler.parseRequest(request);
             if(items!=null){
                 appLogging.debug(" file itesm are going to be listed : " + items + " - " + items.size());
                 for (FileItem item : items) {
                     if (!item.isFormField()) {
-
-                        String fileUploadLocation = applicationConfig.get(Constants.UPLOAD_LOCATION);
-                        File file = new File(fileUploadLocation, item.getName());
+                        String sRandomFilename = Utility.getNewGuid() + "_" + item.getName();
+                        File file = new File(sFolderPath, sRandomFilename);
                         item.write(file);
 
                         UploadRequestBean uploadRequestBean = new UploadRequestBean();
-                        uploadRequestBean.setFilename( item.getName() );
-                        uploadRequestBean.setPath( fileUploadLocation );
+                        uploadRequestBean.setFilename( sRandomFilename );
+                        uploadRequestBean.setPath( sUserFolderName );
 
                         UploadFile uploadFile = new UploadFile();
                         UploadResponseBean uploadResponseBean = uploadFile.saveUploadFileInfo(uploadRequestBean);
@@ -85,9 +94,11 @@ public class ProcUploadExcel extends HttpServlet {
                             responseStatus = RespConstants.Status.OK;
 
                             JSONObject jsono = new JSONObject();
-                            jsono.put("name", item.getName());
-                            jsono.put("size", item.getSize());
+                            jsono.put("name", sRandomFilename );
+                            jsono.put("foldername", sUserFolderName );
+                            jsono.put("fileuploadhost", fileUploadHost );
                             jsono.put("upload_id", uploadResponseBean.getUploadId() );
+                            jsono.put("success", true );
                             jsono.put("url", "UploadServlet?getfile=" + item.getName());
                             jsono.put("thumbnail_url", "UploadServlet?getthumb=" + item.getName());
                             jsono.put("delete_url", "UploadServlet?delfile=" + item.getName());
@@ -99,19 +110,36 @@ public class ProcUploadExcel extends HttpServlet {
                             arrErrorText.add(errorText);
 
                             responseStatus = RespConstants.Status.ERROR;
+
+                            JSONObject jsono = new JSONObject();
+                            jsono.put("success", false );
+                            json.put(jsono);
                         }
+                    } else {
+                        JSONObject jsono = new JSONObject();
+                        jsono.put("success", false );
+                        json.put(jsono);
+                        appLogging.info("Invalid form field used." );
+
                     }
                 }
             } else {
+                JSONObject jsono = new JSONObject();
+                jsono.put("success", false );
+                json.put(jsono);
                 appLogging.info(" item list is null : ");
             }
 
         } catch (FileUploadException e) {
+            JSONObject jsono = new JSONObject();
+            jsono.put("success", false );
+            json.put(jsono);
             appLogging.error("FileUploadException : " + ExceptionHandler.getStackTrace(e));
-            throw new RuntimeException(e);
         } catch (Exception e) {
+            JSONObject jsono = new JSONObject();
+            jsono.put("success", false );
+            json.put(jsono);
             appLogging.error("Exception : " + ExceptionHandler.getStackTrace(e));
-            throw new RuntimeException(e);
         }finally {
             appLogging.debug("After Upload is complete : " + json.toString());
             writer.write(json.toString());

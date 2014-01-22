@@ -1,5 +1,7 @@
 <%@ page import="com.events.common.ParseUtil" %>
 <%@ page import="com.events.common.Constants" %>
+<%@ page import="com.events.common.Configuration" %>
+<%@ page import="com.events.common.Utility" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -13,6 +15,8 @@
     if(sEventId!=null && !"".equalsIgnoreCase(sEventId)) {
         loadEventInfo = true;
     }
+
+    String fileUploadHost = ParseUtil.checkNull(Utility.getFileUploadHost());
 %>
 
 <body>
@@ -25,7 +29,7 @@
     </jsp:include>
     <div class="breadcrumb_format">
         <div class="container">
-            <div class="page-title">Upload Event Guests from Excel - <span id="event_title"></span></div>
+            <div class="page-title">Upload Event Guests from CSV - <span id="event_title"></span></div>
         </div>
     </div>
     <div class="container">
@@ -48,11 +52,17 @@
             </div>
             <div class="row">
                 <div class="col-md-5">
-                    <h4>Step 1 : Create an Excel file with Guest Details</h4>
+                    <h4>Step 1 : Create a CSV file with Guest Details</h4>
                 </div>
-                <div class="col-md-3" style="padding-top:10px;">
-                    <a href="/com/events/event/events.jsp">Download a Sample Excel</a>
-                </div>
+                <%
+                    if(!Utility.isNullOrEmpty(fileUploadHost)){
+                %>
+                        <div class="col-md-3" style="padding-top:10px;">
+                            <a href="<%=fileUploadHost+"/csv_guestlist.csv"%>"  target="_blank" >Download a Sample CSV</a>
+                        </div>
+                <%
+                    }
+                %>
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -65,10 +75,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-1">
-                </div>
-                <form id="fileupload" action="/proc_upload_excel.aeve" method="POST" enctype="multipart/form-data">
-                    <div class="col-md-4">
+                <form id="fileupload" action="/proc_upload_csv.aeve" method="POST" enctype="multipart/form-data">
+                    <div class="col-md-offset-1 col-md-4">
 
                         <input type="file" name="files[]" class="fileinput-button btn btn-default">
                     </div>
@@ -79,17 +87,22 @@
                     </div>
 
                 </form>
-                <div class="col-md-2">
+            </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-3">
                     <div id="progress">
                         <div class="bar" style="width: 0%;"></div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-1">
+                <div class="col-md-offset-1 col-md-5">
+                    &nbsp;
                 </div>
-                <div class="col-md-5">
-                    <span id="guestcreaterecord_file_status"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-5" style="display:none;" id="div_download_guestlist_csv">
+                    <a id="link_download_guestlist_csv" href="">Click to download the uploaded file.</a>
                 </div>
             </div>
             <div class="row">
@@ -106,7 +119,7 @@
                 <div class="col-md-5">
                     <h4>Step 3 :
                         <button  type="button" class="btn  btn-filled" id="btn_process_guest">
-                            <span><span class="glyphicon glyphicon-plus"></span> Create Guests From Uploaded Excel</span>
+                            <span><span class="glyphicon glyphicon-plus"></span> Create Guests From Uploaded CSV</span>
                         </button></h4>
                 </div>
             </div>
@@ -160,6 +173,13 @@
                     $('#upload_id').val(varDataResult.upload_id);
                     $('#job_status').val('<%=Constants.JOB_STATUS.PRELIM_STATE.getStatus()%>');
                     $('#guestcreaterecord_file_status').text('Currently uploaded file : ' + varDataResult.name );
+
+                    if( varDataResult.success ) {
+                        var linkToDownloadFile = varDataResult.fileuploadhost+"/"+  varDataResult.foldername+"/"+varDataResult.name;
+                        $('#link_download_guestlist_csv').attr("href", linkToDownloadFile );
+                        $('#div_download_guestlist_csv').show();
+
+                    }
                 }
                 createGuestsCreationJob( processCreateGuestCreationJob ); //this will create a job record with - Prelim status
             },

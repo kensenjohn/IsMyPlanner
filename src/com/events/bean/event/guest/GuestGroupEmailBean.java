@@ -76,7 +76,7 @@ public class GuestGroupEmailBean {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("GuestGroupPhoneBean{");
+        final StringBuilder sb = new StringBuilder("GuestGroupEmailBean{");
         sb.append("guestGroupEmailId='").append(guestGroupEmailId).append('\'');
         sb.append(", guestGroupId='").append(guestGroupId).append('\'');
         sb.append(", guestId='").append(guestId).append('\'');

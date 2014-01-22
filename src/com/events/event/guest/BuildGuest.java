@@ -54,7 +54,6 @@ public class BuildGuest {
                     buildGuestData.insertGuestEmail(guestRequestBean);
                 }
 
-                appLogging.info(" Addresss 1 : " + ParseUtil.checkNull(guestRequestBean.getAddress1()) );
                 if(!Utility.isNullOrEmpty(guestRequestBean.getAddress1()) || !Utility.isNullOrEmpty(guestRequestBean.getCity())
                         || !Utility.isNullOrEmpty(guestRequestBean.getState()) || !Utility.isNullOrEmpty(guestRequestBean.getZipCode())
                         || !Utility.isNullOrEmpty(guestRequestBean.getCountry()) ) {

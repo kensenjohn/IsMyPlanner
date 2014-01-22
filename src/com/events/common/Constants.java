@@ -47,7 +47,9 @@ public class Constants {
     public static String DEFAULT_TIMEZONE = "UTC";
     public final static String COOKIEUSER_ID = "cu_id";
 
-    public final static String UPLOAD_LOCATION = "file_upload_location";
+
+    public final static String FILE_HOST = "file_host";
+    public final static String FILE_UPLOAD_LOCATION = "file_upload_location";
     public final static String IMAGE_LOCATION = "image_upload_location";
     public final static String IMAGE_HOST = "image_host";
 

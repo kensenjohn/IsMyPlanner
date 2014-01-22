@@ -32,7 +32,11 @@ public class UploadFile {
         if(uploadRequestBean!=null) {
             UploadFileData uploadFileData = new UploadFileData();
             UploadBean uploadBean = uploadFileData.getUploadBean(uploadRequestBean);
-            uploadResponseBean.setUploadBean(uploadBean);
+            if(uploadBean!=null && !Utility.isNullOrEmpty(uploadBean.getUploadId()) ) {
+                uploadResponseBean.setUploadBean(uploadBean);
+                uploadResponseBean.setUploadId( uploadBean.getUploadId() );
+            }
+
         }
         return uploadResponseBean;
     }

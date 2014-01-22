@@ -53,7 +53,7 @@ public class ProcUploadImage extends HttpServlet {
             throw new IllegalArgumentException("Request is not multipart, please 'multipart/form-data' enctype for your form.");
         }
 
-        String imageHost = ParseUtil.checkNull(applicationConfig.get(Constants.IMAGE_HOST));
+        String imageHost = Utility.getImageUploadHost();
 
         ServletFileUpload uploadHandler = new ServletFileUpload(new DiskFileItemFactory());
         PrintWriter writer = response.getWriter();
@@ -61,15 +61,14 @@ public class ProcUploadImage extends HttpServlet {
         JSONArray json = new JSONArray();
         UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
+        String imageUploadLocation = applicationConfig.get(Constants.IMAGE_LOCATION);
+
         if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
             try {
                 List<FileItem> items = uploadHandler.parseRequest(request);
                 if(items!=null){
                     for (FileItem item : items) {
                         if (!item.isFormField()) {
-
-                            String imageUploadLocation = applicationConfig.get(Constants.IMAGE_LOCATION);
-
                             Folder folder = new Folder();
                             String sUserFolderName = folder.getFolderForUser( loggedInUserBean, imageUploadLocation );
                             String sFolderPath = imageUploadLocation + "/" + sUserFolderName ;
@@ -129,13 +128,11 @@ public class ProcUploadImage extends HttpServlet {
                 jsono.put("success", false );
                 json.put(jsono);
                 appLogging.error("FileUploadException : " + ExceptionHandler.getStackTrace(e));
-                throw new RuntimeException(e);
             } catch (Exception e) {
                 JSONObject jsono = new JSONObject();
                 jsono.put("success", false );
                 json.put(jsono);
                 appLogging.error("Exception : " + ExceptionHandler.getStackTrace(e));
-                throw new RuntimeException(e);
             }finally {
                 appLogging.debug("After Upload is complete : " + json.toString());
                 writer.write(json.toString());

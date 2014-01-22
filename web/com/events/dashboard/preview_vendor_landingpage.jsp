@@ -21,7 +21,7 @@
     <link type="text/css" rel="stylesheet" href="/css/style.css" />
 </head>
 <%
-    Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+
     Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     String sFeatureType = ParseUtil.checkNull(request.getParameter("featuretype"));
     String sVendorLandingPageId = ParseUtil.checkNull(request.getParameter("vendor_landingpage_id"));
@@ -32,8 +32,8 @@
     String sFacebookFeed = Constants.EMPTY;
     String sPinterstFeed = Constants.EMPTY;
 
-    String imageHost = ParseUtil.checkNull(applicationConfig.get(Constants.IMAGE_HOST));
 
+    String imageHost = Utility.getImageUploadHost();
     if(!Utility.isNullOrEmpty(sVendorLandingPageId) ) {
 
         AccessVendorLandingPage accessVendorLandingPage = new AccessVendorLandingPage();

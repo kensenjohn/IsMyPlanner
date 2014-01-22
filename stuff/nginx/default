@@ -38,3 +38,24 @@ server {
                 root /usr/uploadloc/images/;
         }
 }
+
+# This is used for hosting files.
+server {
+        listen 9001 default_server;
+        listen [::]:9001 default_server ipv6only=on;
+
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+
+        # Make site accessible from http://localhost/
+        server_name localhost:9001;
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                #try_files $uri $uri/ =404;
+                # Uncomment to enable naxsi on this location
+                # include /etc/nginx/naxsi.rules
+                root /usr/uploadloc/;
+        }
+}

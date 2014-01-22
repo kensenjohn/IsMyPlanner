@@ -1,5 +1,8 @@
 package com.events.proc.job;
 
+import com.events.bean.event.guest.CreateGuestFromCSVRequestBean;
+import com.events.bean.event.guest.CreateGuestFromCSVResponseBean;
+import com.events.bean.event.guest.GuestsFromCSVBean;
 import com.events.bean.job.GuestCreateJobRequestBean;
 import com.events.bean.job.GuestCreateJobResponseBean;
 import com.events.bean.users.UserBean;
@@ -8,6 +11,7 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
+import com.events.event.guest.CreateGuestFromCSV;
 import com.events.job.GuestCreateJob;
 import com.events.json.*;
 import org.json.JSONObject;
@@ -48,53 +52,69 @@ public class ProcEditGuestCreationJobRecords   extends HttpServlet {
                     String sJobStatus = ParseUtil.checkNull(request.getParameter("job_status"));
 
                     if( !Utility.isNullOrEmpty(sEventId) && !Utility.isNullOrEmpty(sUploadId) && !Utility.isNullOrEmpty(sJobStatus)) {
-                        GuestCreateJobRequestBean guestCreateJobRequestBean = new GuestCreateJobRequestBean();
-                        guestCreateJobRequestBean.setEventId(sEventId);
-                        guestCreateJobRequestBean.setUploadId(sUploadId);
-                        guestCreateJobRequestBean.setJobStatus( Constants.JOB_STATUS.valueOf(sJobStatus));
-                        guestCreateJobRequestBean.setUserId(loggedInUserBean.getUserId());
+                        CreateGuestFromCSVRequestBean createGuestFromCSVRequestBean = new CreateGuestFromCSVRequestBean();
+                        createGuestFromCSVRequestBean.setEventId( sEventId );
+                        createGuestFromCSVRequestBean.setUploadId( sUploadId );
 
-                        GuestCreateJob guestCreationJob = new GuestCreateJob();
-                        GuestCreateJobResponseBean guestCreateJobResponseBean = guestCreationJob.getGuestCreationJobByEvent(guestCreateJobRequestBean);
+                        CreateGuestFromCSV createGuestFromCSV = new CreateGuestFromCSV();
+                        CreateGuestFromCSVResponseBean createGuestFromCSVResponseBean = createGuestFromCSV.isFileTooBig(createGuestFromCSVRequestBean);
+                        appLogging.info("IsFile Too Exists : " + createGuestFromCSVResponseBean.isFileExists() );
+                        if(createGuestFromCSVResponseBean!=null && !createGuestFromCSVResponseBean.isFileTooBig()) {
+                            ArrayList<GuestsFromCSVBean> arrGuestFromCSVBean = createGuestFromCSV.processGuestList( createGuestFromCSVResponseBean.getGuestListEntries() );
+                            //appLogging.info("arrGuestFromCSVBean : " + arrGuestFromCSVBean );
+                            createGuestFromCSV.create(arrGuestFromCSVBean, sEventId );
 
-                        if(guestCreateJobResponseBean!=null && guestCreateJobResponseBean.getGuestCreateJobBean()!=null) {
-                            guestCreateJobRequestBean.setGuestCreateJobId( ParseUtil.checkNull(guestCreateJobResponseBean.getGuestCreateJobBean().getGuestCreateJobId() ));
-                        }
+                            appLogging.info("Sucessfully created the Guest Creation job record. " );
+                            Text okText = new OkText("The guests from the file were successfully created.","status_mssg") ;
+                            arrOkText.add(okText);
+                            responseStatus = RespConstants.Status.OK;
 
-                        final String READY_TO_PICK_STATUS = Constants.JOB_STATUS.READY_TO_PICK.getStatus();
-                        boolean isSaveRequest = false;
-                        if(READY_TO_PICK_STATUS.equalsIgnoreCase(sJobStatus) &&
-                                ( READY_TO_PICK_STATUS.equalsIgnoreCase(guestCreateJobRequestBean.getJobStatus().getStatus()) ||
-                                        Constants.JOB_STATUS.PRELIM_STATE.getStatus().equalsIgnoreCase(guestCreateJobRequestBean.getJobStatus().getStatus()))) {
-                            isSaveRequest = true;
-                        } else if( Constants.JOB_STATUS.PRELIM_STATE.getStatus().equalsIgnoreCase(sJobStatus)  ) {
-                            isSaveRequest = true;
-                        }
-                        if( isSaveRequest ) {
-                            appLogging.info("GuestCreateJobId : " + guestCreateJobRequestBean.getGuestCreateJobId() );
-                            GuestCreateJobResponseBean savedGuestCreateJobResponseBean = guestCreationJob.saveGuestCreationJob(guestCreateJobRequestBean);
+                        } else {
+                            GuestCreateJobRequestBean guestCreateJobRequestBean = new GuestCreateJobRequestBean();
+                            guestCreateJobRequestBean.setEventId(sEventId);
+                            guestCreateJobRequestBean.setUploadId(sUploadId);
+                            guestCreateJobRequestBean.setJobStatus( Constants.JOB_STATUS.valueOf(sJobStatus));
+                            guestCreateJobRequestBean.setUserId(loggedInUserBean.getUserId());
 
-                            if(savedGuestCreateJobResponseBean!=null && !Utility.isNullOrEmpty(savedGuestCreateJobResponseBean.getGuestCreateJobId())) {
-                                jsonResponseObj.put("response_id",savedGuestCreateJobResponseBean.getGuestCreateJobId());
-                                appLogging.info("Sucessful edited the Guest Creation job record. " );
-                                Text okText = new OkText("The file has been successfully uploaded. You can now execute the Guest Creation process.","status_mssg") ;
-                                arrOkText.add(okText);
-                                responseStatus = RespConstants.Status.OK;
+                            GuestCreateJob guestCreationJob = new GuestCreateJob();
+                            GuestCreateJobResponseBean guestCreateJobResponseBean = guestCreationJob.getGuestCreationJobByEvent(guestCreateJobRequestBean);
+
+                            if(guestCreateJobResponseBean!=null && guestCreateJobResponseBean.getGuestCreateJobBean()!=null) {
+                                guestCreateJobRequestBean.setGuestCreateJobId( ParseUtil.checkNull(guestCreateJobResponseBean.getGuestCreateJobBean().getGuestCreateJobId() ));
+                            }
+
+                            final String READY_TO_PICK_STATUS = Constants.JOB_STATUS.READY_TO_PICK.getStatus();
+                            boolean isSaveRequest = false;
+                            if(READY_TO_PICK_STATUS.equalsIgnoreCase(sJobStatus) &&
+                                    ( READY_TO_PICK_STATUS.equalsIgnoreCase(guestCreateJobRequestBean.getJobStatus().getStatus()) ||
+                                            Constants.JOB_STATUS.PRELIM_STATE.getStatus().equalsIgnoreCase(guestCreateJobRequestBean.getJobStatus().getStatus()))) {
+                                isSaveRequest = true;
+                            } else if( Constants.JOB_STATUS.PRELIM_STATE.getStatus().equalsIgnoreCase(sJobStatus)  ) {
+                                isSaveRequest = true;
+                            }
+                            if( isSaveRequest ) {
+                                appLogging.info("GuestCreateJobId : " + guestCreateJobRequestBean.getGuestCreateJobId() );
+                                GuestCreateJobResponseBean savedGuestCreateJobResponseBean = guestCreationJob.saveGuestCreationJob(guestCreateJobRequestBean);
+
+                                if(savedGuestCreateJobResponseBean!=null && !Utility.isNullOrEmpty(savedGuestCreateJobResponseBean.getGuestCreateJobId())) {
+                                    jsonResponseObj.put("response_id",savedGuestCreateJobResponseBean.getGuestCreateJobId());
+                                    appLogging.info("Sucessfully edited the Guest Creation job record. " );
+                                    Text okText = new OkText("The file has been successfully uploaded. You can now execute the Guest Creation process.","status_mssg") ;
+                                    arrOkText.add(okText);
+                                    responseStatus = RespConstants.Status.OK;
+                                } else {
+                                    appLogging.error("Error while edited the Guest Creation job record. " + ParseUtil.checkNullObject(savedGuestCreateJobResponseBean));
+                                    Text errorText = new ErrorText("Oops!! There was an error processing your request. Please try again later.","status_mssg") ;
+                                    arrErrorText.add(errorText);
+                                    responseStatus = RespConstants.Status.ERROR;
+                                }
                             } else {
-                                appLogging.error("Error while edited the Guest Creation job record. " + ParseUtil.checkNullObject(savedGuestCreateJobResponseBean));
+                                appLogging.error("Error in Job status. Job status cannot be changed - " + ParseUtil.checkNull(sJobStatus) + " - " + ParseUtil.checkNullObject(guestCreateJobRequestBean));
                                 Text errorText = new ErrorText("Oops!! There was an error processing your request. Please try again later.","status_mssg") ;
                                 arrErrorText.add(errorText);
                                 responseStatus = RespConstants.Status.ERROR;
                             }
-                        } else {
-                            appLogging.error("Error in Job status. Job status cannot be changed - " + ParseUtil.checkNull(sJobStatus) + " - " + ParseUtil.checkNullObject(guestCreateJobRequestBean));
-                            Text errorText = new ErrorText("Oops!! There was an error processing your request. Please try again later.","status_mssg") ;
-                            arrErrorText.add(errorText);
-                            responseStatus = RespConstants.Status.ERROR;
                         }
-
-
-
 
                     } else {
                         appLogging.info("Invalid request in Proc Page sEventId" + sEventId + " sUploadId : " + sUploadId + " sJobStatus : " + sJobStatus );

@@ -119,12 +119,12 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Process Upload Excel</servlet-name>
-        <servlet-class>com.events.proc.upload.ProcUploadExcel</servlet-class>
+        <servlet-name>Process Upload CSV</servlet-name>
+        <servlet-class>com.events.proc.upload.ProcUploadCSV</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Process Upload Excel</servlet-name>
-        <url-pattern>/proc_upload_excel.aeve</url-pattern>
+        <servlet-name>Process Upload CSV</servlet-name>
+        <url-pattern>/proc_upload_csv.aeve</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>Process Upload Image</servlet-name>
