@@ -136,4 +136,18 @@ public class BuildGuest {
         }
         return guestResponseBean;
     }
+    public GuestResponseBean deleteEventGuestGroup(GuestRequestBean guestRequestBean){
+        GuestResponseBean guestResponseBean =  new GuestResponseBean();
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())){
+            BuildGuestData buildGuestData = new BuildGuestData();
+            Integer numOfRowsDeleted = buildGuestData.deleteEventGuestGroup(guestRequestBean);
+            if(numOfRowsDeleted>0){
+                guestResponseBean.setGuestDeleted(true);
+                appLogging.info("Event Guest Group was deleted successfully : " + guestRequestBean );
+            } else {
+                appLogging.error("Event Guest Group could not be deleted : " + guestRequestBean );
+            }
+        }
+        return guestResponseBean;
+    }
 }

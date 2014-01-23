@@ -84,6 +84,11 @@
 <form id="frm_guest" method="POST">
     <input type="hidden" id="event_id"  name="event_id" value="<%=sEventId%>">
 </form>
+<form id="frm_delete_guest">
+    <input type="hidden" id="delete_guestgroup_id" name="guestgroup_id" value="">
+    <input type="hidden" id="delete_event_id" name="event_id" value="">
+    <input type="hidden" id="delete_eventguestgroup_id" name="event_guestgroup_id" value="">
+</form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/event/event_info.js"></script>
 <script src="/js/jquery.dataTables.min.js"></script>
@@ -161,7 +166,59 @@
                             '<a id="'+varEveryEventGuestBean.guestgroup_id+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>'+'</td>');
             $('#every_guest_rows').append(varEveryEventGuestTableRow);
 
-            //TODO add delete functionality for guest. See example in events.jsp
+            // Adding Click Event Functionality for event's delete button.
+            var guest_obj = {
+                guestgroup_id: varEveryEventGuestBean.guestgroup_id,
+                group_name: varEveryEventGuestBean.group_name,
+                eventguestgroup_id:varEveryEventGuestBean.event_guestgroup_id,
+                event_id: varEventId,
+                row_num: i,
+                printObj: function () {
+                    return this.guestgroup_id + ' ' + this.group_name + ' ' + this.event_id;
+                }
+            }
+            $('#'+varEveryEventGuestBean.guestgroup_id).click({ param_guest_obj:guest_obj},function(e) {
+                displayConfirmBox("Are you sure you want to delete this guest? - " + e.data.param_guest_obj.group_name ,
+                        "Delete Guest","Yes", "No", deleteGuest,e.data.param_guest_obj)
+            });
+        }
+    }
+    function deleteGuest(varGuestObj) {
+        $('#delete_guestgroup_id').val(varGuestObj.guestgroup_id);
+        $('#delete_event_id').val(varGuestObj.event_id);
+        $('#delete_eventguestgroup_id').val(varGuestObj.eventguestgroup_id);
+        deleteGuests(processGuestDeletion);
+    }
+    function deleteGuests(callbackmethod) {
+        var actionUrl = "/proc_delete_guest.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_delete_guest").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function processGuestDeletion(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    var varIsGuestDeleted = jsonResponseObj.is_deleted;
+                    if(varIsGuestDeleted){
+                        $('#delete_event_id').val('');
+                        $('#delete_guestgroup_id').val('');
+                        var varDeletedEventGuestGroupId = jsonResponseObj.deleted_eventguestgroup_id;
+                        $('#row_'+varDeletedEventGuestGroupId).remove();
+                    } else {
+                        displayMssgBoxAlert("The guest as not deleted. Please try again later.", true);
+                    }
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (deleteGuest - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (deleteGuest - 2)", true);
         }
     }
     function initializeTable(){

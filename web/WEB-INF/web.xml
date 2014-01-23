@@ -117,6 +117,15 @@
         <servlet-name>Process Load Guest</servlet-name>
         <url-pattern>/proc_load_guest.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Guest</servlet-name>
+        <servlet-class>com.events.proc.event.guest.ProcDeleteEventGuest</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Guest</servlet-name>
+        <url-pattern>/proc_delete_guest.aeve</url-pattern>
+    </servlet-mapping>
+
 
     <servlet>
         <servlet-name>Process Upload CSV</servlet-name>

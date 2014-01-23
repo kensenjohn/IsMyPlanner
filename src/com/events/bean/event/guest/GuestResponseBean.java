@@ -17,6 +17,7 @@ public class GuestResponseBean {
     private String guestGroupId = Constants.EMPTY;
     private String eventId = Constants.EMPTY;
     private String eventGuestGroupId = Constants.EMPTY;
+    private boolean isGuestDeleted = false;
 
     private HashMap<String,GuestGroupBean> hmGuestGroupBean = new HashMap<String, GuestGroupBean>();
     private ArrayList<EventGuestGroupBean> arrEventGuestGroupBean = new ArrayList<EventGuestGroupBean>();
@@ -38,6 +39,13 @@ public class GuestResponseBean {
     private ArrayList<GuestGroupEmailBean>  arrGuestGroupEmailBean = new ArrayList<GuestGroupEmailBean>();
     private ArrayList<GuestGroupAddressBean>  arrGuestGroupAddressBean = new ArrayList<GuestGroupAddressBean>();
 
+    public boolean isGuestDeleted() {
+        return isGuestDeleted;
+    }
+
+    public void setGuestDeleted(boolean guestDeleted) {
+        isGuestDeleted = guestDeleted;
+    }
 
     public String getGuestGroupId() {
         return guestGroupId;

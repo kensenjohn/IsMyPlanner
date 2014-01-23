@@ -102,7 +102,7 @@
                     return this.event_id + ' ' + this.event_name + ' ' + this.client_id;
                 }
             }
-            $('#'+varEveryEventBean.event_id).click({param_event_obj:event_obj},function(e) {displayConfirmBox("Are you sure you want to delete event - " + e.data.param_event_obj.event_name ,"Delete Event","Hell Ya!", "Sorry", deleteEvent,e.data.param_event_obj)});
+            $('#'+varEveryEventBean.event_id).click({param_event_obj:event_obj},function(e) {displayConfirmBox("Are you sure you want to delete event - " + e.data.param_event_obj.event_name ,"Delete Event","Yes", "No", deleteEvent,e.data.param_event_obj)});
         }
 
     }
@@ -121,13 +121,7 @@
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
-                var varIsMessageExist = varResponseObj.is_message_exist;
-                if(varIsMessageExist == true) {
-                    var jsonResponseMessage = varResponseObj.messages;
-                    var varArrErrorMssg = jsonResponseMessage.error_mssg;
-                    displayMssgBoxMessages(varArrErrorMssg, true);
-                }
-
+                displayAjaxError(varResponseObj);
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 if(varIsPayloadExist == true) {

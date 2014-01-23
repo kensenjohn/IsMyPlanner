@@ -26,8 +26,6 @@ public class BuildGuestData {
     public Integer insertGuestGroup(GuestRequestBean guestRequestBean){
         Integer numOfRowsInserted = 0;
         if( guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())  && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupName()) ) {
-            //  GUESTGROUPID  VARCHAR(45) NOT NULL, GROUPNAME  TEXT NOT NULL, CREATEDATE BIGINT(20) NOT NULL DEFAULT 0 ,
-            //  HUMANCREATEDATE VARCHAR(45), DEL_ROW INT(1) NOT NULL DEFAULT 0
             String sQuery = "INSERT into GTGUESTGROUP(GUESTGROUPID,GROUPNAME,CREATEDATE,      HUMANCREATEDATE ) VALUES " +
                     " (?,?,?,    ?)";
             ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getGuestGroupId(),guestRequestBean.getGuestGroupName(), DateSupport.getEpochMillis(),
@@ -68,8 +66,6 @@ public class BuildGuestData {
     public Integer insertGuestEmail(GuestRequestBean guestRequestBean) {
         Integer numOfRowsInserted = 0;
         if( guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getEmail())  && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId()) ) {
-            // GTGUESTGROUPEMAIL ( GUESTGROUPEMAILID  VARCHAR(45) NOT NULL, FK_GUESTGROUPID VARCHAR(45) NOT NULL,
-            // FK_GUESTID   VARCHAR(45), EMAIL_ID VARCHAR(500) NOT NULL, PRIMARY_CONTACT
             String sQuery = "INSERT into GTGUESTGROUPEMAIL( GUESTGROUPEMAILID,FK_GUESTGROUPID,FK_GUESTID,      EMAIL_ID,PRIMARY_CONTACT ) VALUES " +
                     " (?,?,?,    ?,?)";
             ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getGuestGroupEmailId(),guestRequestBean.getGuestGroupId(),guestRequestBean.getGuestId(),
@@ -82,7 +78,6 @@ public class BuildGuestData {
 
     public Integer insertGuestAddress(GuestRequestBean guestRequestBean) {
         Integer numOfRowsInserted = 0;
-        appLogging.info("Going to insert address");
         if( guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId()) ) {
             String sQuery = "INSERT into GTGUESTGROUPADDRESS( GUESTGROUPADDRESSID,FK_GUESTGROUPID,FK_GUESTID,      ADDRESS_1,ADDRESS_2,CITY,  " +
                     " STATE,COUNTRY,ZIPCODE,    PRIMARY_CONTACT ) VALUES " +
@@ -200,5 +195,26 @@ public class BuildGuestData {
             numOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildGuestData.java", "deleteGuest() ");
         }
         return numOfRowsDeleted;
+    }
+
+    public Integer deleteGuestGroup(GuestRequestBean guestRequestBean){
+        Integer numOfRowsDeleted = 0;
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())){
+            String sQuery = "DELETE FROM GTGUESTGROUP WHERE GUESTGROUPID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getGuestGroupId());
+            numOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildGuestData.java", "deleteGuestGroup() ");
+        }
+        return numOfRowsDeleted;
+    }
+
+    public Integer deleteEventGuestGroup(GuestRequestBean guestRequestBean){
+        Integer numOfRowsDeleted = 0;
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())){
+            String sQuery = "DELETE FROM GTEVENTGUESTGROUP WHERE EVENTGUESTGROUPID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getEventGuestGroupId());
+            numOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildGuestData.java", "deleteEventGuestGroup() ");
+        }
+        return numOfRowsDeleted;
+
     }
 }
