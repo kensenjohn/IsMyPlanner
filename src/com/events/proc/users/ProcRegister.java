@@ -129,7 +129,7 @@ public class ProcRegister  extends HttpServlet {
 
                     } else {
                         appLogging.info("This user already exists " + userRequestBean.getEmail());
-                        Text errorText = new ErrorText("Username already exists. Please change the username and try again.","err_mssg") ;
+                        Text errorText = new ErrorText("Email already exists. Please login or use the forgot password feature.","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;

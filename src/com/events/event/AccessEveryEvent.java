@@ -6,6 +6,7 @@ import com.events.bean.event.*;
 import com.events.clients.AccessClients;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import com.events.common.Utility;
 import com.events.data.clients.AccessClientData;
 import com.events.data.event.AccessEveryEventData;
 import org.json.JSONObject;
@@ -47,7 +48,7 @@ public class AccessEveryEvent {
             ArrayList<EveryEventBean> arrEveryEventBean  = everyEventResponseBean.getArrEveryEventBean();
             HashMap<String,ClientBean> hmClientBean = everyEventResponseBean.getHmClientBean();
             HashMap<String,EventDisplayDateBean> hmEventDisplayDateBean = everyEventResponseBean.getHmEventDisplayDateBean();
-            if(arrEveryEventBean!=null && !arrEveryEventBean.isEmpty() && hmClientBean!=null && !hmClientBean.isEmpty() &&
+            if(arrEveryEventBean!=null && !arrEveryEventBean.isEmpty() &&
                     hmEventDisplayDateBean!=null && !hmEventDisplayDateBean.isEmpty()) {
                 int iNumOfEvents = 0;
                 for(EveryEventBean everyEventBean : arrEveryEventBean ){
@@ -66,10 +67,14 @@ public class AccessEveryEvent {
                     }
 
                     String sClientID = ParseUtil.checkNull(everyEventBean.getClientId());
-                    ClientBean clientBean = hmClientBean.get(sClientID);
                     newEveryEventBean.setClientId( sClientID );
-                    newEveryEventBean.setClientName( clientBean.getClientName() );
-                    newEveryEventBean.setVendorId( ParseUtil.checkNull(clientBean.getVendorId()));
+
+                    if(hmClientBean!=null && !hmClientBean.isEmpty()) {
+                        ClientBean clientBean = hmClientBean.get(sClientID);
+                        newEveryEventBean.setClientName( clientBean.getClientName() );
+                        newEveryEventBean.setVendorId( ParseUtil.checkNull(clientBean.getVendorId()));
+                    }
+
 
 
                     jsonEveryEvent.put( ParseUtil.iToS(iNumOfEvents) , newEveryEventBean.toJson() );
@@ -123,5 +128,20 @@ public class AccessEveryEvent {
 
         }
         return hmEventDisplayDate;
+    }
+
+
+    public EveryEventResponseBean getEveryClientEvent(EveryEventRequestBean everyEventRequestBean) {
+        EveryEventResponseBean everyEventResponseBean = new EveryEventResponseBean();
+        if(everyEventRequestBean!=null && !Utility.isNullOrEmpty(everyEventRequestBean.getClientId()) ) {
+            AccessEveryEventData accessEveryEventData = new AccessEveryEventData();
+            ArrayList<EveryEventBean> arrEveryEventBean  = accessEveryEventData.getEveryEventByClient(everyEventRequestBean);
+            appLogging.info("Every client event : " + arrEveryEventBean);
+            HashMap<String,EventDisplayDateBean> hmEventDisplayDate = getEventDisplayDate(arrEveryEventBean);
+            appLogging.info("Every hmEventDisplayDate : " + hmEventDisplayDate);
+            everyEventResponseBean.setArrEveryEventBean(arrEveryEventBean);
+            everyEventResponseBean.setHmEventDisplayDateBean(hmEventDisplayDate);
+        }
+        return everyEventResponseBean;
     }
 }

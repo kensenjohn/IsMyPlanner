@@ -1,16 +1,15 @@
 package com.events.proc.event;
 
 import com.events.bean.event.EveryEventRequestBean;
+import com.events.bean.event.EveryEventResponseBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.json.ErrorText;
-import com.events.json.RespConstants;
-import com.events.json.RespObjectProc;
-import com.events.json.Text;
+import com.events.event.AccessEveryEvent;
+import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +44,46 @@ public class ProcLoadClientEvents  extends HttpServlet {
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
 
                     String sClientId = ParseUtil.checkNull( request.getParameter("client_id") );
-                    if(!Utility.isNullOrEmpty())
-                    EveryEventRequestBean everyEventRequestBean = new EveryEventRequestBean();
+                    if(Utility.isNullOrEmpty(sClientId)) {
+                        appLogging.info("An invalid client ID was used");
+                        Text errorText = new ErrorText("We were unable to load this client's events.","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
+                    } else {
+                        EveryEventRequestBean everyEventRequestBean = new EveryEventRequestBean();
+                        everyEventRequestBean.setClientId( sClientId );
+                        everyEventRequestBean.setDeletedEvent( false );
+
+                        AccessEveryEvent accessClientEveryEvent = new AccessEveryEvent();
+                        EveryEventResponseBean everyEventResponseBean = accessClientEveryEvent.getEveryClientEvent( everyEventRequestBean );
+
+                        if(everyEventResponseBean!=null) {
+                            if( everyEventResponseBean.getArrEveryEventBean()!=null && !everyEventResponseBean.getArrEveryEventBean().isEmpty() ) {
+                                JSONObject jsonClientEveryEvent = accessClientEveryEvent.getEveryEventJson(everyEventResponseBean);
+
+                                jsonResponseObj.put("client_every_event",jsonClientEveryEvent);
+                                jsonResponseObj.put("num_of_events",everyEventResponseBean.getArrEveryEventBean().size());
+
+                                Text okText = new OkText("Loading of Every Event completed","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
+                            } else {
+
+                                jsonResponseObj.put("num_of_events",0);
+                                Text okText = new OkText("No event present","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
+                            }
+                        } else {
+                            appLogging.info("Error while loading every event (everyEventResponseBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEvent - 002)","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
+                        }
+                    }
+
 
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );

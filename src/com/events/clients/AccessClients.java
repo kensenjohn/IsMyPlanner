@@ -8,6 +8,7 @@ import com.events.bean.users.UserInfoBean;
 import com.events.bean.users.UserRequestBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import com.events.common.Utility;
 import com.events.data.clients.AccessClientData;
 import com.events.users.AccessUsers;
 import org.json.JSONException;
@@ -42,7 +43,7 @@ public class AccessClients {
 
     public ClientBean getClientData ( ClientRequestBean clientRequestBean ) {
         ClientBean clientBean = new ClientBean();
-        if(clientRequestBean!=null && !"".equalsIgnoreCase(clientRequestBean.getClientId()) ) {
+        if(clientRequestBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId())  ) {
             AccessClientData accessClientData = new AccessClientData();
             clientBean = accessClientData.getClient(clientRequestBean) ;
         }
@@ -51,18 +52,18 @@ public class AccessClients {
 
     public ClientResponseBean getClientContactInfo(ClientRequestBean clientRequestBean)  {
         ClientResponseBean clientResponseBean =new ClientResponseBean();
-        if(clientRequestBean!=null && !"".equalsIgnoreCase(clientRequestBean.getVendorId()) && !"".equalsIgnoreCase(clientRequestBean.getClientId()) ) {
+        if(clientRequestBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId()) && !Utility.isNullOrEmpty(clientRequestBean.getVendorId())  ) {
 
             ClientBean clientBean = getClientData(clientRequestBean);
-            if(clientBean!=null && !"".equalsIgnoreCase(clientBean.getClientId())) {
+            if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId()) ) {
 
                 UserRequestBean userRequestBean = new UserRequestBean();
-                userRequestBean.setParentId(clientBean.getVendorId());
+                userRequestBean.setParentId(clientBean.getClientId());
 
                 AccessUsers accessUsers = new AccessUsers();
                 UserBean userBean = accessUsers.getUserByParentId(userRequestBean);
 
-                if(userBean!=null && !"".equalsIgnoreCase(ParseUtil.checkNullObject(userBean.getUserInfoId()))) {
+                if(userBean!=null &&  !Utility.isNullOrEmpty(userBean.getUserInfoId()))  {
                     userRequestBean.setUserInfoId( userBean.getUserInfoId() );
                     UserInfoBean userInfoBean = accessUsers.getUserInfoFromInfoId(userRequestBean);
 

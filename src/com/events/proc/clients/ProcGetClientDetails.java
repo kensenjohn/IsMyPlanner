@@ -44,12 +44,13 @@ public class ProcGetClientDetails    extends HttpServlet {
         try{
             if( !DataSecurityChecker.isInsecureInputResponse(request) ) {
 
-                String sClientId = ParseUtil.checkNull(request.getParameter("clientid"));
-                String sClientDataType = ParseUtil.checkNull(request.getParameter("clientdatatype"));
+                String sClientId = ParseUtil.checkNull(request.getParameter("client_id"));
+                String sClientDataType = ParseUtil.checkNull(request.getParameter("client_datatype"));
+                String sDataDetail = ParseUtil.checkNull(request.getParameter("data_detail"));
 
-                if("".equalsIgnoreCase(sClientId)) {
+                if(Utility.isNullOrEmpty(sClientId) ) {
                     appLogging.info("An invalid client ID was used");
-                    Text errorText = new ErrorText("Please select a valid client","err_mssg") ;
+                    Text errorText = new ErrorText("We were unable to load this client's information.","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -70,6 +71,7 @@ public class ProcGetClientDetails    extends HttpServlet {
                             ClientRequestBean clientRequestBean = new ClientRequestBean();
                             clientRequestBean.setClientId(sClientId);
                             clientRequestBean.setVendorId( vendorBean.getVendorId() );
+                            clientRequestBean.setDataDetail( sDataDetail );
 
 
                             AccessClients accessClients = new AccessClients();
@@ -82,7 +84,7 @@ public class ProcGetClientDetails    extends HttpServlet {
                                     UserBean userBean = clientResponseBean.getUserBean();
                                     UserInfoBean userInfoBean = clientResponseBean.getUserInfoBean();
 
-                                    if( clientbean!=null && userBean!=null && userInfoBean!=null && !"".equalsIgnoreCase(clientResponseBean.getClientId()) &&
+                                    if( clientbean!=null && userBean!=null && userInfoBean!=null && !Utility.isNullOrEmpty(clientResponseBean.getClientId())  &&
                                             !"".equalsIgnoreCase(clientResponseBean.getUserId()) && !"".equalsIgnoreCase(clientResponseBean.getUserInfoId() )) {
                                         jsonResponseObj.put("client_data",clientbean.toJson());
                                         jsonResponseObj.put("user_data",userBean.toJson());
@@ -106,6 +108,14 @@ public class ProcGetClientDetails    extends HttpServlet {
 
                                     responseStatus = RespConstants.Status.ERROR;
                                 }
+                            } else if(  "event_info".equalsIgnoreCase(sClientDataType) ) {
+                                ClientBean clientBean = accessClients.getClientData( clientRequestBean ) ;
+                                if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId()) ) {
+                                    jsonResponseObj.put("client_data",clientBean.toJson());
+                                }
+                                Text okText = new OkText("The client contact_info were loaded successfully","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
                             } else{
                                 Text errorText = new ErrorText("Oops!! We were unable to process your request. Please try again later.(getclientdetails - 003)","err_mssg") ;
                                 arrErrorText.add(errorText);

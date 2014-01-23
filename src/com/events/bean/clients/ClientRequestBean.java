@@ -16,11 +16,20 @@ public class ClientRequestBean {
     private String clientId = Constants.EMPTY;
     private String vendorId = Constants.EMPTY;
     private String clientName = Constants.EMPTY;
+    private String dataDetail = Constants.EMPTY;
     private boolean isCorporateClient = false;
     private UserRequestBean userRequestBean = new UserRequestBean();
 
     private UserBean userBean = new UserBean();
     private UserInfoBean userInfoBean = new UserInfoBean();
+
+    public String getDataDetail() {
+        return dataDetail;
+    }
+
+    public void setDataDetail(String dataDetail) {
+        this.dataDetail = dataDetail;
+    }
 
     public String getVendorId() {
         return vendorId;

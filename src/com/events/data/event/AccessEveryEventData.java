@@ -46,8 +46,8 @@ public class AccessEveryEventData {
     public ArrayList<EveryEventBean> getEveryEventByClient(EveryEventRequestBean everyEventRequestBean){
         ArrayList<EveryEventBean> arrEveryEventBean  = new ArrayList<EveryEventBean>();
         if(everyEventRequestBean!=null && !"".equalsIgnoreCase(everyEventRequestBean.getClientId())) {
-            String sQuery = "SELECT * FROM GTEVENT WHERE FK_CLIENTID= ?";
-            ArrayList<Object> aParams = DBDAO.createConstraint( everyEventRequestBean.getClientId() );
+            String sQuery = "SELECT * FROM GTEVENT WHERE FK_CLIENTID= ? AND DEL_ROW = ? ORDER BY EVENTDATE ASC";
+            ArrayList<Object> aParams = DBDAO.createConstraint( everyEventRequestBean.getClientId() , everyEventRequestBean.isDeletedEvent()?"1":"0" );
 
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEveryEventData.java", "getEveryEventByVendor()");
 

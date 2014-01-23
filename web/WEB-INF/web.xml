@@ -57,7 +57,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Process Load Client Events</servlet-name>
-        <servlet-class>com.events.proc.clients.ProcGetClientDetails</servlet-class>
+        <servlet-class>com.events.proc.event.ProcLoadClientEvents</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Process Load Client Events</servlet-name>

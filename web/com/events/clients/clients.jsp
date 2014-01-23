@@ -2,6 +2,9 @@
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
+
+<link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
+<link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 
 <%
@@ -10,15 +13,18 @@
 
     boolean isShowClientContactInfo = false;
     boolean isShowClientEvents = false;
-    String sClientId = ParseUtil.checkNull(request.getParameter("clientid"));
-    String sClientDataType = ParseUtil.checkNull(request.getParameter("clientdatatype"));
+    boolean isShowClientTab = false;
+    String sClientId = ParseUtil.checkNull(request.getParameter("client_id"));
+    String sClientDataType = ParseUtil.checkNull(request.getParameter("client_datatype"));
 
     if( !"".equalsIgnoreCase(sClientId) && "contact_info".equalsIgnoreCase(sClientDataType)) {
         isShowClientContactInfo = true;
         loadSingleClientContactInfo = true;
+        isShowClientTab = true;
     } else if(!"".equalsIgnoreCase(sClientId) && "event_info".equalsIgnoreCase(sClientDataType)) {
         isShowClientEvents = true;
         loadSingleClientEvents = true;
+        isShowClientTab = true;
     }
     if( ("".equalsIgnoreCase(sClientId) || "".equalsIgnoreCase(sClientDataType)) ) {
         isShowClientContactInfo = true;
@@ -34,24 +40,23 @@
     </jsp:include>
     <div class="breadcrumb_format">
         <div class="container">
-            <div class="page-title">Clients</div>
+            <div class="page-title">Clients <span id="client_name_title"> - Add a Client</span></div>
         </div>
     </div>
     <div class="container">
         <div class="content_format">
             <div class="use_left_sidebar col-md-9 no_left_padding">
-                <h4><span id="client_name_title">New Client</span></h4>
                 <div id="tabs">
 
 
                         <%
-                            if(isShowClientContactInfo) {
+                            if(isShowClientTab && isShowClientContactInfo) {
                         %>
                                 <jsp:include page="/com/events/clients/client_tab.jsp">
                                     <jsp:param name="client_contact_info_active" value="active"/>
                                 </jsp:include>
                         <%
-                            } else if (isShowClientEvents) {
+                            } else if (isShowClientTab && isShowClientEvents) {
                         %>
                                 <jsp:include page="/com/events/clients/client_tab.jsp">
                                     <jsp:param name="client_events_active" value="active"/>
@@ -102,10 +107,21 @@
 <form id="frm_new_client" action="/com/events/clients/clients.jsp">
 </form>
 <form id="frm_load_client">
-    <input type="hidden"  id="clientid" name="clientid" value="">
+    <input type="hidden"  id="client_id" name="client_id" value="">
+    <input type="hidden"  id="client_datatype" name="client_datatype" value="">
 </form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
+<%
+    if(loadSingleClientEvents) {
+%>
+        <script src="/js/jquery.dataTables.min.js"></script>
+<%
+    }
+%>
+
+<script src="/js/clients/clientcontactinfo.js"></script>
 <script   type="text/javascript">
+    var varCurrentClientId = '<%=sClientId%>';
     $(window).load(function() {
         $('#btn_save_client').click(function(){
             saveClient(getResult);
@@ -124,7 +140,8 @@
         if(varLoadSingleClientEvents) {
             var varClientId = '<%=sClientId%>';
             var varClientDataType = '<%=sClientDataType%>';
-            loadClientEvents(varClientId, varClientDataType , populateClientDetail);
+            loadClientDetail(varClientId, varClientDataType , populateClientMinimum);
+            loadClientEvents(varClientId, varClientDataType , populateClientEvents);
         }
         loadClients(populateClientList);
     });
@@ -132,7 +149,7 @@
     function loadClients(callbackmethod) {
         var actionUrl = "/proc_load_clients.aeve";
         var methodType = "POST";
-        var dataString = $("#frm_load_client").serialize();
+        var dataString = '';
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
     function populateClientList(jsonResult) {
@@ -153,8 +170,7 @@
                     var varNumOfClients = jsonResponseObj.num_of_clients;
                     if(varNumOfClients>0){
                         processClientListSummary(varNumOfClients,jsonResponseObj.all_client_summary);
-                    }
-                    else {
+                    } else {
                         //displayMssgBoxAlert("Create a new client here.", true);
                     }
 
@@ -170,8 +186,11 @@
         var varUnorderClientList = $('<ul></ul>');
         for(i=0;i<varNumOfClients;i++){
             var varClientBean = clientSummaryList[i];
-            //displayMssgBoxAlert('client name :' + varClientBean.client_name , false);
-            varUnorderClientList.append('<li><a href=\"/com/events/clients/clients.jsp?clientid='+varClientBean.client_id+'&clientdatatype=contact_info\">'+varClientBean.client_name+'</a></li>');
+            var active_link = '';
+            if ( varCurrentClientId == varClientBean.client_id ) {
+                active_link = 'active_link';
+            }
+            varUnorderClientList.append('<li class=\"'+active_link+'\"><a href=\"/com/events/clients/clients.jsp?client_id='+varClientBean.client_id+'&client_datatype=contact_info\">'+varClientBean.client_name+'</a></li>');
         }
         $('#div_client_list').append(varUnorderClientList);
     }

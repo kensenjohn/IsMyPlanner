@@ -9,22 +9,33 @@ function saveClient( callbackmethod) {
 function loadClientDetail(varClientId, varClientDataType , callbackmethod) {
     var actionUrl = "/proc_get_client_details.aeve";
     var methodType = "POST";
-    var dataString = 'clientid=' + varClientId + '&clientdatatype='+varClientDataType;
+    var dataString = 'client_id=' + varClientId + '&client_datatype='+varClientDataType;
     makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
 }
-
+function populateClientMinimum(jsonResult) {
+    if(jsonResult!=undefined) {
+        var varResponseObj = jsonResult.response;
+        if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+            displayAjaxError(varResponseObj);
+        } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+            var varIsPayloadExist = varResponseObj.is_payload_exist;
+            if(varIsPayloadExist == true) {
+                var jsonResponseObj = varResponseObj.payload;
+                processClientMinimumInfo(jsonResponseObj.client_data);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (populateClientDetail - 1)", true);
+        }
+    } else {
+        displayMssgBoxAlert("Please try again later (populateClientDetail - 2)", true);
+    }
+}
 function populateClientDetail(jsonResult) {
 
     if(jsonResult!=undefined) {
         var varResponseObj = jsonResult.response;
         if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
-            var varIsMessageExist = varResponseObj.is_message_exist;
-            if(varIsMessageExist == true) {
-                var jsonResponseMessage = varResponseObj.messages;
-                var varArrErrorMssg = jsonResponseMessage.error_mssg;
-                displayMssgBoxMessages(varArrErrorMssg, true);
-            }
-
+            displayAjaxError(varResponseObj);
         } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
             var varIsPayloadExist = varResponseObj.is_payload_exist;
             if(varIsPayloadExist == true) {
@@ -44,13 +55,7 @@ function getResult(jsonResult)
     if(jsonResult!=undefined) {
         var varResponseObj = jsonResult.response;
         if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
-            var varIsMessageExist = varResponseObj.is_message_exist;
-            if(varIsMessageExist == true) {
-                var jsonResponseMessage = varResponseObj.messages;
-                var varArrErrorMssg = jsonResponseMessage.error_mssg;
-                displayMssgBoxMessages(varArrErrorMssg, true);
-            }
-
+            displayAjaxError(varResponseObj);
         } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
             var varIsPayloadExist = varResponseObj.is_payload_exist;
             if(varIsPayloadExist == true) {
@@ -66,20 +71,33 @@ function getResult(jsonResult)
 }
 function processClientResponse(clientResponse) {
     if(clientResponse!=undefined) {
-        $('#clientId').val(clientResponse.client_id);
+        $('#client_id').val(clientResponse.client_id);
+        $('#client_datatype').val('contact_info');
         $('#userId').val(clientResponse.user_id);
         $('#userInfoId').val(clientResponse.userinfo_id);
         $('#client_name_title').text( $('#clientName').val())
-        displayMssgBoxAlert('Your changes were successfully updated.', false);
+        //displayMssgBoxAlert('Your changes were successfully updated.', false);
+        $('#frm_load_client').submit();
 
     } else {
         displayMssgBoxAlert('Oops!! Something went wrong. Please try again later. (client_response)', false);
     }
 }
-
+function processClientMinimumInfo(varClientBean) {
+    if(varClientBean!=undefined) {
+        setClientNameTitle( varClientBean.client_name );
+    }
+}
+function setClientNameTitle( varTitle) {
+    if(varTitle!=undefined && varTitle!=''){
+        $('#client_name_title').text( ' - ' + varTitle );
+    } else {
+        $('#client_name_title').text( '' ) ;
+    }
+}
 function processClientDetail(varClientBean,varUserBean, varUserInfoBean) {
     if(varClientBean!=undefined) {
-        $('#client_name_title').text( varClientBean.client_name);
+        setClientNameTitle( varClientBean.client_name );
         $('#clientName').val( varClientBean.client_name);
 
         if( varClientBean.is_coporate_client == true ){
@@ -87,7 +105,7 @@ function processClientDetail(varClientBean,varUserBean, varUserInfoBean) {
         } else {
             $('#isCorporateClient').prop('checked', false);
         }
-        $('#clientId').val( varClientBean.client_id);
+        $('#client_id').val( varClientBean.client_id);
     }
     if(varUserBean!=undefined) {
         $('#userId').val( varUserBean.user_id);

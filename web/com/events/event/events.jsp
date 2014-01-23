@@ -48,6 +48,7 @@
     function loadEvents(callbackmethod) {
         var actionUrl = "/proc_load_all_events.aeve";
         var methodType = "POST";
+        var dataString = ''
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
     function populateEventList(jsonResult) {

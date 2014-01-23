@@ -103,6 +103,7 @@
 <form id="frm_passthru" action="<%=Constants.DASHBOARD_LINK%>">
 
 </form>
+<jsp:include page="/com/events/common/footer_top.jsp"/>
 <script   type="text/javascript">
     $(window).load(function() {
         $('#btn_login').click(function(){
@@ -164,5 +165,4 @@
         document.cookie=cookieName + "=" + c_value;
     }
 </script>
-<jsp:include page="/com/events/common/footer_top.jsp"/>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>
