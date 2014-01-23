@@ -70,23 +70,30 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-5">
-                    <h4>Step 2 : Upload Excel</h4>
+                <div class="col-md-6">
+                    <h4>Step 2 : Upload CSV and Create Guests</h4>
                 </div>
             </div>
             <div class="row">
                 <form id="fileupload" action="/proc_upload_csv.aeve" method="POST" enctype="multipart/form-data">
                     <div class="col-md-offset-1 col-md-4">
-
                         <input type="file" name="files[]" class="fileinput-button btn btn-default">
                     </div>
-                    <div class="col-md-2" >
-                        <div id="btn_upload">
-
-                        </div>
-                    </div>
-
                 </form>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-5">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-3">
+                    <div id="btn_upload" style="display:none">
+                        <button  type="button" class="btn  btn-filled" id="btn_upload_and_create">
+                            <span><span class="glyphicon glyphicon-upload"></span> Upload and Create Guests</span>
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-offset-1 col-md-3">
@@ -102,32 +109,12 @@
             </div>
             <div class="row">
                 <div class="col-md-offset-1 col-md-5" style="display:none;" id="div_download_guestlist_csv">
-                    <a id="link_download_guestlist_csv" href="">Click to download the uploaded file.</a>
+                    <a id="link_download_guestlist_csv" href=""  class="btn  btn-default btn-xs" >Click to download the uploaded file.</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     &nbsp;
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    &nbsp;
-                </div>
-            </div>
-            <div class="row" id="btn_process_guest_excel" style="display:none;">
-                <div class="col-md-5">
-                    <h4>Step 3 :
-                        <button  type="button" class="btn  btn-filled" id="btn_process_guest">
-                            <span><span class="glyphicon glyphicon-plus"></span> Create Guests From Uploaded CSV</span>
-                        </button></h4>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-1">
-                </div>
-                <div class="col-md-5">
-                    <span id="guestcreaterecord_button_status"></span>
                 </div>
             </div>
         </div>
@@ -148,31 +135,26 @@
     var varEventId = '<%=sEventId%>';
     $(window).load(function() {
         loadEventInfo(populateEventInfo,varEventId);
-        loadGuestCreateJobRecord(populateGuestCreateJob);
     });
     $(function () {
         $('#fileupload').fileupload({
             dataType: 'json',
             replaceFileInput: false,
             add: function (e, data) {
-                $('#btn_upload').empty();
-                var varUploadButton = $('<button/>').attr("id","upload_button").addClass("btn btn-default").appendTo($('#btn_upload'));
-                $('#upload_button').append( $('<span/>').addClass("glyphicon glyphicon-upload"));
-                $("#upload_button").text('Upload');
-
+                $('#btn_upload').show();
+                var varUploadButton = $('#btn_upload_and_create');
                 data.context = varUploadButton.click(function () {
-                    data.context = $('<p/>').text('Uploading...').replaceAll($(this));
+                    data.context = $('<p/>').attr("id","upload_status").text('Uploading...').replaceAll($(this));
                     data.submit();
                 });
 
             },
             done: function (e, data) {
-                data.context.text('Upload Complete.');
+                data.context.text('Upload Complete. Creating New Guests...');
                 if( data.result != undefined ) {
                     var varDataResult = data.result[0];
                     $('#upload_id').val(varDataResult.upload_id);
                     $('#job_status').val('<%=Constants.JOB_STATUS.PRELIM_STATE.getStatus()%>');
-                    $('#guestcreaterecord_file_status').text('Currently uploaded file : ' + varDataResult.name );
 
                     if( varDataResult.success ) {
                         var linkToDownloadFile = varDataResult.fileuploadhost+"/"+  varDataResult.foldername+"/"+varDataResult.name;
@@ -192,12 +174,6 @@
             }
         });
     });
-    function loadGuestCreateJobRecord(callbackmethod) {
-        var actionUrl = "/proc_load_guestcreationjob_records.aeve";
-        var methodType = "POST";
-        var dataString = $("#frm_process_excel").serialize();
-        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
-    }
     function activateGuestsCreationJob(callbackmethod) {
         var actionUrl = "/proc_edit_guestcreationjob_records.aeve";
         var methodType = "POST";
@@ -213,10 +189,10 @@
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 $('#btn_process_excel').show();
             } else {
-                alert("Please try again later 1.");
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (uploadGuestActive 1)', true);
             }
         } else {
-            alert("Response is null 3.");
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (uploadGuestActive 3)', true);
         }
     }
 
@@ -231,65 +207,16 @@
             var varResponseObj = jsonResult.response;
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
                 displayAjaxError(varResponseObj);
+                $('#upload_status').text('Oops!! We were unable to complete your request.');
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
-                $('#btn_process_guest_excel').show();
-                //$('#guestcreaterecord_button_status').text('Your guests from the excel will be created soon.');
-                invokeActivateGuestsCreation();
+                $('#upload_status').text('Completed Guest Creation');
+                displayMssgBoxAlert('Your guests were successfully created.', false);
             } else {
-                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (uploadGuestCreate 1)', true);
             }
         } else {
-            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (uploadGuestCreate 3)', true);
         }
-    }
-    function populateGuestCreateJob(jsonResult){
-        if(jsonResult!=undefined) {
-            var varResponseObj = jsonResult.response;
-            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
-                displayAjaxError(varResponseObj);
-            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
-                var varIsPayloadExist = varResponseObj.is_payload_exist;
-                if(varIsPayloadExist == true) {
-                    var jsonResponseObj = varResponseObj.payload;
-                    if(jsonResponseObj!=undefined) {
-                        var varFileName = jsonResponseObj.file_name;
-                        var varUploadId = jsonResponseObj.upload_id;
-                        var varJobStatus = jsonResponseObj.job_status;
-                        if(varFileName!=undefined && varFileName!='') {
-                            $('#guestcreaterecord_file_status').text('Currently uploaded file : ' + varFileName );
-                        }
-                        if(varUploadId!=undefined && varUploadId!='') {
-                            $('#upload_id').val(varUploadId);
-                        }
-                        if(varJobStatus!=undefined && varJobStatus!='') {
-                            $('#job_status').val(varJobStatus);
-                        }
-
-                        if(varJobStatus == '<%=Constants.JOB_STATUS.PRELIM_STATE.getStatus()%>' ) {
-                            $('#btn_process_guest_excel').show();
-                            invokeActivateGuestsCreation();
-                        }
-
-                        if(varJobStatus == '<%=Constants.JOB_STATUS.READY_TO_PICK.getStatus()%>' ) {
-                            $('#guestcreaterecord_button_status').text('Your guests from the excel will be created soon.');
-                        }
-                    }
-                }
-            } else {
-                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
-            }
-        } else {
-            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
-        }
-    }
-
-    function invokeActivateGuestsCreation(){
-        $('#btn_process_guest_excel').click(function(){
-            $('#job_status').val('<%=Constants.JOB_STATUS.READY_TO_PICK.getStatus()%>');
-            displayMssgBoxAlert('You will be emailed after the excel gets processed.', false);
-            activateGuestsCreationJob(processActivateGuestCreationJob);   //this will create a job record with - Ready To Pick status
-
-        });
     }
 </script>

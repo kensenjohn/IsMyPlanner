@@ -1,18 +1,16 @@
 package com.events.proc.event;
 
 import com.events.bean.event.EveryEventRequestBean;
-import com.events.bean.event.EveryEventResponseBean;
 import com.events.bean.users.UserBean;
-import com.events.bean.vendors.VendorBean;
-import com.events.bean.vendors.VendorRequestBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.event.AccessEveryEvent;
-import com.events.json.*;
-import com.events.vendors.AccessVendors;
+import com.events.json.ErrorText;
+import com.events.json.RespConstants;
+import com.events.json.RespObjectProc;
+import com.events.json.Text;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +25,11 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 12/29/13
- * Time: 2:13 PM
+ * Date: 1/23/14
+ * Time: 9:11 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadAllEvents  extends HttpServlet {
+public class ProcLoadClientEvents  extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     public void doPost(HttpServletRequest request,  HttpServletResponse response)  throws ServletException, IOException {
@@ -46,41 +44,9 @@ public class ProcLoadAllEvents  extends HttpServlet {
 
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
 
-                    VendorRequestBean vendorRequestBean = new VendorRequestBean();
-                    vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
-                    AccessVendors accessVendor = new AccessVendors();
-                    VendorBean vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
-
+                    String sClientId = ParseUtil.checkNull( request.getParameter("client_id") );
+                    if(!Utility.isNullOrEmpty())
                     EveryEventRequestBean everyEventRequestBean = new EveryEventRequestBean();
-                    everyEventRequestBean.setVendorId(vendorBean.getVendorId());
-                    everyEventRequestBean.setDeletedEvent(false);
-
-                    AccessEveryEvent accessEveryEvent = new AccessEveryEvent();
-                    EveryEventResponseBean everyEventResponseBean = accessEveryEvent.getEveryEvent(everyEventRequestBean);
-                    if(everyEventResponseBean!=null) {
-                        if( everyEventResponseBean.getArrEveryEventBean()!=null && !everyEventResponseBean.getArrEveryEventBean().isEmpty() ) {
-                            JSONObject jsonEveryEvent = accessEveryEvent.getEveryEventJson(everyEventResponseBean);
-
-                            jsonResponseObj.put("every_event",jsonEveryEvent);
-                            jsonResponseObj.put("num_of_events",everyEventResponseBean.getArrEveryEventBean().size());
-
-                            Text okText = new OkText("Loading of Every Event completed","status_mssg") ;
-                            arrOkText.add(okText);
-                            responseStatus = RespConstants.Status.OK;
-                        } else {
-
-                            jsonResponseObj.put("num_of_events",0);
-                            Text okText = new OkText("No event present","status_mssg") ;
-                            arrOkText.add(okText);
-                            responseStatus = RespConstants.Status.OK;
-                        }
-                    } else {
-                        appLogging.info("Error while loading every event (everyEventResponseBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEvent - 002)","err_mssg") ;
-                        arrErrorText.add(errorText);
-
-                        responseStatus = RespConstants.Status.ERROR;
-                    }
 
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );

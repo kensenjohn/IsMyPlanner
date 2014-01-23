@@ -6,6 +6,8 @@
 
 <%
     boolean loadSingleClientContactInfo = false;
+    boolean loadSingleClientEvents = false;
+
     boolean isShowClientContactInfo = false;
     boolean isShowClientEvents = false;
     String sClientId = ParseUtil.checkNull(request.getParameter("clientid"));
@@ -16,6 +18,7 @@
         loadSingleClientContactInfo = true;
     } else if(!"".equalsIgnoreCase(sClientId) && "event_info".equalsIgnoreCase(sClientDataType)) {
         isShowClientEvents = true;
+        loadSingleClientEvents = true;
     }
     if( ("".equalsIgnoreCase(sClientId) || "".equalsIgnoreCase(sClientDataType)) ) {
         isShowClientContactInfo = true;
@@ -102,7 +105,6 @@
     <input type="hidden"  id="clientid" name="clientid" value="">
 </form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
-<script src="/js/clients/clientcontactinfo.js"></script>
 <script   type="text/javascript">
     $(window).load(function() {
         $('#btn_save_client').click(function(){
@@ -116,6 +118,13 @@
             var varClientId = '<%=sClientId%>';
             var varClientDataType = '<%=sClientDataType%>';
             loadClientDetail(varClientId, varClientDataType , populateClientDetail);
+        }
+
+        var varLoadSingleClientEvents = <%=loadSingleClientEvents%>;
+        if(varLoadSingleClientEvents) {
+            var varClientId = '<%=sClientId%>';
+            var varClientDataType = '<%=sClientDataType%>';
+            loadClientEvents(varClientId, varClientDataType , populateClientDetail);
         }
         loadClients(populateClientList);
     });

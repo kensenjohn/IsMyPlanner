@@ -96,3 +96,5 @@
     <input type="hidden"  id="userId" name="userId" value="">
     <input type="hidden"  id="userInfoId" name="userInfoId" value="">
 </form>
+
+<script src="/js/clients/clientcontactinfo.js"></script>
