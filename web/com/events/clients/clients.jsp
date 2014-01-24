@@ -107,8 +107,8 @@
 <form id="frm_new_client" action="/com/events/clients/clients.jsp">
 </form>
 <form id="frm_load_client">
-    <input type="hidden"  id="client_id" name="client_id" value="">
-    <input type="hidden"  id="client_datatype" name="client_datatype" value="">
+    <input type="hidden"  id="load_client_id" name="client_id" value="">
+    <input type="hidden"  id="load_client_datatype" name="client_datatype" value="">
 </form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <%
@@ -192,6 +192,7 @@
             }
             varUnorderClientList.append('<li class=\"'+active_link+'\"><a href=\"/com/events/clients/clients.jsp?client_id='+varClientBean.client_id+'&client_datatype=contact_info\">'+varClientBean.client_name+'</a></li>');
         }
+        $('#div_client_list').empty();
         $('#div_client_list').append(varUnorderClientList);
     }
 </script>

@@ -71,11 +71,17 @@ function getResult(jsonResult)
 }
 function processClientResponse(clientResponse) {
     if(clientResponse!=undefined) {
-        $('#client_id').val(clientResponse.client_id);
+        var varClientId = clientResponse.client_id;
+        $('#client_id').val(varClientId);
         $('#client_datatype').val('contact_info');
         $('#userId').val(clientResponse.user_id);
         $('#userInfoId').val(clientResponse.userinfo_id);
-        $('#client_name_title').text( $('#clientName').val())
+        $('#client_name_title').text( $('#clientName').val());
+
+        $('#load_client_id').val(varClientId);
+        $('#load_client_datatype').val('contact_info');
+
+        //loadClients(populateClientList);
         //displayMssgBoxAlert('Your changes were successfully updated.', false);
         $('#frm_load_client').submit();
 

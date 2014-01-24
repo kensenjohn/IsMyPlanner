@@ -92,7 +92,7 @@
         </label>
     </div>
     <button type="button" class="btn  btn-filled" id="btn_save_client">Save Changes</button>
-    <input type="hidden"  id="clientId" name="clientId" value="">
+    <input type="hidden"  id="client_id" name="client_id" value="">
     <input type="hidden"  id="userId" name="userId" value="">
     <input type="hidden"  id="userInfoId" name="userInfoId" value="">
 </form>
