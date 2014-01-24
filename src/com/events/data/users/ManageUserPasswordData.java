@@ -56,8 +56,6 @@ public class ManageUserPasswordData {
 
     public PasswordBean getPassword(PasswordRequestBean passwordRequestBean) {
         PasswordBean passwordBean = new PasswordBean();
-        appLogging.error("PasswordRequestBean ");
-
         if(passwordRequestBean!=null ) {
             String sQuery = "SELECT * FROM GTPASSWORD WHERE FK_USERID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint(passwordRequestBean.getUserId());

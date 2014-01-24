@@ -527,7 +527,7 @@ aside.sidebar {
     padding: 0px;
     float: left;
     clear: both;
-    width: 99%;
+    width: 100%;
     margin-bottom: 0px;
     text-align: left;
 }
@@ -591,6 +591,17 @@ ul.tabs li.active, html ul.tabs li.active a,  html ul.tabs li.active a:hover  {
 .bar {
     height: 18px;
     background: green;
+}
+
+
+/** Panel **/
+.panel-default {
+    border-color: #dbf1ff;
+}
+.panel-default > .panel-heading {
+    color: #666;
+    background-color: #fcfcfc;
+    border-color: #dbf1ff;
 }
 
 
