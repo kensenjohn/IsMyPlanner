@@ -2,7 +2,10 @@
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
+<meta http-equiv="x-ua-compatible" content="IE=10">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
+<link rel="stylesheet" href="/css/pick-a-color-1.2.0.min.css">
 <link rel="stylesheet" href="/css/colorbox.css" id="theme_time">
 <body>
 <div class="page_wrap">
@@ -14,7 +17,7 @@
     </jsp:include>
     <div class="breadcrumb_format">
         <div class="container">
-            <div class="page-title">Dashboard</div>
+            <div class="page-title">Dashboard - Our Website</div>
         </div>
     </div>
     <div class="container">
@@ -23,7 +26,7 @@
                 <div class="col-md-12">
                     <div id="tabs">
                         <jsp:include page="/com/events/dashboard/dashboard_tab.jsp">
-                            <jsp:param name="dashboard_manage_landingpage_active" value="active"/>
+                            <jsp:param name="our_website_active" value="active"/>
                         </jsp:include>
                     </div>
                 </div>
@@ -36,6 +39,14 @@
             <div class="row">
                 <div class="col-md-6">
                     <form method="post" id="frm_landing_page">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="landingPageBkgColor" class="form_label">Background Color</label><span class="required"> *</span>
+                                    <input type="text" value="FFFFFF" name="landingPageBkgColor"  id="landingPageBkgColor" class="pick-a-color">
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-12">
@@ -192,9 +203,18 @@
 <script src="/js/upload/jquery.iframe-transport.js"></script>
 <script src="/js/upload/jquery.fileupload.js"></script>
 <script src="/js/jquery.colorbox-min.js"></script>
+<script src="/js/pick-a-color/tinycolor-0.9.15.min.js"></script>
+<script src="/js/pick-a-color/pick-a-color-1.2.0.min.js"></script>
 <script type="text/javascript">
     $(window).load(function() {
-        loadVendorLandingPageInfo(populateVendorLandingPage)
+        loadVendorLandingPageInfo(populateVendorLandingPage);
+        $("#landingPageBkgColor").pickAColor({
+            showSavedColors         : false,
+            showAdvanced            : false,
+            saveColorsPerElement    : false,
+            fadeMenuToggle          : true,
+            showHexInput            : true
+        });
         $('#landingPageTheme').on( "change", function(){
             displayLandingPage();
         });
