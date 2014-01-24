@@ -58,7 +58,7 @@ public class ProcSaveClient  extends HttpServlet {
                 String sClientState = ParseUtil.checkNull(request.getParameter("clientState"));
                 String sClientCountry = ParseUtil.checkNull(request.getParameter("clientCountry"));
                 String sClientPostalCode = ParseUtil.checkNull(request.getParameter("clientPostalCode"));
-                String sClientId = ParseUtil.checkNull(request.getParameter("clientId"));
+                String sClientId = ParseUtil.checkNull(request.getParameter("client_id"));
                 String sUserId = ParseUtil.checkNull(request.getParameter("userId"));
                 String sUserInfoId = ParseUtil.checkNull(request.getParameter("userInfoId"));
 
