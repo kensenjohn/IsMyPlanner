@@ -47,7 +47,7 @@
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
                                                     <a data-toggle="collapse" data-parent="#collapse_website_colors" href="#collapse_colors">
-                                                        Colors
+                                                        <span id="website_color_icon" class="glyphicon glyphicon-expand"></span> Colors
                                                     </a>
                                                 </h4>
                                             </div>
@@ -329,6 +329,14 @@
 
         /** Website Colors */
         $('#collapse_website_colors').collapse( 'hide');
+        $('#collapse_website_colors').on('hide.bs.collapse', function () {
+            $('#website_color_icon').removeClass("glyphicon glyphicon-collapse-down");
+            $('#website_color_icon').addClass("glyphicon glyphicon-collapse-right");
+        })
+        $('#collapse_website_colors').on('show.bs.collapse', function () {
+            $('#website_color_icon').removeClass("glyphicon glyphicon-collapse-right");
+            $('#website_color_icon').addClass("glyphicon glyphicon-collapse-down");
+        })
         $(".pick-a-color").spectrum({
             showInput: true,
             allowEmpty:false
