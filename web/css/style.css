@@ -71,7 +71,7 @@ a:focus {
     text-decoration: underline;
 }
 .menu_bar .menu > li > a {
-    border-top:4px solid #fff;
+    border-top:4px solid;
     text-shadow: none;
     font-size: 16px;
     padding:  10px 25px ;
@@ -192,12 +192,6 @@ fieldset[disabled] .btn {
     filter: alpha(opacity=65);
     -webkit-box-shadow: none;
     box-shadow: none;
-}
-
-.btn-default {
-    color: #333333;
-    background-color: #ffffff;
-    border-color: #cccccc;
 }
 
 .btn-default:active,

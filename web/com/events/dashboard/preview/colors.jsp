@@ -1,4 +1,6 @@
 <%@ page import="com.events.common.ParseUtil" %>
+<%@ page import="com.events.bean.common.css.ColorCSSBean" %>
+<%@ page import="com.events.common.css.BuildColorCss" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -9,18 +11,36 @@
 <%
 
     String sColorBackground = ParseUtil.checkNull(request.getParameter("website_color_bkg")).replaceAll("%23","#");
-    String sColorTabackground = ParseUtil.checkNull(request.getParameter("website_color_tab_bkg")).replaceAll("%23","#");
-    String sColorBreadCrumbBackground = ParseUtil.checkNull(request.getParameter("website_color_breadcrumb_bkg")).replaceAll("%23","#");
-    String sColorBorder = ParseUtil.checkNull(request.getParameter("website_color_border")).replaceAll("%23","#");
-
+    String sColorHighlighted = ParseUtil.checkNull(request.getParameter("website_color_highlighted")).replaceAll("%23","#");
+    String sColorText = ParseUtil.checkNull(request.getParameter("website_color_text")).replaceAll("%23","#");
+    String sColorNavBreadTabBackground = ParseUtil.checkNull(request.getParameter("website_color_nav_bread_tab_bkg")).replaceAll("%23","#");
 
     String sColorFilledButton = ParseUtil.checkNull(request.getParameter("website_color_filled_button")).replaceAll("%23","#");
     String sColorFilledButtonTxt = ParseUtil.checkNull(request.getParameter("website_color_filled_button_txt")).replaceAll("%23","#");
-    String sColorHoverDefaultButton = ParseUtil.checkNull(request.getParameter("website_color_default_button")).replaceAll("%23","#");
-    String sColorHoverDefaultButtonTxt = ParseUtil.checkNull(request.getParameter("website_color_default_button_txt")).replaceAll("%23","#");
+    String sColorPlainButton = ParseUtil.checkNull(request.getParameter("website_color_plain_button")).replaceAll("%23","#");
+    String sColorPlainButtonTxt = ParseUtil.checkNull(request.getParameter("website_color_plain_button_txt")).replaceAll("%23","#");
 
-    String sColorDefaultTxt = ParseUtil.checkNull(request.getParameter("website_color_default_text")).replaceAll("%23","#");
+    String sColorBorder = ParseUtil.checkNull(request.getParameter("website_color_border")).replaceAll("%23","#");
+
+    ColorCSSBean colorCSSBean = new ColorCSSBean();
+    colorCSSBean.setBackground( sColorBackground );
+    colorCSSBean.setHighlightedTextOrLink(sColorHighlighted);
+    colorCSSBean.setText(sColorText);
+    colorCSSBean.setNavBreadTabBackground( sColorNavBreadTabBackground );
+
+    colorCSSBean.setFilledButton( sColorFilledButton);
+    colorCSSBean.setFilledButtonText( sColorFilledButtonTxt);
+    colorCSSBean.setPlainButton(sColorPlainButton);
+    colorCSSBean.setPlainButtonText(sColorPlainButtonTxt);
+
+    colorCSSBean.setBorder( sColorBorder);
+
+    BuildColorCss buildColorCss = new BuildColorCss();
+    String sOverridingColorCss = buildColorCss.getColorCss( colorCSSBean ) ;
 %>
+<style type="text/css">
+    <%=sOverridingColorCss%>
+</style>
 <body>
 <div class="page_wrap">
     <div class="top_navbar_format">
@@ -45,7 +65,7 @@
                             <span class="glyphicon glyphicon-plus"></span><a>  Create Event </a>
                         </button>
                     </li>
-                    <li class="active"><a href="#">Active</a></li>
+                    <li class="currently_active"><a href="#">Active</a></li>
                     <li class=""><a href="#">Inactive</a></li>
                 </ul>
             </div>

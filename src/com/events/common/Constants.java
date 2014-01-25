@@ -25,6 +25,7 @@ public class Constants {
     public final static String UNSAFE_INPUT_PROP = PROP_FILE_PATH + "unsafe_input.prop";
     public final static String SCHEDULER_PROCESS_PROP = PROP_FILE_PATH + "scheduler_processor.prop";
     public final static String EMAILER_PROP = PROP_FILE_PATH + "emailer.prop";
+    public final static String COLOR_CSS_TEMPLATE_PROP = PROP_FILE_PATH + "color_css_template.properties";
 
     public final static String PROP_ENABLE_EMAIL_SENDER_THREAD = "enable_email_sender_thread";
     public final static String PROP_ENABLE_EMAIL_CREATOR_THREAD = "enable_email_creator_thread";
@@ -337,4 +338,41 @@ public class Constants {
     }
 
     public static final String  APPLICATION_DOMAIN = "application_domain";
+
+
+    /*
+        String sColorBackground = ParseUtil.checkNull(request.getParameter("website_color_bkg")).replaceAll("%23","#");
+    String sColorTabackground = ParseUtil.checkNull(request.getParameter("website_color_tab_bkg")).replaceAll("%23","#");
+    String sColorBreadCrumbBackground = ParseUtil.checkNull(request.getParameter("website_color_breadcrumb_bkg")).replaceAll("%23","#");
+    String sColorBorder = ParseUtil.checkNull(request.getParameter("website_color_border")).replaceAll("%23","#");
+
+
+    String sColorFilledButton = ParseUtil.checkNull(request.getParameter("website_color_filled_button")).replaceAll("%23","#");
+    String sColorFilledButtonTxt = ParseUtil.checkNull(request.getParameter("website_color_filled_button_txt")).replaceAll("%23","#");
+    String sColorHoverDefaultButton = ParseUtil.checkNull(request.getParameter("website_color_default_button")).replaceAll("%23","#");
+    String sColorHoverDefaultButtonTxt = ParseUtil.checkNull(request.getParameter("website_color_default_button_txt")).replaceAll("%23","#");
+
+    String sColorDefaultTxt = ParseUtil.checkNull(request.getParameter("website_color_default_text")).replaceAll("%23","#");
+     */
+    public enum COLOR_TEMPLATE{
+
+        BKG("__COLOR_BACKGROUND__"),
+        HIGHLIGHTED("__COLOR_HIGHLIGHTED__"),
+        TEXT("__COLOR_TEXT__"),
+        NAVBAR_BREADCRUMB_TAB_BKG("__COLOR_NAVBAR_BREADCRUMB_TAB_BKG__"),
+        BORDER("__COLOR_BORDER__"),
+        FILLED_BUTTON("__COLOR_FILLED_BUTTON__"),
+        FILLED_BUTTON_TEXT("__COLOR_FILLED_BUTTON_TEXT__"),
+        PLAIN_BUTTON("__COLOR_PLAIN_BUTTON__"),
+        PLAIN_BUTTON_TEXT("__COLOR_PLAIN_BUTTON_TEXT__");
+
+        private String text = Constants.EMPTY;
+        COLOR_TEMPLATE(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return this.text;
+        }
+    }
 }

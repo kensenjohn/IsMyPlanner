@@ -1,31 +1,34 @@
 body {
-    background-color: #ffffff;
+    background-color: __COLOR_BACKGROUND__;
 }
 .h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6 {
-    color: #666;
+    color: __COLOR_TEXT__;
 }
 a {
-    color: #666;
+    color: __COLOR_TEXT__;
 }
 a:hover {
-    color: #3F9CFF;
+    color: __COLOR_HIGHLIGHTED__;
 }
 /**
 Top Nav Links (Name , Logout, Login, Register etc.)
 ===========================================*/
 .top_navbar_format {
-    background-color: #f8f8f8; padding-top:3px;padding-bottom:3px;
+    background-color: __COLOR_NAVBAR_BREADCRUMB_TAB_BKG__; padding-top:3px;padding-bottom:3px;
 }
 .top_navbar_links .menu > li > a {
-    color: #666;
+    color: __COLOR_TEXT__;
 }
 .top_navbar_links .menu > li > a:focus,
 .top_navbar_links .menu > li > a:hover {
-    background: #f8f8f8 !important;
+    background: __COLOR_NAVBAR_BREADCRUMB_TAB_BKG__ !important;
 }
+/**
+BreadCrumb
+===========================================*/
 .breadcrumb_format {
-    background-color: #fcfcfc;
-    border-bottom:1px solid #dbf1ff !important;
+    background-color: __COLOR_NAVBAR_BREADCRUMB_TAB_BKG__;
+    border-bottom:1px solid __COLOR_BORDER__ !important;
 }
 
 /**
@@ -33,29 +36,29 @@ Menu Bar
 ===========================================*/
 
 .menu_bar{
-    border-color: #dbf1ff !important;
+    border-color: __COLOR_BORDER__ !important;
 }
 .menu_bar .menu > li > a {
-    border-top-color:#fff;
-    color: #666;
+    border-top-color:__COLOR_BACKGROUND__;
+    color: __COLOR_TEXT__;
 }
 .menu_bar .menu > li > a:focus,
 .menu_bar .menu > li > a:hover {
-    color: #fff !important;
-    border-bottom:4px solid #3F9CFF !important;
-    background: #3F9CFF !important;
+    color: __COLOR_BACKGROUND__ !important;
+    border-bottom:4px solid __COLOR_HIGHLIGHTED__ !important;
+    background: __COLOR_HIGHLIGHTED__ !important;
 }
 
 .menu_bar .menu > .currently_active > a {
-    color: #3F9CFF !important;
-    border-bottom:4px solid #3F9CFF !important;
-    background-color: #fff !important;
+    color: __COLOR_HIGHLIGHTED__ !important;
+    border-bottom:4px solid __COLOR_HIGHLIGHTED__ !important;
+    background-color: __COLOR_BACKGROUND__ !important;
 }
 
 .menu_bar .menu > .currently_active > a:focus ,
 .menu_bar .menu > .currently_active > a:hover {
-    border-bottom:4px solid #3F9CFF !important;
-    background: #3F9CFF !important;
+    border-bottom:4px solid __COLOR_HIGHLIGHTED__ !important;
+    background: __COLOR_HIGHLIGHTED__ !important;
 }
 
 /**
@@ -63,7 +66,7 @@ Buttons
 ===========================================*/
 .btn:hover,
 .btn:focus {
-    color: #3F9CFF;
+    color: __COLOR_HIGHLIGHTED__;
 }
 
 .btn:active,
@@ -73,8 +76,8 @@ Buttons
 }
 
 .btn-default {
-    color: #333333;
-    background-color: #ffffff;
+    color: __COLOR_PLAIN_BUTTON_TEXT__;
+    background-color: __COLOR_PLAIN_BUTTON__;
     border-color: #cccccc;
 }
 
@@ -83,15 +86,15 @@ Buttons
 .btn-default:active,
 .btn-default.active,
 .open .dropdown-toggle.btn-default {
-    color: #3F9CFF;
+    color: __COLOR_HIGHLIGHTED__;
     background-color: #ebebeb;
-    border-color: #3F9CFF;
+    border-color: __COLOR_HIGHLIGHTED__;
 }
 
 .btn-filled {
-    color: #ffffff;
-    background-color: #3F9CFF;
-    border-color: #3F9CFF;
+    color: __COLOR_FILLED_BUTTON_TEXT__;
+    background-color: __COLOR_FILLED_BUTTON__;
+    border-color: __COLOR_FILLED_BUTTON__;
 }
 
 .btn-filled:hover,
@@ -99,9 +102,9 @@ Buttons
 .btn-filled:active,
 .btn-filled.active,
 .open .dropdown-toggle.btn-primary {
-    color: #ffffff;
-    background-color: #3F9CFF;
-    border-color: #3F9CFF;
+    color: __COLOR_FILLED_BUTTON_TEXT__;
+    background-color: __COLOR_FILLED_BUTTON__;
+    border-color: __COLOR_FILLED_BUTTON__;
 }
 
 .btn-filled.disabled,
@@ -119,14 +122,14 @@ fieldset[disabled] .btn-filled:active,
 .btn-filled.disabled.active,
 .btn-filled[disabled].active,
 fieldset[disabled] .btn-filled.active {
-    background-color: #3F9CFF;
-    border-color: #3F9CFF;
+    background-color: __COLOR_FILLED_BUTTON__;
+    border-color: __COLOR_FILLED_BUTTON__;
     color: #333333;
 }
 
 .btn-filled .badge {
-    color: #ffffff;
-    background-color: #3F9CFF;
+    color:__COLOR_FILLED_BUTTON_TEXT__;
+    background-color:__COLOR_FILLED_BUTTON__;
 }
 
 .menu_links .btn-filled > a,
@@ -149,72 +152,73 @@ fieldset[disabled] .btn-filled.active {
 
 
 .page-title {
-    color: #666;
+    color: __COLOR_TEXT__;
 }
 /*
 Form Fields
 ==============================================*/
 .form-control {
-    color: #666666;
-    background-color: #ffffff;
+    color: __COLOR_TEXT__;
+    background-color: __COLOR_BACKGROUND__;
     border: 1px solid #cccccc;
 }
 .form-control:focus {
-    border-color: #3F9CFF;
+    border-color: __COLOR_HIGHLIGHTED__;
 }
 
 
 .sidebar .unordered_menu ul li{
     border-color: #e4e4e4;
-    color: #666666;
+    color: __COLOR_TEXT__;
 }
 
 
 .sidebar .unordered_menu ul li a{
-    color: #666666;
+    color: __COLOR_TEXT__;
 }
 
 .sidebar .unordered_menu ul li a:hover,
 .sidebar .unordered_menu ul li a:focus{
-    color:  #3F9CFF !important;
+    color:  __COLOR_HIGHLIGHTED__ !important;
 }
 
 .sidebar .unordered_menu ul li.active_link{
-    border-color: #3F9CFF;
+    border-color: __COLOR_HIGHLIGHTED__;
 }
+
 ul.tabs {
-    background: #fcfcfc;
+    background:  __COLOR_NAVBAR_BREADCRUMB_TAB_BKG__;
 }
 ul.tabs li a {
-    background-color: #fcfcfc;
-    color: #666666;
-    border-color: #dbf1ff !important;
+    background-color: __COLOR_NAVBAR_BREADCRUMB_TAB_BKG__;
+    color: __COLOR_TEXT__;
+    border-color: __COLOR_BORDER__ !important;
 }
 ul.tabs li a:hover {
-    color: #FFFFFF;
-    background-color: #3F9CFF !important;
+    color: __COLOR_BACKGROUND__;
+    background-color: __COLOR_HIGHLIGHTED__ !important;
 }
 
 ul.tabs li.active, html ul.tabs li.active a  {
-    color: #3F9CFF;
-    background-color: #fcfcfc;
-    border-color: #3F9CFF !important;
+    color: __COLOR_HIGHLIGHTED__;
+    background-color: __COLOR_NAVBAR_BREADCRUMB_TAB_BKG__;
+    border-color: __COLOR_HIGHLIGHTED__ !important;
 }
 html ul.tabs li.active a:hover {
-    color: #FFFFFF;
-    background-color: #fcfcfc;
-    border-color: #3F9CFF !important;
+    color: __COLOR_BACKGROUND__;
+    background-color: __COLOR_NAVBAR_BREADCRUMB_TAB_BKG__;
+    border-color: __COLOR_HIGHLIGHTED__ !important;
 }
 
 
 
 /** Panel **/
 .panel-default {
-    border-color: #dbf1ff;
+    border-color: __COLOR_BORDER__;
 }
 .panel-default > .panel-heading {
-    color: #666;
-    background-color: #fcfcfc;
-    border-color: #dbf1ff;
+    color: __COLOR_TEXT__;
+    background-color: __COLOR_NAVBAR_BREADCRUMB_TAB_BKG__;
+    border-color: __COLOR_BORDER__;
 }
 

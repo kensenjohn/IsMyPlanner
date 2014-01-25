@@ -38,109 +38,68 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <form method="post" id="frm_website_colors">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="panel-group" id="collapse_website_colors">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a data-toggle="collapse" data-parent="#collapse_website_colors" href="#collapse_colors">
-                                                        <span id="website_color_icon" class="glyphicon glyphicon-expand"></span> Colors
-                                                    </a>
-                                                </h4>
+                    <jsp:include page="/com/events/dashboard/panel/panel_colors.jsp"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel-group" id="collapse_logo">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#collapse_website_colors" href="#collapse_logo_body">
+                                                <span id="logo_icon" class="glyphicon glyphicon-expand"></span> Logo
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse_logo_body" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <!-- Panel Body Content Here -->
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <form method="post" id="frm_logo"  action="/proc_upload_image.aeve" method="POST" enctype="multipart/form-data">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-7">
+                                                                    <label for="landingPageLogo" class="form_label">Logo</label><span class="required"> *</span>
+                                                                    <input type="file" name="files[]" id="landingPageLogo" class="fileinput-button btn btn-default">
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class="form_label">&nbsp;</label>
+                                                                    <div>
+                                                                        <button type="button" class="btn btn-default btn-sm" id="btn_upload_logo">Upload Image</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div id="logo_progress">
+                                                                        <div class="bar" style="width: 0%;"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    &nbsp;
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
-                                            <div id="collapse_colors" class="panel-collapse collapse">
-                                                <div class="panel-body">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            <label for="website_color_bkg" class="form_label">Background</label><br>
-                                                            <input type="text" value="FFFFFF" name="website_color_bkg"  id="website_color_bkg" class="pick-a-color">
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label for="website_color_tab_bkg" class="form_label">Tabs Background</label><br>
-                                                            <input type="text" value="fcfcfc" name="website_color_tab_bkg"  id="website_color_tab_bkg" class="pick-a-color">
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label for="website_color_breadcrumb_bkg" class="form_label">Breadcrumb Background</label><br>
-                                                            <input type="text"  class="pick-a-color"  value="fcfcfc" name="website_color_breadcrumb_bkg"  id="website_color_breadcrumb_bkg" >
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label for="website_color_border" class="form_label">Border</label><br>
-                                                            <input type="text" value="dbf1ff" name="website_color_border"  id="website_color_border" class="pick-a-color">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            &nbsp;
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            <label for="website_color_filled_button" class="form_label">Filled Button</label><br>
-                                                            <input type="text" value="3F9CFF" name="website_color_filled_button"  id="website_color_filled_button" class="pick-a-color">
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label for="website_color_filled_button_txt" class="form_label">Filled Button Text</label><br>
-                                                            <input type="text" value="FFFFFF" name="website_color_filled_button_txt"  id="website_color_filled_button_txt" class="pick-a-color">
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label for="website_color_default_button" class="form_label">Highlighted Default Button/Link</label><br>
-                                                            <input type="text" value="3F9CFF" name="website_color_default_button"  id="website_color_default_button" class="pick-a-color">
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label for="website_color_default_button_txt" class="form_label">Highlighted Default Button/Link Text</label><br>
-                                                            <input type="text" value="FFFFFF" name="website_color_default_button_txt"  id="website_color_default_button_txt" class="pick-a-color">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            &nbsp;
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            <label for="website_color_default_text" class="form_label">Default Text</label><br>
-                                                            <input type="text" value="666" name="website_color_default_text"  id="website_color_default_text" class="pick-a-color">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            &nbsp;
-                                                        </div>
-                                                    </div>
 
-                                                    <div class="row">
-                                                        <div class="col-md-5">
-                                                            <label for="website_color_combination" class="form_label">Color Combinations for Inspiration</label><span class="required"> *</span>
-                                                            <select id="website_color_combination" class="form-control">
-                                                                <option value="modern">Modern (Basic)</option>
-                                                                <option value="warm_love">Warm Love</option>
-                                                                <option value="hot_fire">Hot Fire</option>
-                                                                <option value="ocean_blue">Ocean Blue</option>
-                                                                <option value="nature_green">Nature Green</option>
-                                                                <option value="royal_purple">Royal Purple</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            &nbsp;
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-2">
-                                                            <button type="button" class="btn btn-default btn-sm" id="btn_website_color_preview">Preview</button>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <button type="button" class="btn btn-default btn-sm" id="btn_website_color_save">Save</button>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <button type="button" class="btn btn-default btn-sm" id="btn_website_color_publish_color">Publish (To Public Site)</button>
-                                                        </div>
-                                                    </div>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <button type="button" class="btn btn-default btn-sm" id="btn_logo_preview">Preview</button>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="button" class="btn btn-default btn-sm" id="btn_logo_save">Save</button>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button type="button" class="btn btn-default btn-sm" id="btn_logo_publish">Publish (To Public Site)</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -148,160 +107,163 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <form method="post" id="frm_landing_page">
-                        <div class="form-group">
-
-                            <div class="row">
-                                <div class="col-md-4">
-
-                                    <label for="landingPageBkgColor" class="form_label">Background Color</label><span class="required"> *</span>
-                                    <input type="text" value="FFFFFF" name="landingPageBkgColor"  id="landingPageBkgColor" class="pick-a-color">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label for="landingPageTheme" class="form_label">Name</label><span class="required"> *</span>
-                                    <select class="form-control" id="landingPageTheme" name="landingPageTheme">
-                                        <option value="simple_landingpage">Simple Landing Page</option>
-                                        <option value="simple_landingpage_socialmedia">Simple Landing Page with Social Media</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="hidden" id="vendor_id" name="vendor_id" value="" >
-                        <input type="hidden" id="vendor_landingpage_id" name="vendor_landingpage_id" value="" >
-                        <input type="hidden" id="landingpage_logo" name="landingpage_logo" value="" >
-                        <input type="hidden" id="landingpage_picture" name="landingpage_picture" value="" >
-                    </form>
-                    <form method="post" id="frm_landing_page_logo"  action="/proc_upload_image.aeve" method="POST" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-7">
-                                    <label for="landingPageLogo" class="form_label">Logo</label><span class="required"> *</span>
-                                    <input type="file" name="files[]" id="landingPageLogo" class="fileinput-button btn btn-default">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form_label">&nbsp;</label>
-                                    <div>
-                                        <button type="button" class="btn btn-default btn-sm" id="btn_upload_logo">Upload Image</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-2"  id="div_preview_logo" style="display:none;">
-                                    <label class="form_label">&nbsp;</label>
-                                    <div>
-                                        <button type="button" class="btn btn-default btn-sm" id="btn_preview_logo">Preview</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div id="logo_progress">
-                                        <div class="bar" style="width: 0%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    &nbsp;
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <form method="post" id="frm_landing_page_picture"  action="/proc_upload_image.aeve" method="POST" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-7">
-                                    <label for="landingPagePicture" class="form_label">Landing Page Picture</label><span class="required"> *</span>
-                                    <input type="file" name="files[]" id="landingPagePicture" class="fileinput-button btn btn-default">
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="landingPageTheme" class="form_label">&nbsp;</label>
-                                    <div>
-                                        <button type="button" class="btn btn-default btn-sm" id="btn_upload_landingpage_pic">Upload Image</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-2" id="div_preview_pic" style="display:none;">
-                                    <label class="form_label">&nbsp;</label>
-                                    <div>
-                                        <button type="button" class="btn btn-default btn-sm" id="btn_preview_pic">Preview</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div id="picture_progress">
-                                        <div class="bar" style="width: 0%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    &nbsp;
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-md-6" style="text-align: center;" >
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div>
-                                <img id="theme_img" src="/img/theme_thmb/simple_landingpagephoto.png">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button type="button" class="btn btn-default" id="btn_preview_landingpage">Click to Preview Landing Page</button>
-                        </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-10">
-                    <form method="post" id="frm_landing_page_socialmedia">
-                        <div class="form-group" id="social_media_feed" style = "display:none;">
-                            <div class="row">
-                                <div class="col-md-11">
-                                    <label for="landingPage_facebook" class="form_label">Facebook URL</label><span class="required"> *</span>
-                                    <textarea type="textarea"  rows="3" class="form-control" id="landingPage_facebook" name="landingPage_facebook" placeholder="Facebook Feed"></textarea>
-                                </div>
-                                <div class="col-md-1">
-                                    <label for="landingPageTheme" class="form_label">&nbsp;</label>
-                                    <div>
-                                        <button type="button" class="btn btn-default btn-sm" id="btn_preview_facebook">Preview Feed</button>
+                <div class="col-md-12">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            <div class="panel-group" id="collapse_landingpage_layout">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#collapse_website_colors" href="#collapse_landingpage_layout_body">
+                                                <span id="landingpage_layout_icon" class="glyphicon glyphicon-expand"></span> Layout and Content
+                                            </a>
+                                        </h4>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    &nbsp;
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-11">
-                                    <label for="landingPage_pinterest" class="form_label">Pinterest URL</label><span class="required"> *</span>
-                                    <textarea type="textarea"  rows="3" class="form-control" id="landingPage_pinterest" name="landingPage_pinterest" placeholder="Pinterest Feed"></textarea>
-                                </div>
-                                <div class="col-md-1">
-                                    <label for="landingPageTheme" class="form_label">&nbsp;</label>
-                                    <div>
-                                        <button type="button" class="btn btn-default btn-sm" id="btn_preview_pinterest">Preview Feed</button>
+                                    <div id="collapse_landingpage_layout_body" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <!-- Panel Body Content Here -->
+                                            <div class="row">
+                                                <div class="col-md-6">
+
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <form method="post" id="frm_landingpage_layout">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label for="landingPageTheme" class="form_label">Landing Layout Design</label><span class="required"> *</span>
+                                                                            <select class="form-control" id="landingPageTheme" name="landingPageTheme">
+                                                                                <option value="simple_landingpage">Modern Landing Page</option>
+                                                                                <option value="simple_landingpage_socialmedia">Modern Landing Page with Social Media</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <form method="post" id="frm_landing_page_picture"  action="/proc_upload_image.aeve" method="POST" enctype="multipart/form-data">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-7">
+                                                                            <label for="landingPagePicture" class="form_label">Landing Page Picture</label><span class="required"> *</span>
+                                                                            <input type="file" name="files[]" id="landingPagePicture" class="fileinput-button btn btn-default">
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <label for="landingPageTheme" class="form_label">&nbsp;</label>
+                                                                            <div>
+                                                                                <button type="button" class="btn btn-default btn-sm" id="btn_upload_landingpage_pic">Upload Image</button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-2" id="div_preview_pic" style="display:none;">
+                                                                            <label class="form_label">&nbsp;</label>
+                                                                            <div>
+                                                                                <button type="button" class="btn btn-default btn-sm" id="btn_preview_pic">Preview</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div id="picture_progress">
+                                                                                <div class="bar" style="width: 0%;"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            &nbsp;
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            &nbsp;
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6"  style="text-align: center;">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div>
+                                                                <img id="theme_img" src="/img/theme_thmb/simple_landingpagephoto.png">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-10">
+                                                    <form method="post" id="frm_landing_page_socialmedia">
+                                                        <div class="form-group" id="social_media_feed" style = "display:none;">
+                                                            <div class="row">
+                                                                <div class="col-md-11">
+                                                                    <label for="landingPage_facebook" class="form_label">Facebook URL</label><span class="required"> *</span>
+                                                                    <textarea type="textarea"  rows="3" class="form-control" id="landingPage_facebook" name="landingPage_facebook" placeholder="Facebook Feed"></textarea>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <label for="landingPageTheme" class="form_label">&nbsp;</label>
+                                                                    <div>
+                                                                        <button type="button" class="btn btn-default btn-sm" id="btn_preview_facebook">Preview Feed</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    &nbsp;
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11">
+                                                                    <label for="landingPage_pinterest" class="form_label">Pinterest URL</label><span class="required"> *</span>
+                                                                    <textarea type="textarea"  rows="3" class="form-control" id="landingPage_pinterest" name="landingPage_pinterest" placeholder="Pinterest Feed"></textarea>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <label for="landingPageTheme" class="form_label">&nbsp;</label>
+                                                                    <div>
+                                                                        <button type="button" class="btn btn-default btn-sm" id="btn_preview_pinterest">Preview Feed</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <button type="button" class="btn btn-default btn-sm" id="btn_landing_page_preview">Preview</button>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="button" class="btn btn-default btn-sm" id="btn_landing_page_save">Save</button>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button type="button" class="btn btn-default btn-sm" id="btn_landing_page_publish">Publish (To Public Site)</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-filled" id="btn_save_landingpage">Save</button>
-                    </form>
+                    </div>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-12">
                     &nbsp;
@@ -322,34 +284,25 @@
 <script src="/js/jquery.colorbox-min.js"></script>
 <script src="/js/collapse.js"></script>
 <script src="/js/spectrum.js"></script>
-<script src="/js/color_combinations.js"></script>
 <script type="text/javascript">
     $(window).load(function() {
         loadVendorLandingPageInfo(populateVendorLandingPage);
 
-        /** Website Colors */
-        $('#collapse_website_colors').collapse( 'hide');
-        $('#collapse_website_colors').on('hide.bs.collapse', function () {
-            $('#website_color_icon').removeClass("glyphicon glyphicon-collapse-down");
-            $('#website_color_icon').addClass("glyphicon glyphicon-collapse-right");
-        })
-        $('#collapse_website_colors').on('show.bs.collapse', function () {
-            $('#website_color_icon').removeClass("glyphicon glyphicon-collapse-right");
-            $('#website_color_icon').addClass("glyphicon glyphicon-collapse-down");
-        })
-        $(".pick-a-color").spectrum({
-            showInput: true,
-            allowEmpty:false
+        jQuery.cachedScript = function( url, options ) {
+            // Allow user to set any option except for dataType, cache, and url
+            options = $.extend( options || {}, {
+                dataType: "script",
+                cache: false,
+                url: url
+            });
+            // Use $.ajax() since it is more flexible than $.getScript
+            // Return the jqXHR object so we can chain callbacks
+            return jQuery.ajax( options );
+        };
+        // Usage
+        $.cachedScript( "/js/color_combinations.js" ).done(function( script, textStatus ) {
+            setupColorPanel();
         });
-        $('#btn_website_color_preview').click(function(){
-            var colorSelectedParams = $('#frm_website_colors').serialize();
-            $.colorbox({ width:"100%", height:"95%", iframe:true,href:"preview/colors.jsp?"+colorSelectedParams});
-        });
-        $('#website_color_combination').change(function() {
-            setColorCombination(  $('#website_color_combination').val()  );
-        });
-
-
 
         $('#landingPageTheme').on( "change", function(){
             displayLandingPage();
