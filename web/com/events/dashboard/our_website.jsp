@@ -300,7 +300,7 @@
             return jQuery.ajax( options );
         };
         // Usage
-        $.cachedScript( "/js/color_combinations.js" ).done(function( script, textStatus ) {
+        $.cachedScript( "/js/dashboard/manage_color_panel.js" ).done(function( script, textStatus ) {
             setupColorPanel();
         });
 

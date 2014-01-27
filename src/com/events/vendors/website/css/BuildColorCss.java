@@ -1,6 +1,6 @@
-package com.events.common.css;
+package com.events.vendors.website.css;
 
-import com.events.bean.common.css.ColorCSSBean;
+import com.events.bean.vendors.website.ColorCSSBean;
 import com.events.common.Constants;
 
 /**

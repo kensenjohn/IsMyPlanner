@@ -1,12 +1,14 @@
 <%@ page import="com.events.common.ParseUtil" %>
-<%@ page import="com.events.bean.common.css.ColorCSSBean" %>
-<%@ page import="com.events.common.css.BuildColorCss" %>
+<%@ page import="com.events.bean.vendors.website.ColorCSSBean" %>
+<%@ page import="com.events.vendors.website.css.BuildColorCss" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
 <meta http-equiv="x-ua-compatible" content="IE=10">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="/css/spectrum.css">
+<link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
+<link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
 
@@ -128,7 +130,54 @@
                     </form>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_event_table" >
+                        <thead>
+                        <tr role="row">
+                            <th class="sorting col-md-3" role="columnheader">Date</th>
+                            <th class="sorting" role="columnheader">Name</th>
+                            <th class="sorting" role="columnheader">Client</th>
+                            <th class="center" role="columnheader"></th>
+                        </tr>
+                        </thead>
+
+                        <tbody role="alert" id="every_event_rows">
+                            <tr role="row">
+                                <td>23 Oct 2015</td>
+                                <td>Wedding Plans</td>
+                                <td>Party Inc.</td>
+                                <td><a href=""  class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a></td>
+                            </tr>
+                            <tr role="row">
+                                <td>23 Dec 2014</td>
+                                <td>Birthday Party</td>
+                                <td>Ron and Sue</td>
+                                <td><a href=""  class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a></td>
+                            </tr>
+                        </tbody></table>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 </body>
+<script src="/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    var objEveryEventTable = '';
+    $(window).load(function() {
+        objEveryEventTable =  $('#every_event_table').dataTable({
+            "bPaginate": false,
+            "bInfo": false,
+
+            "aoColumns": [
+                null,
+                null,
+                null,
+                { "bSortable": false }
+            ]
+        });
+    });
+
+</script>

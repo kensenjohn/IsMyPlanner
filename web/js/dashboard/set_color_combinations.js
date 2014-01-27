@@ -26,14 +26,24 @@ function setupColorPanel() {
     setColorCombination('modern')
     $('#btn_website_color_preview').click(function(){
         var colorSelectedParams = $('#frm_website_colors').serialize();
-        $.colorbox({ width:"100%", height:"95%", iframe:true,href:"preview/colors.jsp?"+colorSelectedParams});
+        $.colorbox({ width:"100%", height:"95%", iframe:true,href:"preview/preview_colors.jsp?"+colorSelectedParams});
     });
     $('#website_color_combination').change(function() {
         setColorCombination(  $('#website_color_combination').val()  );
     });
+    $('#btn_website_color_save').change(function() {
+        saveColorCombination( );
+    });
+    $('#btn_website_color_publish').change(function() {
+        publishColorCombination( );
+    });
+}
+function saveColorCombination() {
 
 }
+function saveColorCombination() {
 
+}
 function setColorCombination(varColorCombinationName){
     if(varColorCombinationName!=undefined) {
         var colorCombination = eval(varColorCombinationName);

@@ -104,4 +104,6 @@
             </div>
         </div>
     </div>
+    <input type="hidden" name="vendorwebsite_id"  id="vendorwebsite_id" value=""/>
+    <input type="hidden" name="vendor_id"  id="vendor_id" value=""/>
 </form>

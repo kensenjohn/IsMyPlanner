@@ -299,6 +299,16 @@ public class Constants {
         logo,landingpagephoto,facebook_url,pinterest_url,none;
     }
 
+    public enum VENDOR_WEBSITE_FEATURETYPE {
+        saved_logo,saved_landingpagephoto,saved_facebook_feed_script,saved_pinterest_url,
+        published_logo,published_landingpagephoto,published_facebook_feed_script,published_pinterest_url,
+        saved_bkg_color,saved_highlighted_color,saved_text_color,saved_navbar_breadcrumb_tab_color,saved_border_color,
+        saved_filled_button_color,saved_filled_button_text_color,saved_plain_button_color,saved_plain_button_text_color,
+        published_bkg_color,published_highlighted_color,published_text_color,published_navbar_breadcrumb_tab_color,published_border_color,
+        published_filled_button_color,published_filled_button_text_color,published_plain_button_color,published_plain_button_text_color,
+        none;
+    }
+
     public enum EMAIL_TEMPLATE_TEXT {
         GUEST_GROUP_NAME("Guest's Group Name","{__GUEST_GROUP_NAME__}","Show the guest's group name eg. The Rainer Family."),
         GUEST_GIVEN_NAME("Guest's Given Name","{__GUEST_GIVEN_NAME__}","Show the first name or last name. Gives first preference to first name."),
@@ -339,21 +349,6 @@ public class Constants {
 
     public static final String  APPLICATION_DOMAIN = "application_domain";
 
-
-    /*
-        String sColorBackground = ParseUtil.checkNull(request.getParameter("website_color_bkg")).replaceAll("%23","#");
-    String sColorTabackground = ParseUtil.checkNull(request.getParameter("website_color_tab_bkg")).replaceAll("%23","#");
-    String sColorBreadCrumbBackground = ParseUtil.checkNull(request.getParameter("website_color_breadcrumb_bkg")).replaceAll("%23","#");
-    String sColorBorder = ParseUtil.checkNull(request.getParameter("website_color_border")).replaceAll("%23","#");
-
-
-    String sColorFilledButton = ParseUtil.checkNull(request.getParameter("website_color_filled_button")).replaceAll("%23","#");
-    String sColorFilledButtonTxt = ParseUtil.checkNull(request.getParameter("website_color_filled_button_txt")).replaceAll("%23","#");
-    String sColorHoverDefaultButton = ParseUtil.checkNull(request.getParameter("website_color_default_button")).replaceAll("%23","#");
-    String sColorHoverDefaultButtonTxt = ParseUtil.checkNull(request.getParameter("website_color_default_button_txt")).replaceAll("%23","#");
-
-    String sColorDefaultTxt = ParseUtil.checkNull(request.getParameter("website_color_default_text")).replaceAll("%23","#");
-     */
     public enum COLOR_TEMPLATE{
 
         BKG("__COLOR_BACKGROUND__"),

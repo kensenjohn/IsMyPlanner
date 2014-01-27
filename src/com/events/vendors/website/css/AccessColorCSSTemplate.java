@@ -1,4 +1,4 @@
-package com.events.common.css;
+package com.events.vendors.website.css;
 
 import com.events.common.Configuration;
 import com.events.common.Constants;

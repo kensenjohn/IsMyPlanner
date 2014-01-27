@@ -1,15 +1,24 @@
-package com.events.bean.common.css;
+package com.events.bean.vendors.website;
 
 import com.events.common.Constants;
 
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 1/25/14
- * Time: 7:10 AM
+ * Date: 1/26/14
+ * Time: 11:09 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ColorCSSBean {
+public class VendorWebsiteRequestBean {
+
+
+    private String vendorId = Constants.EMPTY;
+    private String themeName = Constants.EMPTY;
+    private String logoImage = Constants.EMPTY;
+    private String landingPageImage = Constants.EMPTY;
+    private String facebookFeedScript = Constants.EMPTY;
+    private String pinterestFeedScript = Constants.EMPTY;
+
 
     private String background = Constants.EMPTY;
     private String highlightedTextOrLink = Constants.EMPTY;
@@ -21,6 +30,76 @@ public class ColorCSSBean {
 
     private String plainButton = Constants.EMPTY;
     private String plainButtonText = Constants.EMPTY;
+
+    private String modifiedByUserId = Constants.EMPTY;
+
+    private String action = Constants.EMPTY;
+
+    private String vendorWebsiteId = Constants.EMPTY;
+
+    public String getVendorWebsiteId() {
+        return vendorWebsiteId;
+    }
+
+    public void setVendorWebsiteId(String vendorWebsiteId) {
+        this.vendorWebsiteId = vendorWebsiteId;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getVendorId() {
+        return vendorId;
+    }
+
+    public void setVendorId(String vendorId) {
+        this.vendorId = vendorId;
+    }
+
+    public String getThemeName() {
+        return themeName;
+    }
+
+    public void setThemeName(String themeName) {
+        this.themeName = themeName;
+    }
+
+    public String getLogoImage() {
+        return logoImage;
+    }
+
+    public void setLogoImage(String logoImage) {
+        this.logoImage = logoImage;
+    }
+
+    public String getLandingPageImage() {
+        return landingPageImage;
+    }
+
+    public void setLandingPageImage(String landingPageImage) {
+        this.landingPageImage = landingPageImage;
+    }
+
+    public String getFacebookFeedScript() {
+        return facebookFeedScript;
+    }
+
+    public void setFacebookFeedScript(String facebookFeedScript) {
+        this.facebookFeedScript = facebookFeedScript;
+    }
+
+    public String getPinterestFeedScript() {
+        return pinterestFeedScript;
+    }
+
+    public void setPinterestFeedScript(String pinterestFeedScript) {
+        this.pinterestFeedScript = pinterestFeedScript;
+    }
 
     public String getBackground() {
         return background;
@@ -94,19 +173,11 @@ public class ColorCSSBean {
         this.plainButtonText = plainButtonText;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("ColorCSSBean{");
-        sb.append("background='").append(background).append('\'');
-        sb.append(", highlightedTextOrLink='").append(highlightedTextOrLink).append('\'');
-        sb.append(", text='").append(text).append('\'');
-        sb.append(", navBreadTabBackground='").append(navBreadTabBackground).append('\'');
-        sb.append(", border='").append(border).append('\'');
-        sb.append(", filledButton='").append(filledButton).append('\'');
-        sb.append(", filledButtonText='").append(filledButtonText).append('\'');
-        sb.append(", plainButton='").append(plainButton).append('\'');
-        sb.append(", plainButtonText='").append(plainButtonText).append('\'');
-        sb.append('}');
-        return sb.toString();
+    public String getModifiedByUserId() {
+        return modifiedByUserId;
+    }
+
+    public void setModifiedByUserId(String modifiedByUserId) {
+        this.modifiedByUserId = modifiedByUserId;
     }
 }
