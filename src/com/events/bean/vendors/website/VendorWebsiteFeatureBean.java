@@ -2,6 +2,7 @@ package com.events.bean.vendors.website;
 
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import com.events.common.Utility;
 
 import java.util.HashMap;
 
@@ -18,6 +19,7 @@ public class VendorWebsiteFeatureBean {
     private String vendorWebsiteFeatureId = Constants.EMPTY;
     private String vendorWebsiteId = Constants.EMPTY;
     private String featureName = Constants.EMPTY;
+    private Constants.VENDOR_WEBSITE_FEATURETYPE featureType = Constants.VENDOR_WEBSITE_FEATURETYPE.none;
     private String value = Constants.EMPTY;
     private Long modifiedDate = 0L;
     private String humanModifiedDate = Constants.EMPTY;
@@ -32,6 +34,9 @@ public class VendorWebsiteFeatureBean {
         this.modifiedDate = ParseUtil.sToL(hmResult.get("MODIFIEDDATE"));
         this.humanModifiedDate = ParseUtil.checkNull(hmResult.get("HUMANMODIFIEDDATE"));
         this.modifiedByUserId = ParseUtil.checkNull(hmResult.get("FK_USERID"));
+        if(!Utility.isNullOrEmpty(this.value)){
+            this.featureType = Constants.VENDOR_WEBSITE_FEATURETYPE.valueOf(this.featureName);
+        }
     }
 
     public String getVendorWebsiteFeatureId() {
@@ -90,12 +95,21 @@ public class VendorWebsiteFeatureBean {
         this.modifiedByUserId = modifiedByUserId;
     }
 
+    public Constants.VENDOR_WEBSITE_FEATURETYPE getFeatureType() {
+        return featureType;
+    }
+
+    public void setFeatureType(Constants.VENDOR_WEBSITE_FEATURETYPE featureType) {
+        this.featureType = featureType;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("VendorWebsiteFeatureBean{");
         sb.append("vendorWebsiteFeatureId='").append(vendorWebsiteFeatureId).append('\'');
         sb.append(", vendorWebsiteId='").append(vendorWebsiteId).append('\'');
         sb.append(", featureName='").append(featureName).append('\'');
+        sb.append(", featureType=").append(featureType);
         sb.append(", value='").append(value).append('\'');
         sb.append(", modifiedDate=").append(modifiedDate);
         sb.append(", humanModifiedDate='").append(humanModifiedDate).append('\'');

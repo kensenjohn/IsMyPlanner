@@ -8,10 +8,7 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.json.ErrorText;
-import com.events.json.RespConstants;
-import com.events.json.RespObjectProc;
-import com.events.json.Text;
+import com.events.json.*;
 import com.events.vendors.website.BuildVendorWebsite;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -105,7 +102,35 @@ public class ProcSavePublishWebsiteColorPanel extends HttpServlet {
                         vendorWebsiteRequestBean.setVendorWebsiteId( sVendorWebsiteId );
 
                         BuildVendorWebsite buildVendorWebsite = new BuildVendorWebsite();
-                        VendorWebsiteResponseBean vendorWebsiteResponseBean = buildVendorWebsite.saveWebsite(vendorWebsiteRequestBean);
+                        if("save".equalsIgnoreCase(sColorAction)){
+                            VendorWebsiteResponseBean vendorWebsiteResponseBean = buildVendorWebsite.saveWebsiteColor(vendorWebsiteRequestBean);
+
+                            if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId())) {
+                                jsonResponseObj.put("vendorwebsite_id",vendorWebsiteResponseBean.getVendorWebsiteId());
+                                Text okText = new OkText("The colors for the website were saved successfully.","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
+                            } else {
+                                Text errorText = new ErrorText("Oops!! We were unable to save the colors. Please try again later.","err_mssg") ;
+                                arrErrorText.add(errorText);
+
+                                responseStatus = RespConstants.Status.ERROR;
+                            }
+                        } else if( "publish".equalsIgnoreCase(sColorAction)){
+                            VendorWebsiteResponseBean vendorWebsiteResponseBean = buildVendorWebsite.publishWebsiteColor(vendorWebsiteRequestBean);
+
+                            if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId())) {
+                                jsonResponseObj.put("vendorwebsite_id",vendorWebsiteResponseBean.getVendorWebsiteId());
+                                Text okText = new OkText("The colors for the website were saved successfully..","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
+                            } else {
+                                Text errorText = new ErrorText("Oops!! We were unable to publish the website colors. Please try again later.","err_mssg") ;
+                                arrErrorText.add(errorText);
+                                responseStatus = RespConstants.Status.ERROR;
+                            }
+                        }
+
                     }
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );

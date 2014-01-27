@@ -32,18 +32,38 @@ function setupColorPanel() {
         setColorCombination(  $('#website_color_combination').val()  );
     });
     $('#btn_website_color_save').change(function() {
-        saveColorCombination( );
+        saveColorCombination( getResult );
     });
     $('#btn_website_color_publish').change(function() {
         publishColorCombination( );
     });
 }
-function saveColorCombination() {
+function saveColorCombination( ) {
+    //
+    var actionUrl = "/proc_save_publish_vendor_website_colors.aeve";
+    var methodType = "POST";
+    var dataString = $('#frm_test_email').serialize();
+    makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+}
+function publishColorCombination() {
 
 }
-function saveColorCombination() {
 
+function getResult(jsonResult) {
+    if(jsonResult!=undefined) {
+        var varResponseObj = jsonResult.response;
+        if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+            displayAjaxError(varResponseObj);
+        } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+            displayMssgBoxAlert('The test email will be sent out in the next few minutes.', false);
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+        }
+    } else {
+        displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+    }
 }
+
 function setColorCombination(varColorCombinationName){
     if(varColorCombinationName!=undefined) {
         var colorCombination = eval(varColorCombinationName);
