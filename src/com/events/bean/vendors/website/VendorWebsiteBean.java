@@ -2,6 +2,8 @@ package com.events.bean.vendors.website;
 
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -80,5 +82,18 @@ public class VendorWebsiteBean {
         sb.append(", humanCreateDate='").append(humanCreateDate).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public JSONObject toJson() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("vendorwebsite_id", this.vendorWebsiteId );
+            jsonObject.put("vendor_id", this.vendorId );
+            jsonObject.put("user_id", this.userId );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }

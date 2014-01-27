@@ -104,6 +104,7 @@
             </div>
         </div>
     </div>
-    <input type="hidden" name="vendorwebsite_id"  id="vendorwebsite_id" value=""/>
-    <input type="hidden" name="vendor_id"  id="vendor_id" value=""/>
+    <input type="hidden" name="vendorwebsite_id"  id="color_vendorwebsite_id" value=""/>
+    <input type="hidden" name="vendor_id"  id="color_vendor_id" value=""/>
+    <input type="hidden" name="website_color_panel_action"  id="website_color_panel_action" value=""/>
 </form>

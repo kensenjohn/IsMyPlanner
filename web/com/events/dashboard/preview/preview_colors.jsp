@@ -163,6 +163,7 @@
     </div>
 </div>
 </body>
+<jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
     var objEveryEventTable = '';

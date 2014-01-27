@@ -24,7 +24,7 @@ public class VendorWebsiteFeature {
         VendorWebsiteFeatureBean vendorWebsiteFeatureBeanFromDB = new VendorWebsiteFeatureBean();
         if(vendorWebsiteFeatureBean!=null &&  !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getFeatureType().toString()) ) {
             VendorWebsiteFeatureData vendorWebsiteFeatureData = new VendorWebsiteFeatureData();
-            vendorWebsiteFeatureBeanFromDB = vendorWebsiteFeatureData.getVendorLandingPageFeature(vendorWebsiteFeatureBean);
+            vendorWebsiteFeatureBeanFromDB = vendorWebsiteFeatureData.getVendorWebsiteFeature(vendorWebsiteFeatureBean);
         }
         return vendorWebsiteFeatureBeanFromDB;
     }

@@ -50,13 +50,13 @@ public class VendorWebsiteFeatureData {
         return  numOfRowsInserted;
     }
 
-    public VendorWebsiteFeatureBean getVendorLandingPageFeature(VendorWebsiteFeatureBean vendorWebsiteFeatureBean) {
+    public VendorWebsiteFeatureBean getVendorWebsiteFeature(VendorWebsiteFeatureBean vendorWebsiteFeatureBean) {
         VendorWebsiteFeatureBean finalFeatureBean = new VendorWebsiteFeatureBean();
         if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getVendorWebsiteId())){
             String sQuery = "SELECT * FROM GTVENDORWEBSITEFEATURES WHERE  FEATURENAME = ? AND FK_VENDORWEBSITEID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint( vendorWebsiteFeatureBean.getFeatureType().toString(),vendorWebsiteFeatureBean.getVendorWebsiteId());
 
-            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "VendorWebsiteFeatureData.java", "getVendorLandingPageFeature()");
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "VendorWebsiteFeatureData.java", "getVendoWebsiteFeature()");
 
             if( arrResult!=null && !arrResult.isEmpty() ) {
                 for(HashMap<String, String> hmResult : arrResult ) {

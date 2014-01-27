@@ -8,7 +8,7 @@ var warm_love = {
             };
 
 
-function setupColorPanel() {
+function setupColorPanel(varColorPallete) {
     /** Website Colors */
     $('#collapse_website_colors').collapse( 'hide');
     $('#collapse_website_colors').on('hide.bs.collapse', function () {
@@ -23,7 +23,10 @@ function setupColorPanel() {
         showInput: true,
         allowEmpty:false
     });
-    setColorCombination('modern')
+    if(varColorPallete == 'pre_load_default_colors') {
+        setColorCombination('modern')
+    }
+
     $('#btn_website_color_preview').click(function(){
         var colorSelectedParams = $('#frm_website_colors').serialize();
         $.colorbox({ width:"100%", height:"95%", iframe:true,href:"preview/preview_colors.jsp?"+colorSelectedParams});
@@ -31,22 +34,21 @@ function setupColorPanel() {
     $('#website_color_combination').change(function() {
         setColorCombination(  $('#website_color_combination').val()  );
     });
-    $('#btn_website_color_save').change(function() {
-        saveColorCombination( getResult );
+    $('#btn_website_color_save').click(function() {
+        save_publish_ColorCombination( getResult, 'save' );
     });
-    $('#btn_website_color_publish').change(function() {
-        publishColorCombination( );
+    $('#btn_website_color_publish').click(function() {
+        save_publish_ColorCombination( getResult, 'publish' );
     });
 }
-function saveColorCombination( ) {
-    //
+function save_publish_ColorCombination( callbackmethod, varAction ) {
+    $('#color_vendorwebsite_id').val( vendorWebsiteId );
+    $('#color_vendor_id').val( vendorId );
+    $('#website_color_panel_action').val(varAction);
     var actionUrl = "/proc_save_publish_vendor_website_colors.aeve";
     var methodType = "POST";
-    var dataString = $('#frm_test_email').serialize();
+    var dataString = $('#frm_website_colors').serialize();
     makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
-}
-function publishColorCombination() {
-
 }
 
 function getResult(jsonResult) {
@@ -55,7 +57,15 @@ function getResult(jsonResult) {
         if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
             displayAjaxError(varResponseObj);
         } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
-            displayMssgBoxAlert('The test email will be sent out in the next few minutes.', false);
+            var varIsPayloadExist = varResponseObj.is_payload_exist;
+            if(varIsPayloadExist == true) {
+                var jsonResponseObj = varResponseObj.payload;
+
+                $('#color_vendorwebsite_id').val( jsonResponseObj.vendorwebsite_id ) ;
+                vendorWebsiteId = jsonResponseObj.vendorwebsite_id;
+            }
+
+            displayAjaxOk(varResponseObj);
         } else {
             displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
         }

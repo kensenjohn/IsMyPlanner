@@ -91,4 +91,31 @@
             displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later.(procCGC 002)', true);
         }
     }
+
+    function displayAjaxOk(varResponseObj) {
+        var varIsMessageExist = varResponseObj.is_message_exist;
+        if(varIsMessageExist == true) {
+            var jsonResponseMessage = varResponseObj.messages;
+            var varArrOkMssg = jsonResponseMessage.ok_mssg;
+            if(varArrOkMssg!=undefined ) {
+                displayMssgBoxMessages(varArrOkMssg, false);
+            } else {
+                displayMssgBoxMessages('Your request was successfully completed.(procOk 002)', false);
+            }
+        } else {
+            displayMssgBoxAlert('Your request was successfully completed.(procOk 001)', false);
+        }
+    }
+
+    function cachedScript( url, options ) {
+        // Allow user to set any option except for dataType, cache, and url
+        options = $.extend( options || {}, {
+            dataType: "script",
+            cache: false,
+            url: url
+        });
+        // Use $.ajax() since it is more flexible than $.getScript
+        // Return the jqXHR object so we can chain callbacks
+        return jQuery.ajax( options );
+    };
 </script>

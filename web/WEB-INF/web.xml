@@ -248,6 +248,8 @@
         <url-pattern>/proc_load_vendor_landingpage_manager.aeve</url-pattern>
     </servlet-mapping>
 
+
+
     <servlet>
         <servlet-name>Process Save Publish Vendor Website Colors</servlet-name>
         <servlet-class>com.events.proc.vendors.ProcSavePublishWebsiteColorPanel</servlet-class>
@@ -256,7 +258,30 @@
         <servlet-name>Process Save Publish Vendor Website Colors</servlet-name>
         <url-pattern>/proc_save_publish_vendor_website_colors.aeve</url-pattern>
     </servlet-mapping>
-
+    <servlet>
+        <servlet-name>Process Load Vendor Website Info</servlet-name>
+        <servlet-class>com.events.proc.vendors.ProcLoadVendorWebsiteInfo</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Vendor Website Info</servlet-name>
+        <url-pattern>/proc_load_vendor_website_info.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process  Save Publish  Vendor Website Logo</servlet-name>
+        <servlet-class>com.events.proc.vendors.ProcSavePublishWebsiteLogoPanel</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process  Save Publish  Vendor Website Logo</servlet-name>
+        <url-pattern>/proc_save_publish_vendor_website_logo.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process  Save Publish  Vendor Landing Page</servlet-name>
+        <servlet-class>com.events.proc.vendors.ProcSavePublishLandingPagePanel</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process  Save Publish  Vendor Landing Page</servlet-name>
+        <url-pattern>/proc_save_publish_vendor_landingpage.aeve</url-pattern>
+    </servlet-mapping>
 
 
     <servlet>
