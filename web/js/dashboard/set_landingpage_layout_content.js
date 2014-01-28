@@ -10,6 +10,9 @@ function setupLandingPagePanel() {
     })
 
     enablePreviewOfLandingPage();
+    $('#landingpage_theme').on( "change", function(){
+        displayLandingPage();
+    });
     displayLandingPage();
 
     $('#btn_landing_page_save').click(function() {
@@ -17,6 +20,10 @@ function setupLandingPagePanel() {
     });
     $('#btn_landing_page_publish').click(function() {
         save_publish_LandingPage( getResult, 'publish' );
+    });
+
+    $('#btn_landing_page_preview').click(function(){
+        $.colorbox({width:"100%", height:"100%",iframe:true,href:"preview_vendor_landingpage.jsp?featuretype=facebook_url&vendor_website_id="+vendorWebsiteId});
     });
 }
 function save_publish_LandingPage( callbackmethod, varAction ) {
@@ -73,7 +80,7 @@ function enablePreviewOfLandingPage( ) {
         });
     } else {
         $( '#btn_preview_landingpage_pic').click( function(){
-            displayMssgBoxAlert('Oops!! We were unable to find the logo.', true)
+            displayMssgBoxAlert('Oops!! We were unable to find the landing page picture.', true)
         });
     }
 

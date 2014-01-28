@@ -8,6 +8,12 @@
 <%@ page import="com.events.common.*" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="org.slf4j.Logger" %>
+<%@ page import="com.events.vendors.website.AccessVendorWebsite" %>
+<%@ page import="com.events.bean.vendors.website.VendorWebsiteRequestBean" %>
+<%@ page import="com.events.bean.vendors.website.VendorWebsiteResponseBean" %>
+<%@ page import="com.events.bean.vendors.website.VendorWebsiteBean" %>
+<%@ page import="com.events.bean.vendors.website.VendorWebsiteFeatureBean" %>
+<%@ page import="com.events.vendors.website.VendorWebsiteFeature" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -19,12 +25,13 @@
     <link rel="stylesheet" type="text/css" href="/css/flexslider.css">
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
     <link type="text/css" rel="stylesheet" href="/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="/css/color/modern_blue.css" />
 </head>
 <%
 
     Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     String sFeatureType = ParseUtil.checkNull(request.getParameter("featuretype"));
-    String sVendorLandingPageId = ParseUtil.checkNull(request.getParameter("vendor_landingpage_id"));
+    String sVendorWebsiteId = ParseUtil.checkNull(request.getParameter("vendor_website_id"));
 
     String sLogo = Constants.EMPTY;
     String sLandingPagePic = Constants.EMPTY;
@@ -34,56 +41,54 @@
 
 
     String imageHost = Utility.getImageUploadHost();
-    if(!Utility.isNullOrEmpty(sVendorLandingPageId) ) {
+    if(!Utility.isNullOrEmpty(sVendorWebsiteId) ) {
 
-        AccessVendorLandingPage accessVendorLandingPage = new AccessVendorLandingPage();
+        AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
 
-        VendorLandingPageRequestBean vendorLandingPageRequestBean = new VendorLandingPageRequestBean();
-        vendorLandingPageRequestBean.setVendorLandingPageId(sVendorLandingPageId);
+        VendorWebsiteRequestBean vendorWebsiteRequestBean = new VendorWebsiteRequestBean();
+        vendorWebsiteRequestBean.setVendorWebsiteId( sVendorWebsiteId );
 
-        VendorLandingPageResponseBean vendorLandingPageResponseBean = accessVendorLandingPage.getVendorLandingPageByLandingPageId(vendorLandingPageRequestBean);
-        VendorLandingPageBean vendorLandingPageBean = vendorLandingPageResponseBean.getVendorLandingPageBean();
-        appLogging.info("vendorLandingPageBean " + vendorLandingPageBean);
+        VendorWebsiteResponseBean vendorWebsiteResponseBean = accessVendorWebsite.getVendorWebsiteByWebsiteId( vendorWebsiteRequestBean );
+        VendorWebsiteBean vendorWebsiteBean = vendorWebsiteResponseBean.getVendorWebsiteBean();
+
 
         Folder folder = new Folder();
-        sUserFolderName = folder.getFolderName( Constants.USER_TYPE.VENDOR, vendorLandingPageBean.getVendorId() );
+        sUserFolderName = folder.getFolderName( Constants.USER_TYPE.VENDOR, vendorWebsiteBean.getVendorId() );
         appLogging.info("sUserFolderName : " + sUserFolderName);
 
         String sImageLocation =  imageHost + "/"+sUserFolderName+"/";
 
 
 
-        ArrayList<VendorLandingPageFeatureBean> arrVendorLandingPageFeatureBean = new ArrayList<VendorLandingPageFeatureBean>();
-        arrVendorLandingPageFeatureBean.add( accessVendorLandingPage.generateVendorLandingPageFeatureBean(Constants.VENDOR_LANDINGPAGE_FEATURETYPE.logo) );
-        arrVendorLandingPageFeatureBean.add( accessVendorLandingPage.generateVendorLandingPageFeatureBean(Constants.VENDOR_LANDINGPAGE_FEATURETYPE.landingpagephoto) );
-        arrVendorLandingPageFeatureBean.add( accessVendorLandingPage.generateVendorLandingPageFeatureBean(Constants.VENDOR_LANDINGPAGE_FEATURETYPE.facebook_url) );
-        arrVendorLandingPageFeatureBean.add( accessVendorLandingPage.generateVendorLandingPageFeatureBean(Constants.VENDOR_LANDINGPAGE_FEATURETYPE.pinterest_url) );
+        ArrayList<VendorWebsiteFeatureBean> arrVendorWebsiteFeatureBean = new ArrayList<VendorWebsiteFeatureBean>();
+        arrVendorWebsiteFeatureBean.add(accessVendorWebsite.generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_logo));
+        arrVendorWebsiteFeatureBean.add(accessVendorWebsite.generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_landingpagephoto));
+        arrVendorWebsiteFeatureBean.add(accessVendorWebsite.generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_facebook_feed_script));
+        arrVendorWebsiteFeatureBean.add(accessVendorWebsite.generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_pinterest_feed_script));
 
-        VendorLandingPageFeature vendorLandingPageFeature = new VendorLandingPageFeature();
-        ArrayList<VendorLandingPageFeatureBean> arrMultipleFeatureBean = vendorLandingPageFeature.getMultipleFeatures(arrVendorLandingPageFeatureBean, sVendorLandingPageId );
-        for (VendorLandingPageFeatureBean vendorLandingPageFeatureBean : arrMultipleFeatureBean) {
-            String sFeatureName = vendorLandingPageFeatureBean.getFeatureName();
-            String sValue = vendorLandingPageFeatureBean.getValue();
-            appLogging.info("sFeatureName : " + sFeatureName);
-            if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_LANDINGPAGE_FEATURETYPE.logo.toString())) {
+        VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();
+        ArrayList<VendorWebsiteFeatureBean> arrMultipleFeatureBean = vendorWebsiteFeature.getMultipleFeatures( arrVendorWebsiteFeatureBean, sVendorWebsiteId );
+        appLogging.info(" arrMultipleFeatureBean : " + arrMultipleFeatureBean );
+        for (VendorWebsiteFeatureBean vendorWebsiteFeatureBean : arrMultipleFeatureBean) {
+            String sFeatureName = vendorWebsiteFeatureBean.getFeatureName();
+            String sValue = vendorWebsiteFeatureBean.getValue();
+            if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_WEBSITE_FEATURETYPE.saved_logo.toString())) {
                 sLogo = sImageLocation + sValue;
             }
 
 
-            if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_LANDINGPAGE_FEATURETYPE.landingpagephoto.toString())) {
+            if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_WEBSITE_FEATURETYPE.saved_landingpagephoto.toString())) {
                 sLandingPagePic = sImageLocation + sValue;
             }
 
-            if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_LANDINGPAGE_FEATURETYPE.facebook_url.toString())) {
+            if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_WEBSITE_FEATURETYPE.saved_facebook_feed_script.toString())) {
                 sFacebookFeed =   sValue;
             }
 
-            if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_LANDINGPAGE_FEATURETYPE.pinterest_url.toString())) {
+            if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_WEBSITE_FEATURETYPE.saved_pinterest_feed_script.toString())) {
                 sPinterstFeed =   sValue;
             }
         }
-
-
     }
 %>
 <body>

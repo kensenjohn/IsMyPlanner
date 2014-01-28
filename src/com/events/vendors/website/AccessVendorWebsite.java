@@ -35,6 +35,19 @@ public class AccessVendorWebsite extends VendorWebsite{
         return vendorWebsiteResponseBean;
     }
 
+    public VendorWebsiteResponseBean getVendorWebsiteByWebsiteId(VendorWebsiteRequestBean vendorLandingPageRequestBean) {
+        VendorWebsiteResponseBean vendorWebsiteResponseBean = new VendorWebsiteResponseBean();
+        if(vendorLandingPageRequestBean!=null && !Utility.isNullOrEmpty(vendorLandingPageRequestBean.getVendorWebsiteId())) {
+            VendorWebsiteBean vendorWebsiteBean = generateVendorWebsiteBean( vendorLandingPageRequestBean );
+
+            AccessVendorWebsiteData accessVendorWebsiteData = new AccessVendorWebsiteData();
+            vendorWebsiteBean= accessVendorWebsiteData.getVendorWebsiteByWebsiteId(vendorWebsiteBean);
+
+            vendorWebsiteResponseBean.setVendorWebsiteBean( vendorWebsiteBean);
+        }
+        return vendorWebsiteResponseBean;
+    }
+
     public ArrayList<VendorWebsiteFeatureBean> getFeatures( VendorWebsiteBean vendorWebsiteBean) {
         ArrayList<VendorWebsiteFeatureBean> arrMultipleFeatureBean = new ArrayList<VendorWebsiteFeatureBean>();
         if(vendorWebsiteBean!=null && !Utility.isNullOrEmpty(vendorWebsiteBean.getVendorWebsiteId())) {

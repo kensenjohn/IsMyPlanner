@@ -206,7 +206,7 @@
                         $('#landingpage_theme').val( varLandingPageTheme );
                     }
 
-                    var varPinterestUrl = jsonResponseObj.published_pinterest_feed_script;
+                    var varPinterestUrl = jsonResponseObj.saved_pinterest_feed_script;
                     if(varPinterestUrl!=undefined) {
                         $('#landingpage_pinterest').val( varPinterestUrl);
                     }
