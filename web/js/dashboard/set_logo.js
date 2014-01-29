@@ -11,10 +11,10 @@ function setupLogoPanel() {
 
     enablePreviewOfLogo();
 
-    $('#btn_landing_page_save').click(function() {
+    $('#btn_logo_save').click(function() {
         save_publish_Logo( getResult, 'save' );
     });
-    $('#btn_landing_page_publish').click(function() {
+    $('#btn_logo_publish').click(function() {
         save_publish_Logo( getResult, 'publish' );
     });
 }

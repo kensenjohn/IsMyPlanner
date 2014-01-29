@@ -302,12 +302,12 @@
             <param-value>email_body</param-value>
         </init-param>
         <init-param>
-            <param-name>landingPage_facebook</param-name>
-            <param-value>landingPage_facebook</param-value>
+            <param-name>landingpage_facebook</param-name>
+            <param-value>landingpage_facebook</param-value>
         </init-param>
         <init-param>
-            <param-name>landingPage_pinterest</param-name>
-            <param-value>landingPage_pinterest</param-value>
+            <param-name>landingpage_pinterest</param-name>
+            <param-value>landingpage_pinterest</param-value>
         </init-param>
     </filter>
     <filter-mapping>

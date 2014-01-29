@@ -1,0 +1,104 @@
+Installing Mysql from tar binaries.
+
+1) Get the latest version of Mysql server from  http://dev.mysql.com/downloads/mysql/
+2) Select Linux Generic under the "MySQL Community Server" section.
+3) We will be downloading the Generic Tarred archive.
+
+	eg : http://cdn.mysql.com/Downloads/MySQL-5.6/mysql-5.6.15-linux-glibc2.5-i686.tar.gz
+
+4) In the terminal execute the following command
+	sudo wget http://cdn.mysql.com/Downloads/MySQL-5.6/mysql-5.6.15-linux-glibc2.5-i686.tar.gz
+	This will download the following file
+	mysql-5.6.15-linux-glibc2.5-i686.tar.gz
+
+5) move the tar file to /usr/local/   (This is the recommended location)
+	$ sudo mv mysql-5.6.15-linux-glibc2.5-i686.tar.gz /usr/local
+
+	http://dev.mysql.com/doc/refman/5.0/en/installation-layouts.html
+	" a tar file binary distribution is installed by unpacking it at the installation location you choose (typically /usr/local/mysql)"
+
+6) Extract the tar file
+	/usr/local$ sudo tar -xvf mysql-5.6.15-linux-glibc2.5-i686.tar.gz
+
+7) rename file to mysql
+	/usr/local$> sudo mv mysql-5.6.15-linux-glibc2.5-i686 mysql
+
+8) Create a group called "mysql", then add an user called "mysql" to the group "mysql"
+	/usr/local$> sudo groupadd mysql
+	/usr/local$> sudo useradd -g mysql mysql
+
+9) the owner of the folder /usr/local/mysql should be "mysql"
+
+10) Create links to executable files to /usr/local/bin/
+	ln -s /usr/local/mysql/bin/* /usr/local/bin/
+
+11) Create the socket directory if it does not exist:
+	$> sudo mkdir /var/run/mysqld
+	$> sudo chown -R mysql:mysql /var/run/mysqld
+
+12) Copy the default .cnf file to a /etc/
+	$> sudo cp /usr/local/mysql/support-files/my-default.cnf /etc/my.cnf
+
+13) Change my.cnf to have your specific parameters
+	$> sudo vim /etc/my.cnf
+
+		user = mysql
+		socket = /var/run/mysqld/mysqld.sock
+		port = 3306
+		basedir = /usr/local/mysql
+		datadir = /usr/local/mysql/data
+		tmpdir = /tmp
+		log_error = /var/log/mysql/error.log
+
+
+
+		#To access through client.
+		[client]
+		socket=/var/lib/mysql/mysql.sock
+
+
+14) Copy the MySql Server startup script to /etc/init.d and give execution persmission to the stratup script
+	$> sudo cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
+	$> sudo chmod +x /etc/init.d/mysql
+
+15) Create it as a service
+	$> sudo update-rc.d mysql defaults
+
+		You should get an output similar to this. (May not be exactly same)
+			Adding system startup for /etc/init.d/mysql ...
+			   /etc/rc0.d/K20mysql -> ../init.d/mysql
+			   /etc/rc1.d/K20mysql -> ../init.d/mysql
+			   /etc/rc6.d/K20mysql -> ../init.d/mysql
+			   /etc/rc2.d/S20mysql -> ../init.d/mysql
+			   /etc/rc3.d/S20mysql -> ../init.d/mysql
+			   /etc/rc4.d/S20mysql -> ../init.d/mysql
+			   /etc/rc5.d/S20mysql -> ../init.d/mysql
+
+
+16) Now run the install script. (double check all the folder paths and parameters you are passing.)
+	$> cd /usr/local/mysql/
+	$> sudo ./scripts/mysql_install_db --user=mysql --defaults-file=/etc/my.cnf  --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data
+
+
+17) If you get the following error
+		error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+	Install those libraries as follows.
+	$> sudo apt-get install libaio1 libaio-dev
+
+	Then try step 16) again
+	 sudo ./scripts/mysql_install_db --user=mysql --defaults-file=/etc/my.cnf  --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data
+
+
+18) Start service
+	$>  sudo service mysql start
+
+	Stop service
+	$>  sudo service mysql stop
+
+
+
+WARNING: Default config file /etc/my.cnf exists on the system
+This file will be read by default by the MySQL server
+If you do not want to use this, either remove it, or use the
+--defaults-file argument to mysqld_safe when starting the server

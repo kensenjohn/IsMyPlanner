@@ -88,19 +88,13 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-10">
+                            <div class="col-md-12">
                                 <form method="post" id="frm_landing_page_socialmedia">
                                     <div class="form-group" id="social_media_feed" style = "display:none;">
                                         <div class="row">
-                                            <div class="col-md-11">
+                                            <div class="col-md-12">
                                                 <label for="landingpage_facebook" class="form_label">Facebook URL</label><span class="required"> *</span>
                                                 <textarea type="textarea"  rows="3" class="form-control" id="landingpage_facebook" name="landingpage_facebook" placeholder="Facebook Feed"></textarea>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label for="landingpage_facebook" class="form_label">&nbsp;</label>
-                                                <div>
-                                                    <button type="button" class="btn btn-default btn-sm" id="btn_preview_facebook">Preview Feed</button>
-                                                </div>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -109,15 +103,9 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-11">
+                                            <div class="col-md-12">
                                                 <label for="landingpage_pinterest" class="form_label">Pinterest URL</label><span class="required"> *</span>
                                                 <textarea type="textarea"  rows="3" class="form-control" id="landingpage_pinterest" name="landingpage_pinterest" placeholder="Pinterest Feed"></textarea>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label for="landingpage_pinterest" class="form_label">&nbsp;</label>
-                                                <div>
-                                                    <button type="button" class="btn btn-default btn-sm" id="btn_preview_pinterest">Preview Feed</button>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -131,11 +119,11 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-3">
-                                <button type="button" class="btn btn-default btn-sm" id="btn_landing_page_preview">Preview Landing Page</button>
-                            </div>
                             <div class="col-md-2">
                                 <button type="button" class="btn btn-default btn-sm" id="btn_landing_page_save">Save</button>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-default btn-sm" id="btn_landing_page_preview">Preview Landing Page</button>
                             </div>
                             <div class="col-md-3">
                                 <button type="button" class="btn btn-default btn-sm" id="btn_landing_page_publish">Publish (To Public Site)</button>

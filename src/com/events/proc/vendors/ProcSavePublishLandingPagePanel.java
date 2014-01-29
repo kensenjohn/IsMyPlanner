@@ -50,11 +50,18 @@ public class ProcSavePublishLandingPagePanel extends HttpServlet {
                     String sFacebookFeedScript = ParseUtil.checkNull(request.getParameter("landingpage_facebook"));
                     String sPinteredFeedScript = ParseUtil.checkNull(request.getParameter("landingpage_pinterest"));
 
-                    if ( Utility.isNullOrEmpty(sLandingpagePictureName) ) {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request. Please upload a logo first.","err_mssg") ;
+                    if ( Utility.isNullOrEmpty(sLandingpagePictureName)  )  {
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request. Please upload a landing page picture.","err_mssg") ;
                         arrErrorText.add(errorText);
                         responseStatus = RespConstants.Status.ERROR;
-                    } else if ( Utility.isNullOrEmpty(sLandingPageAction) ) {
+                    } else if ( ("simple_landingpage_socialmedia".equalsIgnoreCase(sThemeName)
+                            && (Utility.isNullOrEmpty(sFacebookFeedScript) || Utility.isNullOrEmpty(sPinteredFeedScript) )  ) )  {
+                        appLogging.info("Facebook : " + sFacebookFeedScript + " sPinteredFeedScript : " + sPinteredFeedScript);
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request. Please use valid social media feed scripts.","err_mssg") ;
+                        arrErrorText.add(errorText);
+                        responseStatus = RespConstants.Status.ERROR;
+                    }
+                    else if ( Utility.isNullOrEmpty(sLandingPageAction) ) {
                         appLogging.info("An invalid action used by the user : " + loggedInUserBean.getUserId() );
                         Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(landingPage - 003)","err_mssg") ;
                         arrErrorText.add(errorText);
@@ -76,7 +83,7 @@ public class ProcSavePublishLandingPagePanel extends HttpServlet {
 
                             if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId())) {
                                 jsonResponseObj.put("vendorwebsite_id",vendorWebsiteResponseBean.getVendorWebsiteId());
-                                Text okText = new OkText("The logo for the website was saved successfully.","status_mssg") ;
+                                Text okText = new OkText("The landing page layout was successfully updated.","status_mssg") ;
                                 arrOkText.add(okText);
                                 responseStatus = RespConstants.Status.OK;
                             } else {
@@ -89,7 +96,7 @@ public class ProcSavePublishLandingPagePanel extends HttpServlet {
                             VendorWebsiteResponseBean vendorWebsiteResponseBean = buildVendorWebsite.publishLandingPageLayoutContent(vendorWebsiteRequestBean);
                             if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId())) {
                                 jsonResponseObj.put("vendorwebsite_id",vendorWebsiteResponseBean.getVendorWebsiteId());
-                                Text okText = new OkText("The logo for the website was published successfully.","status_mssg") ;
+                                Text okText = new OkText("The landing page layout was successfully published.","status_mssg") ;
                                 arrOkText.add(okText);
                                 responseStatus = RespConstants.Status.OK;
                             } else {
