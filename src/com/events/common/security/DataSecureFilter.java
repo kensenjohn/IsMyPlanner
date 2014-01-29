@@ -5,7 +5,6 @@ import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.exception.PropertyFileException;
-import org.owasp.esapi.ESAPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
