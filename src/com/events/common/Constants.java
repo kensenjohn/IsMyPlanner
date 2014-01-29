@@ -112,7 +112,7 @@ public class Constants {
     }
 
     public enum USER_TYPE {
-        CLIENT("CLIENT"),VENDOR("VENDOR"),ADMIN("ADMIN");
+        CLIENT("CLIENT"),VENDOR("VENDOR"),ADMIN("ADMIN"),SUPERUSER("SUPERUSER"),NONE(Constants.EMPTY);
         private String userType = Constants.EMPTY;
         USER_TYPE(String userType) {
             this.userType = userType;

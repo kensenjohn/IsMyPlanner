@@ -20,6 +20,7 @@ import com.events.vendors.BuildVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.misc.IOUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -77,8 +78,7 @@ public class ProcRegister  extends HttpServlet {
                     AccessUsers accessUsers = new AccessUsers();
                     UserBean tmpExistingUserBean = accessUsers.getUserByEmail(userRequestBean);
 
-                    if( tmpExistingUserBean!=null && "".equalsIgnoreCase(tmpExistingUserBean.getUserId() )) {
-
+                    if( tmpExistingUserBean!=null && !Utility.isNullOrEmpty(tmpExistingUserBean.getUserId()) ) {
 
                         userRequestBean.setFirstName(sFirstName);
                         userRequestBean.setLastName(sLastName);

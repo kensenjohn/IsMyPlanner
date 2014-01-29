@@ -4,6 +4,7 @@ import com.events.bean.users.PasswordRequestBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserInfoBean;
 import com.events.bean.users.UserRequestBean;
+import com.events.bean.users.permissions.UserRolePermissionRequestBean;
 import com.events.bean.vendors.VendorBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
@@ -14,6 +15,7 @@ import com.events.common.exception.users.EditUserInfoException;
 import com.events.common.exception.users.ManagePasswordException;
 import com.events.common.exception.vendors.EditVendorException;
 import com.events.data.users.BuildUserData;
+import com.events.users.permissions.UserRolePermission;
 import com.events.vendors.BuildVendors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +82,7 @@ public class BuildUsers {
                 }
             }
 
-            if(!"".equalsIgnoreCase(userRequestBean.getParentId()) ) {
+            if( !Utility.isNullOrEmpty(userRequestBean.getParentId()) ) {
                 UserInfoBean userInfoBean = generateNewUserInfoBean(userRequestBean);
                 Integer iNumOfUserInfoIdRows = createUserInfo(userInfoBean);
 
@@ -97,6 +99,13 @@ public class BuildUsers {
                         if(iNumOfPasswordRows<=0) {
                             isError = true;
                             appLogging.info("Error creating user password during registration : " + userRequestBean);
+                        } else {
+                            UserRolePermissionRequestBean userRolePermRequest = new UserRolePermissionRequestBean();
+                            userRolePermRequest.setUserId( userBean.getUserId() );
+                            userRolePermRequest.setParentId( userRequestBean.getParentId() );
+                            userRolePermRequest.setUserType( userRequestBean.getUserType() );
+                            UserRolePermission userRolePermission = new UserRolePermission();
+                            userRolePermission.initiatePermissionBootup( userRolePermRequest );
                         }
 
                     } else {
