@@ -97,6 +97,11 @@ public class UserRolePermission {
 
     }
 
+    public UserRolePermissionResponseBean deleteRole ( UserRolePermissionRequestBean userRolePermissionRequestBean ) {
+        UserRolePermissionResponseBean userRolePermissionResponseBean = new UserRolePermissionResponseBean();
+        return userRolePermissionResponseBean;
+    }
+
     public JSONObject loadRoleDetailsJson (ArrayList<EveryRoleDetailBean>  arrEveryRoleDetailBean) {
         JSONObject jsonEveryRoleDetail = new JSONObject();
         if(arrEveryRoleDetailBean!=null && !arrEveryRoleDetailBean.isEmpty() ) {

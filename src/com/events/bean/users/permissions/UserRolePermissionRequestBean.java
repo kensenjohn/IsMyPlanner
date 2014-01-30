@@ -10,10 +10,18 @@ import com.events.common.Constants;
  * To change this template use File | Settings | File Templates.
  */
 public class UserRolePermissionRequestBean {
+    private String roleId = Constants.EMPTY;
     private String userId = Constants.EMPTY;
     private  String parentId= Constants.EMPTY;
     private  Constants.USER_TYPE userType = Constants.USER_TYPE.NONE;
 
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
 
     public String getUserId() {
         return userId;
@@ -42,7 +50,8 @@ public class UserRolePermissionRequestBean {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("UserRolePermissionRequestBean{");
-        sb.append("userId='").append(userId).append('\'');
+        sb.append("roleId='").append(roleId).append('\'');
+        sb.append(", userId='").append(userId).append('\'');
         sb.append(", parentId='").append(parentId).append('\'');
         sb.append(", userType=").append(userType);
         sb.append('}');

@@ -63,6 +63,9 @@
     </div>
 </div>
 </body>
+<form id="frm_delete_role">
+    <input type="hidden" id="role_id" name="role_id" value=""/>
+</form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/jquery.dataTables.min.js"></script>
 <script   type="text/javascript">
@@ -102,17 +105,18 @@
     function processRolesList(varNumOfRoles, everyRoleList) {
         for(i=0;i<varNumOfRoles;i++){
             var varEveryRoleBean = everyRoleList[i];
-            var rowEveryRole= $('<tr id="row_'+varEveryRoleBean.role_id+'" ></tr>');
+            var varIsSiteAdmin =  varEveryRoleBean.is_site_admin;
+            var varRoleId =  varEveryRoleBean.role_id;
+            var varRoleName = varEveryRoleBean.name;
+
+            var rowEveryRole= $('<tr id="row_'+varRoleId+'" ></tr>');
             rowEveryRole.append(
-                    '<td>'+varEveryRoleBean.name+'</td>'+
-                            '<td>'+varEveryRoleBean.assigned_to_num_of_users+'</td>' +
-                            '<td  class="center" >'+
-                            '<a href="/com/events/event/email/edit_email.jsp?event_id='+varEveryRoleBean.role_id+'&eventemail_id='+varEveryRoleBean.role_id+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>'+
-                            '&nbsp;&nbsp;&nbsp;'+
-                            '<a id="'+varEveryRoleBean.role_id+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>'+'</td>');
+                    '<td>'+varRoleName+'</td>'+
+                            '<td>'+varEveryRoleBean.assigned_to_num_of_users +'</td>' +
+                            '<td  class="center" >'+ createButtons(varIsSiteAdmin, varRoleId) +'</td>');
             $('#every_role_rows').append(rowEveryRole);
 
-
+            addDeleteClickEvent(varRoleName, varRoleId, i)
             // Adding Click Event Functionality for event's delete button.
             /*var eventemail_obj = {
                 event_id: varEveryEventEmailBean.event_id,
@@ -130,6 +134,81 @@
                         "Yes", "No", deleteEventEmail,e.data.param_eventemail_obj)
             }); */
         }
+    }
+    function addDeleteClickEvent(varRoleName, varRoleId, varRowNum) {
+        var role_obj = {
+            role_id: varRoleId,
+            role_name: varRoleName,
+            row_num: varRowNum,
+            printObj: function () {
+                return this.role_id + ' ' + this.role_name + ' row : ' + this.row_num;
+            }
+        }
+
+        $('#del_'+varRoleId).click({param_role_obj:role_obj},function(e){
+            displayConfirmBox(
+                    "Are you sure you want to delete this role - " + e.data.param_role_obj.role_name ,
+                    "Delete Role",
+                    "Yes", "No", deleteRole,e.data.param_role_obj)
+        });
+    }
+
+    function deleteRole(varRoleObj) {
+        $('role_id').val(varRoleObj.role_id);
+        deleteRoleInvoke(processRoleDeletion);
+    }
+    function deleteRoleInvoke(callbackmethod) {
+        var actionUrl = "/proc_delete_role.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_delete_role").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function processRoleDeletion(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    var varIsEventDeleted = jsonResponseObj.is_deleted;
+                    if(varIsEventDeleted){
+                        $('#eventemail_id').val('');
+                        var varDeletedEventEmailId = jsonResponseObj.deleted_eventemail_id;
+                        $('#row_'+varDeletedEventEmailId).remove();
+                    } else {
+                        displayMssgBoxAlert("The event was not deleted. Please try again later.", true);
+                    }
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (populateEventList - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (populateEventList - 2)", true);
+        }
+    }
+
+
+    function createButtons( varIsSiteAdmin , varRoleId ){
+        var varButtons = '';
+        if(varIsSiteAdmin){
+            varButtons = varButtons + createViewButtons( varRoleId )
+        } else {
+            varButtons = varButtons + createEditButton( varRoleId );
+            varButtons = varButtons + '&nbsp;&nbsp;&nbsp;';
+            varButtons = varButtons + createDeleteButton( varRoleId );
+        }
+        return varButtons;
+    }
+    function createEditButton(varRoleId){
+        return '<a href="/com/events/dashboard/permissions/edit_roles.jsp?role_id='+varRoleId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>';
+    }
+    function createDeleteButton(varRoleId){
+        return '<a id="del_'+varRoleId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>';
+    }
+    function createViewButtons( varRoleId){
+        return '<a href="/com/events/dashboard/permissions/edit_roles.jsp?role_id='+varRoleId+'" class="btn btn-default btn-xs"></span> View</a>'
     }
     function initializeTable(){
 
