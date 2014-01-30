@@ -1,13 +1,17 @@
 package com.events.users.permissions;
 
+import com.events.bean.users.UserBean;
 import com.events.bean.users.permissions.*;
 import com.events.common.Constants;
+import com.events.common.ParseUtil;
+import com.events.common.Perm;
 import com.events.common.Utility;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -99,7 +103,62 @@ public class UserRolePermission {
 
     public UserRolePermissionResponseBean deleteRole ( UserRolePermissionRequestBean userRolePermissionRequestBean ) {
         UserRolePermissionResponseBean userRolePermissionResponseBean = new UserRolePermissionResponseBean();
+        if( userRolePermissionRequestBean!=null && !Utility.isNullOrEmpty(userRolePermissionRequestBean.getRoleId())
+                && !Utility.isNullOrEmpty(userRolePermissionRequestBean.getUserId() ) ) {
+
+            AccessRoles accessRoles = new AccessRoles();
+            RolesBean rolesBean = accessRoles.getRoleById(userRolePermissionRequestBean);
+            if(rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getRoleId() )) {
+                if( !rolesBean.isSiteAdmin() && !isDefaultRole(rolesBean) ) {
+
+                    AccessUserRoles accessUserRoles = new AccessUserRoles();
+                    ArrayList<UserRolesBean> arrUserRolesBean = accessUserRoles.getUserRolesByRoles( rolesBean ) ;
+                    if(arrUserRolesBean == null || (arrUserRolesBean!=null && arrUserRolesBean.isEmpty()) ) {
+                        BuildRoles buildRoles = new BuildRoles();
+                        boolean isRoleDeleted = buildRoles.deleteRole( rolesBean );
+                        if(isRoleDeleted) {
+                            userRolePermissionResponseBean.setSuccess(true);
+
+                            BuildRolePermissions buildRolePermissions = new BuildRolePermissions();
+                            buildRolePermissions.deleteRolePermissions( rolesBean );
+                        } else {
+                            appLogging.info("Cannot Delete : Role was not be deleted : " + ParseUtil.checkNullObject(rolesBean) );
+                            userRolePermissionResponseBean.setSuccess(false);
+                            userRolePermissionResponseBean.setMessage( "We were unable to delete the role your requested.");
+                        }
+
+                    } else {
+                        appLogging.info("Cannot Delete : The role has users assigned to it- num of users : " + arrUserRolesBean.size() );
+                        userRolePermissionResponseBean.setSuccess(false);
+                        userRolePermissionResponseBean.setMessage( "Please make sure that no users are assigned to this role.");
+                    }
+                } else{
+                    appLogging.info("Cannot Delete : The role is a site admin : " + rolesBean );
+                    userRolePermissionResponseBean.setSuccess(false);
+                    userRolePermissionResponseBean.setMessage( "This role may not be deleted. Please contact your support representative.");
+                }
+            } else {
+                appLogging.info("The role Id does not exist : " + userRolePermissionRequestBean.getRoleId() );
+                userRolePermissionResponseBean.setSuccess(false);
+                userRolePermissionResponseBean.setMessage( "Please select a valid role.");
+            }
+        } else{
+            appLogging.info("Invalid request : " + ParseUtil.checkNullObject(userRolePermissionRequestBean));
+            userRolePermissionResponseBean.setSuccess(false);
+            userRolePermissionResponseBean.setMessage( "We were unable to process your request at this time.");
+        }
         return userRolePermissionResponseBean;
+    }
+
+    private boolean isDefaultRole(RolesBean rolesBean ) {
+        boolean isDefaultRole = false;
+        if(rolesBean!=null && (Constants.USER_TYPE.VENDOR.getType().equalsIgnoreCase(rolesBean.getParentId()) ||
+                Constants.USER_TYPE.ADMIN.getType().equalsIgnoreCase(rolesBean.getParentId()) ||
+                Constants.USER_TYPE.CLIENT.getType().equalsIgnoreCase(rolesBean.getParentId())||
+                Constants.USER_TYPE.SUPERUSER.getType().equalsIgnoreCase(rolesBean.getParentId()))  )  {
+            isDefaultRole = true;
+        }
+        return isDefaultRole;
     }
 
     public JSONObject loadRoleDetailsJson (ArrayList<EveryRoleDetailBean>  arrEveryRoleDetailBean) {
@@ -114,5 +173,62 @@ public class UserRolePermission {
             jsonEveryRoleDetail.put("num_of_roles" , iTrackNumOfRoles);
         }
         return jsonEveryRoleDetail;
+    }
+
+    public HashMap<String, StringBuilder > getRolePermissions( UserRolePermissionRequestBean userRolePermnRequest ) {
+        HashMap<String, StringBuilder > hmPermissionTables = new HashMap<String, StringBuilder >();
+        if(userRolePermnRequest!=null && !Utility.isNullOrEmpty(userRolePermnRequest.getRoleId()) && userRolePermnRequest.getUserType()!=null) {
+            AccessPermissions accessPermissions = new AccessPermissions();
+            ArrayList<PermissionGroupBean> arrPermissionGroupBean = accessPermissions.getDefaultPermissionsGroups(userRolePermnRequest);
+            ArrayList<PermissionsBean> arrDefaultPermissionsBean = accessPermissions.getDefaultPermissions( userRolePermnRequest ) ;
+            ArrayList<RolePermissionsBean> arrRolePermissionsBean = new ArrayList<RolePermissionsBean>();
+            if(arrDefaultPermissionsBean!=null && !arrDefaultPermissionsBean.isEmpty())  {
+                AccessRolePermissions accessRolePermissions = new AccessRolePermissions();
+                arrRolePermissionsBean = accessRolePermissions.getRolePermissions( userRolePermnRequest );
+                appLogging.error("arrRolePermissionsBean : " + arrRolePermissionsBean );
+
+
+            }
+
+            hmPermissionTables = createRolePermissionTable(arrPermissionGroupBean ,arrDefaultPermissionsBean , arrRolePermissionsBean );
+        }
+        return hmPermissionTables;
+    }
+
+    public HashMap<String, StringBuilder > createRolePermissionTable(ArrayList<PermissionGroupBean> arrPermissionGroupBean, ArrayList<PermissionsBean> arrDefaultPermissionsBean,
+                                          ArrayList<RolePermissionsBean> arrRolePermissionsBean ) {
+        HashMap<String, StringBuilder > hmPermissionTables = new HashMap<String, StringBuilder >();
+        if(arrPermissionGroupBean!=null && !arrPermissionGroupBean.isEmpty() ) {
+            for(PermissionGroupBean permissionGroupBean : arrPermissionGroupBean ) {
+                StringBuilder strPermissionTable = new StringBuilder("<table  cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"display table dataTable\" id=\"table_"+permissionGroupBean.getPermissionGroupId()+"\">");
+
+                StringBuilder strPermissionHeaderRow = new StringBuilder("<thead><tr role=\"row\"><th class=\"center\" role=\"columnheader\">" +permissionGroupBean.getGroupName()+ "</th></tr></thead>");
+                StringBuilder strPermissionBodyRow = new StringBuilder("<tbody role=\"alert\" id=\"body_"+permissionGroupBean.getPermissionGroupId()+"\">");
+                if( arrDefaultPermissionsBean!=null && !arrDefaultPermissionsBean.isEmpty() ) {
+                    for(PermissionsBean permissionsBean : arrDefaultPermissionsBean ){
+                        if(permissionsBean.getPermissionGroupId().equalsIgnoreCase( permissionGroupBean.getPermissionGroupId() )) {
+                            strPermissionBodyRow.append("<tr><td>");
+
+                            strPermissionBodyRow.append("<input type=\"checkbox\" id=\""+permissionsBean.getPermissionId()+"\"");
+                            if( arrRolePermissionsBean!=null && !arrRolePermissionsBean.isEmpty() ){
+                                for(RolePermissionsBean rolePermissionsBean : arrRolePermissionsBean ) {
+                                    if(rolePermissionsBean.getPermissionId().equalsIgnoreCase( permissionsBean.getPermissionId() )) {
+                                        strPermissionBodyRow.append(" checked ");
+                                    }
+                                }
+                            }
+                            strPermissionBodyRow.append("/> " + permissionsBean.getDisplayText() +" </td></tr>");
+                        }
+                    }
+                }
+                strPermissionBodyRow.append("</tbody>");
+                strPermissionHeaderRow.append(strPermissionBodyRow);
+                strPermissionTable.append( strPermissionHeaderRow );
+                strPermissionTable.append("</table>");
+                appLogging.info( strPermissionTable.toString() );
+                hmPermissionTables.put(permissionGroupBean.getPermissionGroupId(), strPermissionTable );
+            }
+        }
+        return hmPermissionTables;
     }
 }

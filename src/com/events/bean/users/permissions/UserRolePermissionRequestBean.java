@@ -1,6 +1,7 @@
 package com.events.bean.users.permissions;
 
 import com.events.common.Constants;
+import com.events.common.Perm;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +15,15 @@ public class UserRolePermissionRequestBean {
     private String userId = Constants.EMPTY;
     private  String parentId= Constants.EMPTY;
     private  Constants.USER_TYPE userType = Constants.USER_TYPE.NONE;
+    private Perm perm = null;
+
+    public Perm getPerm() {
+        return perm;
+    }
+
+    public void setPerm(Perm perm) {
+        this.perm = perm;
+    }
 
     public String getRoleId() {
         return roleId;

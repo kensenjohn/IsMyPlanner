@@ -37,4 +37,15 @@ public class BuildRoles {
         }
         return arrRolesBean;
     }
+
+    public boolean deleteRole(RolesBean rolesBean){
+        boolean isRoleDeleted = false;
+        if(rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getRoleId()))  {
+            BuildRolesData buildRolesData = new BuildRolesData();
+            if( buildRolesData.deletetRole(rolesBean) > 0 ) {
+                isRoleDeleted = true;
+            }
+        }
+        return isRoleDeleted;
+    }
 }

@@ -1,15 +1,17 @@
 package com.events.proc.users.permissions;
 
 import com.events.bean.users.UserBean;
+import com.events.bean.users.permissions.UserRolePermissionRequestBean;
+import com.events.bean.users.permissions.UserRolePermissionResponseBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import com.events.common.Perm;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.json.ErrorText;
-import com.events.json.RespConstants;
-import com.events.json.RespObjectProc;
-import com.events.json.Text;
+import com.events.json.*;
+import com.events.users.permissions.CheckPermission;
+import com.events.users.permissions.UserRolePermission;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,10 +44,47 @@ public class ProcDeleteRole extends HttpServlet {
                 UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
                 if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
+                    String sRoleId = ParseUtil.checkNull(request.getParameter("role_id"));
 
+                    CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
+                    if( checkPermission.can(Perm.DELETE_ROLE ) ) {
+                        UserRolePermissionRequestBean userRolePermissionRequestBean = new UserRolePermissionRequestBean();
+                        userRolePermissionRequestBean.setRoleId( sRoleId );
+                        userRolePermissionRequestBean.setUserId( loggedInUserBean.getUserId() );
+
+                        UserRolePermission userRolePermission = new UserRolePermission();
+                        UserRolePermissionResponseBean userRolePermissionResponseBean = userRolePermission.deleteRole(  userRolePermissionRequestBean );
+                        if(userRolePermissionResponseBean!=null){
+                            String sMessage = ParseUtil.checkNull( userRolePermissionResponseBean.getMessage() );
+                            if(userRolePermissionResponseBean.isSuccess()){
+                                jsonResponseObj.put("deleted_role_id",sRoleId);
+                                jsonResponseObj.put("is_deleted",true);
+
+                                Text okText = new OkText("The role was successfully deleted.","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
+                            } else {
+                                Text errorText = new ErrorText("Oops!! " + sMessage ,"err_mssg") ;
+                                arrErrorText.add(errorText);
+                                responseStatus = RespConstants.Status.ERROR;
+                            }
+                        } else {
+                            appLogging.error("Response  to Delete Role  was null : " + sRoleId + " - " + ParseUtil.checkNullObject(loggedInUserBean) );
+                            Text errorText = new ErrorText("Oops!! We were unable to delete the role you requested." ,"err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
+                        }
+                    } else {
+                        appLogging.error("No Permission to Delete Role : " + sRoleId + " - " + ParseUtil.checkNullObject(loggedInUserBean) );
+                        Text errorText = new ErrorText("Oops!! Please make sure you are authorized to execute this action.(deleteRole - 003)","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
+                    }
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAllRoles - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(deleteRole - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -59,7 +98,7 @@ public class ProcDeleteRole extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAllRoles - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(deleteRole - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

@@ -1,5 +1,6 @@
 package com.events.data.users.permissions;
 
+import com.events.bean.users.permissions.PermissionGroupBean;
 import com.events.bean.users.permissions.PermissionsBean;
 import com.events.bean.users.permissions.UserRolePermissionRequestBean;
 import com.events.common.Configuration;
@@ -40,5 +41,22 @@ public class AccessPermissionsData {
             }
         }
         return arrPermissionsBean;
+    }
+    //GTPERMISSIONGROUP(  PERMISSIONGROUPID VARCHAR(45)  NOT NULL,  GROUP_NAME VARCHAR(100) NOT NULL,  FK_PARENTID
+    public ArrayList<PermissionGroupBean> getPermissionGroups(UserRolePermissionRequestBean userRolePermRequest) {
+        ArrayList<PermissionGroupBean> arrPermissionGroupBean = new ArrayList<PermissionGroupBean>();
+        if(userRolePermRequest!=null && !Utility.isNullOrEmpty(userRolePermRequest.getParentId())) {
+            String sQuery = "SELECT * FROM GTPERMISSIONGROUP WHERE FK_PARENTID = ? ";
+            ArrayList<Object> aParams = DBDAO.createConstraint(userRolePermRequest.getParentId());
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessPermissionsData.java", "getPermissionGroups()");
+            if(arrResult!=null) {
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    PermissionGroupBean permissionGroupBean = new PermissionGroupBean( hmResult );
+                    arrPermissionGroupBean.add(permissionGroupBean);
+                }
+            }
+        }
+        return arrPermissionGroupBean;
     }
 }

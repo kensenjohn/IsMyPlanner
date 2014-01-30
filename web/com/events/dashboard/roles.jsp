@@ -154,7 +154,7 @@
     }
 
     function deleteRole(varRoleObj) {
-        $('role_id').val(varRoleObj.role_id);
+        $('#role_id').val(varRoleObj.role_id);
         deleteRoleInvoke(processRoleDeletion);
     }
     function deleteRoleInvoke(callbackmethod) {
@@ -172,20 +172,20 @@
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
-                    var varIsEventDeleted = jsonResponseObj.is_deleted;
-                    if(varIsEventDeleted){
-                        $('#eventemail_id').val('');
-                        var varDeletedEventEmailId = jsonResponseObj.deleted_eventemail_id;
-                        $('#row_'+varDeletedEventEmailId).remove();
+                    var varIsRoleDeleted = jsonResponseObj.is_deleted;
+                    if(varIsRoleDeleted){
+                        $('#role_id').val('');
+                        var varDeletedRoleId = jsonResponseObj.deleted_role_id;
+                        $('#row_'+varDeletedRoleId).remove();
                     } else {
-                        displayMssgBoxAlert("The event was not deleted. Please try again later.", true);
+                        displayMssgBoxAlert("The role was not deleted. Please try again later.", true);
                     }
                 }
             } else {
-                displayMssgBoxAlert("Please try again later (populateEventList - 1)", true);
+                displayMssgBoxAlert("Please try again later (deleteRole - 1)", true);
             }
         } else {
-            displayMssgBoxAlert("Please try again later (populateEventList - 2)", true);
+            displayMssgBoxAlert("Please try again later (deleteRole - 2)", true);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.events.data.users.permissions;
 
 import com.events.bean.users.permissions.RolePermissionsBean;
+import com.events.bean.users.permissions.RolesBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.DateSupport;
@@ -32,6 +33,19 @@ public class BuildRolePermissionsData {
                     rolesPermissionsBean.getRolePermissionId(), rolesPermissionsBean.getRoleId(),rolesPermissionsBean.getPermissionId() );
 
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildRolePermissionsData.java", "insertRolePermission() ");
+        }
+
+
+        return numOfRowsInserted;
+    }
+
+    public Integer deleteRolePermissionByRoleId(RolesBean rolesBean) {
+        int numOfRowsInserted = 0;
+        if(rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getRoleId()) ) {
+            String sQuery = "DELETE FROM GTROLEPERMISSIONS WHERE FK_ROLEID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(  rolesBean.getRoleId() );
+
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildRolePermissionsData.java", "deleteRolePermissionByRoleId() ");
         }
 
 

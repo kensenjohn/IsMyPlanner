@@ -39,4 +39,15 @@ public class BuildRolesData {
 
         return numOfRowsInserted;
     }
+    public Integer deletetRole(RolesBean rolesBean) {
+        //GTROLES( ROLEID, FK_PARENTID, NAME,      CREATEDATE, HUMANCREATEDATE, IS_SITEADMIN)
+        int numOfRowsDeleted = 0;
+        if(rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getRoleId())  && !Utility.isNullOrEmpty(rolesBean.getParentId()) ) {
+            String sQuery = "DELETE FROM GTROLES WHERE ROLEID = ? ";
+            ArrayList<Object> aParams = DBDAO.createConstraint( rolesBean.getRoleId() );
+
+            numOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildRolesData.java", "deletetRole() ");
+        }
+        return numOfRowsDeleted;
+    }
 }

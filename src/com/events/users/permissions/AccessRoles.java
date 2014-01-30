@@ -5,6 +5,7 @@ import com.events.bean.users.permissions.UserRolePermissionRequestBean;
 import com.events.common.Constants;
 import com.events.common.Utility;
 import com.events.data.users.permissions.AccessRolesData;
+import com.events.data.users.permissions.BuildRolesData;
 
 import java.util.ArrayList;
 
@@ -34,5 +35,27 @@ public class AccessRoles {
             arrRolesBean = accessRolesData.getRolesByParent( userRolePermRequest ) ;
         }
         return arrRolesBean;
+    }
+
+    public RolesBean getRoleById(  UserRolePermissionRequestBean userRolePermRequest ) {
+        RolesBean roleBean  = new RolesBean();
+        if(userRolePermRequest!=null && !Utility.isNullOrEmpty( userRolePermRequest.getRoleId()) ) {
+            AccessRolesData accessRolesData = new AccessRolesData();
+            ArrayList<RolesBean> arrRolesBean = accessRolesData.getRoleById(userRolePermRequest);
+            if(arrRolesBean!=null && !arrRolesBean.isEmpty()) {
+                for(RolesBean tmpRolesBean : arrRolesBean )  {
+                    roleBean = tmpRolesBean;
+                }
+            }
+        }
+        return roleBean;
+    }
+
+    public Integer deleteRole(RolesBean rolesBean) {
+        Integer iNumOfRowsDeleted = 0;
+        if(rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getRoleId())) {
+            BuildRolesData buildRolesData = new BuildRolesData();
+        }
+        return iNumOfRowsDeleted;
     }
 }

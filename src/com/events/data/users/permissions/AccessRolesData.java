@@ -60,4 +60,16 @@ public class AccessRolesData {
         }
         return arrRolesBean;
     }
+
+    public ArrayList<RolesBean> getRoleById( UserRolePermissionRequestBean userRolePermRequest ) {
+        ArrayList<RolesBean> arrRolesBean = new ArrayList<RolesBean>();
+        if(userRolePermRequest!=null && !Utility.isNullOrEmpty(userRolePermRequest.getRoleId())) {
+            String sQuery = "SELECT * FROM GTROLES WHERE ROLEID = ? ";
+
+            ArrayList<Object> aParams = DBDAO.createConstraint( userRolePermRequest.getRoleId() );
+
+            arrRolesBean = getRoles(sQuery , aParams );
+        }
+        return arrRolesBean;
+    }
 }

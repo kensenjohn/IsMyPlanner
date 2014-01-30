@@ -38,4 +38,15 @@ public class BuildRolePermissions {
         }
         return arrRolesBeanWithPermissions;
     }
+
+    public boolean deleteRolePermissions(RolesBean rolesBean){
+        boolean isRolePermissionDeleted = false;
+        if(rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getRoleId())) {
+            BuildRolePermissionsData buildRolePermissionsData = new BuildRolePermissionsData();
+            if( buildRolePermissionsData.deleteRolePermissionByRoleId(rolesBean) > 0 ) {
+                isRolePermissionDeleted = true;
+            }
+        }
+        return isRolePermissionDeleted;
+    }
 }
