@@ -1,15 +1,19 @@
-package com.events.proc.email;
+package com.events.proc.users.permissions;
 
-import com.events.bean.common.email.EveryEventEmailRequestBean;
-import com.events.bean.common.email.EveryEventEmailResponseBean;
 import com.events.bean.users.UserBean;
+import com.events.bean.users.permissions.UserRolePermissionRequestBean;
+import com.events.bean.users.permissions.UserRolePermissionResponseBean;
+import com.events.bean.vendors.VendorBean;
+import com.events.bean.vendors.VendorRequestBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
-import com.events.common.email.EveryEventEmail;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
+import com.events.users.permissions.AccessRoles;
+import com.events.users.permissions.UserRolePermission;
+import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +28,11 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 1/13/14
- * Time: 10:44 AM
+ * Date: 1/29/14
+ * Time: 11:23 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadAllEventEmails extends HttpServlet {
+public class ProcLoadAllRoles extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     public void doPost(HttpServletRequest request,  HttpServletResponse response)  throws ServletException, IOException {
@@ -42,31 +46,43 @@ public class ProcLoadAllEventEmails extends HttpServlet {
                 UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
                 if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
-                    String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 
-                    EveryEventEmailRequestBean everyEventEmailRequestBean = new EveryEventEmailRequestBean();
-                    everyEventEmailRequestBean.setEventId( sEventId );
+                    VendorRequestBean vendorRequestBean = new VendorRequestBean();
+                    vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
+                    AccessVendors accessVendors = new AccessVendors();
+                    VendorBean vendorBean = accessVendors.getVendorByUserId( vendorRequestBean );
 
-                    EveryEventEmail everyEventEmail = new EveryEventEmail();
-                    EveryEventEmailResponseBean everyEventEmailResponseBean = everyEventEmail.getEveryEventEmail(everyEventEmailRequestBean);
-                    if(everyEventEmailResponseBean!=null){
-                        JSONObject jsonEveryEventEmailObject = everyEventEmail.getEveryEventEmailJson(everyEventEmailResponseBean);
+                    UserRolePermissionRequestBean userRolePermRequest = new UserRolePermissionRequestBean();
+                    userRolePermRequest.setUserId( loggedInUserBean.getUserId() );
+                    userRolePermRequest.setParentId( vendorBean.getVendorId() );
 
-                        Integer iNumOfEventEmailObjs =  0;
-                        if(jsonEveryEventEmailObject!=null) {
-                            iNumOfEventEmailObjs =  jsonEveryEventEmailObject.optInt("num_of_eventemails");
-                            jsonResponseObj.put("every_eventemail",jsonEveryEventEmailObject);
+                    UserRolePermission userRolePermission = new UserRolePermission();
+                    UserRolePermissionResponseBean userRolePermissionResponseBean = userRolePermission.loadRoleDetails(userRolePermRequest);
+                    if(userRolePermissionResponseBean!=null) {
+                        JSONObject jsonEveryRoleDetail = userRolePermission.loadRoleDetailsJson(userRolePermissionResponseBean.getArrEveryRoleDetailBean());
+
+                        Integer iNumOfRoleObjs =  0;
+                        if(jsonEveryRoleDetail!=null) {
+                            iNumOfRoleObjs =  jsonEveryRoleDetail.optInt("num_of_roles");
+                            jsonResponseObj.put("every_role",jsonEveryRoleDetail);
                         }
-                        jsonResponseObj.put("num_of_eventemails" , ParseUtil.iToS(iNumOfEventEmailObjs) );
+                        jsonResponseObj.put("num_of_roles" , ParseUtil.iToS(iNumOfRoleObjs) );
 
+
+                        Text okText = new OkText("All Roles were successfully loaded","status_mssg") ;
+                        arrOkText.add(okText);
+                        responseStatus = RespConstants.Status.OK;
+                    } else {
+                        appLogging.info("Invalid request in Proc Page (userRolePermissionResponseBean)" + ParseUtil.checkNullObject(userRolePermissionResponseBean) );
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAllRoles - 002)","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
                     }
-                    Text okText = new OkText("All Emails were successfully loaded","status_mssg") ;
-                    arrOkText.add(okText);
-                    responseStatus = RespConstants.Status.OK;
 
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAllEventEmail - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAllRoles - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -80,7 +96,7 @@ public class ProcLoadAllEventEmails extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAllEventEmail - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAllRoles - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

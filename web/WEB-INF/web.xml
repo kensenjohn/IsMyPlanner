@@ -294,6 +294,17 @@
     </servlet-mapping>
 
 
+    <servlet>
+        <servlet-name>Process Load All Roles</servlet-name>
+        <servlet-class>com.events.proc.users.permissions.ProcLoadAllRoles</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load All Roles</servlet-name>
+        <url-pattern>/proc_load_all_roles.aeve</url-pattern>
+    </servlet-mapping>
+
+
+
     <filter>
         <filter-name>Data Secure Filter</filter-name>
         <filter-class>com.events.common.security.DataSecureFilter</filter-class>

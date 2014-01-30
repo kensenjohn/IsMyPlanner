@@ -3,6 +3,7 @@ package com.events.users.permissions;
 import com.events.bean.users.permissions.RolesBean;
 import com.events.bean.users.permissions.UserRolePermissionRequestBean;
 import com.events.common.Constants;
+import com.events.common.Utility;
 import com.events.data.users.permissions.AccessRolesData;
 
 import java.util.ArrayList;
@@ -24,5 +25,14 @@ public class AccessRoles {
             arrDefaultRolesBean = accessRolesData.getRolesByParent( tmpUserRolePermRequest ) ;
         }
         return arrDefaultRolesBean;
+    }
+
+    public ArrayList<RolesBean> getRolesByParent(  UserRolePermissionRequestBean userRolePermRequest  ) {
+        ArrayList<RolesBean> arrRolesBean = new ArrayList<RolesBean>();
+        if(userRolePermRequest!=null && !Utility.isNullOrEmpty( userRolePermRequest.getParentId()) ) {
+            AccessRolesData accessRolesData = new AccessRolesData();
+            arrRolesBean = accessRolesData.getRolesByParent( userRolePermRequest ) ;
+        }
+        return arrRolesBean;
     }
 }

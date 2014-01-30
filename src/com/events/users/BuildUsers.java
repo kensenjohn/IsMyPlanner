@@ -105,7 +105,10 @@ public class BuildUsers {
                             userRolePermRequest.setParentId( userRequestBean.getParentId() );
                             userRolePermRequest.setUserType( userRequestBean.getUserType() );
                             UserRolePermission userRolePermission = new UserRolePermission();
-                            userRolePermission.initiatePermissionBootup( userRolePermRequest );
+                            if(!userRolePermission.initiatePermissionBootup( userRolePermRequest ) ) {
+                                isError = true;
+                                appLogging.info("Unable to set the permission." + isError );
+                            }
                         }
 
                     } else {

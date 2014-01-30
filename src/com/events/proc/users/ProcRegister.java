@@ -78,7 +78,7 @@ public class ProcRegister  extends HttpServlet {
                     AccessUsers accessUsers = new AccessUsers();
                     UserBean tmpExistingUserBean = accessUsers.getUserByEmail(userRequestBean);
 
-                    if( tmpExistingUserBean!=null && !Utility.isNullOrEmpty(tmpExistingUserBean.getUserId()) ) {
+                    if( tmpExistingUserBean == null || (tmpExistingUserBean!=null && Utility.isNullOrEmpty(tmpExistingUserBean.getUserId())) ) {
 
                         userRequestBean.setFirstName(sFirstName);
                         userRequestBean.setLastName(sLastName);

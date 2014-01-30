@@ -16,22 +16,22 @@ import java.util.HashMap;
  */
 public class RolePermissionsBean {
     //ROLEPERMISSIONID VARCHAR(45) NOT NULL, FK_ROLEID VARCHAR(45) NOT NULL , FK_PERMISSIONID
-    private String rolePermissionsId = Constants.EMPTY;
+    private String rolePermissionId = Constants.EMPTY;
     private String roleId = Constants.EMPTY;
     private String permissionId = Constants.EMPTY;
 
     public RolePermissionsBean(){}
     public RolePermissionsBean(HashMap<String,String> hmResult) {
-        this.rolePermissionsId = ParseUtil.checkNull(hmResult.get("ROLEPERMISSIONID"));
+        this.rolePermissionId = ParseUtil.checkNull(hmResult.get("ROLEPERMISSIONID"));
         this.roleId = ParseUtil.checkNull(hmResult.get("FK_ROLEID"));
         this.permissionId = ParseUtil.checkNull(hmResult.get("FK_PERMISSIONID"));
     }
-    public String getRolePermissionsId() {
-        return rolePermissionsId;
+    public String getRolePermissionId() {
+        return rolePermissionId;
     }
 
-    public void setRolePermissionsId(String rolePermissionsId) {
-        this.rolePermissionsId = rolePermissionsId;
+    public void setRolePermissionId(String rolePermissionId) {
+        this.rolePermissionId = rolePermissionId;
     }
 
     public String getRoleId() {
@@ -53,7 +53,7 @@ public class RolePermissionsBean {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("RolePermissionsBean{");
-        sb.append("rolePermissionsId='").append(rolePermissionsId).append('\'');
+        sb.append("rolePermissionId='").append(rolePermissionId).append('\'');
         sb.append(", roleId='").append(roleId).append('\'');
         sb.append(", permissionsId='").append(permissionId).append('\'');
         sb.append('}');
@@ -64,7 +64,7 @@ public class RolePermissionsBean {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("role_permission_id", this.rolePermissionsId);
+            jsonObject.put("role_permission_id", this.rolePermissionId);
             jsonObject.put("role_id", this.roleId);
             jsonObject.put("permission_id", this.permissionId);
 
