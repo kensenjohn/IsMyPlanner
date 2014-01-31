@@ -175,8 +175,10 @@ public class UserRolePermission {
         return jsonEveryRoleDetail;
     }
 
-    public HashMap<String, StringBuilder > getRolePermissions( UserRolePermissionRequestBean userRolePermnRequest ) {
-        HashMap<String, StringBuilder > hmPermissionTables = new HashMap<String, StringBuilder >();
+    public UserRolePermissionResponseBean getRolePermissions( UserRolePermissionRequestBean userRolePermnRequest ) {
+
+        UserRolePermissionResponseBean userRolePermissionResponseBean = new UserRolePermissionResponseBean();
+
         if(userRolePermnRequest!=null && !Utility.isNullOrEmpty(userRolePermnRequest.getRoleId()) && userRolePermnRequest.getUserType()!=null) {
             AccessPermissions accessPermissions = new AccessPermissions();
             ArrayList<PermissionGroupBean> arrPermissionGroupBean = accessPermissions.getDefaultPermissionsGroups(userRolePermnRequest);
@@ -185,14 +187,19 @@ public class UserRolePermission {
             if(arrDefaultPermissionsBean!=null && !arrDefaultPermissionsBean.isEmpty())  {
                 AccessRolePermissions accessRolePermissions = new AccessRolePermissions();
                 arrRolePermissionsBean = accessRolePermissions.getRolePermissions( userRolePermnRequest );
-                appLogging.error("arrRolePermissionsBean : " + arrRolePermissionsBean );
-
-
             }
+            userRolePermissionResponseBean.setArrPermissionGroupBean( arrPermissionGroupBean );
+            userRolePermissionResponseBean.setArrDefaultPermissionsBean( arrDefaultPermissionsBean );
+            userRolePermissionResponseBean.setArrRolePermissionsBean( arrRolePermissionsBean );
 
-            hmPermissionTables = createRolePermissionTable(arrPermissionGroupBean ,arrDefaultPermissionsBean , arrRolePermissionsBean );
+
+            AccessRoles accessRoles = new AccessRoles();
+            RolesBean roleBean  = accessRoles.getRoleById(userRolePermnRequest);
+            userRolePermissionResponseBean.setRoleBean(roleBean);
+
+            //hmPermissionTables = createRolePermissionTable(arrPermissionGroupBean ,arrDefaultPermissionsBean , arrRolePermissionsBean );
         }
-        return hmPermissionTables;
+        return userRolePermissionResponseBean;
     }
 
     public HashMap<String, StringBuilder > createRolePermissionTable(ArrayList<PermissionGroupBean> arrPermissionGroupBean, ArrayList<PermissionsBean> arrDefaultPermissionsBean,
@@ -200,33 +207,20 @@ public class UserRolePermission {
         HashMap<String, StringBuilder > hmPermissionTables = new HashMap<String, StringBuilder >();
         if(arrPermissionGroupBean!=null && !arrPermissionGroupBean.isEmpty() ) {
             for(PermissionGroupBean permissionGroupBean : arrPermissionGroupBean ) {
-                StringBuilder strPermissionTable = new StringBuilder("<table  cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"display table dataTable\" id=\"table_"+permissionGroupBean.getPermissionGroupId()+"\">");
 
-                StringBuilder strPermissionHeaderRow = new StringBuilder("<thead><tr role=\"row\"><th class=\"center\" role=\"columnheader\">" +permissionGroupBean.getGroupName()+ "</th></tr></thead>");
-                StringBuilder strPermissionBodyRow = new StringBuilder("<tbody role=\"alert\" id=\"body_"+permissionGroupBean.getPermissionGroupId()+"\">");
                 if( arrDefaultPermissionsBean!=null && !arrDefaultPermissionsBean.isEmpty() ) {
                     for(PermissionsBean permissionsBean : arrDefaultPermissionsBean ){
                         if(permissionsBean.getPermissionGroupId().equalsIgnoreCase( permissionGroupBean.getPermissionGroupId() )) {
-                            strPermissionBodyRow.append("<tr><td>");
 
-                            strPermissionBodyRow.append("<input type=\"checkbox\" id=\""+permissionsBean.getPermissionId()+"\"");
                             if( arrRolePermissionsBean!=null && !arrRolePermissionsBean.isEmpty() ){
                                 for(RolePermissionsBean rolePermissionsBean : arrRolePermissionsBean ) {
                                     if(rolePermissionsBean.getPermissionId().equalsIgnoreCase( permissionsBean.getPermissionId() )) {
-                                        strPermissionBodyRow.append(" checked ");
                                     }
                                 }
                             }
-                            strPermissionBodyRow.append("/> " + permissionsBean.getDisplayText() +" </td></tr>");
                         }
                     }
                 }
-                strPermissionBodyRow.append("</tbody>");
-                strPermissionHeaderRow.append(strPermissionBodyRow);
-                strPermissionTable.append( strPermissionHeaderRow );
-                strPermissionTable.append("</table>");
-                appLogging.info( strPermissionTable.toString() );
-                hmPermissionTables.put(permissionGroupBean.getPermissionGroupId(), strPermissionTable );
             }
         }
         return hmPermissionTables;

@@ -4,10 +4,9 @@
 <%@ page import="com.events.common.Constants" %>
 <%@ page import="com.events.users.permissions.CheckPermission" %>
 <%@ page import="com.events.common.Perm" %>
-<%@ page import="com.events.bean.users.permissions.UserRolePermissionRequestBean" %>
 <%@ page import="com.events.users.permissions.UserRolePermission" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.Map" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.events.bean.users.permissions.*" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -21,7 +20,13 @@
 
     UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
-    HashMap<String, StringBuilder > hmPermissionTables = new HashMap<String, StringBuilder >();
+    ArrayList<PermissionGroupBean> arrPermissionGroupBean = new ArrayList<PermissionGroupBean>();
+    ArrayList<PermissionsBean> arrDefaultPermissionsBean = new ArrayList<PermissionsBean>();
+    ArrayList<RolePermissionsBean> arrRolePermissionsBean = new ArrayList<RolePermissionsBean>();
+    RolesBean roleBean  = new RolesBean();
+
+    boolean canViewRolePermissions = false;
+    boolean canEditRolePermissions = false;
     if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
         CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
         if( checkPermission.can(Perm.VIEW_ROLE_PERMMISIONS ) ) {
@@ -30,7 +35,16 @@
             userRolePermRequest.setRoleId( sRoleId);
             userRolePermRequest.setUserType(loggedInUserType);
             UserRolePermission userRolePermission = new UserRolePermission();
-            hmPermissionTables = userRolePermission.getRolePermissions(userRolePermRequest);
+            UserRolePermissionResponseBean userRolePermissionResponseBean = userRolePermission.getRolePermissions(userRolePermRequest);
+            if(userRolePermissionResponseBean!=null){
+                arrPermissionGroupBean = userRolePermissionResponseBean.getArrPermissionGroupBean();
+                arrDefaultPermissionsBean = userRolePermissionResponseBean.getArrDefaultPermissionsBean();
+                arrRolePermissionsBean = userRolePermissionResponseBean.getArrRolePermissionsBean();
+                roleBean = userRolePermissionResponseBean.getRoleBean();
+            }
+            canViewRolePermissions = true;
+        } else {
+            response.sendRedirect("/com/events/common/error/stop.jsp");
         }
     }
 %>
@@ -63,64 +77,141 @@
                     &nbsp;
                 </div>
             </div>
+            <%
+                if(canViewRolePermissions){
+
+            %>
             <div class="row">
                 <div class="col-md-12">
+                    <form method="post" id="frm_role_permissions">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="roleName" class="form_label">Name</label><span class="required"> *</span>
+                                    <input type="text" class="form-control" id="roleName" name="roleName" placeholder="Role Name" value="<%=roleBean.getName()%>" >
+                                </div>
+                            </div>
+                        </div>
                     <%
-                        if(hmPermissionTables!=null && !hmPermissionTables.isEmpty()) {
-                            for(Map.Entry<String,StringBuilder> mapPermissionTable : hmPermissionTables.entrySet()) {
+                        int columnNum = 0;
+                        if(arrPermissionGroupBean!=null && !arrPermissionGroupBean.isEmpty() ) {
+                            for(PermissionGroupBean permissionGroupBean : arrPermissionGroupBean ) {
+
+
+                                if(columnNum == 0) {
                     %>
-                                <%=mapPermissionTable.getValue()%>
+                                <div  class="row" >
+                    <%
+                                }
+                    %>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h5><%=permissionGroupBean.getGroupName()%></h5>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                    <%
+                                                    if( arrDefaultPermissionsBean!=null && !arrDefaultPermissionsBean.isEmpty() ) {
+                                                        for(PermissionsBean permissionsBean : arrDefaultPermissionsBean ){
+                                                            if(permissionsBean.getPermissionGroupId().equalsIgnoreCase( permissionGroupBean.getPermissionGroupId() )) {
+                    %>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input type="checkbox" name="perm_checkbox" value="<%=permissionsBean.getPermissionId()%>"
+                    <%
+                                                                if( arrRolePermissionsBean!=null && !arrRolePermissionsBean.isEmpty() ){
+                                                                    for(RolePermissionsBean rolePermissionsBean : arrRolePermissionsBean ) {
+                                                                        if(rolePermissionsBean.getPermissionId().equalsIgnoreCase( permissionsBean.getPermissionId() )) {
+                    %>
+                                                                            checked
+                    <%
+                                                                        }
+                                                                    }
+                                                                }
+                    %>
+                                                                /> &nbsp;&nbsp;&nbsp;<%=permissionsBean.getDisplayText()%>
+                                                            </div>
+                                                        </div>
+
+                    <%
+                                                            }
+                                                        }
+                                                    }
+                    %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                    <%
+                                if( columnNum == 2 ) {
+                                    columnNum=0 ;
+                    %>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                            </div>
+                    <%
+                                } else {
+                                    columnNum++;
+                                }
+                    %>
+
+
+
                     <%
                             }
                         }
                     %>
+                        <input type="hidden" id="role_id"  name="role_id" value="<%=roleBean.getRoleId()%>">
+                    </form>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-filled" id="btn_save_role">Save</button>
+                </div>
+            </div>
+            <%
+
+                }
+                else {
+            %>
+                <jsp:include page="/com/events/common/error/stop.jsp"/>
+            <%
+                }
+            %>
+
         </div>
     </div>
 </div>
 </body>
-<form id="frm_load_role_permissions">
-    <input type="hidden" id="role_id" name="role_id" value="<%=sRoleId%>">
-</form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script   type="text/javascript">
-    var varArray = '';
-    <%
-        if(hmPermissionTables!=null && !hmPermissionTables.isEmpty()) {
-            for(Map.Entry<String,StringBuilder> mapPermissionTable : hmPermissionTables.entrySet()) {
-    %>
-        initializeTable('table_'+<%=mapPermissionTable.getKey()%>);
-
-    <%
-            }
-        }
-    %>
     $(window).load(function() {
         //loadRolePermissions(populateRolePermissions);
         //initializeTable();
+        $('#btn_save_role').click(function(){
+            saveRolePermissions(getResult)
+        });
     });
-    function loadRolePermissions(callbackmethod) {
-        var actionUrl = "/proc_load_role_permissions.aeve";
+    function saveRolePermissions(callbackmethod) {
+        var actionUrl = "/proc_save_role_permissions.aeve";
         var methodType = "POST";
-        var dataString = $("#frm_load_role_permissions").serialize();
+        var dataString = $("#frm_role_permissions").serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
-    function populateRolePermissions(jsonResult) {
+    function getResult(jsonResult) {
 
-    }
-
-    function initializeTable(varTableId){
-
-        objEveryRoleTable =  $('#'+varTableId).dataTable({
-            "bPaginate": false,
-            "bInfo": false,
-
-            "aoColumns": [
-                null,
-                null,
-                { "bSortable": false }
-            ]
-        });
     }
 </script>

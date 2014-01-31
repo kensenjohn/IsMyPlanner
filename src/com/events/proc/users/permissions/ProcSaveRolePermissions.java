@@ -37,7 +37,7 @@ import java.util.ArrayList;
  * Time: 1:51 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadRolePermissions extends HttpServlet {
+public class ProcSaveRolePermissions extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RespObjectProc responseObject = new RespObjectProc();
@@ -45,35 +45,45 @@ public class ProcLoadRolePermissions extends HttpServlet {
         ArrayList<Text> arrOkText = new ArrayList<Text>();
         ArrayList<Text> arrErrorText = new ArrayList<Text>();
         RespConstants.Status responseStatus = RespConstants.Status.ERROR;
+
+        appLogging.info("ProcSaveRolePermissions invoked " );
         try{
             if( !DataSecurityChecker.isInsecureInputResponse(request) ) {
                 UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
                 if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
                     String sRoleId = ParseUtil.checkNull(request.getParameter("role_id"));
+                    String[] sParamChecked = request.getParameterValues("perm_checkbox");
+                    if(sParamChecked!=null && sParamChecked.length > 0 ) {
+                        for(String paramCheck : sParamChecked ) {
+                            appLogging.info( paramCheck );
+                        }
+                    }
+
 
 
                     CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
-                    if( checkPermission.can(Perm.VIEW_ROLE_PERMMISIONS ) ) {
+                    if( checkPermission.can(Perm.EDIT_ROLE_PERMISSION ) ) {
 
                         Constants.USER_TYPE loggedInUserType = loggedInUserBean.getUserType();
                         UserRolePermissionRequestBean userRolePermRequest = new UserRolePermissionRequestBean();
                         userRolePermRequest.setRoleId( sRoleId);
                         userRolePermRequest.setUserType(loggedInUserType);
                         UserRolePermission userRolePermission = new UserRolePermission();
-                        userRolePermission.getRolePermissions(userRolePermRequest);
+
+
 
 
                     } else {
                         appLogging.error("No Permission to View Role Permission : " + sRoleId + " - " + ParseUtil.checkNullObject(loggedInUserBean) );
-                        Text errorText = new ErrorText("Oops!! Please make sure you are authorized to execute this action.(deleteRole - 003)","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! Please make sure you are authorized to execute this action.(saveRole - 003)","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
                     }
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadRolePerms - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveRole - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -87,7 +97,7 @@ public class ProcLoadRolePermissions extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadRolePerms - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveRole - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

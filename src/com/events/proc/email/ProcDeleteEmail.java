@@ -1,10 +1,8 @@
 package com.events.proc.email;
 
 import com.events.bean.users.UserBean;
-import com.events.bean.users.permissions.UserRolePermissionRequestBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
-import com.events.common.Perm;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
@@ -12,8 +10,6 @@ import com.events.json.ErrorText;
 import com.events.json.RespConstants;
 import com.events.json.RespObjectProc;
 import com.events.json.Text;
-import com.events.users.permissions.CheckPermission;
-import com.events.users.permissions.UserRolePermission;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

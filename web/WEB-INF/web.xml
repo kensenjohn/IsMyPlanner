@@ -311,13 +311,14 @@
         <url-pattern>/proc_delete_role.aeve</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>Process Load Role Permissions</servlet-name>
-        <servlet-class>com.events.proc.users.permissions.ProcLoadRolePermissions</servlet-class>
+        <servlet-name>Process Save Role Permissions</servlet-name>
+        <servlet-class>com.events.proc.users.permissions.ProcSaveRolePermissions</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Process Load Role Permissions</servlet-name>
-        <url-pattern>/proc_load_role_permissions.aeve</url-pattern>
+        <servlet-name>Process Save Role Permissions</servlet-name>
+        <url-pattern>/proc_save_role_permissions.aeve</url-pattern>
     </servlet-mapping>
+
 
 
 
