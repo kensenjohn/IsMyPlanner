@@ -179,12 +179,14 @@ public class UserRolePermission {
 
         UserRolePermissionResponseBean userRolePermissionResponseBean = new UserRolePermissionResponseBean();
 
-        if(userRolePermnRequest!=null && !Utility.isNullOrEmpty(userRolePermnRequest.getRoleId()) && userRolePermnRequest.getUserType()!=null) {
+        if(userRolePermnRequest!=null && userRolePermnRequest.getUserType()!=null) {
             AccessPermissions accessPermissions = new AccessPermissions();
             ArrayList<PermissionGroupBean> arrPermissionGroupBean = accessPermissions.getDefaultPermissionsGroups(userRolePermnRequest);
+            appLogging.info("PermissionGroupd : " + arrPermissionGroupBean);
             ArrayList<PermissionsBean> arrDefaultPermissionsBean = accessPermissions.getDefaultPermissions( userRolePermnRequest ) ;
+            appLogging.info("PermissionGroup Bean : " + arrDefaultPermissionsBean);
             ArrayList<RolePermissionsBean> arrRolePermissionsBean = new ArrayList<RolePermissionsBean>();
-            if(arrDefaultPermissionsBean!=null && !arrDefaultPermissionsBean.isEmpty())  {
+            if(arrDefaultPermissionsBean!=null && !arrDefaultPermissionsBean.isEmpty() && !Utility.isNullOrEmpty(userRolePermnRequest.getRoleId()))  {
                 AccessRolePermissions accessRolePermissions = new AccessRolePermissions();
                 arrRolePermissionsBean = accessRolePermissions.getRolePermissions( userRolePermnRequest );
             }
@@ -202,27 +204,72 @@ public class UserRolePermission {
         return userRolePermissionResponseBean;
     }
 
-    public HashMap<String, StringBuilder > createRolePermissionTable(ArrayList<PermissionGroupBean> arrPermissionGroupBean, ArrayList<PermissionsBean> arrDefaultPermissionsBean,
-                                          ArrayList<RolePermissionsBean> arrRolePermissionsBean ) {
-        HashMap<String, StringBuilder > hmPermissionTables = new HashMap<String, StringBuilder >();
-        if(arrPermissionGroupBean!=null && !arrPermissionGroupBean.isEmpty() ) {
-            for(PermissionGroupBean permissionGroupBean : arrPermissionGroupBean ) {
+    public RolesBean saveRolePersmissions(UserRolePermissionRequestBean userRolePermRequest){
+        RolesBean roleBean  = new RolesBean();
+        if(userRolePermRequest!=null && !Utility.isNullOrEmpty(userRolePermRequest.getRoleName())) {
 
-                if( arrDefaultPermissionsBean!=null && !arrDefaultPermissionsBean.isEmpty() ) {
-                    for(PermissionsBean permissionsBean : arrDefaultPermissionsBean ){
-                        if(permissionsBean.getPermissionGroupId().equalsIgnoreCase( permissionGroupBean.getPermissionGroupId() )) {
+            ArrayList<String> arrPermissionId = userRolePermRequest.getArrPermissionId();
+            if( arrPermissionId!=null  && !arrPermissionId.isEmpty() ) {
+                AccessRoles accessRoles = new AccessRoles();
+                if(!Utility.isNullOrEmpty(userRolePermRequest.getRoleId())) {
+                    roleBean = accessRoles.getRoleById(userRolePermRequest);
+                }
+                appLogging.info("Request role Id : " +userRolePermRequest.getRoleId() );
+                if(roleBean!=null && Utility.isNullOrEmpty(roleBean.getRoleId())) {
+                    appLogging.info("Create Role invoked" );
+                    roleBean = createRole(userRolePermRequest);
+                } else {
+                    roleBean = updateRole(userRolePermRequest);
+                }
+                appLogging.info("Role Bean after edit : " + roleBean );
 
-                            if( arrRolePermissionsBean!=null && !arrRolePermissionsBean.isEmpty() ){
-                                for(RolePermissionsBean rolePermissionsBean : arrRolePermissionsBean ) {
-                                    if(rolePermissionsBean.getPermissionId().equalsIgnoreCase( permissionsBean.getPermissionId() )) {
-                                    }
-                                }
-                            }
-                        }
+                if(roleBean!=null && !Utility.isNullOrEmpty(roleBean.getRoleId())) {
+                    userRolePermRequest.setRoleId( ParseUtil.checkNull(roleBean.getRoleId()) );
+                    AccessRolePermissions accessRolePermissions = new AccessRolePermissions();
+                    boolean isRolePermissionCreationSuccess = accessRolePermissions.saveRolePermissions( userRolePermRequest );
+                    if(!isRolePermissionCreationSuccess) {
+                        BuildRoles buildRoles = new BuildRoles();
+                        buildRoles.deleteRole( roleBean );
+                        roleBean = new RolesBean();
                     }
+                } else {
+                    appLogging.error("There was error saving the RoleBean");
                 }
             }
         }
-        return hmPermissionTables;
+        return roleBean;
+    }
+
+    public RolesBean createRole(UserRolePermissionRequestBean userRolePermRequest) {
+        RolesBean newRoleBean = new RolesBean();
+        if(userRolePermRequest!=null && !Utility.isNullOrEmpty(userRolePermRequest.getRoleName())
+                && !Utility.isNullOrEmpty(userRolePermRequest.getParentId() ) && userRolePermRequest.getArrPermissionId()!=null
+                && ! userRolePermRequest.getArrPermissionId().isEmpty()) {
+
+            newRoleBean.setName( userRolePermRequest.getRoleName() );
+            newRoleBean.setParentId( userRolePermRequest.getParentId() );
+            newRoleBean.setSiteAdmin( userRolePermRequest.isSiteAdmin() );
+
+            BuildRoles buildRoles = new BuildRoles();
+            newRoleBean = buildRoles.createRole( newRoleBean );
+        }
+        return newRoleBean;
+    }
+    public RolesBean updateRole(UserRolePermissionRequestBean userRolePermRequest) {
+        RolesBean updatedRoleBean = new RolesBean();
+        if(userRolePermRequest!=null && !Utility.isNullOrEmpty(userRolePermRequest.getRoleName())
+                && !Utility.isNullOrEmpty(userRolePermRequest.getParentId())  && !Utility.isNullOrEmpty(userRolePermRequest.getRoleId() )
+                && userRolePermRequest.getArrPermissionId()!=null
+                && ! userRolePermRequest.getArrPermissionId().isEmpty()) {
+            updatedRoleBean.setRoleId( userRolePermRequest.getRoleId() );
+            updatedRoleBean.setName( userRolePermRequest.getRoleName() );
+            updatedRoleBean.setParentId( userRolePermRequest.getParentId() );
+            updatedRoleBean.setSiteAdmin(userRolePermRequest.isSiteAdmin());
+
+            BuildRoles buildRoles = new BuildRoles();
+            updatedRoleBean = buildRoles.updateRoleById(updatedRoleBean);
+
+        }
+        return updatedRoleBean;
     }
 }

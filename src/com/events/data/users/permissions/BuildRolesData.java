@@ -35,9 +35,19 @@ public class BuildRolesData {
 
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildRolesData.java", "insertRole() ");
         }
-
-
         return numOfRowsInserted;
+    }
+
+    public Integer updateRoleById(RolesBean rolesBean) {
+        int numOfRowsUpdated = 0;
+        if(rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getRoleId())  && !Utility.isNullOrEmpty(rolesBean.getParentId()) ) {
+            String sQuery = "UPDATE GTROLES SET NAME = ?, CREATEDATE=?, HUMANCREATEDATE=?, IS_SITEADMIN = ? WHERE ROLEID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(rolesBean.getName(), DateSupport.getEpochMillis(),
+                    DateSupport.getUTCDateTime(),rolesBean.isSiteAdmin()?"1":"0", rolesBean.getRoleId());
+
+            numOfRowsUpdated = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildRolesData.java", "updateRoleById() ");
+        }
+        return numOfRowsUpdated;
     }
     public Integer deletetRole(RolesBean rolesBean) {
         //GTROLES( ROLEID, FK_PARENTID, NAME,      CREATEDATE, HUMANCREATEDATE, IS_SITEADMIN)

@@ -38,6 +38,34 @@ public class BuildRoles {
         return arrRolesBean;
     }
 
+    public RolesBean createRole( RolesBean rolesBean ) {
+
+        if( rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getParentId()) &&  !Utility.isNullOrEmpty(rolesBean.getName())) {
+            rolesBean.setRoleId(Utility.getNewGuid());
+            BuildRolesData buildRolesData = new BuildRolesData();
+            Integer iNumOfRows = buildRolesData.insertRole(rolesBean );
+            if(iNumOfRows<=0) {
+                rolesBean = new RolesBean();
+            }
+
+        }
+        return rolesBean;
+    }
+
+    public RolesBean updateRoleById( RolesBean rolesBean ) {
+
+        if( rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getParentId()) &&  !Utility.isNullOrEmpty(rolesBean.getName())
+                &&  !Utility.isNullOrEmpty(rolesBean.getRoleId()) ) {
+            BuildRolesData buildRolesData = new BuildRolesData();
+            Integer iNumOfRows = buildRolesData.updateRoleById(rolesBean );
+            if(iNumOfRows<=0) {
+                rolesBean = new RolesBean();
+            }
+
+        }
+        return rolesBean;
+    }
+
     public boolean deleteRole(RolesBean rolesBean){
         boolean isRoleDeleted = false;
         if(rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getRoleId()))  {

@@ -3,6 +3,8 @@ package com.events.bean.users.permissions;
 import com.events.common.Constants;
 import com.events.common.Perm;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: kensen
@@ -15,7 +17,34 @@ public class UserRolePermissionRequestBean {
     private String userId = Constants.EMPTY;
     private  String parentId= Constants.EMPTY;
     private  Constants.USER_TYPE userType = Constants.USER_TYPE.NONE;
+    private String roleName = Constants.EMPTY;
+    private ArrayList<String> arrPermissionId = new ArrayList<String>();
     private Perm perm = null;
+    private boolean isSiteAdmin = false;
+
+    public boolean isSiteAdmin() {
+        return isSiteAdmin;
+    }
+
+    public void setSiteAdmin(boolean siteAdmin) {
+        isSiteAdmin = siteAdmin;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public ArrayList<String> getArrPermissionId() {
+        return arrPermissionId;
+    }
+
+    public void setArrPermissionId(ArrayList<String> arrPermissionId) {
+        this.arrPermissionId = arrPermissionId;
+    }
 
     public Perm getPerm() {
         return perm;

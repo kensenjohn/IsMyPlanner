@@ -39,6 +39,49 @@ public class BuildRolePermissionsData {
         return numOfRowsInserted;
     }
 
+    public Integer insertRolePermissionBatch(ArrayList<RolePermissionsBean> arrRolesPermissionsBean) {
+        int numOfRowsInserted = 0;
+        if(arrRolesPermissionsBean!=null && !arrRolesPermissionsBean.isEmpty()){
+            String sQuery = "INSERT INTO GTROLEPERMISSIONS ( ROLEPERMISSIONID,FK_ROLEID,FK_PERMISSIONID)  VALUES ( ?,?,?)";
+            ArrayList< ArrayList<Object> > aBatchParams = new ArrayList<ArrayList<Object>>();
+            for(RolePermissionsBean rolePermissionsBean : arrRolesPermissionsBean ) {
+                ArrayList<Object> aParams = DBDAO.createConstraint(
+                        rolePermissionsBean.getRolePermissionId(), rolePermissionsBean.getRoleId(),rolePermissionsBean.getPermissionId() );
+                aBatchParams.add( aParams );
+            }
+
+            int[] numOfRowsAffected = DBDAO.putBatchRowsQuery( sQuery, aBatchParams, EVENTADMIN_DB, "BuildRolePermissionsData.java", "insertRolePermissionBatch() " );
+
+            if(numOfRowsAffected!=null && numOfRowsAffected.length > 0 ) {
+                for(int iCount : numOfRowsAffected ) {
+                    numOfRowsInserted = numOfRowsInserted + iCount;
+                }
+            }
+        }
+        return numOfRowsInserted;
+    }
+
+    public Integer deleteRolePermissionBatch(ArrayList<RolePermissionsBean> arrRolesPermissionsBean) {
+        int numOfRowsInserted = 0;
+        if(arrRolesPermissionsBean!=null && !arrRolesPermissionsBean.isEmpty()){
+            String sQuery = "DELETE FROM GTROLEPERMISSIONS WHERE ROLEPERMISSIONID = ?";
+            ArrayList< ArrayList<Object> > aBatchParams = new ArrayList<ArrayList<Object>>();
+            for(RolePermissionsBean rolePermissionsBean : arrRolesPermissionsBean ) {
+                ArrayList<Object> aParams = DBDAO.createConstraint( rolePermissionsBean.getRolePermissionId());
+                aBatchParams.add( aParams );
+            }
+
+            int[] numOfRowsAffected = DBDAO.putBatchRowsQuery( sQuery, aBatchParams, EVENTADMIN_DB, "BuildRolePermissionsData.java", "deleteRolePermissionBatch() " );
+
+            if(numOfRowsAffected!=null && numOfRowsAffected.length > 0 ) {
+                for(int iCount : numOfRowsAffected ) {
+                    numOfRowsInserted = numOfRowsInserted + iCount;
+                }
+            }
+        }
+        return numOfRowsInserted;
+    }
+
     public Integer deleteRolePermissionByRoleId(RolesBean rolesBean) {
         int numOfRowsInserted = 0;
         if(rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getRoleId()) ) {

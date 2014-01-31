@@ -7,11 +7,14 @@
 <%@ page import="com.events.users.permissions.UserRolePermission" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.events.bean.users.permissions.*" %>
+<%@ page import="org.slf4j.Logger" %>
+<%@ page import="org.slf4j.LoggerFactory" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
+    Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     String sRoleId = ParseUtil.checkNull(request.getParameter("role_id"));
     boolean loadRolePermissions = false;
     if(!Utility.isNullOrEmpty(sRoleId)) {
@@ -35,16 +38,23 @@
             userRolePermRequest.setRoleId( sRoleId);
             userRolePermRequest.setUserType(loggedInUserType);
             UserRolePermission userRolePermission = new UserRolePermission();
+            appLogging.info("Before getting role permissions");
             UserRolePermissionResponseBean userRolePermissionResponseBean = userRolePermission.getRolePermissions(userRolePermRequest);
             if(userRolePermissionResponseBean!=null){
                 arrPermissionGroupBean = userRolePermissionResponseBean.getArrPermissionGroupBean();
                 arrDefaultPermissionsBean = userRolePermissionResponseBean.getArrDefaultPermissionsBean();
                 arrRolePermissionsBean = userRolePermissionResponseBean.getArrRolePermissionsBean();
                 roleBean = userRolePermissionResponseBean.getRoleBean();
+                appLogging.info("Role Permissions was not null and there is data.");
             }
+
             canViewRolePermissions = true;
         } else {
             response.sendRedirect("/com/events/common/error/stop.jsp");
+        }
+
+        if((roleBean!=null && !roleBean.isSiteAdmin()) && checkPermission.can(Perm.EDIT_ROLE_PERMISSION)  ) {
+            canEditRolePermissions = true;
         }
     }
 %>
@@ -88,7 +98,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="roleName" class="form_label">Name</label><span class="required"> *</span>
-                                    <input type="text" class="form-control" id="roleName" name="roleName" placeholder="Role Name" value="<%=roleBean.getName()%>" >
+                                    <input type="text" class="form-control" <%=canEditRolePermissions?"":" disabled "%> id="roleName" name="roleName" placeholder="Role Name" value="<%=roleBean.getName()%>" >
                                 </div>
                             </div>
                         </div>
@@ -121,8 +131,8 @@
                     %>
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <input type="checkbox" name="perm_checkbox" value="<%=permissionsBean.getPermissionId()%>"
-                    <%
+                                                            <input type="checkbox" name="perm_checkbox" value="<%=permissionsBean.getPermissionId()%>"  <%=canEditRolePermissions?"":" disabled "%>
+                                                                    <%
                                                                 if( arrRolePermissionsBean!=null && !arrRolePermissionsBean.isEmpty() ){
                                                                     for(RolePermissionsBean rolePermissionsBean : arrRolePermissionsBean ) {
                                                                         if(rolePermissionsBean.getPermissionId().equalsIgnoreCase( permissionsBean.getPermissionId() )) {
@@ -177,12 +187,31 @@
                     &nbsp;
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <button type="button" class="btn btn-filled" id="btn_save_role">Save</button>
-                </div>
-            </div>
             <%
+                if( !canEditRolePermissions )  {
+            %>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="boxedcontent">
+                                <div class="widget">
+                                    <div class="content error_background">
+                                        <h5>This role cannot be edited at this time.</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            <%
+                } else {
+            %>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-filled" id="btn_save_role">Save</button>
+                            </div>
+                        </div>
+            <%
+                }
+
 
                 }
                 else {
@@ -199,8 +228,6 @@
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script   type="text/javascript">
     $(window).load(function() {
-        //loadRolePermissions(populateRolePermissions);
-        //initializeTable();
         $('#btn_save_role').click(function(){
             saveRolePermissions(getResult)
         });
@@ -212,6 +239,24 @@
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
     function getResult(jsonResult) {
-
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    if(jsonResponseObj!=undefined) {
+                        $('#role_id').val(jsonResponseObj.role_id);
+                    }
+                }
+                displayMssgBoxAlert('Your changes were saved successfully.', false);
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
     }
 </script>

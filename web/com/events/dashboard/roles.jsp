@@ -39,9 +39,9 @@
             </div>
             <div class="row">
                 <div class="col-md-2">
-                    <button  type="button" class="btn  btn-filled" id="btn_add_role">
+                    <a href="/com/events/dashboard/permissions/edit_roles.jsp" class="btn btn-filled">
                         <span><span class="glyphicon glyphicon-plus"></span> Add A Role</span>
-                    </button>
+                    </a>
                 </div>
             </div>
             <div class="row">
@@ -70,7 +70,6 @@
 <script src="/js/jquery.dataTables.min.js"></script>
 <script   type="text/javascript">
     $(window).load(function() {
-
         loadRoles(populateRolesList);
     });
     function loadRoles(callbackmethod) {
@@ -117,22 +116,6 @@
             $('#every_role_rows').append(rowEveryRole);
 
             addDeleteClickEvent(varRoleName, varRoleId, i)
-            // Adding Click Event Functionality for event's delete button.
-            /*var eventemail_obj = {
-                event_id: varEveryEventEmailBean.event_id,
-                eventemail_name: varEveryEventEmailBean.eventemail_name,
-                eventemail_id: varEveryEventEmailBean.eventemail_id,
-                row_num: i,
-                printObj: function () {
-                    return this.event_id + ' ' + this.eventemail_name + ' ' + this.eventemail_id + ' row : ' + this.row_num;
-                }
-            }
-            $('#'+varEveryEventEmailBean.eventemail_id).click({param_eventemail_obj:eventemail_obj},function(e){
-                displayConfirmBox(
-                        "Are you sure you want to delete - " + e.data.param_eventemail_obj.eventemail_name ,
-                        "Delete Email",
-                        "Yes", "No", deleteEventEmail,e.data.param_eventemail_obj)
-            }); */
         }
     }
     function addDeleteClickEvent(varRoleName, varRoleId, varRowNum) {
