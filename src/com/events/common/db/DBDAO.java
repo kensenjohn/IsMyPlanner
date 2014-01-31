@@ -128,8 +128,8 @@ public class DBDAO {
                 for( ArrayList<Object> aParams : aBatchParams ) {
                     for (int i = 0; i < aParams.size(); i++) {
                         preparedStatement.setObject(i + 1, aParams.get(i));
-                        preparedStatement.addBatch();
                     }
+                    preparedStatement.addBatch();
                 }
             }
             iRowsAffected = preparedStatement.executeBatch();
