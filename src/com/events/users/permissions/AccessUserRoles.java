@@ -1,5 +1,6 @@
 package com.events.users.permissions;
 
+import com.events.bean.users.UserBean;
 import com.events.bean.users.permissions.RolesBean;
 import com.events.bean.users.permissions.UserRolesBean;
 import com.events.common.Utility;
@@ -20,6 +21,15 @@ public class AccessUserRoles {
         if(rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getRoleId())) {
             AccessUserRolesData accessUserRolesData = new AccessUserRolesData();
             arrUserRolesBean = accessUserRolesData.getUserRoles(rolesBean) ;
+        }
+        return arrUserRolesBean;
+    }
+
+    public ArrayList<UserRolesBean> getUserRolesByUserId(UserBean userBean) {
+        ArrayList<UserRolesBean> arrUserRolesBean = new ArrayList<UserRolesBean>();
+        if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId())) {
+            AccessUserRolesData accessUserRolesData = new AccessUserRolesData();
+            arrUserRolesBean = accessUserRolesData.getUserRolesByUser(userBean) ;
         }
         return arrUserRolesBean;
     }

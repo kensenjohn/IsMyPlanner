@@ -57,8 +57,8 @@ public class AccessUserData {
     }
 
 
-    public UserBean getUserDataByParentID(UserRequestBean userRequestBean) {
-        UserBean userBean = new UserBean();
+    public ArrayList<UserBean> getUserDataByParentID(UserRequestBean userRequestBean) {
+        ArrayList<UserBean> arrUserBean = new ArrayList<UserBean>();
         if(userRequestBean!=null) {
             String sQuery  = "SELECT * FROM GTUSER WHERE FK_PARENTID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint(userRequestBean.getParentId());
@@ -66,11 +66,12 @@ public class AccessUserData {
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessUserData.java", "getUserDataByParentID()");
             if(arrResult!=null) {
                 for(HashMap<String, String> hmResult : arrResult ) {
-                    userBean = new UserBean(hmResult);
+                    UserBean userBean = new UserBean(hmResult);
+                    arrUserBean.add(userBean);
                 }
             }
         }
-        return userBean;
+        return arrUserBean;
     }
 
     public UserInfoBean getUserInfoFromInfoId(UserRequestBean userRequestBean) {
@@ -105,5 +106,26 @@ public class AccessUserData {
 
         }
         return userInfoBean;
+    }
+
+    public ArrayList<UserInfoBean> getUserInfoFromAllUserBean(ArrayList<UserBean> arrUserBean ) {
+        ArrayList<UserInfoBean> arrUserInfoBeans = new ArrayList<UserInfoBean>();
+        if(arrUserBean!=null && !arrUserBean.isEmpty()) {
+            String sQuery  = "SELECT GTUINFO.* FROM GTUSER GTU, GTUSERINFO GTUINFO WHERE GTUINFO.USERINFOID = GTU.FK_USERINFOID AND USERID in ";
+            sQuery = sQuery + "(" + DBDAO.createParamQuestionMarks( arrUserBean.size() ) + ")";
+            ArrayList<Object> aParams = new ArrayList<Object>();
+            for(UserBean userBean : arrUserBean ) {
+                aParams.add(userBean.getUserId());
+
+            }
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessUserData.java", "getUserInfoFromUserId()");
+            if(arrResult!=null) {
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    UserInfoBean userInfoBean = new UserInfoBean(hmResult);
+                    arrUserInfoBeans.add( userInfoBean );
+                }
+            }
+        }
+        return arrUserInfoBeans;
     }
 }

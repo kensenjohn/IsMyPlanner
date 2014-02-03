@@ -1,5 +1,6 @@
 package com.events.data.users.permissions;
 
+import com.events.bean.users.UserBean;
 import com.events.bean.users.permissions.RolesBean;
 import com.events.bean.users.permissions.UserRolesBean;
 import com.events.common.Configuration;
@@ -30,7 +31,23 @@ public class AccessUserRolesData {
         if(rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getRoleId() )) {
             String sQuery = "SELECT * FROM GTUSERROLES WHERE FK_ROLEID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint( rolesBean.getRoleId() );
-            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessRolesData.java", "getRoles()");
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessUserRolesData.java", "getUserRoles()");
+            if(arrResult!=null) {
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    UserRolesBean userRolesBean = new UserRolesBean( hmResult );
+                    arrUserRolesBean.add(userRolesBean);
+                }
+            }
+        }
+        return arrUserRolesBean;
+    }
+
+    public ArrayList<UserRolesBean> getUserRolesByUser( UserBean userBean  ) {
+        ArrayList<UserRolesBean> arrUserRolesBean = new ArrayList<UserRolesBean>();
+        if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId() )) {
+            String sQuery = "SELECT * FROM GTUSERROLES WHERE FK_USERID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint( userBean.getUserId() );
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessUserRolesData.java", "getUserRolesByUser()");
             if(arrResult!=null) {
                 for(HashMap<String, String> hmResult : arrResult ) {
                     UserRolesBean userRolesBean = new UserRolesBean( hmResult );

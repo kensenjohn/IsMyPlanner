@@ -2,6 +2,8 @@ package com.events.bean.users.permissions;
 
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -58,5 +60,19 @@ public class UserRolesBean {
         return sb.toString();
     }
 
+    public JSONObject toJson() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("user_id", this.userId);
+            jsonObject.put("role_id", this.roleId);
+            jsonObject.put("userrole_id", this.userRoleId);
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
 
 }

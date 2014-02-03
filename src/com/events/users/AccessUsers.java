@@ -7,10 +7,12 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.users.EditUserException;
 import com.events.data.users.AccessUserData;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.Cookie;
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,12 +40,33 @@ public class AccessUsers {
         }
         return userBean;
     }
+    public ArrayList<UserInfoBean> getAllUsersInfo(ArrayList<UserBean> arrUserBean) {
+        ArrayList<UserInfoBean> arrUserInfoBeans =  new ArrayList<UserInfoBean>();
+        if(arrUserBean!=null && !arrUserBean.isEmpty() ) {
+            AccessUserData accessUserData = new AccessUserData();
+             arrUserInfoBeans = accessUserData.getUserInfoFromAllUserBean( arrUserBean );
+        }
+        return arrUserInfoBeans;
+    }
 
+    public ArrayList<UserBean> getAllUsersByParentId(UserRequestBean userRequestBean) {
+        ArrayList<UserBean> arrUserBean =  new ArrayList<UserBean>();
+        if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getParentId()) ) {
+            AccessUserData accessUserData = new AccessUserData();
+            arrUserBean = accessUserData.getUserDataByParentID(userRequestBean);
+        }
+        return arrUserBean;
+    }
     public UserBean getUserByParentId(UserRequestBean userRequestBean) {
         UserBean userBean = new UserBean();
-        if(userRequestBean!=null && !"".equalsIgnoreCase(userRequestBean.getParentId())) {
+        if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getParentId()) ) {
             AccessUserData accessUserData = new AccessUserData();
-            userBean = accessUserData.getUserDataByParentID(userRequestBean);
+            ArrayList<UserBean> arrUserBean = accessUserData.getUserDataByParentID(userRequestBean);
+            if(arrUserBean!=null && !arrUserBean.isEmpty() ){
+                for(UserBean tmpUserBean : arrUserBean) {
+                    userBean = tmpUserBean;
+                }
+            }
         }
         return userBean;
     }
@@ -59,7 +82,7 @@ public class AccessUsers {
 
     public UserInfoBean getUserInfoFromUserId(UserRequestBean userRequestBean) {
         UserInfoBean userInfoBean = new UserInfoBean();
-        if(userRequestBean!=null && !"".equalsIgnoreCase(userRequestBean.getUserInfoId()) ) {
+        if(userRequestBean!=null && !"".equalsIgnoreCase(userRequestBean.getUserId()) ) {
             AccessUserData accessUserData = new AccessUserData();
             userInfoBean = accessUserData.getUserInfoFromUserId(userRequestBean);
         }
@@ -109,5 +132,24 @@ public class AccessUsers {
             }
         }
         return userBean;
+    }
+
+    public JSONObject getJsonUserBeanAndInfo(ArrayList<UserBean> arrUserBean, ArrayList<UserInfoBean> arrUserInfoBean){
+        JSONObject jsonObject = new JSONObject();
+        if(arrUserBean!=null && !arrUserBean.isEmpty() && arrUserInfoBean!=null && !arrUserInfoBean.isEmpty()) {
+            Integer iNumOfUserBeanObjs = 0;
+            for(UserBean userBean : arrUserBean) {
+
+                for(UserInfoBean userInfoBean : arrUserInfoBean){
+                    if(userBean.getUserInfoId().equalsIgnoreCase(userInfoBean.getUserInfoId()) ) {
+                        userBean.setUserInfoBean( userInfoBean );
+                        jsonObject.put( iNumOfUserBeanObjs.toString(), userBean.toJson() );
+                        iNumOfUserBeanObjs++;
+                    }
+                }
+            }
+            jsonObject.put("num_of_userbean", iNumOfUserBeanObjs);
+        }
+        return jsonObject;
     }
 }

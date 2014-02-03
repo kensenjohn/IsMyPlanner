@@ -25,6 +25,7 @@ public class UserBean {
     private String humanCreateDate = Constants.EMPTY;
     private UserInfoBean userInfoBean = new UserInfoBean();
     private boolean isUserExists = false;
+    private boolean isLoggedInUser = false;
 
     public UserBean(HashMap<String, String> hmAdminRes) {
 
@@ -56,6 +57,18 @@ public class UserBean {
 
     public UserBean() {
         // this.adminId = Utility.getNewGuid();
+    }
+
+    public void setUserExists(boolean userExists) {
+        isUserExists = userExists;
+    }
+
+    public boolean isLoggedInUser() {
+        return isLoggedInUser;
+    }
+
+    public void setLoggedInUser(boolean isLoggedInUser) {
+        isLoggedInUser = isLoggedInUser;
     }
 
     public String getUserId() {
@@ -128,9 +141,17 @@ public class UserBean {
 
     @Override
     public String toString() {
-        return "UserBean [userId=" + userId + ", usertype=" + userType.getType() + ", parent id=" + parentId + ", userInfoId=" + userInfoId
-                + ", createDate=" + createDate
-                + ", deleteRow=" + deleteRow + "]";
+        return "UserBean{" +
+                "userId='" + userId + '\'' +
+                ", userType=" + userType +
+                ", parentId='" + parentId + '\'' +
+                ", userInfoId='" + userInfoId + '\'' +
+                ", createDate=" + createDate +
+                ", deleteRow='" + deleteRow + '\'' +
+                ", humanCreateDate='" + humanCreateDate + '\'' +
+                ", isUserExists=" + isUserExists +
+                ", isLoggedInUser=" + isLoggedInUser +
+                '}';
     }
 
     public JSONObject toJson() {
@@ -143,6 +164,7 @@ public class UserBean {
             jsonObject.put("create_date", this.createDate);
             jsonObject.put("del_row", this.deleteRow);
             jsonObject.put("user_info_id", this.userInfoId);
+            jsonObject.put("is_logged_in_user", this.isLoggedInUser);
 
             if (userInfoBean != null) {
 

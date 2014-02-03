@@ -4,7 +4,9 @@ import com.events.bean.users.PasswordRequestBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserInfoBean;
 import com.events.bean.users.UserRequestBean;
+import com.events.bean.users.permissions.RolesBean;
 import com.events.bean.users.permissions.UserRolePermissionRequestBean;
+import com.events.bean.users.permissions.UserRolesBean;
 import com.events.bean.vendors.VendorBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
@@ -15,10 +17,14 @@ import com.events.common.exception.users.EditUserInfoException;
 import com.events.common.exception.users.ManagePasswordException;
 import com.events.common.exception.vendors.EditVendorException;
 import com.events.data.users.BuildUserData;
+import com.events.users.permissions.AccessUserRoles;
+import com.events.users.permissions.BuildUserRoles;
 import com.events.users.permissions.UserRolePermission;
 import com.events.vendors.BuildVendors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,6 +54,14 @@ public class BuildUsers {
         }
         return iNumOfRecords;
     }
+    public Integer deleteUser(UserBean userBean) {
+        Integer iNumOfRecords = 0;
+        if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId())){
+            BuildUserData buildUserData = new BuildUserData();
+            iNumOfRecords = buildUserData.deleteUser(userBean);
+        }
+        return iNumOfRecords;
+    }
     public Integer updateUser(UserBean userBean) throws EditUserException {
         Integer iNumOfRecords = 0;
         if(userBean!=null && !"".equalsIgnoreCase(ParseUtil.checkNull(userBean.getUserId()))
@@ -60,6 +74,117 @@ public class BuildUsers {
             throw new EditUserException();
         }
         return iNumOfRecords;
+    }
+    public UserBean updateTeamMemberUserDetails( UserRequestBean userRequestBean )    throws EditUserException, EditUserInfoException, ManagePasswordException {
+        UserBean userBean = new UserBean();
+        if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getUserId()) ) {
+            if( !Utility.isNullOrEmpty(userRequestBean.getParentId()) ) {
+                UserInfoBean userInfoBean = generateExistingUserInfoBean(userRequestBean);
+                Integer iNumOfUserInfoIdRows = updateUserInfo(userInfoBean);
+
+                if(iNumOfUserInfoIdRows > 0 ) {
+                    ArrayList<String> arrRoleId = userRequestBean.getArrRoleId();
+
+                    ArrayList<RolesBean> arrRoleBean = new ArrayList<RolesBean>();
+                    for(String roleId : arrRoleId) {
+                        RolesBean rolesBean = new RolesBean();
+                        rolesBean.setRoleId( roleId );
+                        arrRoleBean.add(rolesBean);
+                    }
+                    userBean.setUserId( userRequestBean.getUserId() );
+                    AccessUserRoles accessUserRoles = new AccessUserRoles();
+                    ArrayList<UserRolesBean> arrOldUserRolesBean = accessUserRoles.getUserRolesByUserId( userBean);
+
+                    BuildUserRoles buildUserRoles = new BuildUserRoles();
+                    ArrayList<UserRolesBean> arrNewUserRolesBean = buildUserRoles.createUserRole( userRequestBean.getUserId() , arrRoleBean );
+                    if(arrNewUserRolesBean!=null && !arrNewUserRolesBean.isEmpty() ) {
+                        if ( !buildUserRoles.deleteUserRole( arrOldUserRolesBean ) ){
+                            // if the old roles could not be deleted. then delete the newest user roles that were created just above.
+
+                            appLogging.error("There was error while updating team member user Role data " + userRequestBean);
+                            buildUserRoles.deleteUserRole( arrNewUserRolesBean );
+                            userBean = new UserBean();
+                        }
+                    }
+                } else {
+                    appLogging.error("There was error while updating team member user info data " + userRequestBean);
+                }
+
+            }else {
+                appLogging.error("Invalid request while trying to update Team Member " + ParseUtil.checkNullObject(userRequestBean));
+            }
+        }
+        return userBean;
+    }
+    public boolean  deleteTeamMember( UserRequestBean userRequestBean )  {
+        boolean isSuccessfullyDeleted = false;
+        if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getUserId()) ) {
+            UserBean userBean  = new UserBean();
+            userBean.setUserId( userRequestBean.getUserId());
+
+            Integer iNumOfTeamMembersDeleted = deleteUser(userBean );
+            if(iNumOfTeamMembersDeleted>0){
+
+                AccessUserRoles accessUserRoles = new AccessUserRoles();
+                ArrayList<UserRolesBean> arrUserRolesBean =  accessUserRoles.getUserRolesByUserId(userBean);
+                if(arrUserRolesBean!=null && !arrUserRolesBean.isEmpty() ) {
+                    BuildUserRoles buildUserRoles = new BuildUserRoles();
+                    buildUserRoles.deleteUserRole( arrUserRolesBean );
+                }
+                isSuccessfullyDeleted = true;
+            }
+        }
+        return isSuccessfullyDeleted;
+    }
+    public UserBean createTeamMember( UserRequestBean userRequestBean )    throws EditUserException, EditUserInfoException, ManagePasswordException {
+        UserBean userBean = new UserBean();
+        boolean isError = false;
+        if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getEmail())
+                && userRequestBean.getPasswordRequestBean() !=null ) {
+
+            if( !Utility.isNullOrEmpty(userRequestBean.getParentId()) ) {
+                UserInfoBean userInfoBean = generateNewUserInfoBean(userRequestBean);
+                Integer iNumOfUserInfoIdRows = createUserInfo(userInfoBean);
+                if( iNumOfUserInfoIdRows>0 ) {
+                    userRequestBean.setUserInfoId( userInfoBean.getUserInfoId() );
+                    userBean = generateNewUserBean(userRequestBean);
+
+                    ManageUserPassword managePasswords = new ManageUserPassword();
+                    PasswordRequestBean passwordRequest = userRequestBean.getPasswordRequestBean();
+                    passwordRequest.setUserId( userBean.getUserId() );
+                    Integer iNumOfPasswordRows = managePasswords.createPassword(passwordRequest);
+
+                    if(iNumOfPasswordRows > 0 ) {
+                        ArrayList<String> arrRoleId = userRequestBean.getArrRoleId();
+
+                        ArrayList<RolesBean> arrRoleBean = new ArrayList<RolesBean>();
+                        for(String roleId : arrRoleId) {
+                            RolesBean rolesBean = new RolesBean();
+                            rolesBean.setRoleId( roleId );
+                            arrRoleBean.add(rolesBean);
+                        }
+
+                        BuildUserRoles buildUserRoles = new BuildUserRoles();
+                        ArrayList<UserRolesBean> arrUserRolesBean = buildUserRoles.createUserRole( userBean.getUserId() ,arrRoleBean);
+                        if( arrUserRolesBean!=null && !arrUserRolesBean.isEmpty()) {
+                            Integer iNumOfUsersRows = createUser( userBean );
+
+                            if(iNumOfUsersRows<=0) {
+                                appLogging.info("Error while creating a new user (team member)" +  userBean.getUserId()  );
+                                userBean = new UserBean();
+                            }
+                        } else {
+                            isError = true;
+                            appLogging.info("Unable to set the permission for user (team member)" +  userBean.getUserId()  );
+                        }
+                    } else {
+                        isError = true;
+                        appLogging.info("Unable to create password for user " +  userBean.getUserId()  );
+                    }
+                }
+            }
+        }
+        return userBean;
     }
 
     public UserBean registerUser(UserRequestBean userRequestBean) throws EditUserException, EditUserInfoException, ManagePasswordException {
@@ -158,6 +283,7 @@ public class BuildUsers {
     public UserInfoBean generateExistingUserInfoBean(UserRequestBean userRequestBean) {
         UserInfoBean userInfoBean = new UserInfoBean();
         if(userRequestBean!=null) {
+            userInfoBean.setUserInfoId( ParseUtil.checkNull(userRequestBean.getUserInfoId()) );
             userInfoBean.setFirstName( ParseUtil.checkNull(userRequestBean.getFirstName()) );
             userInfoBean.setLastName( ParseUtil.checkNull(userRequestBean.getLastName()) );
             userInfoBean.setEmail( ParseUtil.checkNull(userRequestBean.getEmail())  );
@@ -193,7 +319,7 @@ public class BuildUsers {
 
     public Integer  updateUserInfo(UserInfoBean userInfoBean) throws EditUserInfoException{
         Integer iNumOfRecords = 0;
-        if(userInfoBean!=null && !"".equalsIgnoreCase(userInfoBean.getUserInfoId())) {
+        if(userInfoBean!=null && !Utility.isNullOrEmpty(userInfoBean.getUserInfoId()) ) {
             BuildUserData buildUserData = new BuildUserData();
             iNumOfRecords = buildUserData.updateUserInfo(userInfoBean);
         }  else {

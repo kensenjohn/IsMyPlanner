@@ -37,4 +37,24 @@ public class BuildUserRolesData {
 
         return numOfRowsInserted;
     }
+
+    public Integer deleteUserRoles(ArrayList<UserRolesBean> arrUserRolesBean) {
+        int numOfRowsDeleted= 0;
+        if(arrUserRolesBean!=null &&  !arrUserRolesBean.isEmpty() ) {
+            String sQuery = "DELETE FROM GTUSERROLES WHERE USERROLEID = ? ";
+            ArrayList<ArrayList<Object>> arrParamsBatch = new ArrayList<ArrayList<Object>>();
+            for(UserRolesBean userRolesBean : arrUserRolesBean ) {
+                ArrayList<Object> aParams = DBDAO.createConstraint( userRolesBean.getUserRoleId() );
+                arrParamsBatch.add( aParams );
+
+                int[] aNumOfRowsDeleted = DBDAO.putBatchRowsQuery(sQuery, arrParamsBatch, EVENTADMIN_DB, "BuildUserRolesData.java", "deleteUserRoles() ");
+                if(aNumOfRowsDeleted!=null && aNumOfRowsDeleted.length>0){
+                    for(int iNumOfDel : aNumOfRowsDeleted ) {
+                        numOfRowsDeleted = numOfRowsDeleted + iNumOfDel;
+                    }
+                }
+            }
+        }
+        return numOfRowsDeleted;
+    }
 }

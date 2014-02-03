@@ -159,7 +159,7 @@
                     if(varIsRoleDeleted){
                         $('#role_id').val('');
                         var varDeletedRoleId = jsonResponseObj.deleted_role_id;
-                        $('#row_'+varDeletedRoleId).remove();
+                        objEveryRoleTable.fnDeleteRow((objEveryRoleTable.$('#row_'+varDeletedRoleId))[0] );
                     } else {
                         displayMssgBoxAlert("The role was not deleted. Please try again later.", true);
                     }

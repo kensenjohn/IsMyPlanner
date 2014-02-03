@@ -182,9 +182,7 @@ public class UserRolePermission {
         if(userRolePermnRequest!=null && userRolePermnRequest.getUserType()!=null) {
             AccessPermissions accessPermissions = new AccessPermissions();
             ArrayList<PermissionGroupBean> arrPermissionGroupBean = accessPermissions.getDefaultPermissionsGroups(userRolePermnRequest);
-            appLogging.info("PermissionGroupd : " + arrPermissionGroupBean);
             ArrayList<PermissionsBean> arrDefaultPermissionsBean = accessPermissions.getDefaultPermissions( userRolePermnRequest ) ;
-            appLogging.info("PermissionGroup Bean : " + arrDefaultPermissionsBean);
             ArrayList<RolePermissionsBean> arrRolePermissionsBean = new ArrayList<RolePermissionsBean>();
             if(arrDefaultPermissionsBean!=null && !arrDefaultPermissionsBean.isEmpty() && !Utility.isNullOrEmpty(userRolePermnRequest.getRoleId()))  {
                 AccessRolePermissions accessRolePermissions = new AccessRolePermissions();
@@ -214,14 +212,12 @@ public class UserRolePermission {
                 if(!Utility.isNullOrEmpty(userRolePermRequest.getRoleId())) {
                     roleBean = accessRoles.getRoleById(userRolePermRequest);
                 }
-                appLogging.info("Request role Id : " +userRolePermRequest.getRoleId() );
+
                 if(roleBean!=null && Utility.isNullOrEmpty(roleBean.getRoleId())) {
-                    appLogging.info("Create Role invoked" );
                     roleBean = createRole(userRolePermRequest);
                 } else {
                     roleBean = updateRole(userRolePermRequest);
                 }
-                appLogging.info("Role Bean after edit : " + roleBean );
 
                 if(roleBean!=null && !Utility.isNullOrEmpty(roleBean.getRoleId())) {
                     userRolePermRequest.setRoleId( ParseUtil.checkNull(roleBean.getRoleId()) );

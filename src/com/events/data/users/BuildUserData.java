@@ -5,6 +5,7 @@ import com.events.bean.users.UserInfoBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.DateSupport;
+import com.events.common.Utility;
 import com.events.common.db.DBDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,18 @@ public class BuildUserData {
                 userBean.getUserInfoId(), DateSupport.getEpochMillis(),DateSupport.getUTCDateTime());
 
         int numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildUserData.java", "insertUser() ");
+
+        return numOfRowsInserted;
+    }
+    public Integer deleteUser(UserBean userBean) {
+        int numOfRowsInserted = 0;
+        if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId() )){
+            String sQuery = "DELETE FROM GTUSER WHERE USERID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint( userBean.getUserId());
+
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildUserData.java", "deleteUser() ");
+
+        }
 
         return numOfRowsInserted;
     }

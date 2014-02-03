@@ -320,6 +320,41 @@
     </servlet-mapping>
 
 
+    <servlet>
+        <servlet-name>Process Load All Team Members</servlet-name>
+        <servlet-class>com.events.proc.vendors.team.ProcLoadAllTeamMembers</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load All Team Members</servlet-name>
+        <url-pattern>/proc_load_all_team_members.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Team Member</servlet-name>
+        <servlet-class>com.events.proc.vendors.team.ProcSaveTeamMember</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Team Member</servlet-name>
+        <url-pattern>/proc_save_team_member.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Team Member</servlet-name>
+        <servlet-class>com.events.proc.vendors.team.ProcLoadTeamMember</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Team Member</servlet-name>
+        <url-pattern>/proc_load_team_member.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Team Member</servlet-name>
+        <servlet-class>com.events.proc.vendors.team.ProcDeleteTeamMember</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Team Member</servlet-name>
+        <url-pattern>/proc_delete_teammember.aeve</url-pattern>
+    </servlet-mapping>
+
+
+
 
 
 

@@ -2,6 +2,8 @@ package com.events.bean.users;
 
 import com.events.common.Constants;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: root
@@ -31,6 +33,15 @@ public class UserRequestBean {
     private String userTypeId = Constants.EMPTY;
     private  Constants.USER_TYPE userType = Constants.USER_TYPE.VENDOR;
     private boolean isPlanner = false;
+    private ArrayList<String> arrRoleId = new ArrayList<String>();
+
+    public ArrayList<String> getArrRoleId() {
+        return arrRoleId;
+    }
+
+    public void setArrRoleId(ArrayList<String> arrRoleId) {
+        this.arrRoleId = arrRoleId;
+    }
 
     public String getUserId() {
         return userId;

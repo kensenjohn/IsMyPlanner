@@ -130,7 +130,7 @@
                     if(varIsEventDeleted){
                         $('#event_id').val('');
                         var varDeletedEventId = jsonResponseObj.deleted_event_id;
-                        $('#row_'+varDeletedEventId).remove();
+                        objEveryEventTable.fnDeleteRow((objEveryEventTable.$('#row_'+varDeletedEventId))[0] );
                     } else {
                         displayMssgBoxAlert("The event was not deleted. Please try again later.", true);
                     }

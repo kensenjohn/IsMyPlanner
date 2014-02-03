@@ -33,4 +33,17 @@ public class BuildUserRoles {
         }
         return arrUserRolesBean;
     }
+
+    public boolean deleteUserRole( ArrayList<UserRolesBean> arrUserRolesBean ) {
+        boolean isSuccessfullyDeleted = false;
+        if(arrUserRolesBean!=null && !arrUserRolesBean.isEmpty() ) {
+            BuildUserRolesData buildUserRolesData  = new BuildUserRolesData();
+            Integer iNumOfRowsDeleted = buildUserRolesData.deleteUserRoles( arrUserRolesBean );
+            if(iNumOfRowsDeleted == arrUserRolesBean.size()) {
+                isSuccessfullyDeleted = true;
+            }
+
+        }
+        return isSuccessfullyDeleted;
+    }
 }
