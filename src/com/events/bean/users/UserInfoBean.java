@@ -1,5 +1,6 @@
 package com.events.bean.users;
 
+import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import org.json.JSONException;
@@ -16,28 +17,28 @@ import java.util.HashMap;
  */
 public class UserInfoBean {
     private boolean isUserInfoExists = false;
-    private String userInfoId = "";
-    private String firstName = "";
-    private String lastName = "";
-    private String address1 = "";
-    private String address2 = "";
-    private String city = "";
-    private String state = "";
-    private String country = "";
-    private String ipAddress = "";
+    private String userInfoId = Constants.EMPTY;
+    private String firstName = Constants.EMPTY;
+    private String lastName = Constants.EMPTY;
+    private String address1 = Constants.EMPTY;
+    private String address2 = Constants.EMPTY;
+    private String city = Constants.EMPTY;
+    private String state = Constants.EMPTY;
+    private String country = Constants.EMPTY;
+    private String ipAddress = Constants.EMPTY;
     private String isTemporary = "1";
     private String deleteRow = "0";
     private Long createDate = 0L;
-    private String email = "";
-    private String cellPhone = "";
-    private String phoneNum = "";
-    private String humanCellPhone = "";
-    private String humanPhoneNum = "";
-    private String humanCreateDate = "";
-    private String timezone = "";
+    private String email = Constants.EMPTY;
+    private String cellPhone = Constants.EMPTY;
+    private String phoneNum = Constants.EMPTY;
+    private String humanCellPhone = Constants.EMPTY;
+    private String humanPhoneNum = Constants.EMPTY;
+    private String humanCreateDate = Constants.EMPTY;
+    private String timezone = Constants.EMPTY;
 
-    private String company = "";
-    private String zipcode = "";
+    private String company = Constants.EMPTY;
+    private String zipcode = Constants.EMPTY;
 
 
     public UserInfoBean() {
@@ -74,7 +75,7 @@ public class UserInfoBean {
 
     public String getHumanFormattedPhoneNumber(String sTmpPhoneNumber)
     {
-        String sHumanFormattedPhones = "";
+        String sHumanFormattedPhones = Constants.EMPTY;
         if(sTmpPhoneNumber!=null && !"".equalsIgnoreCase(sTmpPhoneNumber))
         {
             sHumanFormattedPhones = Utility.getHumanFormattedNumber(sTmpPhoneNumber, "US");

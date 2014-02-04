@@ -295,6 +295,11 @@ public class Constants {
         send_email_rule,email_send_day,email_send_time,email_send_timezone,action,none;
     }
 
+    public enum VENDOR_FEATURETYPE {
+        website,price,partner_first_name,partner_last_name,partner_email,partner_cell_phone,partner_work_phone,
+        partner_address_1,partner_address_2,partner_city,partner_state,partner_zipcode,partner_country,partner_vendor_type,none;
+    }
+
     public enum VENDOR_LANDINGPAGE_FEATURETYPE {
         logo,landingpagephoto,facebook_url,pinterest_url,none;
     }
@@ -369,6 +374,39 @@ public class Constants {
 
         public String getText() {
             return this.text;
+        }
+    }
+
+    public enum VENDOR_TYPE{
+        BAND("Band","band"),
+        BEAUTY_AND_HEALTH("Beauty","beauty"),
+        CATERING("Catering","catering"),
+        PHOTOGRAPHY("Photography","photography"),
+        RECEPTION_VENUE("Reception Venue","reception_venue"),
+        CEREMONY_VENUE("Ceremony Venue","ceremony_venue"),
+        FLOWERS("Flowers","flowers");
+
+        private String text = Constants.EMPTY;
+        private String id = Constants.EMPTY;
+        VENDOR_TYPE(String text, String id){
+            this.text = text;
+            this.id = id;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
         }
     }
 }

@@ -36,4 +36,14 @@ public class BuildVendorData {
 
         return numOfRowsInserted;
     }
+
+    public Integer updateVendor(VendorBean vendorBean) {
+        String sQuery = "UPDATE GTVENDOR SET VENDORNAME=?,MODIFIEDDATE=?,HUMANMODIFIEDDATE=?    WHERE  VENDORID=?";
+        ArrayList<Object> aParams = DBDAO.createConstraint( vendorBean.getVendorName(), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(),
+                vendorBean.getVendorId());
+
+        int numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildVendorData.java", "updateVendor() ");
+
+        return numOfRowsInserted;
+    }
 }

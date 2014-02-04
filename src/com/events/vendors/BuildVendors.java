@@ -38,10 +38,30 @@ public class BuildVendors {
         return iNumOfRecords;
     }
 
+    public Integer updateVendor(VendorBean vendorBean) throws EditVendorException {
+        Integer iNumOfRecords = 0;
+        if(vendorBean!=null && !Utility.isNullOrEmpty(vendorBean.getVendorId()) && !Utility.isNullOrEmpty(vendorBean.getVendorName()) ) {
+            BuildVendorData buildVendorData = new BuildVendorData();
+            iNumOfRecords = buildVendorData.updateVendor(vendorBean);
+            if(iNumOfRecords<=0) {
+                appLogging.error("Vendor was not be updated : " + vendorBean);
+                throw new EditVendorException();
+            }
+        } else {
+            appLogging.error("Vendor not updated because some data is missing : " + ParseUtil.checkNullObject(vendorBean)  );
+            throw new EditVendorException();
+        }
+        return iNumOfRecords;
+    }
+
     public VendorBean registerVendor()  throws EditVendorException  {
+        return registerVendor(Constants.EMPTY);
+    }
+    public VendorBean registerVendor(String sVendorName)  throws EditVendorException  {
         VendorBean vendorBean = new VendorBean();
         vendorBean.setVendorId(Utility.getNewGuid());
         vendorBean.setFolder( Utility.getNewGuid() );
+        vendorBean.setVendorName( ParseUtil.checkNull(sVendorName) );
 
         Integer iNumOfVendorRecords = createVendor( vendorBean );
         if(iNumOfVendorRecords<=0){

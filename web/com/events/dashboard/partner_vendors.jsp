@@ -72,7 +72,7 @@
         initializeTable();
     });
     function loadPartnerVendors(callbackmethod) {
-        var actionUrl = "/proc_load_all_team_members.aeve";
+        var actionUrl = "/proc_load_all_partner_vendors.aeve";
         var methodType = "POST";
         var dataString = '';
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
