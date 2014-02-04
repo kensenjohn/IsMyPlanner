@@ -27,6 +27,7 @@ public class ScheduledServiceExecutions implements ServletContextListener {
 
     private ScheduledExecutorService emailSenderThread;
     private ScheduledExecutorService emailCreatorThread;
+    private ScheduledExecutorService imapReaderThread;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
@@ -47,6 +48,14 @@ public class ScheduledServiceExecutions implements ServletContextListener {
                 ParseUtil.sToL(configSchedulerProc.get( Constants.SCHEDULER.CREATE_EMAIL_DELAY_BETWEEN_CALL.getPropName() , "600" ) ),
                 TimeUnit.SECONDS  );
         schedulerLogging.info("emailCreator Scheduler started : startup context");
+
+
+        /*imapReaderThread = Executors.newSingleThreadScheduledExecutor();
+        imapReaderThread.scheduleWithFixedDelay(new IMAPThread(),
+                ParseUtil.sToL(configSchedulerProc.get( Constants.SCHEDULER.CREATE_EMAIL_STARTUP_DELAY.getPropName(), "10" ) ),
+                ParseUtil.sToL(configSchedulerProc.get( Constants.SCHEDULER.CREATE_EMAIL_DELAY_BETWEEN_CALL.getPropName() , "600" ) ),
+                TimeUnit.SECONDS  );
+        schedulerLogging.info("imap Reader started : startup context");*/
     }
 
     @Override
@@ -60,5 +69,10 @@ public class ScheduledServiceExecutions implements ServletContextListener {
             emailCreatorThread.shutdownNow();
             schedulerLogging.info("emailCreatorThread  : shut down ");
         }
+
+        /*if(imapReaderThread!=null) {
+            imapReaderThread.shutdownNow();
+            schedulerLogging.info("imapReaderThread  : shut down ");
+        }*/
     }
 }

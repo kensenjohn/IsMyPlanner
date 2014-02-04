@@ -11,5 +11,5 @@
     <li class="<%=sDashBoardOurWebsiteActive%>"><a href="/com/events/dashboard/our_website.jsp">Website</a></li>
     <li class="<%=sDashBoardOurTeamActive%>"><a href="/com/events/dashboard/our_team.jsp">Team</a></li>
     <li class="<%=sDashBoardRolesAndPermissionsActive%>"><a href="/com/events/dashboard/roles.jsp">Roles and Permissions</a></li>
-    <li class="<%=sDashBoardVendorsActive%>"><a href="/com/events/dashboard/roles.jsp">Vendors</a></li>
+    <li class="<%=sDashBoardVendorsActive%>"><a href="/com/events/dashboard/partner_vendors.jsp">Vendors</a></li>
 </ul>

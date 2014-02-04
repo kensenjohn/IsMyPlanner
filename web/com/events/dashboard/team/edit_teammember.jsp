@@ -1,12 +1,6 @@
 <%@ page import="com.events.common.ParseUtil" %>
 <%@ page import="com.events.common.Utility" %>
-<%@ page import="com.events.bean.users.UserBean" %>
 <%@ page import="com.events.common.Constants" %>
-<%@ page import="com.events.users.permissions.CheckPermission" %>
-<%@ page import="com.events.common.Perm" %>
-<%@ page import="com.events.users.permissions.UserRolePermission" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="com.events.bean.users.permissions.*" %>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 <jsp:include page="/com/events/common/header_top.jsp">
