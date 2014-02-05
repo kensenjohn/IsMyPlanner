@@ -1,6 +1,7 @@
 package com.events.data.vendors.partner;
 
 import com.events.bean.vendors.partner.PartnerVendorBean;
+import com.events.bean.vendors.partner.PartnerVendorRequestBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.DateSupport;
@@ -34,6 +35,17 @@ public class BuildPartnerVendorData {
                     partnerVendorBean.getPartnerId(), partnerVendorBean.getVendorId(), partnerVendorBean.getPartnerVendorId());
 
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildPartnerVendorData.java", "insertPartnerVendor() ");
+        }
+        return numOfRowsInserted;
+    }
+
+    public Integer deletePartnerVendor( PartnerVendorRequestBean partnerVendorRequest){
+        int numOfRowsInserted = 0;
+        if(partnerVendorRequest!=null && !Utility.isNullOrEmpty(partnerVendorRequest.getPartnerVendorId() ) ) {
+            String sQuery = "DELETE FROM GTPARTNERVENDORS WHERE FK_VENDORID_PARTNER =? ";
+            ArrayList<Object> aParams = DBDAO.createConstraint(partnerVendorRequest.getPartnerVendorId());
+
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildPartnerVendorData.java", "deletePartnerVendor() ");
         }
         return numOfRowsInserted;
     }

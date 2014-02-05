@@ -200,6 +200,20 @@ public class BuildPartnerVendor {
         return partnerVendorBean;
     }
 
+    public boolean deletePartnerVendor( PartnerVendorRequestBean partnerVendorRequest ) {
+        boolean isSuccessfulyDelete = false;
+        if(partnerVendorRequest!=null  && !Utility.isNullOrEmpty(partnerVendorRequest.getPartnerVendorId()) ) {
+
+            BuildPartnerVendorData buildPartnerVendorData = new BuildPartnerVendorData();
+            int numOfRowsInserted = buildPartnerVendorData.deletePartnerVendor(partnerVendorRequest);
+            if(numOfRowsInserted>0) {
+                isSuccessfulyDelete = true;
+            }
+
+        }
+        return isSuccessfulyDelete;
+    }
+
     private PartnerVendorBean generatePartnerVendorBean(PartnerVendorRequestBean partnerVendorRequest) {
         PartnerVendorBean partnerVendorBean = new PartnerVendorBean();
         if(partnerVendorRequest!=null ) {

@@ -379,6 +379,14 @@
         <servlet-name>Process Load Partner Vendor</servlet-name>
         <url-pattern>/proc_load_partner_vendor.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Partner Vendor</servlet-name>
+        <servlet-class>com.events.proc.vendors.partner.ProcDeletePartnerVendor</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Partner Vendor</servlet-name>
+        <url-pattern>/proc_delete_partnervendor.aeve</url-pattern>
+    </servlet-mapping>
 
 
 

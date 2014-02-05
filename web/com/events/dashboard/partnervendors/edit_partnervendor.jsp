@@ -13,8 +13,10 @@
     String sPartnerId = ParseUtil.checkNull(request.getParameter("partner_id"));
     String sVendorId = ParseUtil.checkNull(request.getParameter("partner_id"));
     boolean loadPartnerVendor = false;
+    String breadCrumbPageTitle = "Vendor - Add New";
     if(!Utility.isNullOrEmpty(sPartnerVendorId)) {
         loadPartnerVendor = true;
+        breadCrumbPageTitle = "Vendor - Edit";
     }
 %>
 
@@ -28,7 +30,7 @@
     </jsp:include>
     <div class="breadcrumb_format">
         <div class="container">
-            <div class="page-title">Vendor</div>
+            <div class="page-title"><%=breadCrumbPageTitle%></div>
         </div>
     </div>
     <div class="container">
@@ -57,12 +59,6 @@
                                     <input type="email" class="form-control" id="partner_vendorName" name="partner_vendorName" placeholder="Business Name">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label for="partner_vendorWebsite" class="form_label">Website</label>
-                                    <input type="email" class="form-control" id="partner_vendorWebsite" name="partner_vendorWebsite" placeholder="Website">
-                                </div>
-                            </div>
                         </div>
                         <div class="form-group">
                             <div class="row">
@@ -85,7 +81,7 @@
                                         <%
                                             for(Constants.VENDOR_TYPE vendorType : Constants.VENDOR_TYPE.values()){
                                         %>
-                                                <option value="<%=vendorType.getId()%>"><%=vendorType.getText()%></option>
+                                                <option value="<%=vendorType.toString()%>"><%=vendorType.getText()%></option>
                                         <%
                                             }
                                         %>
@@ -97,7 +93,7 @@
                             <div class="row">
                                 <div class="col-md-8">
                                     <label for="partner_vendorPrice" class="form_label">Approximate Price</label><span class="required"> *</span>
-                                    <input type="email" class="form-control" id="partner_vendorPrice" name="partner_vendorPrice" placeholder="Email">
+                                    <input type="email" class="form-control" id="partner_vendorPrice" name="partner_vendorPrice" placeholder="Approximate Price">
                                 </div>
                             </div>
                         </div>
@@ -106,6 +102,13 @@
                                 <div class="col-md-8">
                                     <label for="partner_vendorEmail" class="form_label">Email</label>
                                     <input type="email" class="form-control" id="partner_vendorEmail" name="partner_vendorEmail" placeholder="Email">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="partner_vendorWebsite" class="form_label">Website</label>
+                                    <input type="email" class="form-control" id="partner_vendorWebsite" name="partner_vendorWebsite" placeholder="Website">
                                 </div>
                             </div>
                         </div>

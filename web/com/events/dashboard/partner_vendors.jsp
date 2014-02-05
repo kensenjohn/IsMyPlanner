@@ -62,14 +62,13 @@
 </div>
 </body>
 <form id="frm_delete_partner_vendor">
-    <input type="hidden" id="delete_partner_vendor_id" name="user_id" value="">
+    <input type="hidden" id="delete_partner_vendor_id" name="partner_vendor_id" value="">
 </form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/jquery.dataTables.min.js"></script>
 <script   type="text/javascript">
     $(window).load(function() {
-        //loadPartnerVendors(populatePartnerVendorsList);
-        initializeTable();
+        loadPartnerVendors(populatePartnerVendorsList);
     });
     function loadPartnerVendors(callbackmethod) {
         var actionUrl = "/proc_load_all_partner_vendors.aeve";
@@ -86,9 +85,9 @@
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
-                    var varNumOfTeamMembers = jsonResponseObj.num_of_team_members;
-                    if(varNumOfTeamMembers!=undefined && varNumOfTeamMembers>0){
-                        processTeamMembersList(varNumOfTeamMembers, jsonResponseObj.team_members );
+                    var varNumOfPartnerVendors = jsonResponseObj.num_of_partner_vendors;
+                    if(varNumOfPartnerVendors!=undefined && varNumOfPartnerVendors>0){
+                        processPartnerVendorsList(varNumOfPartnerVendors, jsonResponseObj.every_partner_vendor_bean );
                     }
                     initializeTable();
                 }
@@ -100,53 +99,54 @@
         }
 
     }
-    function processTeamMembersList(varNumOfTeamMembers , everyTeamMemberList  ) {
-        for(i=0;i<varNumOfTeamMembers;i++){
-            var varUserBean = everyTeamMemberList[i];
-            var varUserId =  varUserBean.user_id;
-            var varUserInfoId =  varUserBean.user_info_id;
+    function processPartnerVendorsList(varNumOfPartnerVendors , everyPartnerVendorList  ) {
+        for(i=0;i<varNumOfPartnerVendors;i++){
+            var varPartnerVendorBean = everyPartnerVendorList[i];
+            var varPartnerVendorId =  varPartnerVendorBean.partner_vendor_id;
+            var varPartnerVendorType =  varPartnerVendorBean.type;
+            var varPartnerVendorName =  varPartnerVendorBean.name;
+            var varPartnerVendorEmail =  varPartnerVendorBean.email;
+            var varPartnerVendorPhone =  varPartnerVendorBean.phone;
 
-            var varUserInfoBean = varUserBean.user_info_bean;
-            var varFirstName = varUserInfoBean.first_name;
-            var varLastName = varUserInfoBean.last_name;
-            var varEmail = varUserInfoBean.email;
 
-            var rowEveryTeamMember= $('<tr id="row_'+varUserId+'" ></tr>');
-            rowEveryTeamMember.append(
-                    '<td>'+varFirstName + ' ' +varLastName +'</td>'+
-                            '<td>'+varEmail +'</td>' +
-                            '<td  class="center" >'+ createButtons(varUserId, varUserInfoId) +'</td>');
-            $('#every_team_member_rows').append(rowEveryTeamMember);
+            var rowEveryPartnerVendor= $('<tr id="row_'+varPartnerVendorId+'" ></tr>');
+            rowEveryPartnerVendor.append(
+                    '<td>'+varPartnerVendorName +'</td>'+
+                            '<td>'+varPartnerVendorType +'</td>' +
+                            '<td>'+varPartnerVendorEmail +'</td>' +
+                            '<td>'+varPartnerVendorPhone +'</td>' +
+                            '<td  class="center" >'+ createButtons(varPartnerVendorId) +'</td>');
+            $('#every_partner_vendor_rows').append(rowEveryPartnerVendor);
 
-            addDeleteClickEvent(varUserId,varEmail, i)
+            addDeleteClickEvent(varPartnerVendorId,varPartnerVendorName, i)
         }
     }
-    function addDeleteClickEvent(varUserId , varEmail ,  varRowNum) {
-        var userbean_obj = {
-            user_id: varUserId,
-            user_email: varEmail,
+    function addDeleteClickEvent(varPartnerVendorId , varPartnerVendorName ,  varRowNum) {
+        var partner_vendor_obj = {
+            partner_vendor_id: varPartnerVendorId,
+            name: varPartnerVendorName,
             row_num: varRowNum,
             printObj: function () {
-                return this.user_id + ' row : ' + this.row_num;
+                return this.partner_vendor_id + ' row : ' + this.row_num;
             }
         }
 
-        $('#del_'+varUserId).click({param_userbean_obj:userbean_obj},function(e){
+        $('#del_'+varPartnerVendorId).click({param_partner_vendor_obj:partner_vendor_obj},function(e){
             displayConfirmBox(
-                    "Are you sure you want to delete this team member - " + e.data.param_userbean_obj.user_email ,
-                    "Delete Team Member",
-                    "Yes", "No", deleteTeamMember,e.data.param_userbean_obj)
+                    "Are you sure you want to delete this vendor - " + e.data.param_partner_vendor_obj.name ,
+                    "Delete Vendor",
+                    "Yes", "No", deletePartnerVendor,e.data.param_partner_vendor_obj)
         });
     }
 
-    function deleteTeamMember(varUserBeanObj) {
-        $('#delete_teammember_user_id').val(varUserBeanObj.user_id);
-        deleteTeamMemberInvoke(processTeamMemberDeletion);
+    function deletePartnerVendor(varPartnerVendorObj) {
+        $('#delete_partner_vendor_id').val(varPartnerVendorObj.partner_vendor_id);
+        deletePartnerVendorInvoke(processTeamMemberDeletion);
     }
-    function deleteTeamMemberInvoke(callbackmethod) {
-        var actionUrl = "/proc_delete_teammember.aeve";
+    function deletePartnerVendorInvoke(callbackmethod) {
+        var actionUrl = "/proc_delete_partnervendor.aeve";
         var methodType = "POST";
-        var dataString = $("#frm_delete_team_member").serialize();
+        var dataString = $("#frm_delete_partner_vendor").serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
     function processTeamMemberDeletion(jsonResult) {
@@ -158,36 +158,36 @@
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
-                    var varIsTeamMemberDeleted = jsonResponseObj.is_deleted;
-                    if(varIsTeamMemberDeleted){
-                        $('#user_id').val('');
-                        var varDeletedTeamMemberUserId = jsonResponseObj.deleted_user_id;
-                        objTeamMemberTable.fnDeleteRow((objTeamMemberTable.$('#row_'+varDeletedTeamMemberUserId))[0] );
+                    var varIsPartnerVendorDeleted = jsonResponseObj.is_deleted;
+                    if(varIsPartnerVendorDeleted){
+                        $('#partner_vendor_id').val('');
+                        var varDeletedPartnerVendorId = jsonResponseObj.deleted_partner_vendor_id;
+                        objPartnerVendorTable.fnDeleteRow((objPartnerVendorTable.$('#row_'+varDeletedPartnerVendorId))[0] );
                     } else {
-                        displayMssgBoxAlert("The team member was not deleted. Please try again later.", true);
+                        displayMssgBoxAlert("We were unable to delete the vendor. Please try again later.", true);
                     }
                 }
             } else {
-                displayMssgBoxAlert("Please try again later (deleteTeamMember - 1)", true);
+                displayMssgBoxAlert("Please try again later (deleteVendor - 1)", true);
             }
         } else {
-            displayMssgBoxAlert("Please try again later (deleteTeamMember - 2)", true);
+            displayMssgBoxAlert("Please try again later (deleteVendor - 2)", true);
         }
     }
 
 
-    function createButtons( varUserId , varUserInfoId ){
+    function createButtons( varPartnerVendorId ){
         var varButtons = '';
-        varButtons = varButtons + createEditButton( varUserId , varUserInfoId );
+        varButtons = varButtons + createEditButton( varPartnerVendorId );
         varButtons = varButtons + '&nbsp;&nbsp;&nbsp;';
-        varButtons = varButtons + createDeleteButton( varUserId );
+        varButtons = varButtons + createDeleteButton( varPartnerVendorId );
         return varButtons;
     }
-    function createEditButton(varUserId , varUserInfoId){
-        return '<a href="/com/events/dashboard/team/edit_teammember.jsp?user_id='+varUserId+'&userinfo_id=' + varUserInfoId +'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>';
+    function createEditButton(varPartnerVendorId){
+        return '<a href="/com/events/dashboard/partnervendors/edit_partnervendor.jsp?partner_vendor_id='+varPartnerVendorId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>';
     }
-    function createDeleteButton(varUserId){
-        return '<a id="del_'+varUserId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>';
+    function createDeleteButton(varPartnerVendorId){
+        return '<a id="del_'+varPartnerVendorId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>';
     }
 
     function initializeTable(){

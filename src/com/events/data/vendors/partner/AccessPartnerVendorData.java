@@ -42,7 +42,7 @@ public class AccessPartnerVendorData {
     }
     public ArrayList<PartnerVendorBean> getAllPartnerVendorBean (PartnerVendorRequestBean partnerVendorRequestBean) {
         ArrayList<PartnerVendorBean> arrPartnerVendorBean = new ArrayList<PartnerVendorBean>();
-        if(partnerVendorRequestBean!=null && !Utility.isNullOrEmpty(partnerVendorRequestBean.getPartnerVendorId())) {
+        if(partnerVendorRequestBean!=null && !Utility.isNullOrEmpty(partnerVendorRequestBean.getVendorId())) {
             String sQuery = "SELECT * FROM GTPARTNERVENDORS WHERE FK_VENDORID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint(partnerVendorRequestBean.getVendorId());
 

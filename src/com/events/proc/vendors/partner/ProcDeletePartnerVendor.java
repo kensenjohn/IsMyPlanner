@@ -1,9 +1,6 @@
 package com.events.proc.vendors.partner;
 
 import com.events.bean.users.UserBean;
-import com.events.bean.vendors.VendorBean;
-import com.events.bean.vendors.VendorRequestBean;
-import com.events.bean.vendors.partner.EveryPartnerVendorBean;
 import com.events.bean.vendors.partner.PartnerVendorRequestBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
@@ -12,8 +9,7 @@ import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
-import com.events.vendors.AccessVendors;
-import com.events.vendors.partner.AccessPartnerVendor;
+import com.events.vendors.partner.BuildPartnerVendor;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,12 +23,12 @@ import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
- * User: kensen
+ * User: root
  * Date: 2/4/14
- * Time: 4:24 PM
+ * Time: 9:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadAllPartnerVendors  extends HttpServlet {
+public class ProcDeletePartnerVendor  extends HttpServlet {
     private static final Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
@@ -48,54 +44,53 @@ public class ProcLoadAllPartnerVendors  extends HttpServlet {
 
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
-                    VendorRequestBean vendorRequestBean = new VendorRequestBean();
-                    vendorRequestBean.setUserId(sUserId);
 
-                    AccessVendors accessVendors = new AccessVendors();
-                    VendorBean vendorBean = accessVendors.getVendorByUserId(vendorRequestBean);
+                    String sPartnerVendorId = ParseUtil.checkNull(request.getParameter("partner_vendor_id"));
 
-                    if(vendorBean!=null && !Utility.isNullOrEmpty(vendorBean.getVendorId())) {
-                        PartnerVendorRequestBean partnerVendorRequestBean = new   PartnerVendorRequestBean();
-                        partnerVendorRequestBean.setVendorId( vendorBean.getVendorId() );
-                        AccessPartnerVendor accessPartnerVendor = new AccessPartnerVendor();
-                        ArrayList<EveryPartnerVendorBean> arrEveryPartnerVendorBeans = accessPartnerVendor.getAllPartnerVendorsForVendor(partnerVendorRequestBean);
-                        JSONObject everyPartnerVendorJson = accessPartnerVendor.getAllPartnerVendorsForVendorJson(arrEveryPartnerVendorBeans);
-
-                        Integer iNumOfPartnerVendors = 0;
-                        if(everyPartnerVendorJson!=null){
-                            iNumOfPartnerVendors = everyPartnerVendorJson.optInt("num_of_partner_vendors");
-                            jsonResponseObj.put("every_partner_vendor_bean", everyPartnerVendorJson);
-                        }
-
-                        jsonResponseObj.put( "num_of_partner_vendors", iNumOfPartnerVendors );
-
-                        Text okText = new OkText("Partner Vendors are successfully loaded.","status_mssg") ;
-                        arrOkText.add(okText);
-                        responseStatus = RespConstants.Status.OK;
-                    } else {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later,.(lAPVendors - 003)","err_mssg") ;
+                    if(Utility.isNullOrEmpty(sPartnerVendorId)) {
+                        Text errorText = new ErrorText("Oops!! Please select a valid vendor and try again.","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
+                    } else {
+
+
+                        PartnerVendorRequestBean partnerVendorRequestBean = new PartnerVendorRequestBean();
+                        partnerVendorRequestBean.setPartnerVendorId(sPartnerVendorId  );
+                        BuildPartnerVendor buildPartnerVendor = new BuildPartnerVendor();
+                        boolean isSuccessfullyDeleted =  buildPartnerVendor.deletePartnerVendor(partnerVendorRequestBean);
+
+                        jsonResponseObj.put("deleted_partner_vendor_id",sPartnerVendorId);
+                        jsonResponseObj.put("is_deleted",isSuccessfullyDeleted);
+
+                        Text okText = new OkText("Vendor was successfully deleted.","status_mssg") ;
+                        arrOkText.add(okText);
+                        responseStatus = RespConstants.Status.OK;
                     }
 
+
                 } else {
+
+                    jsonResponseObj.put("is_deleted",false);
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(lAPVendors - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadVendorLandingPage - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
+
                 }
 
             } else {
+                jsonResponseObj.put("is_deleted",false);
                 appLogging.info("Insecure Parameters used in this Proc Page " + Utility.dumpRequestParameters(request).toString()  + " --> " + this.getClass().getName());
                 Text errorText = new ErrorText("Please use valid parameters. We have identified insecure parameters in your form.","account_num") ;
                 arrErrorText.add(errorText);
                 responseStatus = RespConstants.Status.ERROR;
             }
         } catch(Exception e) {
+            jsonResponseObj.put("is_deleted",false);
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(lAPVendors - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadVendorLandingPage - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;
