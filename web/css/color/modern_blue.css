@@ -218,3 +218,8 @@ html ul.tabs li.active a:hover {
     border-color: #dbf1ff;
 }
 
+/** Web Excel */
+.web_excel.web_excel_header {
+    background: #AEDAFF;
+}
+

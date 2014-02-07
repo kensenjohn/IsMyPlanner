@@ -3,6 +3,7 @@
 </jsp:include>
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
+<link href="/css/font-awesome.min.css" rel="stylesheet">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <body>
 <div class="page_wrap">
@@ -36,7 +37,7 @@
             <div class="row">
                 <div class="col-md-2">
                     <a href="/com/events/dashboard/partnervendors/edit_partnervendor.jsp" class="btn btn-filled">
-                        <span><span class="glyphicon glyphicon-plus"></span> Add A Vendor</span>
+                        <span><i class="fa fa-plus"></i> Add A Vendor</span>
                     </a>
                 </div>
             </div>
@@ -184,10 +185,10 @@
         return varButtons;
     }
     function createEditButton(varPartnerVendorId){
-        return '<a href="/com/events/dashboard/partnervendors/edit_partnervendor.jsp?partner_vendor_id='+varPartnerVendorId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>';
+        return '<a href="/com/events/dashboard/partnervendors/edit_partnervendor.jsp?partner_vendor_id='+varPartnerVendorId+'" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>';
     }
     function createDeleteButton(varPartnerVendorId){
-        return '<a id="del_'+varPartnerVendorId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>';
+        return '<a id="del_'+varPartnerVendorId+'" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i></span> Delete</a>';
     }
 
     function initializeTable(){

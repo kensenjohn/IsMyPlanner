@@ -6,6 +6,7 @@
     String sEventEmailsActive = ParseUtil.checkNull(request.getParameter("event_emails_active"));
     String sEventPhoneActive = ParseUtil.checkNull(request.getParameter("event_phone_active"));
     String sEventWebsiteActive = ParseUtil.checkNull(request.getParameter("event_website_active"));
+    String sEventVendorsActive = ParseUtil.checkNull(request.getParameter("event_vendors_active"));
     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 %>
 <ul class="tabs">
@@ -14,4 +15,5 @@
     <li class="<%=sEventEmailsActive%>"><a href="/com/events/event/email/emails.jsp?event_id=<%=sEventId%>">Emails</a></li>
     <li class="<%=sEventPhoneActive%>"><a href="/com/events/event/phone.jsp?event_id=<%=sEventId%>">Phone</a></li>
     <li class="<%=sEventWebsiteActive%>"><a href="/com/events/event/website.jsp?event_id=<%=sEventId%>">Website</a></li>
+    <li class="<%=sEventVendorsActive%>"><a href="/com/events/event/event_vendors.jsp?event_id=<%=sEventId%>">Vendors</a></li>
 </ul>
