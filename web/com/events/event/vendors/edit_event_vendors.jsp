@@ -48,6 +48,13 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
+                    <a href="/com/events/event/event_vendors.jsp?event_id=<%=sEventId%>" class="btn btn-filled">
+                        <i class="fa fa-chevron-left"></i> <span> Back to Event Vendor List</span>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_potential_partner_vendor" >
                         <thead>
                         <tr role="row">
@@ -69,7 +76,7 @@
                     &nbsp;
                 </div>
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-md-8">
                     <div class="boxedcontent">
                         <div class="widget">
@@ -128,7 +135,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -136,6 +143,17 @@
 <form id="frm_load_potential_event_vendors">
     <input type="hidden" id="ld_pot_event_vendor_event_id" name="event_id" value="<%=sEventId%>" />
 </form>
+<form id="frm_assign_event_vendors">
+    <input type="hidden" id="assign_pot_event_vendor_event_id" name="event_id" value="<%=sEventId%>" />
+    <input type="hidden" id="assign_partnervendor_id" name="partner_vendor_id" value="" />
+    <input type="hidden" id="assign_action" name="action" value="" />
+</form>
+<form id="frm_recommend_event_vendors">
+    <input type="hidden" id="recommend_pot_event_vendor_event_id" name="event_id" value="<%=sEventId%>" />
+    <input type="hidden" id="recommend_partnervendor_id" name="partner_vendor_id" value="" />
+    <input type="hidden" id="recommend_action" name="action" value="" />
+</form>
+
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/jquery.dataTables.min.js"></script>
 <script src="/js/event/event_info.js"></script>
@@ -177,6 +195,7 @@
     function processPotentialEventVendorsList(varNumOfPotentialEventVendors , everyPotEventVendorList  ) {
         for(i=0;i<varNumOfPotentialEventVendors;i++){
             var varPotEventVendorBean = everyPotEventVendorList[i];
+            var varEventId =  varPotEventVendorBean.event_id;
             var varEventVendorBean = varPotEventVendorBean.event_vendor_bean;
 
             var varEventVendorId =  varEventVendorBean.eventvendor_id;
@@ -192,24 +211,248 @@
 
             var varIsAssignedToEvent = varPotEventVendorBean.is_assigned_to_event;
             var varIsRecommendedForEvent = varPotEventVendorBean.is_recommended_for_event;
-            var varIsShortListedForEvent = varPotEventVendorBean.is_recommended_for_event;
+            var varIsShortListedForEvent = varPotEventVendorBean.is_shortlisted_for_event;
 
             var varPartnerVendorId =  varPartnerVendorBean.partner_vendor_id;
 
+            var varAssigedAction = 'assign';
+            if(varIsAssignedToEvent) {
+                varAssigedAction = 'remove_assign';
+            }
+
+            var varRecommendAction = 'recommend';
+            if(varIsRecommendedForEvent) {
+                varRecommendAction = 'remove_recommend';
+            }
+            var varTagMessage = '';
+            var varTagClasses = '';
+            if(varIsAssignedToEvent) {
+                varTagMessage = 'assigned';
+                varTagClasses = 'label label-success';
+            } else if (varIsRecommendedForEvent) {
+                varTagMessage = 'recommended';
+                varTagClasses = 'label label-info';
+            }
 
             var rowEveryEventVendor= $('<tr id="row_'+varPartnerVendorId+'" ></tr>');
             rowEveryEventVendor.append(
-                    '<td>'+varEventVendorName +'</td>'+
+                    '<td>'+varEventVendorName +'&nbsp;&nbsp;<span id="event_vendor_status_'+varPartnerVendorId+'" class="'+varTagClasses+'">'+varTagMessage+'</span></td>'+
                             '<td>'+varEventVendorType +'</td>' +
                             '<td>'+varEventVendorWebsite +'</td>' +
-                            '<td>'+varEventVendorEmail +'</td>' +
-                            '<td></td>');
-                            //'<td  class="center" >'+ createButtons(varPartnerVendorId) +'</td>');
+                            '<td>'+varEventVendorPhone +'</td>' +
+                            '<td  class="center" >'+ createButtons(varPartnerVendorId , varAssigedAction , varRecommendAction) +'</td>');
             $('#every_potential_partner_vendor_rows').append(rowEveryEventVendor);
 
-            //addDeleteClickEvent(varPartnerVendorId,varPartnerVendorName, i)
+            addAssignClickEvent(varPartnerVendorId , varEventId , varAssigedAction);
+
+            addRecommendClickEvent(varPartnerVendorId , varEventId , varRecommendAction)
         }
     }
+    function createButtons( varPartnerVendorId   , varAssigedAction , varRecommendAction ){
+        var varButtons = '';
+        varButtons = varButtons + createAssignButton( varPartnerVendorId , varAssigedAction );
+        varButtons = varButtons + '&nbsp;&nbsp;&nbsp;';
+        varButtons = varButtons + createRecommendButton( varPartnerVendorId , varRecommendAction );
+        return varButtons;
+    }
+    function createAssignButton(varPartnerVendorId , varAssigedAction ){
+        var varAssignButton = '';
+        if(varAssigedAction  == 'assign') {
+            varAssignButton = '<a id="assign_'+varPartnerVendorId+'" class="btn btn-default btn-xs"><i id="assign_icon_'+varPartnerVendorId+'" class="fa fa-check"></i> <span id="assign_text_'+varPartnerVendorId+'">Assign</span></a>';
+        } else if (varAssigedAction  == 'remove_assign') {
+            varAssignButton = '<a id="assign_'+varPartnerVendorId+'" class="btn btn-default btn-xs"><i id="assign_icon_'+varPartnerVendorId+'" class="fa fa-ban"></i> <span id="assign_text_'+varPartnerVendorId+'">Unassign</span></a>';
+        }
+        return varAssignButton;
+    }
+    function createRecommendButton(varPartnerVendorId , varAssigedAction ){
+        var varRecommendButton = '';
+        if(varAssigedAction  == 'recommend') {
+            varRecommendButton = '<a id="recommend_'+varPartnerVendorId+'" class="btn btn-default btn-xs"><i id="recommend_icon_'+varPartnerVendorId+'" class="fa fa-thumbs-o-up"></i> <span id="recommend_text_'+varPartnerVendorId+'">Recommend</span></a>';
+        } else if (varAssigedAction  == 'remove_recommend') {
+            varRecommendButton = '<a id="recommend_'+varPartnerVendorId+'" class="btn btn-default btn-xs"><i id="recommend_icon_'+varPartnerVendorId+'" class="fa fa-thumbs-o-down"></i> <span id="recommend_text_'+varPartnerVendorId+'">Remove Recommendation</span></a>';
+        }
+        return varRecommendButton;
+    }
+
+    function addAssignClickEvent(varPartnerVendorId , varEventId , varAction) {
+        var event_vendor_obj = {
+            partner_vendor_id: varPartnerVendorId,
+            event_id: varEventId,
+            action: varAction,
+            printObj: function () {
+                return this.partner_vendor_id + ' row : ' + this.row_num;
+            }
+        }
+        $('#assign_'+varPartnerVendorId).unbind('click');
+        if( varAction == 'assign') {
+            $('#assign_'+varPartnerVendorId).click({param_event_vendor_obj:event_vendor_obj},function(e){
+                displayConfirmBox(
+                        "Are you sure you want to assign this vendor to the event?" ,
+                        "Assign Vendor To Event",
+                        "Yes", "No", assignEventVendor,e.data.param_event_vendor_obj)
+            });
+        } else if ( varAction == 'remove_assign' ) {
+            $('#assign_'+varPartnerVendorId).click({param_event_vendor_obj:event_vendor_obj},function(e){
+                displayConfirmBox(
+                        "Are you sure you want to remove this vendor from the event?",
+                        "Remove Vendor Assignment To Event",
+                        "Yes", "No", assignEventVendor,e.data.param_event_vendor_obj)
+            });
+        }
+
+    }
+    function assignEventVendor(varEventVendorObj) {
+        $('#assign_partnervendor_id').val(varEventVendorObj.partner_vendor_id);
+        $('#assign_action').val(varEventVendorObj.action);
+        assignEventVendorInvoke(processAssignEventVendor);
+    }
+    function assignEventVendorInvoke(callbackmethod) {
+        var actionUrl = "/proc_assign_eventvendor.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_assign_event_vendors").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+
+    function processAssignEventVendor(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    var varActionCompleted = jsonResponseObj.action_complete;
+                    var varEventId = jsonResponseObj.event_id;
+                    var varPartnerVendorId = jsonResponseObj.partnervendor_id;
+                    if(varActionCompleted == 'assign') {
+                        $('#event_vendor_status_'+varPartnerVendorId).removeClass("label   label-info   label-success   label-warning").addClass("label label-success").text("assigned");
+
+                        $('#assign_text_'+varPartnerVendorId).text("Unassign");
+                        $('#assign_icon_'+varPartnerVendorId).removeClass("fa-check fa-ban").addClass("fa-ban");
+
+                        addAssignClickEvent(varPartnerVendorId ,varEventId , 'remove_assign' );
+
+                        resetRecommendButton(varPartnerVendorId , varEventId)
+
+                    } else if ( varActionCompleted == 'remove_assign'  ) {
+                        $('#event_vendor_status_'+varPartnerVendorId).removeClass("label   label-info   label-success   label-warning").text("");
+
+                        $('#assign_text_'+varPartnerVendorId).text("Assign");
+                        $('#assign_icon_'+varPartnerVendorId).removeClass("fa-ban fa-check ").addClass("fa-check");
+
+                        addAssignClickEvent(varPartnerVendorId ,varEventId , 'assign' );
+
+                        resetRecommendButton(varPartnerVendorId , varEventId)
+
+                    } else {
+                        displayMssgBoxAlert("We were unable to complete your assignment request. Please try again later.", true);
+                    }
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (processAssignEventVendor - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (processAssignEventVendor - 2)", true);
+        }
+    }
+
+    function resetRecommendButton(varPartnerVendorId , varEventId) {
+        $('#recommend_text_'+varPartnerVendorId).text("Recommend");
+        $('#recommend_icon_'+varPartnerVendorId).removeClass("fa-thumbs-o-down fa-thumbs-o-up").addClass("fa-thumbs-o-up");
+        addRecommendClickEvent(varPartnerVendorId ,varEventId , 'recommend' );
+    }
+
+    function resetAssignButton(varPartnerVendorId , varEventId) {
+        $('#assign_text_'+varPartnerVendorId).text("Assign");
+        $('#assign_icon_'+varPartnerVendorId).removeClass("fa-ban fa-check ").addClass("fa-check");
+
+        addAssignClickEvent(varPartnerVendorId ,varEventId , 'assign' );
+    }
+
+    function addRecommendClickEvent(varPartnerVendorId , varEventId , varAction) {
+        var event_vendor_obj = {
+            partner_vendor_id: varPartnerVendorId,
+            event_id: varEventId,
+            action: varAction,
+            printObj: function () {
+                return this.partner_vendor_id + ' row : ' + this.row_num;
+            }
+        }
+        $('#recommend_'+varPartnerVendorId).unbind('click');
+        if( varAction == 'recommend') {
+            $('#recommend_'+varPartnerVendorId).click({param_event_vendor_obj:event_vendor_obj},function(e){
+                displayConfirmBox(
+                        "Are you sure you want to recommend this vendor for this event?" ,
+                        "Recommend Vendor for Event",
+                        "Yes", "No", recommendEventVendor,e.data.param_event_vendor_obj)
+            });
+        } else if ( varAction == 'remove_recommend' ) {
+            $('#recommend_'+varPartnerVendorId).click({param_event_vendor_obj:event_vendor_obj},function(e){
+                displayConfirmBox(
+                        "Are you sure you want to remove this recommendation from this event?",
+                        "Remove Vendor Recommendation For Event",
+                        "Yes", "No", recommendEventVendor,e.data.param_event_vendor_obj)
+            });
+        }
+
+    }
+
+    function recommendEventVendor(varEventVendorObj) {
+        $('#recommend_partnervendor_id').val(varEventVendorObj.partner_vendor_id);
+        $('#recommend_action').val(varEventVendorObj.action);
+        recommendEventVendorInvoke(processRecommendEventVendor);
+    }
+    function recommendEventVendorInvoke(callbackmethod) {
+        var actionUrl = "/proc_recommend_eventvendor.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_recommend_event_vendors").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+
+    function processRecommendEventVendor(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    var varActionCompleted = jsonResponseObj.action_complete;
+                    var varEventId = jsonResponseObj.event_id;
+                    var varPartnerVendorId = jsonResponseObj.partnervendor_id;
+                    if(varActionCompleted == 'recommend') {
+                        $('#event_vendor_status_'+varPartnerVendorId).removeClass("label   label-info   label-success   label-warning").addClass("label label-info").text("recommended");
+
+                        $('#recommend_text_'+varPartnerVendorId).text("Remove Recommendation");
+                        $('#recommend_icon_'+varPartnerVendorId).removeClass("fa-thumbs-o-up fa-thumbs-o-down").addClass("fa-thumbs-o-down");
+
+                        addRecommendClickEvent(varPartnerVendorId ,varEventId , 'remove_recommend' );
+
+                        resetAssignButton(varPartnerVendorId , varEventId)
+
+                    } else if ( varActionCompleted == 'remove_recommend'  ) {
+                        $('#event_vendor_status_'+varPartnerVendorId).removeClass("label   label-info   label-success   label-warning").text("");
+
+                        $('#recommend_text_'+varPartnerVendorId).text("Recommend");
+                        $('#recommend_icon_'+varPartnerVendorId).removeClass("fa-thumbs-o-down fa-thumbs-o-up ").addClass("fa-thumbs-o-up");
+
+                        addRecommendClickEvent(varPartnerVendorId ,varEventId , 'recommend' );
+
+                        resetAssignButton(varPartnerVendorId , varEventId)
+                    } else {
+                        displayMssgBoxAlert("We were unable to complete your request. Please try again later.", true);
+                    }
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (processRecommendEventVendor - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (processRecommendEventVendor - 2)", true);
+        }
+    }
+
     function initializeTable(){
 
         objPotentialEventVendorTable =  $('#every_potential_partner_vendor').dataTable({

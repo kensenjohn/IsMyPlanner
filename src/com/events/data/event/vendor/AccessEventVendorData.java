@@ -42,4 +42,20 @@ public class AccessEventVendorData {
         }
         return arrEventVendorBean;
     }
+
+    public EventVendorBean getEventVendor(EventVendorRequestBean eventVendorRequestBean) {
+        EventVendorBean eventVendorBean = new EventVendorBean();
+        if(eventVendorRequestBean!=null && !"".equalsIgnoreCase(eventVendorRequestBean.getEventId())) {
+            String sQuery  = "SELECT * FROM GTEVENTVENDORS WHERE FK_EVENTID = ? AND FK_VENDORID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(eventVendorRequestBean.getEventId(), eventVendorRequestBean.getVendorId());
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventVendorData.java", "getEventVendorsByEventId()");
+
+            if(arrResult!=null && !arrResult.isEmpty()) {
+                for( HashMap<String, String> hmResult : arrResult ) {
+                    eventVendorBean = new EventVendorBean(hmResult);
+                }
+            }
+        }
+        return eventVendorBean;
+    }
 }

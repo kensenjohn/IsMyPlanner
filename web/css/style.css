@@ -495,31 +495,17 @@ ul.tabs li.active, html ul.tabs li.active a,  html ul.tabs li.active a:hover  {
     background: green;
 }
 
-/** Web Excel */
-.web_excel {
-    float: left;
-    clear: both;
-    width: 100%;
-    margin-bottom: 0px;
-    text-align: left;
+/** Event Vendor Status */
+.assigned {
+    background-color: #D3F6DE ;
 }
-.web_excel.web_excel_header {
-    margin: 0;
-    padding: 0;
-    float: left;
-    list-style: none;
-    min-height: 30px;
-    width: 100%;
+
+.recommended {
+    background-color: #FCFAD2 ;
 }
-.web_excel.web_excel_header.web_excel_cell {
-    float: left;
-    padding: 0;
-    margin: 0 0 0 0px;
-    min-height: 30px;
-    line-height: 30px;
-    border-left: none;
-    margin-bottom: 2px;
-    overflow: hidden;
-    position: relative;
-    border-right: 0px solid #fff;
+
+.shortlisted {
+    background-color: #FCE8D2 ;
 }
+
+

@@ -363,6 +363,39 @@
         <servlet-name>Process Load Potential Event And Partner Vendors</servlet-name>
         <url-pattern>/proc_load_all_event_partner_vendors.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Assign Event Vendor</servlet-name>
+        <servlet-class>com.events.proc.event.vendors.ProcAssignEventVendor</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Assign Event Vendor</servlet-name>
+        <url-pattern>/proc_assign_eventvendor.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Recommend Event Vendor</servlet-name>
+        <servlet-class>com.events.proc.event.vendors.ProcRecommendEventVendor</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Recommend Event Vendor</servlet-name>
+        <url-pattern>/proc_recommend_eventvendor.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Shortlist Event Vendor</servlet-name>
+        <servlet-class>com.events.proc.event.vendors.ProcShortlistEventVendor</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Shortlist Event Vendor</servlet-name>
+        <url-pattern>/proc_shortlist_eventvendor.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Event Vendor</servlet-name>
+        <servlet-class>com.events.proc.event.vendors.ProcLoadEventVendors</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Event Vendor</servlet-name>
+        <url-pattern>/proc_load_event_vendors.aeve</url-pattern>
+    </servlet-mapping>
+
 
 
 

@@ -52,6 +52,17 @@ public class EventVendorFeatureData {
         return  numOfRowsInserted;
     }
 
+    public Integer deleteFeature(EventVendorFeatureBean eventVendorFeatureBean) {
+        Integer numOfRowsDeleted = 0;
+        if(eventVendorFeatureBean!=null && !Utility.isNullOrEmpty(eventVendorFeatureBean.getEventVendorId()) && eventVendorFeatureBean.getFeatureType()!=null ){
+            String sQuery = "DELETE FROM GTEVENTVENDORFEATURES WHERE FEATURENAME = ? AND FK_EVENTVENDORID = ? ";
+            ArrayList<Object> aParams = DBDAO.createConstraint( eventVendorFeatureBean.getFeatureType().toString(),eventVendorFeatureBean.getEventVendorId());
+
+            numOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "VendorFeatureData.java", "deleteFeature() ");
+        }
+        return  numOfRowsDeleted;
+    }
+
     public EventVendorFeatureBean getVendorFeature(EventVendorFeatureBean eventVendorFeatureBean) {
         EventVendorFeatureBean finalFeatureBean = new EventVendorFeatureBean();
         if(eventVendorFeatureBean!=null && !Utility.isNullOrEmpty(eventVendorFeatureBean.getEventVendorId())){

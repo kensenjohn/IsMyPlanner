@@ -56,6 +56,15 @@ public class EventVendorFeature {
         }
         return iNumOfRows;
     }
+    public Integer deleteFeatureValue(EventVendorFeatureBean eventVendorFeatureBean) {
+        Integer iNumOfRows = 0;
+        if(eventVendorFeatureBean!=null && !Utility.isNullOrEmpty(eventVendorFeatureBean.getEventVendorId())
+                && eventVendorFeatureBean.getFeatureType()!=null ) {
+            EventVendorFeatureData eventVendorFeatureData = new EventVendorFeatureData();
+            iNumOfRows = eventVendorFeatureData.deleteFeature( eventVendorFeatureBean );
+        }
+        return iNumOfRows;
+    }
 
     public static EventVendorFeatureBean generateEventVendorFeatureBean(Constants.EVENT_VENDOR_FEATURETYPE eventVendorFeaturetype) {
         EventVendorFeatureBean eventVendorFeatureBean = new EventVendorFeatureBean();

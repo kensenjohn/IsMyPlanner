@@ -48,25 +48,29 @@ public class AccessPartnerVendor {
                     everyPartnerVendorBean.setPartnerVendorId(  vendorBean.getVendorId() );
                     everyPartnerVendorBean.setName( vendorBean.getVendorName() );
 
-                    if(arrMultipleFeatureBean!=null && !arrMultipleFeatureBean.isEmpty()) {
-                        for(VendorFeatureBean vendorFeatureBean : arrMultipleFeatureBean ) {
-                            String sValue = ParseUtil.checkNull(vendorFeatureBean.getValue() );
-                            if(Constants.VENDOR_FEATURETYPE.partner_email.equals( vendorFeatureBean.getFeatureType() ) ) {
-                                everyPartnerVendorBean.setEmail( sValue  );
-                            } else if(Constants.VENDOR_FEATURETYPE.partner_work_phone.equals( vendorFeatureBean.getFeatureType() ) ) {
-                                everyPartnerVendorBean.setPhone( sValue );
-                            }  else if(Constants.VENDOR_FEATURETYPE.partner_vendor_type.equals( vendorFeatureBean.getFeatureType() ) ) {
-                                everyPartnerVendorBean.setType(ParseUtil.checkNull( Constants.VENDOR_TYPE.valueOf( sValue ).getText()  ));
-                            }   else if(Constants.VENDOR_FEATURETYPE.website.equals( vendorFeatureBean.getFeatureType() ) ) {
-                                everyPartnerVendorBean.setWebsite( sValue );
-                            }
-                        }
-                    }
+                    setEveryPartnerVendorMultiFeature(everyPartnerVendorBean , arrMultipleFeatureBean );
                     arrEveryPartnerVendorBeans.add(everyPartnerVendorBean);
                 }
             }
         }
         return arrEveryPartnerVendorBeans;
+    }
+
+    public void setEveryPartnerVendorMultiFeature(EveryPartnerVendorBean everyPartnerVendorBean , ArrayList<VendorFeatureBean> arrMultipleFeatureBean ) {
+        if(everyPartnerVendorBean!=null && arrMultipleFeatureBean!=null && !arrMultipleFeatureBean.isEmpty()) {
+            for(VendorFeatureBean vendorFeatureBean : arrMultipleFeatureBean ) {
+                String sValue = ParseUtil.checkNull(vendorFeatureBean.getValue() );
+                if(Constants.VENDOR_FEATURETYPE.partner_email.equals( vendorFeatureBean.getFeatureType() ) ) {
+                    everyPartnerVendorBean.setEmail( sValue  );
+                } else if(Constants.VENDOR_FEATURETYPE.partner_work_phone.equals( vendorFeatureBean.getFeatureType() ) ) {
+                    everyPartnerVendorBean.setPhone( sValue );
+                }  else if(Constants.VENDOR_FEATURETYPE.partner_vendor_type.equals( vendorFeatureBean.getFeatureType() ) ) {
+                    everyPartnerVendorBean.setType(ParseUtil.checkNull( Constants.VENDOR_TYPE.valueOf( sValue ).getText()  ));
+                }   else if(Constants.VENDOR_FEATURETYPE.website.equals( vendorFeatureBean.getFeatureType() ) ) {
+                    everyPartnerVendorBean.setWebsite( sValue );
+                }
+            }
+        }
     }
     public JSONObject getAllPartnerVendorsForVendorJson(ArrayList<EveryPartnerVendorBean> arrEveryPartnerVendorBeans) {
         JSONObject everyPartnerVendorJson = new JSONObject();

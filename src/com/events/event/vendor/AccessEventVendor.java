@@ -4,11 +4,17 @@ import com.events.bean.event.vendor.EventVendorBean;
 import com.events.bean.event.vendor.EventVendorFeatureBean;
 import com.events.bean.event.vendor.EventVendorRequestBean;
 import com.events.bean.event.vendor.EveryEventVendorBean;
+import com.events.bean.vendors.VendorBean;
+import com.events.bean.vendors.VendorFeatureBean;
+import com.events.bean.vendors.VendorRequestBean;
 import com.events.bean.vendors.partner.EveryPartnerVendorBean;
+import com.events.bean.vendors.partner.PartnerVendorBean;
 import com.events.bean.vendors.partner.PartnerVendorRequestBean;
+import com.events.bean.vendors.partner.PartnerVendorResponseBean;
 import com.events.common.Constants;
 import com.events.common.Utility;
 import com.events.data.event.vendor.AccessEventVendorData;
+import com.events.vendors.AccessVendors;
 import com.events.vendors.partner.AccessPartnerVendor;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -36,7 +42,7 @@ public class AccessEventVendor {
             partnerVendorRequestBean.setVendorId( eventVendorRequestBean.getVendorId() );
             AccessPartnerVendor accessPartnerVendor = new AccessPartnerVendor();
             ArrayList<EveryPartnerVendorBean> arrEveryPartnerVendorBeans = accessPartnerVendor.getAllPartnerVendorsForVendor(partnerVendorRequestBean);
-            appLogging.info("Partner Vendors : " + arrEveryPartnerVendorBeans );
+
             if( arrEveryPartnerVendorBeans!=null && !arrEveryPartnerVendorBeans.isEmpty() )  {
                 ArrayList<EventVendorBean> arrEventVendorBean = getEventVendors( eventVendorRequestBean );
                 HashMap<String, ArrayList<EventVendorFeatureBean> > hmEventVendorFeatures = new HashMap<String, ArrayList<EventVendorFeatureBean>>();
@@ -55,29 +61,38 @@ public class AccessEventVendor {
                 for(EveryPartnerVendorBean everyPartnerVendorBean : arrEveryPartnerVendorBeans ) {
                     EveryEventVendorBean everyEventVendorBean = new EveryEventVendorBean();
                     everyEventVendorBean.setEventId( eventVendorRequestBean.getEventId() );
+                    everyEventVendorBean.setEveryPartnerVendorBean( everyPartnerVendorBean );
 
                     EventVendorBean eventVendorBean = hmEventVendorBean.get( everyPartnerVendorBean.getPartnerVendorId() );
                     if(eventVendorBean!=null && !Utility.isNullOrEmpty(eventVendorBean.getEventVendorId())) {
                         everyEventVendorBean.setEventVendorBean( eventVendorBean );
                         ArrayList<EventVendorFeatureBean> arrEventVendorFeatures = hmEventVendorFeatures.get( eventVendorBean.getEventVendorId() );
-
-                        for( EventVendorFeatureBean eventVendorFeatureBean : arrEventVendorFeatures ) {
-                            if(Constants.EVENT_VENDOR_FEATURETYPE.current_user_action.equals(eventVendorFeatureBean.getFeatureType())) {
-                                if( Constants.EVENT_VENDOR_USER_ACTION.is_assigned.toString().equals( eventVendorFeatureBean.getValue() ) ){
-                                    everyEventVendorBean.setAssignedToEvent( true );
-                                } else if( Constants.EVENT_VENDOR_USER_ACTION.is_recommended.toString().equals( eventVendorFeatureBean.getValue() ) ){
-                                    everyEventVendorBean.setRecommendedForEvent( true );
-                                } else if( Constants.EVENT_VENDOR_USER_ACTION.is_shortlisted.toString().equals( eventVendorFeatureBean.getValue() ) ){
-                                    everyEventVendorBean.setShortlistedForEvent( true );
-                                }
-                            }
+                        if(arrEventVendorFeatures!=null && !arrEventVendorFeatures.isEmpty() ) {
+                            setEveryEventVendorMultiFeatures( everyEventVendorBean , arrEventVendorFeatures );
                         }
-                        arrEveryEventVendorBean.add(everyEventVendorBean);
                     }
+                    arrEveryEventVendorBean.add(everyEventVendorBean);
                 }
             }
         }
         return arrEveryEventVendorBean;
+    }
+
+    public void setEveryEventVendorMultiFeatures( EveryEventVendorBean everyEventVendorBean , ArrayList<EventVendorFeatureBean> arrEventVendorFeatures ) {
+
+        if(everyEventVendorBean!=null && arrEventVendorFeatures!=null && !arrEventVendorFeatures.isEmpty() ) {
+            for( EventVendorFeatureBean eventVendorFeatureBean : arrEventVendorFeatures ) {
+                if(Constants.EVENT_VENDOR_FEATURETYPE.current_user_action.equals(eventVendorFeatureBean.getFeatureType())) {
+                    if( Constants.EVENT_VENDOR_USER_ACTION.is_assigned.toString().equals( eventVendorFeatureBean.getValue() ) ){
+                        everyEventVendorBean.setAssignedToEvent( true );
+                    } else if( Constants.EVENT_VENDOR_USER_ACTION.is_recommended.toString().equals( eventVendorFeatureBean.getValue() ) ){
+                        everyEventVendorBean.setRecommendedForEvent( true );
+                    } else if( Constants.EVENT_VENDOR_USER_ACTION.is_shortlisted.toString().equals( eventVendorFeatureBean.getValue() ) ){
+                        everyEventVendorBean.setShortlistedForEvent( true );
+                    }
+                }
+            }
+        }
     }
 
     public JSONObject getPotentialEventVendorJSON(ArrayList<EveryEventVendorBean> arrEveryEventVendorBean){
@@ -112,5 +127,67 @@ public class AccessEventVendor {
             arrMultipleFeatureBean =  vendorFeature.getMultipleFeatures(arrTmpMultipleFeatureBean , eventVendorBean.getEventVendorId()  );
         }
         return arrMultipleFeatureBean;
+    }
+    public ArrayList<EveryEventVendorBean> getEventVendorsList(EventVendorRequestBean eventVendorRequestBean) {
+
+        ArrayList<EveryEventVendorBean> arrEveryEventVendorBean = new ArrayList<EveryEventVendorBean>();
+        if(eventVendorRequestBean!=null && !Utility.isNullOrEmpty( eventVendorRequestBean.getEventId() )){
+            ArrayList<EventVendorBean> arrEventVendorBean = getEventVendors( eventVendorRequestBean );
+            if(arrEventVendorBean!=null && !arrEventVendorBean.isEmpty()){
+                for(EventVendorBean eventVendorBean : arrEventVendorBean ) {
+
+                    EveryEventVendorBean everyEventVendorBean = new EveryEventVendorBean();
+                    everyEventVendorBean.setEventId( eventVendorBean.getEventId() );
+                    everyEventVendorBean.setEventVendorBean( eventVendorBean );
+
+                    ArrayList<EventVendorFeatureBean> arrMultipleFeatureBean = getEventVendorSummaryFeatures(eventVendorBean);
+                    setEveryEventVendorMultiFeatures(everyEventVendorBean , arrMultipleFeatureBean);
+
+                    PartnerVendorRequestBean partnerVendorRequestBean = new   PartnerVendorRequestBean();
+                    partnerVendorRequestBean.setPartnerVendorId( eventVendorBean.getVendorId() );
+                    AccessPartnerVendor accessPartnerVendor = new AccessPartnerVendor();
+                    PartnerVendorResponseBean partnerVendorResponseBean = accessPartnerVendor.getPartnerVendorDetails( partnerVendorRequestBean );
+                    if(partnerVendorResponseBean!=null && !Utility.isNullOrEmpty(partnerVendorResponseBean.getPartnerVendorId())) {
+                        PartnerVendorBean partnerVendorBean = partnerVendorResponseBean.getPartnerVendorBean();
+
+                        VendorRequestBean vendorRequestBean = new VendorRequestBean();
+                        vendorRequestBean.setVendorId( partnerVendorBean.getPartnerVendorId() );
+
+                        AccessVendors accessVendor = new AccessVendors();
+                        VendorBean vendorBean = accessVendor.getVendor(vendorRequestBean);
+
+
+
+                        PartnerVendorRequestBean tmpPartnerVendorRequestBean = new PartnerVendorRequestBean();
+                        tmpPartnerVendorRequestBean.setPartnerVendorId(vendorBean.getVendorId());
+
+                        ArrayList<VendorFeatureBean> arrMultipleVendorFeatureBean = accessPartnerVendor.getPartnerVendorSummaryFeatures( tmpPartnerVendorRequestBean );
+
+                        EveryPartnerVendorBean everyPartnerVendorBean = new EveryPartnerVendorBean();
+                        everyPartnerVendorBean.setPartnerVendorId(  vendorBean.getVendorId() );
+                        everyPartnerVendorBean.setName( vendorBean.getVendorName() );
+
+                        accessPartnerVendor.setEveryPartnerVendorMultiFeature(everyPartnerVendorBean , arrMultipleVendorFeatureBean);
+                        everyEventVendorBean.setEveryPartnerVendorBean( everyPartnerVendorBean );
+
+
+
+
+                    }
+
+                }
+            }
+        }
+        return arrEveryEventVendorBean;
+    }
+
+    public EventVendorBean getEventVendor( EventVendorRequestBean eventVendorRequestBean ){
+        EventVendorBean eventVendorBean = new EventVendorBean();
+        if(eventVendorRequestBean!=null && !Utility.isNullOrEmpty( eventVendorRequestBean.getEventId() )
+                && !Utility.isNullOrEmpty( eventVendorRequestBean.getVendorId() ) ){
+            AccessEventVendorData accessEventVendorData = new AccessEventVendorData();
+            eventVendorBean = accessEventVendorData.getEventVendor( eventVendorRequestBean );
+        }
+        return eventVendorBean;
     }
 }

@@ -13,6 +13,24 @@ public class EventVendorRequestBean {
 
     private String vendorId = Constants.EMPTY;
     private String eventId = Constants.EMPTY;
+    private String eventVendorId = Constants.EMPTY;
+    private String userId = Constants.EMPTY;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getEventVendorId() {
+        return eventVendorId;
+    }
+
+    public void setEventVendorId(String eventVendorId) {
+        this.eventVendorId = eventVendorId;
+    }
 
     public String getVendorId() {
         return vendorId;
