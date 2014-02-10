@@ -356,6 +356,17 @@
 
 
     <servlet>
+        <servlet-name>Process Load Potential Event And Partner Vendors</servlet-name>
+        <servlet-class>com.events.proc.event.vendors.ProcLoadPotentialEventAndPartnerVendor</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Potential Event And Partner Vendors</servlet-name>
+        <url-pattern>/proc_load_all_event_partner_vendors.aeve</url-pattern>
+    </servlet-mapping>
+
+
+
+    <servlet>
         <servlet-name>Process Load All Partner Vendors</servlet-name>
         <servlet-class>com.events.proc.vendors.partner.ProcLoadAllPartnerVendors</servlet-class>
     </servlet>
@@ -380,6 +391,7 @@
         <url-pattern>/proc_load_partner_vendor.aeve</url-pattern>
     </servlet-mapping>
     <servlet>
+        <display-name>=</display-name>
         <servlet-name>Process Delete Partner Vendor</servlet-name>
         <servlet-class>com.events.proc.vendors.partner.ProcDeletePartnerVendor</servlet-class>
     </servlet>
@@ -387,8 +399,6 @@
         <servlet-name>Process Delete Partner Vendor</servlet-name>
         <url-pattern>/proc_delete_partnervendor.aeve</url-pattern>
     </servlet-mapping>
-
-
 
 
 

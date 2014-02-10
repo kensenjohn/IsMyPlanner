@@ -1,7 +1,7 @@
 package com.events.vendors.partner;
 
 import com.events.bean.vendors.VendorBean;
-import com.events.bean.vendors.VendorFeature;
+import com.events.vendors.VendorFeature;
 import com.events.bean.vendors.VendorFeatureBean;
 import com.events.bean.vendors.partner.PartnerVendorBean;
 import com.events.bean.vendors.partner.PartnerVendorRequestBean;

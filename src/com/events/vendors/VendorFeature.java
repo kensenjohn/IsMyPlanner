@@ -1,5 +1,6 @@
-package com.events.bean.vendors;
+package com.events.vendors;
 
+import com.events.bean.vendors.VendorFeatureBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;

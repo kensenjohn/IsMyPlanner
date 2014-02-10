@@ -33,7 +33,6 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class ProcLoadAllPartnerVendors  extends HttpServlet {
-    private static final Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     public void doPost(HttpServletRequest request,  HttpServletResponse response)  throws ServletException, IOException {

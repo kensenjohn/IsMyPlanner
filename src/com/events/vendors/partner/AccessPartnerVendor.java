@@ -1,7 +1,7 @@
 package com.events.vendors.partner;
 
 import com.events.bean.vendors.VendorBean;
-import com.events.bean.vendors.VendorFeature;
+import com.events.vendors.VendorFeature;
 import com.events.bean.vendors.VendorFeatureBean;
 import com.events.bean.vendors.VendorRequestBean;
 import com.events.bean.vendors.partner.EveryPartnerVendorBean;
@@ -50,12 +50,15 @@ public class AccessPartnerVendor {
 
                     if(arrMultipleFeatureBean!=null && !arrMultipleFeatureBean.isEmpty()) {
                         for(VendorFeatureBean vendorFeatureBean : arrMultipleFeatureBean ) {
+                            String sValue = ParseUtil.checkNull(vendorFeatureBean.getValue() );
                             if(Constants.VENDOR_FEATURETYPE.partner_email.equals( vendorFeatureBean.getFeatureType() ) ) {
-                                everyPartnerVendorBean.setEmail(ParseUtil.checkNull( vendorFeatureBean.getValue()  ));
+                                everyPartnerVendorBean.setEmail( sValue  );
                             } else if(Constants.VENDOR_FEATURETYPE.partner_work_phone.equals( vendorFeatureBean.getFeatureType() ) ) {
-                                everyPartnerVendorBean.setPhone(ParseUtil.checkNull( vendorFeatureBean.getValue()  ) );
+                                everyPartnerVendorBean.setPhone( sValue );
                             }  else if(Constants.VENDOR_FEATURETYPE.partner_vendor_type.equals( vendorFeatureBean.getFeatureType() ) ) {
-                                everyPartnerVendorBean.setType(ParseUtil.checkNull( Constants.VENDOR_TYPE.valueOf(vendorFeatureBean.getValue()).getText()  ));
+                                everyPartnerVendorBean.setType(ParseUtil.checkNull( Constants.VENDOR_TYPE.valueOf( sValue ).getText()  ));
+                            }   else if(Constants.VENDOR_FEATURETYPE.website.equals( vendorFeatureBean.getFeatureType() ) ) {
+                                everyPartnerVendorBean.setWebsite( sValue );
                             }
                         }
                     }
@@ -134,6 +137,7 @@ public class AccessPartnerVendor {
             arrTmpMultipleFeatureBean.add(VendorFeature.generateVendorFeatureBean(Constants.VENDOR_FEATURETYPE.partner_email));
             arrTmpMultipleFeatureBean.add(VendorFeature.generateVendorFeatureBean(Constants.VENDOR_FEATURETYPE.partner_work_phone) );
             arrTmpMultipleFeatureBean.add(VendorFeature.generateVendorFeatureBean(Constants.VENDOR_FEATURETYPE.partner_vendor_type) );
+            arrTmpMultipleFeatureBean.add(VendorFeature.generateVendorFeatureBean(Constants.VENDOR_FEATURETYPE.website) );
             VendorFeature vendorFeature = new VendorFeature();
             arrMultipleFeatureBean =  vendorFeature.getMultipleFeatures(arrTmpMultipleFeatureBean ,  partnerVendorRequestBean.getPartnerVendorId()  );
         }

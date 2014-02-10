@@ -17,6 +17,15 @@ public class EveryPartnerVendorBean {
     private String email = Constants.EMPTY;
     private String phone = Constants.EMPTY;
     private String type = Constants.EMPTY;
+    private String website = Constants.EMPTY;
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
 
     public String getType() {
         return type;
@@ -65,7 +74,8 @@ public class EveryPartnerVendorBean {
         sb.append(", name='").append(name).append('\'');
         sb.append(", email='").append(email).append('\'');
         sb.append(", phone='").append(phone).append('\'');
-        sb.append(", type='").append(type).append('\'');
+        sb.append(", type='").append(type).append('\'');;
+        sb.append(", website='").append(website).append('\'');
         sb.append('}');
         return sb.toString();
     }
@@ -79,6 +89,7 @@ public class EveryPartnerVendorBean {
             jsonObject.put("email", this.email );
             jsonObject.put("phone", this.phone );
             jsonObject.put("type", this.type );
+            jsonObject.put("website", this.website );
         } catch (JSONException e) {
             e.printStackTrace();
         }

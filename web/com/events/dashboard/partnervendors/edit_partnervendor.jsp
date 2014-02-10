@@ -77,7 +77,7 @@
                                 <div class="col-md-8">
                                     <label for="partner_vendorType" class="form_label">Vendor Type</label><span class="required"> *</span>
                                     <select class="form-control" id="partner_vendorType" name="partner_vendorType">
-                                        <option value="">Select A Role</option>
+                                        <option value="">Select Vendor Type</option>
                                         <%
                                             for(Constants.VENDOR_TYPE vendorType : Constants.VENDOR_TYPE.values()){
                                         %>

@@ -300,6 +300,14 @@ public class Constants {
         partner_address_1,partner_address_2,partner_city,partner_state,partner_zipcode,partner_country,partner_vendor_type,none;
     }
 
+    public enum EVENT_VENDOR_FEATURETYPE {
+        current_user_action,none;
+    }
+
+    public enum EVENT_VENDOR_USER_ACTION {
+        is_assigned,is_recommended,is_shortlisted,none;
+    }
+
     public enum VENDOR_LANDINGPAGE_FEATURETYPE {
         logo,landingpagephoto,facebook_url,pinterest_url,none;
     }
