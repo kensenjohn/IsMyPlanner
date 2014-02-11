@@ -3,6 +3,8 @@
     <jsp:param name="page_title" value=""/>
 </jsp:include>
 <link href="/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
+<link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -79,7 +81,6 @@
                                                     <th class="sorting" role="columnheader">Type</th>
                                                     <th class="sorting" role="columnheader">Website</th>
                                                     <th class="sorting" role="columnheader">Phone</th>
-                                                    <th class="center" role="columnheader"></th>
                                                 </tr>
                                                 </thead>
 
@@ -124,7 +125,6 @@
                                                     <th class="sorting" role="columnheader">Type</th>
                                                     <th class="sorting" role="columnheader">Website</th>
                                                     <th class="sorting" role="columnheader">Phone</th>
-                                                    <th class="center" role="columnheader"></th>
                                                 </tr>
                                                 </thead>
 
@@ -170,7 +170,6 @@
                                                     <th class="sorting" role="columnheader">Type</th>
                                                     <th class="sorting" role="columnheader">Website</th>
                                                     <th class="sorting" role="columnheader">Phone</th>
-                                                    <th class="center" role="columnheader"></th>
                                                 </tr>
                                                 </thead>
 
@@ -189,8 +188,12 @@
     </div>
 </div>
 </body>
+<form id="frm_load_event_vendors">
+    <input type="hidden" name="event_id" id="load_event_id" value="<%=sEventId%>">
+</form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/event/event_info.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
 <script src="/js/collapse.js"></script>
 <script type="text/javascript">
     var varEventId = '<%=sEventId%>';
@@ -228,8 +231,90 @@
     function loadEventVendorList(callbackmethod) {
         var actionUrl = "/proc_load_event_vendors.aeve";
         var methodType = "POST";
-        var dataString = $('#frm_load_potential_event_vendors').serialize();
+        var dataString = $('#frm_load_event_vendors').serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+
+    function populateEventVendorList(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    var varNumOfEventVendors = jsonResponseObj.num_of_event_vendors;
+                    if(varNumOfEventVendors!=undefined && varNumOfEventVendors>0){
+                        processEventVendorsList(varNumOfEventVendors, jsonResponseObj.event_vendors );
+                    }
+                    initializeTable('every_assigned_event_vendor');
+                    initializeTable('every_recommended_event_vendor');
+                    initializeTable('every_shortlisted_event_vendor');
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (populateEventList - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (populateEventList - 2)", true);
+        }
+    }
+
+    function processEventVendorsList(varNumOfEventVendors, everEventVendorsList) {
+        for(i=0;i<varNumOfEventVendors;i++){
+            var varEveryEventVendorBean = everEventVendorsList[i];
+            var varEventId =  varEveryEventVendorBean.event_id;
+            var varEventVendorBean = varEveryEventVendorBean.event_vendor_bean;
+
+            var varEventVendorId =  varEventVendorBean.eventvendor_id;
+            var varVendorId =  varEventVendorBean.vendor_id;
+
+            var varPartnerVendorBean = varEveryEventVendorBean.every_partner_vendor_bean;
+
+            var varEventVendorName = varPartnerVendorBean.name;
+            var varEventVendorEmail = varPartnerVendorBean.email;
+            var varEventVendorPhone = varPartnerVendorBean.phone;
+            var varEventVendorWebsite = varPartnerVendorBean.website;
+            var varEventVendorType =  varPartnerVendorBean.type;
+
+            var varIsAssignedToEvent = varEveryEventVendorBean.is_assigned_to_event;
+            var varIsRecommendedForEvent = varEveryEventVendorBean.is_recommended_for_event;
+            var varIsShortListedForEvent = varEveryEventVendorBean.is_shortlisted_for_event;
+
+            var varPartnerVendorId =  varPartnerVendorBean.partner_vendor_id;
+
+            var rowEveryEventVendor= $('<tr id="row_'+varPartnerVendorId+'" ></tr>');
+            rowEveryEventVendor.append(
+                    '<td>'+varEventVendorName +'</td>'+
+                            '<td>'+varEventVendorType +'</td>' +
+                            '<td>'+varEventVendorWebsite +'</td>' +
+                            '<td><a href="tel:'+varEventVendorPhone +'">'+varEventVendorPhone +'</a></td>' );
+                            //'<td  class="center" >'+ createButtons(varPartnerVendorId , varAssigedAction , varRecommendAction) +'</td>');
+            if(varIsAssignedToEvent)  {
+                $('#every_assigned_event_vendor_rows').append(rowEveryEventVendor);
+            } else if( varIsRecommendedForEvent ) {
+                $('#every_recommended_event_vendor_rows').append(rowEveryEventVendor);
+            } else if( varIsShortListedForEvent) {
+                $('#every_shortlisted_event_vendor_rows').append(rowEveryEventVendor);
+            }
+
+        }
+    }
+
+    function initializeTable(varTableId){
+
+        var objEventVendorTable =  $('#'+varTableId).dataTable({
+            "bPaginate": false,
+            "bInfo": false,
+
+            "aoColumns": [
+                null,
+                null,
+                null,
+                null
+            ]
+        });
+        return objEventVendorTable;
     }
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>

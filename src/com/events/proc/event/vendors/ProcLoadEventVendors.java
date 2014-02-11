@@ -69,19 +69,19 @@ public class ProcLoadEventVendors  extends HttpServlet {
                         eventVendorRequestBean.setEventId( sEventId );
 
                         AccessEventVendor accessEventVendor = new AccessEventVendor();
-                        Integer iNumOfPotentialEventVendors = 0;
-                        ArrayList<EveryEventVendorBean> arrEveryEventVendorBean = accessEventVendor.getPotentialVendors( eventVendorRequestBean );
+                        Integer iNumOfEventVendors = 0;
+                        ArrayList<EveryEventVendorBean> arrEveryEventVendorBean = accessEventVendor.getEventVendorsList( eventVendorRequestBean );
                         if(arrEveryEventVendorBean!=null && !arrEveryEventVendorBean.isEmpty()){
-                            JSONObject everyPotentialEventVendorJSON = accessEventVendor.getPotentialEventVendorJSON(arrEveryEventVendorBean);
-                            iNumOfPotentialEventVendors = everyPotentialEventVendorJSON.optInt("num_of_potential_event_vendors");
-                            if(iNumOfPotentialEventVendors>0 && everyPotentialEventVendorJSON!=null){
-                                jsonResponseObj.put("potential_event_vendors",everyPotentialEventVendorJSON);
+                            JSONObject everyEventVendorJSON = accessEventVendor.getEveryEventVendorJSON(arrEveryEventVendorBean);
+                            iNumOfEventVendors = everyEventVendorJSON.optInt("num_of_potential_event_vendors");
+                            if(iNumOfEventVendors>0 && everyEventVendorJSON!=null){
+                                jsonResponseObj.put("event_vendors",everyEventVendorJSON);
                             }
                         }
 
-                        jsonResponseObj.put("num_of_potential_event_vendors",iNumOfPotentialEventVendors);
+                        jsonResponseObj.put("num_of_event_vendors",iNumOfEventVendors);
 
-                        Text okText = new OkText("Partner Vendors are successfully loaded.","status_mssg") ;
+                        Text okText = new OkText("Event  Vendors are successfully loaded.","status_mssg") ;
                         arrOkText.add(okText);
                         responseStatus = RespConstants.Status.OK;
 

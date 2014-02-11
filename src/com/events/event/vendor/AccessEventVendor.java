@@ -95,7 +95,7 @@ public class AccessEventVendor {
         }
     }
 
-    public JSONObject getPotentialEventVendorJSON(ArrayList<EveryEventVendorBean> arrEveryEventVendorBean){
+    public JSONObject getEveryEventVendorJSON(ArrayList<EveryEventVendorBean> arrEveryEventVendorBean){
         JSONObject everyEventVendorJsonObject = new JSONObject();
         if(arrEveryEventVendorBean!=null && !arrEveryEventVendorBean.isEmpty() ) {
             Integer iNumOfRecs = 0;
@@ -132,7 +132,7 @@ public class AccessEventVendor {
 
         ArrayList<EveryEventVendorBean> arrEveryEventVendorBean = new ArrayList<EveryEventVendorBean>();
         if(eventVendorRequestBean!=null && !Utility.isNullOrEmpty( eventVendorRequestBean.getEventId() )){
-            ArrayList<EventVendorBean> arrEventVendorBean = getEventVendors( eventVendorRequestBean );
+            ArrayList<EventVendorBean> arrEventVendorBean = getEventVendors( eventVendorRequestBean );   //All Event Vendor Beans
             if(arrEventVendorBean!=null && !arrEventVendorBean.isEmpty()){
                 for(EventVendorBean eventVendorBean : arrEventVendorBean ) {
 
@@ -140,13 +140,13 @@ public class AccessEventVendor {
                     everyEventVendorBean.setEventId( eventVendorBean.getEventId() );
                     everyEventVendorBean.setEventVendorBean( eventVendorBean );
 
-                    ArrayList<EventVendorFeatureBean> arrMultipleFeatureBean = getEventVendorSummaryFeatures(eventVendorBean);
+                    ArrayList<EventVendorFeatureBean> arrMultipleFeatureBean = getEventVendorSummaryFeatures(eventVendorBean);   //Features of Event Vendor Beans
                     setEveryEventVendorMultiFeatures(everyEventVendorBean , arrMultipleFeatureBean);
 
                     PartnerVendorRequestBean partnerVendorRequestBean = new   PartnerVendorRequestBean();
                     partnerVendorRequestBean.setPartnerVendorId( eventVendorBean.getVendorId() );
                     AccessPartnerVendor accessPartnerVendor = new AccessPartnerVendor();
-                    PartnerVendorResponseBean partnerVendorResponseBean = accessPartnerVendor.getPartnerVendorDetails( partnerVendorRequestBean );
+                    PartnerVendorResponseBean partnerVendorResponseBean = accessPartnerVendor.getPartnerVendorDetails( partnerVendorRequestBean );   // Details of the Vendors
                     if(partnerVendorResponseBean!=null && !Utility.isNullOrEmpty(partnerVendorResponseBean.getPartnerVendorId())) {
                         PartnerVendorBean partnerVendorBean = partnerVendorResponseBean.getPartnerVendorBean();
 
@@ -154,7 +154,7 @@ public class AccessEventVendor {
                         vendorRequestBean.setVendorId( partnerVendorBean.getPartnerVendorId() );
 
                         AccessVendors accessVendor = new AccessVendors();
-                        VendorBean vendorBean = accessVendor.getVendor(vendorRequestBean);
+                        VendorBean vendorBean = accessVendor.getVendor(vendorRequestBean);    // Vendor Name
 
 
 
@@ -171,7 +171,7 @@ public class AccessEventVendor {
                         everyEventVendorBean.setEveryPartnerVendorBean( everyPartnerVendorBean );
 
 
-
+                        arrEveryEventVendorBean.add(everyEventVendorBean);
 
                     }
 

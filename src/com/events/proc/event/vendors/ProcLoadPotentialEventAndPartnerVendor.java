@@ -75,7 +75,7 @@ public class ProcLoadPotentialEventAndPartnerVendor extends HttpServlet {
                         Integer iNumOfPotentialEventVendors = 0;
                         ArrayList<EveryEventVendorBean> arrEveryEventVendorBean = accessEventVendor.getPotentialVendors( eventVendorRequestBean );
                         if(arrEveryEventVendorBean!=null && !arrEveryEventVendorBean.isEmpty()){
-                            JSONObject everyPotentialEventVendorJSON = accessEventVendor.getPotentialEventVendorJSON(arrEveryEventVendorBean);
+                            JSONObject everyPotentialEventVendorJSON = accessEventVendor.getEveryEventVendorJSON(arrEveryEventVendorBean);
                             iNumOfPotentialEventVendors = everyPotentialEventVendorJSON.optInt("num_of_potential_event_vendors");
                             if(iNumOfPotentialEventVendors>0 && everyPotentialEventVendorJSON!=null){
                                 jsonResponseObj.put("potential_event_vendors",everyPotentialEventVendorJSON);
