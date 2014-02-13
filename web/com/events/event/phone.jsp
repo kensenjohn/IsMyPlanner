@@ -2,6 +2,7 @@
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
+<link href="/css/font-awesome.min.css" rel="stylesheet">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -43,8 +44,72 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-4">
+                    <div class="info_tile">
+                        <div class="widget">
+                            <div class="content">
+                                <div class="icon_display">
+                                    <i class="fa fa-cog"></i>
+                                </div>
+                                <div>
+                                    <h3>Demo Mode</h3>
+                                    <h5>Free Minutes and Text Messages</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info_tile">
+                        <div class="widget">
+                            <div class="content">
+                                <div class="icon_display">
+                                    <i class="fa fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h3>5</h3>
+                                    <h5>Call Minutes</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info_tile">
+                        <div class="widget">
+                            <div class="content">
+                                <div class="icon_display">
+                                    <i class="fa fa-comment-o"></i>
+                                </div>
+                                <div>
+                                    <h3>5</h3>
+                                    <h5>Sms Messages</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-12">
-                    Phone
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h2>(214) 432-5420</h2>
+                        </div>
+                        <div class="col-md-3">
+                            <h2>Key : 34526</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            &nbsp;
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
