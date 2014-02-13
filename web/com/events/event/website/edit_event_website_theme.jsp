@@ -18,36 +18,27 @@
         <jsp:param name="AFTER_LOGIN_REDIRECT" value="index.jsp"/>
     </jsp:include>
     <jsp:include page="/com/events/common/menu_bar.jsp">
-        <jsp:param name="event_active" value="currently_active"/>
+        <jsp:param name="hide_menu" value="true"/>
     </jsp:include>
-    <div class="breadcrumb_format">
-        <div class="container">
-            <div class="page-title">Edit Event Website - <span id="event_title"></span></div>
-        </div>
-    </div>
     <div class="container">
         <div class="content_format">
-            <%if(loadEventInfo) {%>
             <div class="row">
                 <div class="col-md-12">
                     <div id="tabs">
-                        <jsp:include page="/com/events/event/event_tab.jsp">
-                            <jsp:param name="event_website_active" value="active"/>
+                        <jsp:include page="/com/events/event/website/event_website_editor_tab.jsp">
+                            <jsp:param name="edit_event_website_theme_active" value="active"/>
                         </jsp:include>
                     </div>
                 </div>
             </div>
-            <%}%>
             <div class="row">
                 <div class="col-md-12">
-                    &nbsp;
+                    <h5>Current Theme</h5>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <a href="/com/events/event/website/edit_event_website_theme.jsp" class="btn btn-filled" target="_blank">
-                        <span><i class="fa fa-desktop"></i> Create a Website</span>
-                    </a>
+                    <h5>Select A Theme</h5>
                 </div>
             </div>
         </div>
