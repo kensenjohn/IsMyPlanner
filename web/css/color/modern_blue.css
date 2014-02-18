@@ -218,5 +218,11 @@ html ul.tabs li.active a:hover {
     border-color: #dbf1ff;
 }
 
+/** Image **/
+.img-circle {
+    background-color: #fff;
+    border: 1px solid #3F9CFF;
+}
+
 
 

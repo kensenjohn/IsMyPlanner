@@ -508,4 +508,12 @@ ul.tabs li.active, html ul.tabs li.active a,  html ul.tabs li.active a:hover  {
     background-color: #FCE8D2 ;
 }
 
+/** Image **/
+.img-circle {
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 4px;
+}
+
 
