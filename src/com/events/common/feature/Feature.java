@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class Feature {
     public FeatureBean getFeature(FeatureBean featureBean) {
         FeatureBean featureBeanFromDB = new FeatureBean();
-        if(featureBean!=null && !"".equalsIgnoreCase(featureBean.getValue()) && !"".equalsIgnoreCase(ParseUtil.checkNull(featureBean.getFeatureType().toString()))) {
+        if(featureBean!=null && !"".equalsIgnoreCase(ParseUtil.checkNull(featureBean.getFeatureType().toString()))) {
             FeatureData featureData = new FeatureData();
             featureBeanFromDB = featureData.getFeature(featureBean);
         }

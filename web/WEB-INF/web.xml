@@ -449,7 +449,30 @@
         <url-pattern>/proc_load_event_vendors.aeve</url-pattern>
     </servlet-mapping>
 
-
+    <servlet>
+        <servlet-name>Process Load All Website Themes</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcLoadAllWebsiteThemes</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load All Website Themes</servlet-name>
+        <url-pattern>/proc_load_all_website_themes.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Event Website Themes</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcLoadEventWebsiteTheme</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Event Website Themes</servlet-name>
+        <url-pattern>/proc_load_event_website_theme.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Event Website Theme</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcSaveEventWebsiteTheme</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Event Website Theme</servlet-name>
+        <url-pattern>/proc_save_event_website_theme.aeve</url-pattern>
+    </servlet-mapping>
 
 
     <servlet>

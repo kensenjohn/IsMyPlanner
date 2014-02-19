@@ -54,7 +54,7 @@ public class DispatchingFilter implements Filter {
         if( isInsecureParamUsed ) {
             servletRequest.getRequestDispatcher("/com/events/common/error/security_warning.jsp").forward(servletRequest, servletResponse);
         } else if( !isUserLoggedIn && !path.endsWith("/credentials.jsp") && !path.endsWith("/forgot.jsp")&& !path.endsWith("/reset_password.jsp")) {
-            servletRequest.getRequestDispatcher("/index.jsp").forward(servletRequest, servletResponse);
+            servletRequest.getRequestDispatcher("/preview.jsp").forward(servletRequest, servletResponse);
         }  else  if( (isUserLoggedIn && !isInsecureParamUsed) || path.endsWith("/credentials.jsp")  || path.endsWith("/forgot.jsp")  || path.endsWith("/reset_password.jsp") ) {
             filterChain.doFilter(servletRequest, servletResponse);
         }

@@ -45,9 +45,9 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <a href="/com/events/event/website/edit_event_website_theme.jsp" class="btn btn-filled" target="_blank">
+                    <button id="edit_website" class="btn btn-filled" target="_blank">
                         <span><i class="fa fa-desktop"></i> Create a Website</span>
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -56,5 +56,11 @@
 </body>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script type="text/javascript">
+    $(window).load(function() {
+        $('#edit_website').click(function(){
+            window.open("/com/events/event/website/edit_event_website_theme.jsp?event_id=<%=sEventId%>","edit_event_website");
+        });
+    } );
+    //website.jsp
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>
