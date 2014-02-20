@@ -1,6 +1,8 @@
 package com.events.proc.event.website;
 
 import com.events.bean.common.FeatureBean;
+import com.events.bean.event.website.EventWebsiteBean;
+import com.events.bean.event.website.EventWebsiteRequestBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
@@ -9,6 +11,7 @@ import com.events.common.exception.ExceptionHandler;
 import com.events.common.feature.Feature;
 import com.events.common.feature.FeatureType;
 import com.events.common.security.DataSecurityChecker;
+import com.events.event.website.BuildEventWebsite;
 import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -48,22 +51,43 @@ public class ProcSaveEventWebsiteTheme  extends HttpServlet {
                     String sVendorId = Constants.EMPTY;
 
                     if(!Utility.isNullOrEmpty(sEventId) && !Utility.isNullOrEmpty(sWebsiteThemeId) ) {
-                        FeatureBean featureBeanEventDay = new FeatureBean();
-                        featureBeanEventDay.setEventId( sEventId );
-                        featureBeanEventDay.setFeatureType( FeatureType.website_theme_id );
-                        featureBeanEventDay.setValue( sWebsiteThemeId);
 
-                        Feature feature = new Feature();
-                        Integer iNumOfRows = feature.setFeatureValue( featureBeanEventDay );
-                        if(iNumOfRows>0) {
-                            Text okText = new OkText("The event website theme was successfully set","status_mssg") ;
-                            arrOkText.add(okText);
-                            responseStatus = RespConstants.Status.OK;
+
+                        EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
+                        eventWebsiteRequestBean.setEventId( sEventId );
+                        eventWebsiteRequestBean.setWebsiteThemId( sWebsiteThemeId );
+
+                        BuildEventWebsite buildEventWebsite = new BuildEventWebsite();
+                        EventWebsiteBean eventWebsiteBean = buildEventWebsite.saveEventWebsite( eventWebsiteRequestBean );
+
+                        if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
+                            FeatureBean featureBeanEventDay = new FeatureBean();
+                            featureBeanEventDay.setEventId( sEventId );
+                            featureBeanEventDay.setFeatureType( FeatureType.event_website_id );
+                            featureBeanEventDay.setValue( eventWebsiteBean.getEventWebsiteId() );
+
+                            Feature feature = new Feature();
+                            Integer iNumOfRows = feature.setFeatureValue( featureBeanEventDay );
+
+                            if(iNumOfRows>0) {
+                                Text okText = new OkText("The event website theme was successfully set","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
+                            } else {
+                                Text errorText = new ErrorText("Oops!! We were unable to assign this theme to your website. Please try again later.(saveEventWebThemes - 004)","err_mssg") ;
+                                arrErrorText.add(errorText);
+                                responseStatus = RespConstants.Status.ERROR;
+                            }
                         } else {
                             Text errorText = new ErrorText("Oops!! We were unable to assign this theme to your website. Please try again later.(saveEventWebThemes - 004)","err_mssg") ;
                             arrErrorText.add(errorText);
                             responseStatus = RespConstants.Status.ERROR;
                         }
+
+
+
+
+
 
                     } else {
                         Text errorText = new ErrorText("Oops!! We were unable to select this theme. Please try again later.(saveEventWebThemes - 003)","err_mssg") ;

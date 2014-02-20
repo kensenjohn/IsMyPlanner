@@ -474,6 +474,32 @@
         <url-pattern>/proc_save_event_website_theme.aeve</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Process Load Theme Colors And Fonts</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcLoadThemeColorsAndFonts</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Theme Colors And Fonts</servlet-name>
+        <url-pattern>/proc_load_theme_colors_and_fonts.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Event Website Color And Font</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcLoadEventWebsiteColorsAndFonts</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Event Website Color And Font</servlet-name>
+        <url-pattern>/proc_load_event_website_color_and_font.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Event Website Color And Font</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcSaveEventWebsiteColorsAndFonts</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Event Website Color And Font</servlet-name>
+        <url-pattern>/proc_save_event_website_color_and_font.aeve</url-pattern>
+    </servlet-mapping>
+
+
 
     <servlet>
         <servlet-name>Process Load All Partner Vendors</servlet-name>

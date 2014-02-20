@@ -22,6 +22,7 @@ public class WebsiteColorBean {
     private String colorName = Constants.EMPTY;
     private String colorCssName = Constants.EMPTY;
     private String colorSwatchName = Constants.EMPTY;
+    private boolean isDefault = false;
 
     public WebsiteColorBean(){}
     public WebsiteColorBean(HashMap<String,String> hmResult) {
@@ -30,6 +31,7 @@ public class WebsiteColorBean {
         this.colorName = ParseUtil.checkNull(hmResult.get("COLOR_NAME"));
         this.colorCssName = ParseUtil.checkNull(hmResult.get("COLOR_CSS_NAME"));
         this.colorSwatchName = ParseUtil.checkNull(hmResult.get("COLOR_SWATCH_NAME"));
+        this.isDefault = ParseUtil.sTob(hmResult.get("IS_DEFAULT"));
     }
 
     public String getWebsiteColorId() {
@@ -72,6 +74,14 @@ public class WebsiteColorBean {
         this.colorSwatchName = colorSwatchName;
     }
 
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("WebsiteColorBean{");
@@ -93,6 +103,7 @@ public class WebsiteColorBean {
             jsonObject.put("color_name", this.colorName );
             jsonObject.put("color_swatch_name", this.colorSwatchName );
             jsonObject.put("color_css_name", this.colorCssName );
+            jsonObject.put("is_default", this.isDefault );
         } catch (JSONException e) {
             e.printStackTrace();
         }

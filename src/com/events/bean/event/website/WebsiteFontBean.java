@@ -20,6 +20,7 @@ public class WebsiteFontBean {
     private String websiteThemeId = Constants.EMPTY;
     private String fontName = Constants.EMPTY;
     private String fontCssName = Constants.EMPTY;
+    private boolean isDefault = false;
 
     public WebsiteFontBean(){}
     public WebsiteFontBean(HashMap<String,String> hmResult) {
@@ -27,6 +28,7 @@ public class WebsiteFontBean {
         this.websiteFontId = ParseUtil.checkNull(hmResult.get("WEBSITEFONTID"));
         this.fontName = ParseUtil.checkNull(hmResult.get("FONT_NAME"));
         this.fontCssName = ParseUtil.checkNull(hmResult.get("FONT_CSS_NAME"));
+        this.isDefault = ParseUtil.sTob(hmResult.get("IS_DEFAULT"));
     }
     public String getWebsiteFontId() {
         return websiteFontId;
@@ -60,6 +62,14 @@ public class WebsiteFontBean {
         this.fontCssName = fontCssName;
     }
 
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("WebsiteFontBean{");
@@ -67,6 +77,7 @@ public class WebsiteFontBean {
         sb.append(", websiteThemeId='").append(websiteThemeId).append('\'');
         sb.append(", fontName='").append(fontName).append('\'');
         sb.append(", fontCssName='").append(fontCssName).append('\'');
+        sb.append(", isDefault=").append(isDefault);
         sb.append('}');
         return sb.toString();
     }
@@ -79,6 +90,7 @@ public class WebsiteFontBean {
             jsonObject.put("website_theme_id", this.websiteThemeId );
             jsonObject.put("font_name", this.fontName );
             jsonObject.put("font_css_name", this.fontCssName );
+            jsonObject.put("is_default", this.isDefault );
         } catch (JSONException e) {
             e.printStackTrace();
         }

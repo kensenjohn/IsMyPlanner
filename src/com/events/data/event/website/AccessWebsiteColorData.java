@@ -5,6 +5,7 @@ import com.events.bean.event.website.WebsiteColorBean;
 import com.events.bean.event.website.WebsiteThemeBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
+import com.events.common.Utility;
 import com.events.common.db.DBDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ public class AccessWebsiteColorData {
     private String EVENTADMIN_DB = applicationConfig.get(Constants.EVENTADMIN_DB);
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
-    public ArrayList<WebsiteColorBean> getWebsiteFont(ArrayList<WebsiteThemeBean> arrWebsiteTheme) {
+    public ArrayList<WebsiteColorBean> getWebsiteColor(ArrayList<WebsiteThemeBean> arrWebsiteTheme) {
         // GTWEBSITECOLOR ( WEBSITECOLORID , FK_WEBSITETHEMEID , COLOR_NAME , COLOR_CSS_NAME,COLOR_SWATCH_NAME)
         ArrayList<WebsiteColorBean> arrWebsiteColors = new ArrayList<WebsiteColorBean>();
         if( arrWebsiteTheme!=null && !arrWebsiteTheme.isEmpty()) {
@@ -34,7 +35,7 @@ public class AccessWebsiteColorData {
                 aParams.add(websiteThemeBean.getWebsiteThemeId());
             }
 
-            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessWebsiteFontData.java", "getWebsiteFont()");
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessWebsiteColorData.java", "getWebsiteColor()");
             if(arrResult!=null && !arrResult.isEmpty()){
                 for(HashMap<String, String> hmResult : arrResult ) {
                     WebsiteColorBean websiteColorBean = new WebsiteColorBean(hmResult);
@@ -43,6 +44,23 @@ public class AccessWebsiteColorData {
             }
         }
         return arrWebsiteColors;
+    }
+
+    public WebsiteColorBean getDefaultWebsiteColor( WebsiteThemeBean websiteThemeBean ) {
+        WebsiteColorBean websiteColorBean = new WebsiteColorBean();
+        if(websiteThemeBean!=null && !Utility.isNullOrEmpty(websiteThemeBean.getWebsiteThemeId())) {
+            String sQuery = "SELECT * FROM GTWEBSITECOLOR WHERE FK_WEBSITETHEMEID = ? AND IS_DEFAULT = 1";
+            ArrayList<Object> aParams = DBDAO.createConstraint( websiteThemeBean.getWebsiteThemeId() );
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessWebsiteColorData.java", "getDefaultWebsiteColor()");
+
+            if(arrResult!=null && !arrResult.isEmpty()){
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    websiteColorBean = new WebsiteColorBean(hmResult);
+                }
+            }
+        }
+        return websiteColorBean;
     }
 
 }

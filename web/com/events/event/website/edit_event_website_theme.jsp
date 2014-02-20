@@ -33,7 +33,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <h5>Current Theme</h5>
+                    <h3>Current Theme</h3>
                 </div>
             </div>
             <div class="row">
@@ -53,7 +53,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <h5>Select A Theme</h5>
+                    <h3>Select A Theme</h3>
                 </div>
             </div>
             <div class="row">
@@ -84,6 +84,7 @@
         initialize: function(){
             this.varWebsiteThemeModel = this.model.get('bb_website_themes');
             this.varNumOfThemesModel = this.model.get('bb_num_of_website_themes');
+            this.varButtonCreatorModel = this.model.get('bb_button_creator');
         },
         render:function(){
 
@@ -94,7 +95,7 @@
                     websiteThemeRow = $('<div>').addClass('row');
                     $(this.el).append(websiteThemeRow);
                 }
-                var websiteThemeCol = createThemeThumbnail( this.varWebsiteThemeModel[i] )
+                var websiteThemeCol = createThemeThumbnail( this.varWebsiteThemeModel[i] , this.varButtonCreatorModel )
 
                 websiteThemeRow.append(websiteThemeCol);
 
@@ -107,6 +108,60 @@
             }
         }
     });
+    var CurrentThemeThumbnailView = Backbone.View.extend({
+        initialize: function(){
+            this.varWebsiteThemeModel = this.model.get('bb_website_themes');
+            this.varNumOfThemesModel = this.model.get('bb_num_of_website_themes');
+            this.varButtonCreatorModel = this.model.get('bb_button_creator');
+            this.varEventWebsiteModel = this.model.get('bb_event_website');
+        },
+        render:function(){
+            if(this.varNumOfThemesModel == 1 ){
+                this.createCurrentThemeThumbnail( this.varWebsiteThemeModel[0] )
+            }
+        },
+        createCurrentThemeThumbnail : function(websiteTheme) {
+            var websiteThemeRow = $('<div>').addClass('row');
+            $(this.el).append(websiteThemeRow);
+
+            var websiteThemeCol = createThemeThumbnail( websiteTheme , this.varButtonCreatorModel, this.varEventWebsiteModel )
+
+            websiteThemeRow.append(websiteThemeCol);
+
+            $(this.el).append( createBlankRow() );
+            $(this.el).append( createBlankRow() );
+        }
+    });
+
+    function generateThemeThumbnailModel( varAllWebsiteThemes , varNumOfThemes , buttonCreator ) {
+        this.themeThumbnailModel = new ThemeThumbnailModel();
+        this.themeThumbnailModel.set('bb_website_themes' , varAllWebsiteThemes );
+        this.themeThumbnailModel.set('bb_num_of_website_themes' , varNumOfThemes );
+        this.themeThumbnailModel.set('bb_button_creator' , buttonCreator );
+    }
+
+    function generateCurrentThemeThumbnailModel( varAllWebsiteThemes , varNumOfThemes , buttonCreator , varEventWebsite) {
+        this.themeThumbnailModel = new ThemeThumbnailModel();
+        this.themeThumbnailModel.set('bb_website_themes' , varAllWebsiteThemes );
+        this.themeThumbnailModel.set('bb_num_of_website_themes' , varNumOfThemes );
+        this.themeThumbnailModel.set('bb_button_creator' , buttonCreator );
+        this.themeThumbnailModel.set('bb_event_website' , varEventWebsite );
+    }
+
+    function generateAllThemeThumbnail( ) {
+
+        var themeThumbnailView = new ThemeThumbnailView({model:this.themeThumbnailModel});
+        themeThumbnailView.render();
+        return themeThumbnailView;
+    }
+
+    function generateCurrentThemeThumbnail( ) {
+
+        var themeThumbnailView = new CurrentThemeThumbnailView({model:this.themeThumbnailModel});
+        themeThumbnailView.render();
+        return themeThumbnailView;
+    }
+
     $(window).load(function() {
         loadAllThemes(populateAllThemes);
         loadEventWebsiteThemes(populateCurrentTheme);
@@ -130,12 +185,14 @@
 
                     var varNumOfThemes = jsonResponseObj.num_of_themes;
                     if(varNumOfThemes!=undefined && varNumOfThemes>0){
-                        var varAllWebsiteThemes = jsonResponseObj.website_themes;
+                        var varWebsiteThemes = jsonResponseObj.website_themes;
+                        var varEventWebsite = jsonResponseObj.event_website;
 
-                        var themeThumbnailView = generateThemeThumbnail(varAllWebsiteThemes , varNumOfThemes);
+                        generateCurrentThemeThumbnailModel(varWebsiteThemes , varNumOfThemes, createCurrentThemeButtons , varEventWebsite);
+                        var themeThumbnailView = generateCurrentThemeThumbnail();
                         $('#current_theme').html( themeThumbnailView.el );
 
-
+                        createCurrentThemeButtonEvents( varWebsiteThemes[0] )
                     }
                 }
             } else {
@@ -152,15 +209,7 @@
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
 
-    function generateThemeThumbnail(varAllWebsiteThemes , varNumOfThemes ) {
-        themeThumbnailModel = new ThemeThumbnailModel();
-        themeThumbnailModel.set('bb_website_themes' , varAllWebsiteThemes );
-        themeThumbnailModel.set('bb_num_of_website_themes' , varNumOfThemes );
 
-        var themeThumbnailView = new ThemeThumbnailView({model:themeThumbnailModel});
-        themeThumbnailView.render();
-        return themeThumbnailView;
-    }
     function populateAllThemes(jsonResult) {
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
@@ -175,12 +224,15 @@
                     if(varNumOfThemes!=undefined && varNumOfThemes>0){
                         var varAllWebsiteThemes = jsonResponseObj.website_themes;
 
-                        var themeThumbnailView = generateThemeThumbnail(varAllWebsiteThemes , varNumOfThemes);
+
+                        generateThemeThumbnailModel(varAllWebsiteThemes , varNumOfThemes , createAllThemeButtons);
+                        var themeThumbnailView = generateAllThemeThumbnail();
                         $('#select_a_theme').html( themeThumbnailView.el );
 
                         for(i = 0; i <varNumOfThemes; i++) {
-                           createButtonEvents( varAllWebsiteThemes[i] )
+                            createAllThemesButtonEvents( varAllWebsiteThemes[i] )
                         }
+
                     }
                 }
             } else {
@@ -191,36 +243,57 @@
         }
     }
 
-
-    function createThemeThumbnail(websiteTheme){
+    function createThemeImage( websiteTheme ) {
         var varImg = $('<img>').addClass('img-thumbnail');
         varImg.attr('src', '/com/events/event/website/static_templates/' + websiteTheme.name + '/img/' + websiteTheme.screen  );
+        return varImg;
+    }
 
+    function createCurrentThemeButtons( websiteTheme , eventWebsite ) {
+        return createButton('View Website','view_website_'+eventWebsite.event_website_id) ;
+    }
+    function createAllThemeButtons( websiteTheme ) {
         var varButtonGroup = $('<div>').addClass('btn-group');
         varButtonGroup.append( createButton('Preview','preview_'+websiteTheme.website_theme_id) );
         varButtonGroup.append( createButton('Select','select_'+websiteTheme.website_theme_id) );
+        return varButtonGroup;
+    }
+    function createThemeName( websiteTheme ){
+        var varThemeGroup = $('<h4>').append( websiteTheme.name );
+        return varThemeGroup;
+    }
+
+    function createThemeThumbnailRow( varRowContents , varStyleContent ){
+
+        var varIndividualThemeColumn = $('<div>').addClass('col-md-12');
+        varIndividualThemeColumn.append( varRowContents );
+
+        var varIndividualThemeRow = $('<div>').addClass('row');
+        if(varStyleContent!=''){
+            varIndividualThemeRow.attr('style',varStyleContent );
+        }
+        varIndividualThemeRow.append( varIndividualThemeColumn  );
+
+        return varIndividualThemeRow;
+    }
+
+    function createThemeThumbnail(websiteTheme , createButtonForTheme , eventWebsite ){
+        var varThemeName = createThemeName( websiteTheme );
+        var varImg = createThemeImage(websiteTheme);
+        var varButtonGroup = createButtonForTheme(websiteTheme , eventWebsite);
+
+
+
+        var varIndividualThemeNameRow = createThemeThumbnailRow(varThemeName);
+        var varIndividualThemeImgRow = createThemeThumbnailRow(varImg);
+        var varIndividualThemeButtonGroupRow = createThemeThumbnailRow(varButtonGroup,'text-align:center;');
+
 
         var varColumn = $('<div>').addClass('col-md-4');
-        //varColumn.append(varImg);
-
-        var varIndividualThemeImgCol = $('<div>').addClass('col-md-12');
-        varIndividualThemeImgCol.append( varImg );
-
-        var varIndividualThemeImgRow = $('<div>').addClass('row');
-        varIndividualThemeImgRow.append( varIndividualThemeImgCol  );
-
-
-        var varIndividualThemeButtonCol = $('<div>').addClass('col-md-12');
-        varIndividualThemeButtonCol.append( varButtonGroup );
-
-        var varIndividualThemeButtonsRow = $('<div>').addClass('row').attr('style','text-align:center;');
-        varIndividualThemeButtonsRow.append( varIndividualThemeButtonCol  );
-
-
+        varColumn.append(varIndividualThemeNameRow);
         varColumn.append(varIndividualThemeImgRow);
         varColumn.append( createBlankRow() );
-        varColumn.append(varIndividualThemeButtonsRow);
-
+        varColumn.append(varIndividualThemeButtonGroupRow);
 
         return varColumn;
 
@@ -237,7 +310,7 @@
         varBlankRow.append(varBlankCol);
         return varBlankRow;
     }
-    function createButtonEvents( websiteTheme) {
+    function createAllThemesButtonEvents( websiteTheme) {
         if(websiteTheme!=undefined) {
             $('#preview_'+websiteTheme.website_theme_id).click({param_web_theme_obj:websiteTheme},function(e) {
                 window.open('static_templates/'+e.data.param_web_theme_obj.name+"/preview.jsp?event_id=<%=sEventId%>","preview_website_theme");
@@ -245,6 +318,13 @@
             $('#select_'+websiteTheme.website_theme_id).click({param_web_theme_obj:websiteTheme},function(e) {
                 $('#selected_website_theme_id').val(e.data.param_web_theme_obj.website_theme_id);
                 selectEventWebsiteTheme(getResult);
+            });
+        }
+    }
+    function createCurrentThemeButtonEvents( websiteTheme) {
+        if(websiteTheme!=undefined) {
+            $('#view_website_'+websiteTheme.website_theme_id).click({param_web_theme_obj:websiteTheme},function(e) {
+                window.open('static_templates/'+e.data.param_web_theme_obj.name+"/preview.jsp?event_id=<%=sEventId%>","preview_website_theme");
             });
         }
     }
@@ -262,6 +342,7 @@
                 displayAjaxError(varResponseObj);
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
                 displayMssgBoxAlert('The theme was successfully selected.', false);
+                loadEventWebsiteThemes(populateCurrentTheme);
             } else {
                 displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
             }

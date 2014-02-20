@@ -8,6 +8,6 @@ package com.events.common.feature;
  * To change this template use File | Settings | File Templates.
  */
 public enum FeatureType {
-    event_day,event_time,event_timezone,website_theme_id;
+    event_day,event_time,event_timezone,event_website_id;
 
 }

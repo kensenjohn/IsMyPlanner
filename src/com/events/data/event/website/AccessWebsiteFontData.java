@@ -5,6 +5,7 @@ import com.events.bean.event.website.WebsiteFontBean;
 import com.events.bean.event.website.WebsiteThemeBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
+import com.events.common.Utility;
 import com.events.common.db.DBDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,5 +44,22 @@ public class AccessWebsiteFontData {
             }
         }
         return arrWebsiteFonts;
+    }
+
+    public WebsiteFontBean getDefaultWebsiteFont( WebsiteThemeBean websiteThemeBean ) {
+        WebsiteFontBean websiteFontBean = new WebsiteFontBean();
+        if(websiteThemeBean!=null && !Utility.isNullOrEmpty(websiteThemeBean.getWebsiteThemeId())) {
+            String sQuery = "SELECT * FROM GTWEBSITEFONT WHERE FK_WEBSITETHEMEID = ? AND IS_DEFAULT = 1";
+            ArrayList<Object> aParams = DBDAO.createConstraint( websiteThemeBean.getWebsiteThemeId() );
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessWebsiteFontData.java", "getDefaultWebsiteFont()");
+
+            if(arrResult!=null && !arrResult.isEmpty()){
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    websiteFontBean = new WebsiteFontBean(hmResult);
+                }
+            }
+        }
+        return websiteFontBean;
     }
 }

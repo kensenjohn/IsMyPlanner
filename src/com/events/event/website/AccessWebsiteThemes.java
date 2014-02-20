@@ -29,7 +29,7 @@ public class AccessWebsiteThemes {
             if(arrWebsiteTheme!=null && !arrWebsiteTheme.isEmpty()) {
 
                 AccessWebsiteColorData accessWebsiteColorData = new AccessWebsiteColorData();
-                arrWebsiteColors = accessWebsiteColorData.getWebsiteFont( arrWebsiteTheme );
+                arrWebsiteColors = accessWebsiteColorData.getWebsiteColor( arrWebsiteTheme );
 
                 AccessWebsiteFontData accessWebsiteFontData = new AccessWebsiteFontData();
                 arrWebsiteFont = accessWebsiteFontData.getWebsiteFont(arrWebsiteTheme);
@@ -53,15 +53,15 @@ public class AccessWebsiteThemes {
                 arrWebsiteTheme.add(websiteThemeBean);
 
 
-                AccessWebsiteColorData accessWebsiteColorData = new AccessWebsiteColorData();
-                ArrayList<WebsiteColorBean> arrWebsiteColors = accessWebsiteColorData.getWebsiteFont( arrWebsiteTheme );
+                AccessWebsiteColor accessWebsiteColor = new AccessWebsiteColor();
+                ArrayList<WebsiteColorBean> arrWebsiteColors =  accessWebsiteColor.getWebsiteThemeColors( allWebsiteThemeRequestBean );
 
-                AccessWebsiteFontData accessWebsiteFontData = new AccessWebsiteFontData();
-                ArrayList<WebsiteFontBean> arrWebsiteFont = accessWebsiteFontData.getWebsiteFont(arrWebsiteTheme);
+                AccessWebsiteFont accessWebsiteFont = new AccessWebsiteFont();
+                ArrayList<WebsiteFontBean> arrWebsiteFonts =  accessWebsiteFont.getWebsiteThemeFonts(  allWebsiteThemeRequestBean);
 
                 websiteThemResponseBean.setArrWebsiteTheme( arrWebsiteTheme );
                 websiteThemResponseBean.setArrWebsiteColors( arrWebsiteColors );
-                websiteThemResponseBean.setArrWebsiteFont( arrWebsiteFont );
+                websiteThemResponseBean.setArrWebsiteFont( arrWebsiteFonts );
             }
         }
         return websiteThemResponseBean;

@@ -1,20 +1,15 @@
 package com.events.proc.event.website;
 
-import com.events.bean.common.FeatureBean;
-import com.events.bean.event.website.AllWebsiteThemeRequestBean;
-import com.events.bean.event.website.EventWebsiteBean;
-import com.events.bean.event.website.EventWebsiteRequestBean;
-import com.events.bean.event.website.WebsiteThemResponseBean;
+import com.events.bean.event.website.*;
 import com.events.bean.users.UserBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
-import com.events.common.feature.Feature;
-import com.events.common.feature.FeatureType;
 import com.events.common.security.DataSecurityChecker;
-import com.events.data.event.website.AccessEventWebsiteData;
 import com.events.event.website.AccessEventWebsite;
+import com.events.event.website.AccessWebsiteColor;
+import com.events.event.website.AccessWebsiteFont;
 import com.events.event.website.AccessWebsiteThemes;
 import com.events.json.*;
 import org.json.JSONObject;
@@ -31,11 +26,11 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 2/18/14
- * Time: 4:02 PM
+ * Date: 2/19/14
+ * Time: 3:31 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadEventWebsiteTheme  extends HttpServlet {
+public class ProcLoadThemeColorsAndFonts  extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,60 +47,61 @@ public class ProcLoadEventWebsiteTheme  extends HttpServlet {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
                     String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
                     if(!Utility.isNullOrEmpty(sEventId)) {
-                        FeatureBean featureBean = new FeatureBean();
-                        featureBean.setFeatureType(FeatureType.event_website_id);
-                        featureBean.setEventId( sEventId );
+                        EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
+                        eventWebsiteRequestBean.setEventId( sEventId );
 
-                        Feature feature = new Feature();
-                        FeatureBean featureBeanFromDB = feature.getFeature( featureBean );
-                        Integer iNumOfWebsiteThemes = 0;
-                        if(featureBeanFromDB!=null && !Utility.isNullOrEmpty(featureBeanFromDB.getFeatureId() )&& !Utility.isNullOrEmpty(featureBeanFromDB.getValue() )) {
+                        AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
+                        EventWebsiteBean eventWebsiteBean = accessEventWebsite.getEventWebsite(eventWebsiteRequestBean);
+                        if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
+                            AllWebsiteThemeRequestBean allWebsiteThemeRequestBean = new AllWebsiteThemeRequestBean();
+                            allWebsiteThemeRequestBean.setWebsiteThemeId( eventWebsiteBean.getWebsiteThemeId() );
 
-                            EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
-                            eventWebsiteRequestBean.setEventId(sEventId);
+                            AccessWebsiteThemes accessWebsiteThemes = new AccessWebsiteThemes();
+                            WebsiteThemResponseBean websiteThemResponseBean = accessWebsiteThemes.getEventWebsiteThemeDetail( allWebsiteThemeRequestBean );
 
-                            AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
-                            EventWebsiteBean eventWebsiteBean = accessEventWebsite.getEventWebsite(eventWebsiteRequestBean);
-
-                            if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())){
-                                AllWebsiteThemeRequestBean allWebsiteThemeRequestBean = new AllWebsiteThemeRequestBean();
-                                allWebsiteThemeRequestBean.setWebsiteThemeId(  eventWebsiteBean.getWebsiteThemeId() );
-
-                                AccessWebsiteThemes accessWebsiteThemes = new AccessWebsiteThemes();
-                                WebsiteThemResponseBean websiteThemResponseBean = accessWebsiteThemes.getEventWebsiteThemeDetail( allWebsiteThemeRequestBean );
-
-
-                                if(websiteThemResponseBean!=null && websiteThemResponseBean.getArrWebsiteTheme()!=null && !websiteThemResponseBean.getArrWebsiteTheme().isEmpty()) {
-                                    JSONObject jsonAllWebsiteTheme = accessWebsiteThemes.getAllWebsiteThemeJson(  websiteThemResponseBean );
-                                    if(jsonAllWebsiteTheme!=null){
-                                        iNumOfWebsiteThemes = jsonAllWebsiteTheme.optInt("num_of_themes");
-                                        if(iNumOfWebsiteThemes>0) {
-                                            jsonResponseObj.put("website_themes" , jsonAllWebsiteTheme);
-                                        }
-                                    }
+                            if( websiteThemResponseBean !=null) {
+                                ArrayList<WebsiteThemeBean> arrWebsiteTheme = websiteThemResponseBean.getArrWebsiteTheme();
+                                for( WebsiteThemeBean websiteThemeBean : arrWebsiteTheme )  {
+                                    jsonResponseObj.put("theme" , websiteThemeBean.toJson() );
                                 }
-                                jsonResponseObj.put("event_website" , eventWebsiteBean.toJson()) ;
+
+                                ArrayList<WebsiteColorBean> arrWebsiteColors = websiteThemResponseBean.getArrWebsiteColors();
+                                AccessWebsiteColor accessWebsiteColor = new AccessWebsiteColor();
+                                JSONObject jsonThemeColors = accessWebsiteColor.getWebsiteThemeColorsJson( arrWebsiteColors );
+                                Integer iNumOfColors = 0;
+                                if(jsonThemeColors!=null){
+                                    iNumOfColors = jsonThemeColors.optInt("num_of_colors");
+                                    jsonResponseObj.put("colors" , jsonThemeColors );
+                                }
+                                jsonResponseObj.put("num_of_colors" , iNumOfColors );
+
+
+                                ArrayList<WebsiteFontBean> arrWebsiteFonts =  websiteThemResponseBean.getArrWebsiteFont();
+                                AccessWebsiteFont accessWebsiteFont = new AccessWebsiteFont();
+                                JSONObject jsonThemeFonts = accessWebsiteFont.getWebsiteThemeFontsJson( arrWebsiteFonts );
+                                Integer iNumOfFonts = 0;
+                                if(jsonThemeFonts!=null){
+                                    iNumOfFonts = jsonThemeFonts.optInt("num_of_fonts");
+                                    jsonResponseObj.put("fonts" , jsonThemeFonts );
+                                }
+                                jsonResponseObj.put("num_of_fonts" , iNumOfFonts );
+
                             }
 
+                            jsonResponseObj.put("event_website",eventWebsiteBean.toJson());
 
-
-                            if(iNumOfWebsiteThemes>0){
-                                Text okText = new OkText("Website Themes loaded","status_mssg") ;
-                                arrOkText.add(okText);
-                                responseStatus = RespConstants.Status.OK;
-                            } else {
-                                Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later,.(loadEventWebThemes - 004)","err_mssg") ;
-                                arrErrorText.add(errorText);
-
-                                responseStatus = RespConstants.Status.ERROR;
-                            }
-
-                        } else {
-                            Text okText = new OkText("Please select a theme for this event's website.","status_mssg") ;
+                            Text okText = new OkText("Website Themes loaded","status_mssg") ;
                             arrOkText.add(okText);
                             responseStatus = RespConstants.Status.OK;
+
+                        } else {
+                            Text errorText = new ErrorText("Please select a theme for this website. We were unable to load the colors and fonts.","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
                         }
-                        jsonResponseObj.put("num_of_themes" , iNumOfWebsiteThemes );
+
+
                     } else {
                         Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventWebThemes - 003)","err_mssg") ;
                         arrErrorText.add(errorText);
