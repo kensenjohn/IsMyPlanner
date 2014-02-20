@@ -84,11 +84,6 @@ public class ProcSaveEventWebsiteTheme  extends HttpServlet {
                             responseStatus = RespConstants.Status.ERROR;
                         }
 
-
-
-
-
-
                     } else {
                         Text errorText = new ErrorText("Oops!! We were unable to select this theme. Please try again later.(saveEventWebThemes - 003)","err_mssg") ;
                         arrErrorText.add(errorText);

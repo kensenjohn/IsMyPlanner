@@ -1,15 +1,15 @@
 package com.events.proc.event.website;
 
+import com.events.bean.event.website.EventWebsiteBean;
+import com.events.bean.event.website.EventWebsiteRequestBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.json.ErrorText;
-import com.events.json.RespConstants;
-import com.events.json.RespObjectProc;
-import com.events.json.Text;
+import com.events.event.website.BuildEventWebsite;
+import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,17 +44,45 @@ public class ProcSaveEventWebsiteColorsAndFonts  extends HttpServlet {
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
                     String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
-                    if(!Utility.isNullOrEmpty(sEventId)) {
+                    String sEventWebsiteId =  ParseUtil.checkNull(request.getParameter("event_website_id"));
+                    String sId =  ParseUtil.checkNull(request.getParameter("id"));
+                    String sType =  ParseUtil.checkNull(request.getParameter("type"));
+                    if(!Utility.isNullOrEmpty(sEventId) && !Utility.isNullOrEmpty(sEventWebsiteId) && !Utility.isNullOrEmpty(sId)
+                            && !Utility.isNullOrEmpty(sType) &&
+                            ( Constants.EVENT_WEBSITE_PARAMS.color.toString().equalsIgnoreCase(sType) || Constants.EVENT_WEBSITE_PARAMS.font.toString().equalsIgnoreCase(sType)) )   {
+                        EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
+                        eventWebsiteRequestBean.setUserId( sUserId );
+                        eventWebsiteRequestBean.setEventId( sEventId );
+                        eventWebsiteRequestBean.setEventWebsiteId( sEventWebsiteId );
+
+                        if(Constants.EVENT_WEBSITE_PARAMS.color.toString().equalsIgnoreCase(sType)) {
+                            eventWebsiteRequestBean.setWebsiteColorId( sId );
+                        } else if(Constants.EVENT_WEBSITE_PARAMS.font.toString().equalsIgnoreCase(sType)) {
+                            eventWebsiteRequestBean.setWebsiteFontId( sId);
+                        }
+
+                        BuildEventWebsite buildEventWebsite = new BuildEventWebsite();
+                        EventWebsiteBean eventWebsiteBean = buildEventWebsite.saveEventWebsite( eventWebsiteRequestBean );
+                        if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
+                            Text okText = new OkText("The event website theme was successfully set","status_mssg") ;
+                            arrOkText.add(okText);
+                            responseStatus = RespConstants.Status.OK;
+                        } else {
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please refresh the screen and try again later.(saveFontColor - 004)","err_mssg") ;
+                            arrErrorText.add(errorText);
+                            responseStatus = RespConstants.Status.ERROR;
+                        }
+
 
                     } else {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventWebThemes - 003)","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveFontColor - 003)","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
                     }
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventWebThemes - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveFontColor - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -68,7 +96,7 @@ public class ProcSaveEventWebsiteColorsAndFonts  extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventWebThemes - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveFontColor - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

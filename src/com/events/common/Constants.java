@@ -417,4 +417,7 @@ public class Constants {
             this.id = id;
         }
     }
+    public enum EVENT_WEBSITE_PARAMS {
+        theme,font,color;
+    }
 }

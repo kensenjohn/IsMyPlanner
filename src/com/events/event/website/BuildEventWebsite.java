@@ -16,12 +16,12 @@ import com.events.data.event.website.BuildEventWebsiteData;
 public class BuildEventWebsite {
     public EventWebsiteBean saveEventWebsite(EventWebsiteRequestBean eventWebsiteRequestBean) {
         EventWebsiteBean eventWebsiteBean = new EventWebsiteBean();
-        if(eventWebsiteRequestBean!=null && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getEventId())
-                && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getWebsiteThemId()) ){
+        if(eventWebsiteRequestBean!=null && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getEventId()) ){
 
             AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
             eventWebsiteBean = accessEventWebsite.getEventWebsite( eventWebsiteRequestBean ); // get the current event website bean
-            if(eventWebsiteBean==null || (eventWebsiteBean!=null && Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) ){
+            if(eventWebsiteBean==null || (eventWebsiteBean!=null && Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())
+                    && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getWebsiteThemId()) ) ){
                 // this assumes that there is none so create one from default values
 
 
@@ -42,9 +42,9 @@ public class BuildEventWebsite {
 
             if(Utility.isNullOrEmpty(eventWebsiteRequestBean.getEventWebsiteId())) {
                 eventWebsiteBean.setEventWebsiteId( Utility.getNewGuid() );
-                createEventWebsite(eventWebsiteBean);
+                eventWebsiteBean = createEventWebsite(eventWebsiteBean);
             } else {
-                updateEventWebsite( eventWebsiteBean );
+                eventWebsiteBean = updateEventWebsite( eventWebsiteBean );
             }
         }
         return eventWebsiteBean;
@@ -92,15 +92,15 @@ public class BuildEventWebsite {
             }
 
             if( !Utility.isNullOrEmpty( eventWebsiteRequestBean.getWebsiteFontId())) {
-                eventWebsiteBean.setWebsiteThemeId(  ParseUtil.checkNull(eventWebsiteRequestBean.getWebsiteFontId()) );
+                eventWebsiteBean.setWebsiteFontId(  ParseUtil.checkNull(eventWebsiteRequestBean.getWebsiteFontId()) );
             }
 
             if( !Utility.isNullOrEmpty( eventWebsiteRequestBean.getWebsiteColorId())) {
-                eventWebsiteBean.setWebsiteThemeId(  ParseUtil.checkNull(eventWebsiteRequestBean.getWebsiteColorId()) );
+                eventWebsiteBean.setWebsiteColorId(  ParseUtil.checkNull(eventWebsiteRequestBean.getWebsiteColorId()) );
             }
 
             if( !Utility.isNullOrEmpty( eventWebsiteRequestBean.getUserId())) {
-                eventWebsiteBean.setWebsiteThemeId(  ParseUtil.checkNull(eventWebsiteRequestBean.getUserId()) );
+                eventWebsiteBean.setUserId(  ParseUtil.checkNull(eventWebsiteRequestBean.getUserId()) );
             }
         }
         return eventWebsiteBean;

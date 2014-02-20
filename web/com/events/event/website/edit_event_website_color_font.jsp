@@ -78,6 +78,12 @@
 <form id="frm_load_theme_color_font">
     <input type="hidden" name="event_id" value="<%=sEventId%>"/>
 </form>
+<form id="frm_save_selection">
+    <input type="hidden" name="event_id" value="<%=sEventId%>"/>
+    <input type="hidden" name="type"  id="save_sel_type"  value=""/>
+    <input type="hidden" name="id"  id="save_sel_id" value=""/>
+    <input type="hidden" name="event_website_id" id="save_sel_event_website_id" value=""/>
+</form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
@@ -128,8 +134,14 @@
                     $(this.el).append( createBlankRow() );
                 }
             }
+        },
+        assignEventHandling : function() {
+            for(i = 0; i <this.varNumOfColors; i++) {
+                assignSelectionEvent( this.varColors[i].website_color_id , 'color',  this.varEventWebsite );
+            }
         }
-    });
+
+     });
     var ThemeFontsView = Backbone.View.extend({
         initialize: function(){
             this.varNumOfFonts = this.model.get('bb_num_of_fonts');
@@ -146,6 +158,12 @@
                 $(this.el).append( websiteFontRow );
                 $(this.el).append( createBlankRow() );
                 $(this.el).append( createBlankRow() );
+            }
+        },
+        assignEventHandling : function() {
+            for(i = 0; i <this.varNumOfFonts; i++) {
+                assignSelectionEvent( this.varFonts[i].website_font_id , 'font',  this.varEventWebsite );
+
             }
         }
     });
@@ -179,10 +197,12 @@
                     generateColorsThumbnailModel(varColors,numOfColors,varTheme, varEventWebsite );
                     var themeColorsView = generateColorsThumbnail();
                     $('#theme_colors').html( themeColorsView.el );
+                    themeColorsView.assignEventHandling();
 
                     generateFontsThumbnailModel(varFonts,numOfFonts,varTheme, varEventWebsite );
                     var themeFontsView = generateFontsThumbnail();
                     $('#theme_fonts').html( themeFontsView.el );
+                    themeFontsView.assignEventHandling();
 
                 }
             } else {
@@ -192,6 +212,39 @@
             displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
         }
     }
+    function assignSelectionEvent( varId , varType,  varEventWebsite ) {
+        if(varId!=undefined && varType!=undefined ){
+            $('#' + varId).click( function(){
+                $('#save_sel_event_website_id').val(varEventWebsite.event_website_id);
+                $('#save_sel_type').val( varType );
+                $('#save_sel_id').val(varId);
+                saveColorFontSelection(getResult)
+            });
+        }
+    }
+    function saveColorFontSelection(callbackmethod) {
+        var actionUrl = "/proc_save_event_website_color_and_font.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_save_selection").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function getResult(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                //displayMssgBoxAlert('The theme was successfully selected.', false);
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
+    }
+
+
+
 
     function generateColorsThumbnailModel( varColors , numOfColors , varTheme,  varEventWebsite ) {
         this.themeColorsModel = new ThemeColorsModel();
