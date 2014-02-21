@@ -516,4 +516,8 @@ ul.tabs li.active, html ul.tabs li.active a,  html ul.tabs li.active a:hover  {
     padding: 4px;
 }
 
+/** Color **/
+.red { color: #CA3E3D;}
+.green { color: #0AA65B;}
+
 

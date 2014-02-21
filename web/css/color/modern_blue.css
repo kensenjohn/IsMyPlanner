@@ -224,5 +224,19 @@ html ul.tabs li.active a:hover {
     border: 1px solid #3F9CFF;
 }
 
+/** Switch **/
+.bootstrap-switch>div>span.bootstrap-switch-primary {
+    color: #fff;
+    background: #3F9CFF;
+}
+
+bootstrap-switch.bootstrap-switch-focused {
+    border-color: #3F9CFF;
+    outline: none;
+    -webkit-box-shadow: #3F9CFF;
+    box-shadow: #3F9CFF;
+    outline: none;
+}
+
 
 
