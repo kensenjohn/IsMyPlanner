@@ -1,4 +1,5 @@
 <%@ page import="com.events.common.ParseUtil" %>
+<%@ page import="com.events.common.Constants" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -85,9 +86,32 @@
     <input type="hidden" name="event_website_id" id="save_sel_event_website_id" value=""/>
 </form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
+<script id="template_font_name" type="text/x-handlebars-template">
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="row">
+
+                <div class="col-md-1" style="text-align:center;">
+                    <input type="radio" id="{{website_font_id}}" name="fonts" {{#if is_font_selected}} checked {{/if}}>
+                </div>
+
+                <div class="col-md-9"><img class="img-thumbnail" src="/com/events/event/website/static_templates/{{name}}/img/{{font_name}}.png">
+                </div>
+
+                <div class="col-md-2"><h4>{{font_name}}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script src="/js/handlebars-v1.3.0.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 <script type="text/javascript">
+
     var ThemeColorFontModel = Backbone.Model.extend({
         urlRoot: '/proc_load_theme_colors_and_fonts.aeve'
     });
@@ -148,11 +172,29 @@
             this.varFonts = this.model.get('bb_fonts');
             this.varEventWebsite = this.model.get('bb_event_website');
             this.varTheme = this.model.get('bb_theme');
+            console.log( $('#template_font_name').html() );
         },
+        events : {
+            "click input[name='fonts']" : 'assignEventHandling'
+        },
+        template : Handlebars.compile( $('#template_font_name').html() ),
         render:function(){
             for(i = 0; i <this.varNumOfFonts; i++) {
                 var websiteFontRow = $('<div>').addClass('row');
-                var fontColumn =  createFontThumbnail( this.varFonts[i] , this.varTheme , this.varEventWebsite ) ;
+                console.log( 'this.varTheme.name : ' + this.varTheme.name);
+                //var fontColumn =  createFontThumbnail( this.varFonts[i] , this.varTheme , this.varEventWebsite ) ;
+                var isFontSelected = false;
+                if(this.varFonts[i].website_font_id == this.varEventWebsite.website_font_id)  {
+                    isFontSelected = true;
+                }
+                var newModel = {
+                    "name" : this.varTheme.name ,
+                    "website_font_id" :this.varFonts[i].website_font_id,
+                    "font_name" : this.varFonts[i].font_name,
+                    "is_font_selected" : isFontSelected
+                }
+                console.log(  newModel );
+                var fontColumn = this.template(  eval(newModel)  );
                 websiteFontRow.append(fontColumn);
 
                 $(this.el).append( websiteFontRow );
@@ -160,11 +202,17 @@
                 $(this.el).append( createBlankRow() );
             }
         },
-        assignEventHandling : function() {
-            for(i = 0; i <this.varNumOfFonts; i++) {
+        assignEventHandling : function(event) {
+            //console.log($(event.target).val() + ' ---'+ $(event.target).attr('id'));
+            $('#save_sel_event_website_id').val(this.varEventWebsite.event_website_id);
+            $('#save_sel_type').val( '<%=Constants.EVENT_WEBSITE_PARAMS.font%>' );
+            $('#save_sel_id').val( $(event.target).attr('id'));
+            saveColorFontSelection(getResult)
+
+            /*for(i = 0; i <this.varNumOfFonts; i++) {
                 assignSelectionEvent( this.varFonts[i].website_font_id , 'font',  this.varEventWebsite );
 
-            }
+            }*/
         }
     });
 
@@ -202,7 +250,7 @@
                     generateFontsThumbnailModel(varFonts,numOfFonts,varTheme, varEventWebsite );
                     var themeFontsView = generateFontsThumbnail();
                     $('#theme_fonts').html( themeFontsView.el );
-                    themeFontsView.assignEventHandling();
+                    //themeFontsView.assignEventHandling();
 
                 }
             } else {
@@ -247,18 +295,20 @@
 
 
     function generateColorsThumbnailModel( varColors , numOfColors , varTheme,  varEventWebsite ) {
-        this.themeColorsModel = new ThemeColorsModel();
-        this.themeColorsModel.set('bb_colors' , varColors );
-        this.themeColorsModel.set('bb_num_of_colors' , numOfColors );
-        this.themeColorsModel.set('bb_theme' , varTheme );
-        this.themeColorsModel.set('bb_event_website' , varEventWebsite );
+        this.themeColorsModel = new ThemeColorsModel({
+            'bb_colors' : varColors,
+            'bb_num_of_colors' : numOfColors,
+            'bb_theme' : varTheme,
+            'bb_event_website' : varEventWebsite
+        });
     }
     function generateFontsThumbnailModel( varFonts , numOfFonts , varTheme,  varEventWebsite ) {
-        this.themeFontsModel = new ThemeFontsModel();
-        this.themeFontsModel.set('bb_fonts' , varFonts );
-        this.themeFontsModel.set('bb_num_of_fonts' , numOfFonts );
-        this.themeFontsModel.set('bb_theme' , varTheme );
-        this.themeFontsModel.set('bb_event_website' , varEventWebsite );
+        this.themeFontsModel = new ThemeFontsModel({
+            'bb_fonts' : varFonts,
+            'bb_num_of_fonts' : numOfFonts,
+            'bb_theme' : varTheme,
+            'bb_event_website' : varEventWebsite
+        });
     }
     function generateColorsThumbnail( ) {
 
@@ -275,7 +325,7 @@
     }
 
     function createFontThumbnail(font , theme,  event_website) {
-        var varName =createFontName(font)
+        var varName =createFontName(font);
         var varImg = createFontImage(font, theme);
         var varRadioButton = createRadioButton(font.website_font_id , event_website.website_font_id, 'fonts' );
 
