@@ -420,4 +420,8 @@ public class Constants {
     public enum EVENT_WEBSITE_PARAMS {
         theme,font,color;
     }
+
+    public enum EVENT_WEBSITE_PAGE_FEATURETYPE{
+        caption_title, caption_tag_line,invite_name,none;
+    }
 }

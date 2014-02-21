@@ -56,6 +56,7 @@ public class ProcSaveEventWebsiteTheme  extends HttpServlet {
                         EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
                         eventWebsiteRequestBean.setEventId( sEventId );
                         eventWebsiteRequestBean.setWebsiteThemId( sWebsiteThemeId );
+                        eventWebsiteRequestBean.setUserId( sUserId );
 
                         BuildEventWebsite buildEventWebsite = new BuildEventWebsite();
                         EventWebsiteBean eventWebsiteBean = buildEventWebsite.saveEventWebsite( eventWebsiteRequestBean );

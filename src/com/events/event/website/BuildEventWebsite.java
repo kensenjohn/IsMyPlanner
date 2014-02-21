@@ -1,10 +1,15 @@
 package com.events.event.website;
 
 import com.events.bean.event.website.*;
+import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.data.event.website.AccessEventWebsiteData;
 import com.events.data.event.website.BuildEventWebsiteData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +19,8 @@ import com.events.data.event.website.BuildEventWebsiteData;
  * To change this template use File | Settings | File Templates.
  */
 public class BuildEventWebsite {
+
+    private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     public EventWebsiteBean saveEventWebsite(EventWebsiteRequestBean eventWebsiteRequestBean) {
         EventWebsiteBean eventWebsiteBean = new EventWebsiteBean();
         if(eventWebsiteRequestBean!=null && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getEventId()) ){
@@ -43,6 +50,15 @@ public class BuildEventWebsite {
             if(Utility.isNullOrEmpty(eventWebsiteRequestBean.getEventWebsiteId())) {
                 eventWebsiteBean.setEventWebsiteId( Utility.getNewGuid() );
                 eventWebsiteBean = createEventWebsite(eventWebsiteBean);
+                if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
+                    AccessEventWebsitePage accessEventWebsitePage = new AccessEventWebsitePage();
+                    ArrayList<EventWebsitePageBean> arrEventWebsitePageBean = accessEventWebsitePage.getEventWebsitePage( eventWebsiteBean ) ;
+                    if(arrEventWebsitePageBean == null || (arrEventWebsitePageBean!=null && arrEventWebsitePageBean.isEmpty()) ) {
+                        ArrayList<ThemePageBean> arrThemePageBean = getThemePages( eventWebsiteBean );
+                        ArrayList<EventWebsitePageBean> arrEventWebsitePage = createDefaultEventWebsitePages(arrThemePageBean, eventWebsiteBean );
+                    }
+
+                }
             } else {
                 eventWebsiteBean = updateEventWebsite( eventWebsiteBean );
             }
@@ -104,5 +120,80 @@ public class BuildEventWebsite {
             }
         }
         return eventWebsiteBean;
+    }
+    private  ArrayList<ThemePageBean> getThemePages(EventWebsiteBean eventWebsiteBean) {
+        ArrayList<ThemePageBean> arrThemePageBean = new ArrayList<ThemePageBean>();
+        if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getWebsiteThemeId())){
+            AllWebsiteThemeRequestBean allWebsiteThemeRequestBean = new AllWebsiteThemeRequestBean();
+            allWebsiteThemeRequestBean.setWebsiteThemeId(  eventWebsiteBean.getWebsiteThemeId() );
+
+            AccessThemeWebsitePage accessThemeWebsitePage = new AccessThemeWebsitePage();
+            arrThemePageBean = accessThemeWebsitePage.getThemePage( allWebsiteThemeRequestBean );
+        }
+        return arrThemePageBean;
+    }
+
+    private ArrayList<EventWebsitePageBean> createDefaultEventWebsitePages(ArrayList<ThemePageBean> arrThemePageBean , EventWebsiteBean eventWebsiteBean){
+        ArrayList<EventWebsitePageBean> arrEventWebsitePage = new ArrayList<EventWebsitePageBean>();
+        if(eventWebsiteBean!=null){
+
+            if(arrThemePageBean!=null && !arrThemePageBean.isEmpty()) {
+
+                ThemePageFeature themePageFeature = new ThemePageFeature();
+                ArrayList<EventWebsitePageFeatureBean> arrEventWebsitePageFeatureBean = new ArrayList<EventWebsitePageFeatureBean>();
+                for(ThemePageBean themePageBean : arrThemePageBean){
+
+                    String sNewPageId =  Utility.getNewGuid();
+                    EventWebsitePageBean eventWebsitePageBean = new EventWebsitePageBean();
+                    eventWebsitePageBean.setEventWebsiteId( eventWebsiteBean.getEventWebsiteId() );
+                    eventWebsitePageBean.setWebsiteThemeId( eventWebsiteBean.getWebsiteThemeId() );
+                    eventWebsitePageBean.setEventWebsitePageId( sNewPageId );
+                    eventWebsitePageBean.setShow( themePageBean.isShow() );
+                    eventWebsitePageBean.setType( themePageBean.getType() );
+
+                    arrEventWebsitePage.add( eventWebsitePageBean );
+
+
+                    ArrayList<ThemePageFeatureBean> arrMultipleFeatureBean =  themePageFeature.getMultipleFeatures(new ArrayList<ThemePageFeatureBean>(), themePageBean.getThemePageId() );
+
+                    if(arrMultipleFeatureBean!=null && !arrMultipleFeatureBean.isEmpty()) {
+                        for(ThemePageFeatureBean themePageFeatureBean : arrMultipleFeatureBean ){
+                            EventWebsitePageFeatureBean eventWebsitePageFeatureBean = new EventWebsitePageFeatureBean();
+                            eventWebsitePageFeatureBean.setUserId( eventWebsiteBean.getUserId() );
+                            eventWebsitePageFeatureBean.setEventWebsitePageId( sNewPageId );
+                            eventWebsitePageFeatureBean.setEventWebsitePageFeatureId( Utility.getNewGuid() );
+                            eventWebsitePageFeatureBean.setFeatureDescription( themePageFeatureBean.getFeatureDescription() );
+                            eventWebsitePageFeatureBean.setFeatureName( themePageFeatureBean.getFeatureName() );
+                            eventWebsitePageFeatureBean.setFeatureType( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.valueOf( themePageFeatureBean.getFeatureName()  ));
+                            eventWebsitePageFeatureBean.setValue( themePageFeatureBean.getValue() );
+
+
+                            arrEventWebsitePageFeatureBean.add( eventWebsitePageFeatureBean );
+
+                        }
+                    }
+
+                }
+
+                if(arrEventWebsitePageFeatureBean!=null && !arrEventWebsitePageFeatureBean.isEmpty() ){
+                    EventWebsitePageFeature eventWebsitePageFeature = new EventWebsitePageFeature();
+                    for(EventWebsitePageFeatureBean eventWebsitePageFeatureBean : arrEventWebsitePageFeatureBean){
+                        eventWebsitePageFeature.setFeatureValue(eventWebsitePageFeatureBean);
+                    }
+
+                }
+
+                if(arrEventWebsitePage!=null && !arrEventWebsitePage.isEmpty() ) {
+                    BuildEventWebsitePage buildEventWebsitePage = new BuildEventWebsitePage();
+                    Integer iNumOfPagesInserted = buildEventWebsitePage.createEventWebsitePage( arrEventWebsitePage );
+                    if(iNumOfPagesInserted!=arrThemePageBean.size()) {
+                        appLogging.error("There was error inserting Theme pages for Event Website : " + eventWebsiteBean );
+                        buildEventWebsitePage.deleteEventWebsitePage(arrEventWebsitePage);
+                        arrEventWebsitePage = new ArrayList<EventWebsitePageBean>();
+                    }
+                }
+            }
+        }
+        return arrEventWebsitePage;
     }
 }
