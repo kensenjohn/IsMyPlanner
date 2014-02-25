@@ -7,6 +7,8 @@ import com.events.bean.event.EventRequestBean;
 import com.events.bean.event.EventResponseBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
+import com.events.common.Utility;
+import com.events.common.feature.Feature;
 import com.events.common.feature.FeatureType;
 import com.events.data.event.AccessEventData;
 import com.events.data.feature.FeatureData;
@@ -75,5 +77,18 @@ public class AccessEvent {
             }
         }
         return eventDisplayDateBean;
+    }
+
+    public FeatureBean getFeatureValue(EventRequestBean eventRequestBean ,FeatureType featureType ){
+        FeatureBean featureBean = new FeatureBean();
+        if(eventRequestBean!=null && !Utility.isNullOrEmpty(eventRequestBean.getEventId()) && featureType!=null ) {
+
+            featureBean.setEventId( eventRequestBean.getEventId() );
+            featureBean.setFeatureType( featureType );
+
+            Feature feature  = new Feature();
+            featureBean = feature.getFeature( featureBean );
+        }
+        return featureBean;
     }
 }

@@ -29,10 +29,12 @@ public class EventWebsitePageFeature {
         }
         return eventEventWebsitePageFeatureBeanFromDB;
     }
-
+    public ArrayList<EventWebsitePageFeatureBean> getMultipleFeatures( String sEventWebsitePageId) {
+        return getMultipleFeatures(new ArrayList<EventWebsitePageFeatureBean>() , sEventWebsitePageId) ;
+    }
     public ArrayList<EventWebsitePageFeatureBean> getMultipleFeatures(ArrayList<EventWebsitePageFeatureBean> arrEventWebsitePageFeatureBean,  String sEventWebsitePageId) {
         ArrayList<EventWebsitePageFeatureBean> arrMultipleFeatureBean = new ArrayList<EventWebsitePageFeatureBean>();
-        if(arrEventWebsitePageFeatureBean!=null && !arrEventWebsitePageFeatureBean.isEmpty()) {
+        if(arrEventWebsitePageFeatureBean!=null) {
             EventWebsitePageFeatureData eventWebsitePageFeatureData = new EventWebsitePageFeatureData();
             arrMultipleFeatureBean = eventWebsitePageFeatureData.getMultipleFeatures(arrEventWebsitePageFeatureBean , sEventWebsitePageId );
         }

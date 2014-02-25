@@ -32,7 +32,7 @@ public class AccessEventWebsitePageData {
             String sQuery = "SELECT * FROM GTEVENTWEBSITEPAGE WHERE FK_EVENTWEBSITEID = ? AND FK_WEBSITETHEMEID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint( eventWebsiteBean.getEventWebsiteId() , eventWebsiteBean.getWebsiteThemeId());
 
-            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventWebsiteData.java", "getEventWebsite()");
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventWebsitePageData.java", "getEventWebsitePage()");
             if(arrResult!=null && !arrResult.isEmpty()){
                 for(HashMap<String, String> hmResult : arrResult ) {
                     EventWebsitePageBean eventWebsitePageBean = new EventWebsitePageBean(hmResult);
@@ -41,5 +41,22 @@ public class AccessEventWebsitePageData {
             }
         }
         return arrEventWebsitePageBean;
+    }
+
+    public EventWebsitePageBean getEventWebsitePageByType(EventWebsitePageBean eventWebsitePageBean) {
+        EventWebsitePageBean eventWebsitePageBeanFromDB = new EventWebsitePageBean();
+        if(eventWebsitePageBean!=null && !Utility.isNullOrEmpty(eventWebsitePageBean.getEventWebsiteId())
+                && !Utility.isNullOrEmpty(eventWebsitePageBean.getWebsiteThemeId()) && !Utility.isNullOrEmpty(eventWebsitePageBean.getType())) {
+            String sQuery = "SELECT * FROM GTEVENTWEBSITEPAGE WHERE FK_EVENTWEBSITEID = ? AND FK_WEBSITETHEMEID = ? AND TYPE = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint( eventWebsitePageBean.getEventWebsiteId() , eventWebsitePageBean.getWebsiteThemeId(), eventWebsitePageBean.getType() );
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventWebsitePageData.java", "getEventWebsitePageByType()");
+            if(arrResult!=null && !arrResult.isEmpty()){
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    eventWebsitePageBeanFromDB = new EventWebsitePageBean(hmResult);
+                }
+            }
+        }
+        return eventWebsitePageBeanFromDB;
     }
 }

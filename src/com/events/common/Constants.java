@@ -422,6 +422,6 @@ public class Constants {
     }
 
     public enum EVENT_WEBSITE_PAGE_FEATURETYPE{
-        caption_title, caption_tag_line,invite_name,none;
+        caption_title, caption_tag_line,none, banner_image_name,invite_name,invite_text,invite_date,invite_location_name,invite_address;
     }
 }

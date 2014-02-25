@@ -24,4 +24,16 @@ public class AccessEventWebsitePage {
         }
         return arrEventWebsitePageBean;
     }
+
+    public EventWebsitePageBean getEventWebsitePageByType(EventWebsitePageBean eventWebsitePageBeanReg) {
+        EventWebsitePageBean eventWebsitePageBean = new EventWebsitePageBean();
+        if(eventWebsitePageBeanReg!=null && !Utility.isNullOrEmpty(eventWebsitePageBeanReg.getEventWebsiteId())
+                && !Utility.isNullOrEmpty(eventWebsitePageBeanReg.getWebsiteThemeId()) && !Utility.isNullOrEmpty(eventWebsitePageBeanReg.getType())) {
+            AccessEventWebsitePageData accessEventWebsitePageData = new AccessEventWebsitePageData();
+            eventWebsitePageBean = accessEventWebsitePageData.getEventWebsitePageByType(eventWebsitePageBeanReg );
+        }
+        return eventWebsitePageBean;
+    }
+
+
 }

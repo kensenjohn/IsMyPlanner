@@ -1,12 +1,18 @@
 package com.events.users;
 
+import com.events.bean.clients.ClientBean;
+import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.users.*;
+import com.events.bean.vendors.VendorBean;
+import com.events.bean.vendors.VendorRequestBean;
+import com.events.clients.AccessClients;
 import com.events.common.Constants;
 import com.events.common.DateSupport;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.users.EditUserException;
 import com.events.data.users.AccessUserData;
+import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,5 +157,33 @@ public class AccessUsers {
             jsonObject.put("num_of_userbean", iNumOfUserBeanObjs);
         }
         return jsonObject;
+    }
+    public VendorBean getVendorFromUser(UserBean userBean){
+        VendorBean vendorBean = new VendorBean();
+        if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId())) {
+            String sVendorId = Constants.EMPTY;
+            if(Constants.USER_TYPE.VENDOR.equals( userBean.getUserType() )) {
+                sVendorId = userBean.getParentId();
+
+            } else if(Constants.USER_TYPE.CLIENT.equals( userBean.getUserType())) {
+                ClientRequestBean clientRequestBean = new ClientRequestBean();
+                clientRequestBean.setClientId( userBean.getParentId() );
+
+                AccessClients accessClients = new AccessClients();
+                ClientBean clientBean = accessClients.getClientData( clientRequestBean );
+                if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getVendorId())) {
+                    sVendorId = ParseUtil.checkNull(clientBean.getVendorId());
+                }
+            }
+
+            if(!Utility.isNullOrEmpty(sVendorId)){
+                VendorRequestBean vendorRequestBean = new VendorRequestBean();
+                vendorRequestBean.setVendorId( sVendorId );
+
+                AccessVendors accessVendors = new AccessVendors();
+                vendorBean = accessVendors.getVendor(vendorRequestBean);
+            }
+        }
+        return  vendorBean;
     }
 }

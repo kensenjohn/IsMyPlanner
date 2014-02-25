@@ -30,6 +30,9 @@ public class ThemePageFeature {
         return themePageFeatureBeanFromDB;
     }
 
+    public ArrayList<ThemePageFeatureBean> getMultipleFeatures( String sThemePageId) {
+        return getMultipleFeatures(new ArrayList<ThemePageFeatureBean>() , sThemePageId) ;
+    }
     public ArrayList<ThemePageFeatureBean> getMultipleFeatures(ArrayList<ThemePageFeatureBean> arrThemePageFeatureBean,  String sThemePageId) {
         ArrayList<ThemePageFeatureBean> arrMultipleFeatureBean = new ArrayList<ThemePageFeatureBean>();
         if(arrThemePageFeatureBean!=null ) {

@@ -68,7 +68,9 @@ public class ProcUploadImage extends HttpServlet {
                 List<FileItem> items = uploadHandler.parseRequest(request);
                 if(items!=null){
                     for (FileItem item : items) {
-                        if (!item.isFormField()) {
+                        if (item.isFormField()) {
+                            //place to read other parameters
+                        } else if (!item.isFormField()) {
                             Folder folder = new Folder();
                             String sUserFolderName = folder.getFolderForUser( loggedInUserBean, imageUploadLocation );
                             String sFolderPath = imageUploadLocation + "/" + sUserFolderName ;
@@ -91,17 +93,11 @@ public class ProcUploadImage extends HttpServlet {
                                 arrOkText.add(okText);
                                 responseStatus = RespConstants.Status.OK;
 
-                                JSONObject jsono = new JSONObject();
-                                jsono.put("name", sRandomFilename );
-                                jsono.put("foldername", sUserFolderName );
-                                jsono.put("imagehost", imageHost );
-                                jsono.put("size", item.getSize());
-                                jsono.put("success", true );
-                                jsono.put("upload_image", jsonResponseObj );
-                                jsono.put("url", "UploadServlet?getfile=" + item.getName());
-                                jsono.put("thumbnail_url", "UploadServlet?getthumb=" + item.getName());
-                                jsono.put("delete_url", "UploadServlet?delfile=" + item.getName());
-                                jsono.put("delete_type", "GET");
+                                uploadRequestBean.setFolderName(sUserFolderName);
+                                uploadRequestBean.setImageHost( imageHost );
+                                uploadRequestBean.setImageSize( item.getSize() );
+                                uploadRequestBean.setJsonResponseObj(jsonResponseObj );
+                                JSONObject jsono = UploadFile.generateSuccessUploadJson(uploadRequestBean);
                                 json.put(jsono);
                             }else {
                                 appLogging.info("There was error uploading file" + uploadRequestBean );

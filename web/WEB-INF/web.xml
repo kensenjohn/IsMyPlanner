@@ -205,6 +205,14 @@
         <servlet-name>Process Upload Image</servlet-name>
         <url-pattern>/proc_upload_image.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Upload Event Image</servlet-name>
+        <servlet-class>com.events.proc.upload.ProcUploadEventImage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Upload Event Image</servlet-name>
+        <url-pattern>/proc_upload_event_image.aeve</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>Process Send Reset Password Link</servlet-name>
@@ -497,6 +505,24 @@
     <servlet-mapping>
         <servlet-name>Process Save Event Website Color And Font</servlet-name>
         <url-pattern>/proc_save_event_website_color_and_font.aeve</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>Process Load Website Page Data</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcLoadEventWebsitePageRecords</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Website Page Data</servlet-name>
+        <url-pattern>/proc_load_website_page_data.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Website Page</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcSaveEventWebsitePage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Website Page</servlet-name>
+        <url-pattern>/proc_save_event_website_page.aeve</url-pattern>
     </servlet-mapping>
 
 

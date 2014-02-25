@@ -30,7 +30,7 @@ public class EventWebsitePageFeatureBean {
     public EventWebsitePageFeatureBean(){}
     public EventWebsitePageFeatureBean(HashMap<String, String> hmResult) {
         this.eventWebsitePageFeatureId = ParseUtil.checkNull(hmResult.get("EVENTWEBSITEPAGEFEATUREID"));
-        this.eventWebsitePageId = ParseUtil.checkNull(hmResult.get("EVENTWEBSITEPAGEID"));
+        this.eventWebsitePageId = ParseUtil.checkNull(hmResult.get("FK_EVENTWEBSITEPAGEID"));
         this.featureDescription = ParseUtil.checkNull(hmResult.get("FEATUREDESCRIPTION"));
         this.featureName = ParseUtil.checkNull(hmResult.get("FEATURENAME"));
         this.value = ParseUtil.checkNull(hmResult.get("VALUE"));

@@ -154,7 +154,7 @@ public class BuildEventWebsite {
                     arrEventWebsitePage.add( eventWebsitePageBean );
 
 
-                    ArrayList<ThemePageFeatureBean> arrMultipleFeatureBean =  themePageFeature.getMultipleFeatures(new ArrayList<ThemePageFeatureBean>(), themePageBean.getThemePageId() );
+                    ArrayList<ThemePageFeatureBean> arrMultipleFeatureBean =  themePageFeature.getMultipleFeatures(themePageBean.getThemePageId() );
 
                     if(arrMultipleFeatureBean!=null && !arrMultipleFeatureBean.isEmpty()) {
                         for(ThemePageFeatureBean themePageFeatureBean : arrMultipleFeatureBean ){
@@ -172,6 +172,8 @@ public class BuildEventWebsite {
 
                         }
                     }
+
+
 
                 }
 

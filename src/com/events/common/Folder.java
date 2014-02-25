@@ -73,7 +73,7 @@ public class Folder {
         return sFolderName;
     }
 
-    public boolean isFolderExists(String sFolderPath) {
+    public static boolean isFolderExists(String sFolderPath) {
         boolean isFolderExists = false;
         if(!Utility.isNullOrEmpty(sFolderPath)){
             try{

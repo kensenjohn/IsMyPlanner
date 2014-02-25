@@ -46,8 +46,7 @@ public class EventWebsitePageFeatureData {
         Integer numOfRowsInserted = 0;
         if(eventWebsitePageFeatureBean!=null && !Utility.isNullOrEmpty(eventWebsitePageFeatureBean.getEventWebsitePageFeatureId() ) ){
             String sQuery = "UPDATE GTEVENTWEBSITEPAGEFEATURES SET  VALUE = ? ,MODIFIEDDATE = ?,HUMANMODIFIEDDATE =?   WHERE FEATURENAME = ? AND FK_EVENTWEBSITEPAGEID = ?";
-            ArrayList<Object> aParams = DBDAO.createConstraint( eventWebsitePageFeatureBean.getValue(),
-                    eventWebsitePageFeatureBean.getUserId(), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(),
+            ArrayList<Object> aParams = DBDAO.createConstraint( eventWebsitePageFeatureBean.getValue(), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(),
                     eventWebsitePageFeatureBean.getFeatureType().toString(),eventWebsitePageFeatureBean.getEventWebsitePageId());
 
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "EventWebsitePageFeatureData.java", "updateFeature() ");

@@ -1,6 +1,7 @@
 package com.events.bean.upload;
 
 import com.events.common.Constants;
+import org.json.JSONObject;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,8 +16,46 @@ public class UploadRequestBean {
     private String filename = Constants.EMPTY;
     private String path = Constants.EMPTY;
 
+    private String folderName = Constants.EMPTY;
+    private String imageHost = Constants.EMPTY;
+    private Long imageSize = 0L;
+
+    private JSONObject jsonResponseObj = new JSONObject();
+
+    public JSONObject getJsonResponseObj() {
+        return jsonResponseObj;
+    }
+
+    public void setJsonResponseObj(JSONObject jsonResponseObj) {
+        this.jsonResponseObj = jsonResponseObj;
+    }
+
     public String getUploadId() {
         return uploadId;
+    }
+
+    public String getFolderName() {
+        return folderName;
+    }
+
+    public void setFolderName(String folderName) {
+        this.folderName = folderName;
+    }
+
+    public String getImageHost() {
+        return imageHost;
+    }
+
+    public void setImageHost(String imageHost) {
+        this.imageHost = imageHost;
+    }
+
+    public Long getImageSize() {
+        return imageSize;
+    }
+
+    public void setImageSize(Long imageSize) {
+        this.imageSize = imageSize;
     }
 
     public void setUploadId(String uploadId) {
@@ -39,12 +78,16 @@ public class UploadRequestBean {
         this.path = path;
     }
 
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("UploadRequestBean{");
         sb.append("uploadId='").append(uploadId).append('\'');
         sb.append(", filename='").append(filename).append('\'');
         sb.append(", path='").append(path).append('\'');
+        sb.append(", folderName='").append(folderName).append('\'');
+        sb.append(", imageHost='").append(imageHost).append('\'');
+        sb.append(", imageSize=").append(imageSize);
         sb.append('}');
         return sb.toString();
     }

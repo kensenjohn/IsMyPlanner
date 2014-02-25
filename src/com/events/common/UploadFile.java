@@ -4,6 +4,7 @@ import com.events.bean.upload.UploadBean;
 import com.events.bean.upload.UploadRequestBean;
 import com.events.bean.upload.UploadResponseBean;
 import com.events.data.upload.UploadFileData;
+import org.json.JSONObject;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,4 +41,34 @@ public class UploadFile {
         }
         return uploadResponseBean;
     }
+
+    public static JSONObject generateSuccessUploadJson(UploadRequestBean uploadRequestBean){
+        JSONObject jsono = new JSONObject();
+        if(uploadRequestBean!=null && !Utility.isNullOrEmpty(uploadRequestBean.getFilename())) {
+            jsono.put("name", ParseUtil.checkNull( uploadRequestBean.getFilename() ) );
+            jsono.put("foldername", ParseUtil.checkNull( uploadRequestBean.getFolderName()) );
+            jsono.put("imagehost", ParseUtil.checkNull( uploadRequestBean.getImageHost()) );
+            jsono.put("size", ParseUtil.LToS( uploadRequestBean.getImageSize()) );
+            jsono.put("success", true );
+            jsono.put("upload_image", uploadRequestBean.getJsonResponseObj() );
+            jsono.put("url", "UploadServlet?getfile=" );
+            jsono.put("thumbnail_url", "UploadServlet?getthumb=");
+            jsono.put("delete_url", "UploadServlet?delfile=");
+            jsono.put("delete_type", "GET");
+        } else {
+            jsono = generateErrorUploadJson();
+        }
+        return jsono;
+    }
+
+    public static JSONObject generateErrorUploadJson(){
+        JSONObject jsono = new JSONObject();
+        jsono.put("success", false );
+        return jsono;
+    }
+    public static String geenerateRandomeFileName(String sFileName){
+        return Utility.getNewGuid() + "_" + ParseUtil.checkNull(sFileName);
+    }
+
+
 }

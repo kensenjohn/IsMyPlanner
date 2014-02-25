@@ -43,6 +43,14 @@ public class BuildEvent {
         if(eventRequestBean!=null && "".equalsIgnoreCase(eventRequestBean.getEventId())) {
             eventRequestBean.setEventId(Utility.getNewGuid());
             eventResponseBean = createEvent(eventRequestBean);
+
+            Feature feature = new Feature();
+            FeatureBean featureBeanEventLocation = new FeatureBean();
+            featureBeanEventLocation.setEventId( eventResponseBean.getEventId() );
+            featureBeanEventLocation.setFeatureType(FeatureType.image_location);
+            featureBeanEventLocation.setValue( Utility.getNewGuid());
+            feature.setFeatureValue( featureBeanEventLocation );
+
         } else {
             appLogging.info("Update Event invoked");
             eventResponseBean = updateEvent(eventRequestBean);
@@ -62,6 +70,8 @@ public class BuildEvent {
             featureBeanEventTimeZone.setEventId( eventResponseBean.getEventId() );
             featureBeanEventTimeZone.setFeatureType(FeatureType.event_timezone);
             featureBeanEventTimeZone.setValue( eventRequestBean.getEventTimeZone());
+
+
 
             Feature feature = new Feature();
             feature.setFeatureValue( featureBeanEventDay );

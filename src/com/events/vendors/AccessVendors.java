@@ -3,6 +3,7 @@ package com.events.vendors;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
 import com.events.common.Constants;
+import com.events.common.Utility;
 import com.events.data.vendors.AccessVendorData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ public class AccessVendors {
 
     public VendorBean getVendorByUserId(VendorRequestBean vendorRequestBean) {
         VendorBean vendorBean = new VendorBean();
-        if(vendorRequestBean!=null && !"".equalsIgnoreCase(vendorRequestBean.getUserId()) ) {
+        if(vendorRequestBean!=null && !Utility.isNullOrEmpty(vendorRequestBean.getUserId())   ) {
             AccessVendorData accessVendorData = new AccessVendorData();
             vendorBean = accessVendorData.getVendorFromUserId(vendorRequestBean);
         }
@@ -28,7 +29,7 @@ public class AccessVendors {
 
     public VendorBean getVendor(VendorRequestBean vendorRequestBean) {
         VendorBean vendorBean = new VendorBean();
-        if(vendorRequestBean!=null && !"".equalsIgnoreCase(vendorRequestBean.getVendorId()) ) {
+        if(vendorRequestBean!=null && !Utility.isNullOrEmpty(vendorRequestBean.getVendorId()) ) {
             AccessVendorData accessVendorData = new AccessVendorData();
             vendorBean = accessVendorData.getVendor(vendorRequestBean);
         }
