@@ -11,7 +11,6 @@ import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.event.website.AccessEventWebsite;
 import com.events.event.website.AccessEventWebsitePage;
-import com.events.event.website.BuildEventWebsite;
 import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -28,10 +27,10 @@ import java.util.ArrayList;
  * Created with IntelliJ IDEA.
  * User: root
  * Date: 2/25/14
- * Time: 10:14 AM
+ * Time: 11:28 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcSaveEventWebsitePage extends HttpServlet {
+public class ProcLoadEventWebsitePages extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -47,8 +46,6 @@ public class ProcSaveEventWebsitePage extends HttpServlet {
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
                     String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
-                    String sPageType =  ParseUtil.checkNull(request.getParameter("page_type"));
-                    String sAction =  ParseUtil.checkNull(request.getParameter("action"));
 
                     EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
                     eventWebsiteRequestBean.setEventId( sEventId );
@@ -56,31 +53,25 @@ public class ProcSaveEventWebsitePage extends HttpServlet {
                     AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
                     EventWebsiteBean eventWebsiteBean = accessEventWebsite.getEventWebsite( eventWebsiteRequestBean );
 
-                    EventWebsitePageBean eventWebsitePageBeanReq = new EventWebsitePageBean();
-                    eventWebsitePageBeanReq.setEventWebsiteId(eventWebsiteBean.getEventWebsiteId());
-                    eventWebsitePageBeanReq.setWebsiteThemeId( eventWebsiteBean.getWebsiteThemeId() );
-                    eventWebsitePageBeanReq.setType( sPageType );
-
-
                     AccessEventWebsitePage accessEventWebsitePage = new AccessEventWebsitePage();
-                    EventWebsitePageBean eventWebsitePageBean = accessEventWebsitePage.getEventWebsitePageByType(eventWebsitePageBeanReq);
-                    if("show".equalsIgnoreCase(sAction)) {
-                        eventWebsitePageBean.setShow( true );
-                    } else if("hide".equalsIgnoreCase(sAction)) {
-                        eventWebsitePageBean.setShow( false );
+                    ArrayList<EventWebsitePageBean> arrEventWebsitePageBean = accessEventWebsitePage.getEventWebsitePage(eventWebsiteBean) ;
+                    if(arrEventWebsitePageBean!=null && !arrEventWebsitePageBean.isEmpty()) {
+
+                        JSONObject jsonObject = accessEventWebsitePage.getJsonEventWebsitePage( arrEventWebsitePageBean );
+
+                        jsonResponseObj.put("event_website_pages", jsonObject );
+                        Text okText = new OkText("Your changes were successfully updated.","status_mssg") ;
+                        arrOkText.add(okText);
+                        responseStatus = RespConstants.Status.OK;
+                    } else {
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventWebPage - 002)","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
                     }
-
-                    BuildEventWebsite buildEventWebsite = new BuildEventWebsite();
-                    buildEventWebsite.toggleWebPageShowHide( eventWebsitePageBean );
-
-
-                    Text okText = new OkText("Your changes were successfully updated.","status_mssg") ;
-                    arrOkText.add(okText);
-                    responseStatus = RespConstants.Status.OK;
-
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventWebPage - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventWebPage - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -94,7 +85,7 @@ public class ProcSaveEventWebsitePage extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventWebPage - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventWebPage - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

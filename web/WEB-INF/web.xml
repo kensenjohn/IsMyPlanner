@@ -509,12 +509,20 @@
 
 
     <servlet>
-        <servlet-name>Process Load Website Page Data</servlet-name>
+        <servlet-name>Process Load Website Page Features</servlet-name>
         <servlet-class>com.events.proc.event.website.ProcLoadEventWebsitePageRecords</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Process Load Website Page Data</servlet-name>
-        <url-pattern>/proc_load_website_page_data.aeve</url-pattern>
+        <servlet-name>Process Load Website Page Features</servlet-name>
+        <url-pattern>/proc_load_website_page_features.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Website Page Features</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcSaveEventWebsitePageFeatures</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Website Page Features</servlet-name>
+        <url-pattern>/proc_save_event_website_page_features.aeve</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>Process Save Website Page</servlet-name>
@@ -524,6 +532,15 @@
         <servlet-name>Process Save Website Page</servlet-name>
         <url-pattern>/proc_save_event_website_page.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Website Page</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcLoadEventWebsitePages</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Website Page</servlet-name>
+        <url-pattern>/proc_load_website_page.aeve</url-pattern>
+    </servlet-mapping>
+
 
 
 

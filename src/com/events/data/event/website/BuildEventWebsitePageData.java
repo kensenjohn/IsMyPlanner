@@ -3,6 +3,7 @@ package com.events.data.event.website;
 import com.events.bean.event.website.EventWebsitePageBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
+import com.events.common.Utility;
 import com.events.common.db.DBDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,17 @@ public class BuildEventWebsitePageData {
             }
         }
         return numOfRowsDeleted;
+
+    }
+
+    public Integer updateEventWebsitePageBatch( EventWebsitePageBean eventWebsitePageBean) {
+        Integer numOfRowsUpdated = 0;
+        if(eventWebsitePageBean!=null && !Utility.isNullOrEmpty(eventWebsitePageBean.getEventWebsitePageId())){
+            String sQuery = "UPDATE GTEVENTWEBSITEPAGE SET IS_SHOW = ? WHERE EVENTWEBSITEPAGEID = ? AND FK_EVENTWEBSITEID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(eventWebsitePageBean.isShow() , eventWebsitePageBean.getEventWebsitePageId(), eventWebsitePageBean.getEventWebsiteId());
+            numOfRowsUpdated = DBDAO.putRowsQuery( sQuery, aParams, EVENTADMIN_DB, "BuildEventWebsitePageData.java", "updateEventWebsitePageBatch() " );
+        }
+        return numOfRowsUpdated;
 
     }
 }

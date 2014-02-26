@@ -6,6 +6,7 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.data.event.website.AccessEventWebsiteData;
 import com.events.data.event.website.BuildEventWebsiteData;
+import com.events.data.event.website.BuildEventWebsitePageData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -197,5 +198,17 @@ public class BuildEventWebsite {
             }
         }
         return arrEventWebsitePage;
+    }
+
+    public boolean toggleWebPageShowHide(EventWebsitePageBean eventWebsitePageBean) {
+        boolean isSuccess = false;
+        if(eventWebsitePageBean!=null){
+            BuildEventWebsitePageData buildEventWebsitePageData = new BuildEventWebsitePageData();
+            Integer numOfRowsUpdated = buildEventWebsitePageData.updateEventWebsitePageBatch(  eventWebsitePageBean );
+            if(numOfRowsUpdated>0){
+                isSuccess = true;
+            }
+        }
+        return isSuccess;
     }
 }

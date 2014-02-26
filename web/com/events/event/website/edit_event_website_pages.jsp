@@ -48,7 +48,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_welcome">
                                         <i id="welcome_collapse_icon" class="fa fa-chevron-circle-right"></i> Welcome</a>
                                     &nbsp;&nbsp;
-                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" name="welcome_hide" id="welcome_hide">
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide"  class="hide-page" name="welcome_hide" id="welcome_hide" param="welcome">
 
                                 </h4>
                             </div>
@@ -138,7 +138,9 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_invitation">
-                                        <i id="invitation_collapse_icon" class="fa fa-chevron-circle-right"></i> Invitation
+                                        <i id="invitation_collapse_icon" class="fa fa-chevron-circle-right"></i> Invitation</a>
+                                        &nbsp;&nbsp;
+                                        <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="invitation_hide" id="invitation_hide" param="invitation">
                                     </a>
                                 </h4>
                             </div>
@@ -150,42 +152,42 @@
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <label for="invite_invite_name" class="form_label">Invitation Names</label>
-                                                            <input type="text" name="invite_name" id="invite_invite_name" class="form-control" >
+                                                            <label for="invitation_invite_name" class="form_label">Invitation Names</label>
+                                                            <input type="text" name="invite_name" id="invitation_invite_name" class="form-control" >
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <label for="invite_text" class="form_label">Invite Text </label>
-                                                            <input type="text" name="invite_text" id="invite_text" class="form-control" >
+                                                            <label for="invitation_invite_text" class="form_label">Invite Text </label>
+                                                            <input type="text" name="invite_text" id="invitation_invite_text" class="form-control" >
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <label for="invite_date" class="form_label">Date of Event</label>
-                                                            <input type="text" name="invite_date" id="invite_date" class="form-control" >
+                                                            <label for="invitation_invite_date" class="form_label">Date of Event</label>
+                                                            <input type="text" name="invite_date" id="invitation_invite_date" class="form-control" >
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <label for="invite_location_name" class="form_label">Location Name</label>
-                                                            <input type="text" name="invite_location_name" id="invite_location_name" class="form-control">
+                                                            <label for="invitation_invite_location_name" class="form_label">Location Name</label>
+                                                            <input type="text" name="invite_location_name" id="invitation_invite_location_name" class="form-control">
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <label for="invite_address" class="form_label">Location Address </label>
-                                                            <input type="text" name="invite_address" id="invite_address" class="form-control">
+                                                            <label for="invitation_invite_address" class="form_label">Location Address </label>
+                                                            <input type="text" name="invite_address" id="invitation_invite_address" class="form-control">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" name="page_type" id="save_page_type" value="invite"/>
+                                                <input type="hidden" name="page_type" id="save_page_type" value="invitation"/>
                                                 <input type="hidden" name="event_id" id="save_event_id" value="<%=sEventId%>"/>
                                             </form>
                                             <div class="row">
@@ -205,9 +207,17 @@
     </div>
 </div>
 </body>
-<form id="frm_load_web_page_records">
+<form id="frm_load_web_page">
+    <input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+</form>
+<form id="frm_load_web_page_features">
     <input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
     <input type="hidden" id="load_page_type" name="page_type" value=""/>
+</form>
+<form id="frm_save_web_page">
+    <input type="hidden" name="event_id" value="<%=sEventId%>"/>
+    <input type="hidden" id="save_web_page_type" name="page_type" value=""/>
+    <input type="hidden" id="save_action" name="action" value=""/>
 </form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
@@ -220,15 +230,15 @@
 <script src="/js/bootstrap-switch.min.js"></script>
 <script type="text/javascript">
     $(window).load(function() {
-        $('#welcome_hide').bootstrapSwitch('size', 'mini');
-        $('#welcome_hide').bootstrapSwitch('readonly', false);
+        $('.hide-page').bootstrapSwitch('size', 'mini');
+        $('.hide-page').bootstrapSwitch('readonly', false);
 
         $('#collapse_welcome').on('hide.bs.collapse', function () {
             toggleCollapseIcon('welcome_collapse_icon');
         })
         $('#collapse_welcome').on('show.bs.collapse', function () {
             toggleCollapseIcon('welcome_collapse_icon');
-            loadWebsitePageData('welcome', populateWebsitePageRecords)
+            loadWebsitePageFeatures('welcome', populateWebsitePageFeatures)
         })
 
         $('#collapse_invitation').on('hide.bs.collapse', function () {
@@ -236,32 +246,65 @@
         })
         $('#collapse_invitation').on('show.bs.collapse', function () {
             toggleCollapseIcon('invitation_collapse_icon');
-            loadWebsitePageData('invite', populateWebsitePageRecords)
+            loadWebsitePageFeatures('invitation', populateWebsitePageFeatures)
         })
 
         $('.save-website-page').click(function(){
-            saveWebsitePageSetting(getResult , $(this).attr('param'));
+            saveWebsitePageFeatureSetting(getResult , $(this).attr('param'));
         })
+
+        $('.hide-page').on('switchChange', function (e, data) {
+            var $element = $(data.el);
+            var value = data.value;
+
+            if($element !=undefined && value!=undefined ) {
+                if(value == false) {
+                    $('#save_action').val( 'hide' );
+                } else {
+                    $('#save_action').val( 'show' );
+                }
+
+                $('#save_web_page_type').val( $element.attr('param') );
+                saveWebsitePageSetting(getResult)
+            } else {
+
+            }
+            // console.log( 'value = ' + data.value + ' - ' + $element.attr('param') );
+        });
+
+        loadWebsitePage(populateWebsitePages);
 
     });
 
     function toggleCollapseIcon(varIcon) {
         $('#'+varIcon).toggleClass("fa-chevron-circle-down").toggleClass("a-chevron-circle-right");
     }
-
-    function saveWebsitePageSetting(callbackmethod , pageType) {
+    function saveWebsitePageSetting(callbackmethod ) {
         var actionUrl = "/proc_save_event_website_page.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_save_web_page" ).serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function saveWebsitePageFeatureSetting(callbackmethod , pageType) {
+        var actionUrl = "/proc_save_event_website_page_features.aeve";
         var methodType = "POST";
         var dataString = $("#frm_save_"+pageType).serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
 
-    function loadWebsitePageData(pageType,callbackmethod) {
+    function loadWebsitePage(callbackmethod) {
+        var actionUrl = "/proc_load_website_page.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_load_web_page").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+
+    function loadWebsitePageFeatures(pageType,callbackmethod) {
         if(pageType!=undefined) {
             $('#load_page_type').val( pageType );
-            var actionUrl = "/proc_load_website_page_data.aeve";
+            var actionUrl = "/proc_load_website_page_features.aeve";
             var methodType = "POST";
-            var dataString = $("#frm_load_web_page_records").serialize();
+            var dataString = $("#frm_load_web_page_features").serialize();
             makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
         } else {
             displayMssgBoxAlert('Oops!! We were unable to load any information for this page. Please try again later', true);
@@ -269,6 +312,18 @@
     }
     var WebsitePageModel = Backbone.Model.extend({});
     var WebsitePageView = Backbone.View.extend({
+        initialize: function(){
+            this.varArrayOfEventWebsitePages = this.model.get('bb_arr_event_website_page');
+        },
+        render:function(){
+            for (var key in this.varArrayOfEventWebsitePages) {
+                $('#'+key+'_hide').bootstrapSwitch('state', this.varArrayOfEventWebsitePages[key].is_show );
+            }
+        }
+    } );
+
+    var WebsitePageFeaturesModel = Backbone.Model.extend({});
+    var WebsitePageFeaturesView = Backbone.View.extend({
         initialize: function(){
             this.varPage = this.model.get('bb_event_website_page');
             this.varPageType = this.model.get('bb_page_type');
@@ -294,19 +349,26 @@
             }
         }
     });
-
-    function generateWebsitePage( varJsonResponse ) {
+    function generateWebsitePages( varJsonResponse ) {
         this.websitePageModel = new WebsitePageModel({
+            'bb_arr_event_website_page' : varJsonResponse.event_website_pages
+        });
+
+        var webpagesView = new WebsitePageView({model:this.websitePageModel});
+        webpagesView.render();
+    }
+    function generateWebsitePageFeatures( varJsonResponse ) {
+        this.websitePageFeaturesModel = new WebsitePageFeaturesModel({
             'bb_event_website_page' : varJsonResponse.event_website_page,
             'bb_page_type' : varJsonResponse.page_type,
             'bb_event_website_page_features' : varJsonResponse.event_website_page_feature ,
             'bb_image_host' : varJsonResponse.image_host,
             'bb_image_folder_location' : varJsonResponse.image_folder_location
         });
-        var webpageView = new WebsitePageView({model:this.websitePageModel});
-        webpageView.render();
+        var webpageFeaturesView = new WebsitePageFeaturesView({model:this.websitePageFeaturesModel});
+        webpageFeaturesView.render();
     }
-    function populateWebsitePageRecords(jsonResult) {
+    function populateWebsitePages(jsonResult){
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
@@ -316,7 +378,28 @@
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
                     if(jsonResponseObj!=undefined) {
-                        generateWebsitePage( jsonResponseObj );
+                        generateWebsitePages( jsonResponseObj );
+                    }
+
+                }
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
+    }
+    function populateWebsitePageFeatures(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    if(jsonResponseObj!=undefined) {
+                        generateWebsitePageFeatures( jsonResponseObj );
                     }
 
                 }

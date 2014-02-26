@@ -4,6 +4,7 @@ import com.events.bean.event.website.EventWebsiteBean;
 import com.events.bean.event.website.EventWebsitePageBean;
 import com.events.common.Utility;
 import com.events.data.event.website.AccessEventWebsitePageData;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,16 @@ public class AccessEventWebsitePage {
             arrEventWebsitePageBean = accessEventWebsitePageData.getEventWebsitePage(eventWebsiteBean );
         }
         return arrEventWebsitePageBean;
+    }
+
+    public JSONObject getJsonEventWebsitePage(ArrayList<EventWebsitePageBean> arrEventWebsitePageBean){
+        JSONObject jsonObject = new JSONObject();
+        if(arrEventWebsitePageBean!=null && !arrEventWebsitePageBean.isEmpty()){
+            for(EventWebsitePageBean eventWebsitePageBean : arrEventWebsitePageBean ) {
+                jsonObject.put(eventWebsitePageBean.getType() , eventWebsitePageBean.toJson() );
+            }
+        }
+        return jsonObject;
     }
 
     public EventWebsitePageBean getEventWebsitePageByType(EventWebsitePageBean eventWebsitePageBeanReg) {
