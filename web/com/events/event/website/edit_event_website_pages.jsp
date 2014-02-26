@@ -5,6 +5,8 @@
 </jsp:include>
 <link href="/css/font-awesome.min.css" rel="stylesheet">
 <link href="/css/bootstrap-switch.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
+<link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <link rel="stylesheet" href="/css/colorbox.css" id="theme_time">
 <%
@@ -119,8 +121,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <input type="hidden" name="page_type" id="save_page_type" value="welcome"/>
-                                                        <input type="hidden" name="event_id" id="save_event_id" value="<%=sEventId%>"/>
+                                                        <input type="hidden" name="page_type" value="welcome"/>
+                                                        <input type="hidden" name="event_id" value="<%=sEventId%>"/>
                                                     </form>
                                                     <div class="row">
                                                         <div class="col-md-6">
@@ -187,14 +189,198 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" name="page_type" id="save_page_type" value="invitation"/>
-                                                <input type="hidden" name="event_id" id="save_event_id" value="<%=sEventId%>"/>
+                                                <input type="hidden" name="page_type" value="invitation"/>
+                                                <input type="hidden" name="event_id"  value="<%=sEventId%>"/>
                                             </form>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <button class="btn btn-filled save-website-page" id="save_invitation" param="invitation">Save</button>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_couples">
+                                        <i id="couples_collapse_icon" class="fa fa-chevron-circle-right"></i> Couples</a>
+                                    &nbsp;&nbsp;
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="couples_hide" id="couples_hide" param="couples">
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse_couples" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <form id="frm_save_couples">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h3>The Bride</h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="couples_partner1_name" class="form_label">Bride's Name</label>
+                                                            <input type="text" name="partner1_name" id="couples_partner1_name" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="couples_partner1_facebook" class="form_label">Facebook URL </label>
+                                                            <input type="text" name="partner1_facebook" id="couples_partner1_facebook" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="couples_partner1_twitter" class="form_label">Twitter URL </label>
+                                                            <input type="text" name="partner1_twitter" id="couples_partner1_twitter" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="couples_partner1_pinterest" class="form_label">Pinterest URL </label>
+                                                            <input type="text" name="partner1_pinterest" id="couples_partner1_pinterest" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="couples_partner1_description" class="form_label">Description </label>
+                                                            <input type="text" name="partner1_description" id="couples_partner1_description" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        &nbsp;
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <h3>The Groom</h3>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="couples_partner2_name" class="form_label">Groom's Name</label>
+                                                            <input type="text" name="partner2_name" id="couples_partner2_name" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="couples_partner2_facebook" class="form_label">Facebook URL </label>
+                                                            <input type="text" name="partner2_facebook" id="couples_partner2_facebook" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="couples_partner2_twitter" class="form_label">Twitter URL </label>
+                                                            <input type="text" name="partner2_twitter" id="couples_partner2_twitter" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="couples_partner2_pinterest" class="form_label">Pinterest URL </label>
+                                                            <input type="text" name="partner2_pinterest" id="couples_partner2_pinterest" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="couples_partner2_description" class="form_label">Description </label>
+                                                            <input type="text" name="partner2_description" id="couples_partner2_description" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bride's Maid -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_bridesmaids">
+                                        <i id="bridesmaids_collapse_icon" class="fa fa-chevron-circle-right"></i> Bride's Maids</a>
+                                    &nbsp;&nbsp;
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="bridesmaids_hide" id="bridesmaids_hide" param="bridesmaids">
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse_bridesmaids" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <button type="button" class="btn btn-filled" id="btn_add_bridesmaid">Create New</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_bridesmaid" >
+                                                <thead>
+                                                <tr role="row">
+                                                    <th class="sorting col-md-3" role="columnheader">Name</th>
+                                                    <th class="center" role="columnheader"></th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody role="alert" id="every_bridesmaid_rows">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Groom's Men  -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_groomsmen">
+                                        <i id="groomsmen_collapse_icon" class="fa fa-chevron-circle-right"></i> Grooms's Men</a>
+                                    &nbsp;&nbsp;
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="groomsmen_hide" id="groomsmen_hide" param="groomsmen">
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse_groomsmen" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <button type="button" class="btn btn-filled" id="btn_add_groomsmen">Create New</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_groomsmen" >
+                                                <thead>
+                                                <tr role="row">
+                                                    <th class="sorting col-md-3" role="columnheader">Name</th>
+                                                    <th class="center" role="columnheader"></th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody role="alert" id="every_groomsmen_rows">
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -208,10 +394,10 @@
 </div>
 </body>
 <form id="frm_load_web_page">
-    <input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+    <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
 </form>
 <form id="frm_load_web_page_features">
-    <input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+    <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
     <input type="hidden" id="load_page_type" name="page_type" value=""/>
 </form>
 <form id="frm_save_web_page">
@@ -228,6 +414,7 @@
 <script src="/js/upload/jquery.fileupload.js"></script>
 <script src="/js/collapse.js"></script>
 <script src="/js/bootstrap-switch.min.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
     $(window).load(function() {
         $('.hide-page').bootstrapSwitch('size', 'mini');
@@ -247,6 +434,30 @@
         $('#collapse_invitation').on('show.bs.collapse', function () {
             toggleCollapseIcon('invitation_collapse_icon');
             loadWebsitePageFeatures('invitation', populateWebsitePageFeatures)
+        })
+
+        $('#collapse_couples').on('hide.bs.collapse', function () {
+            toggleCollapseIcon('couples_collapse_icon');
+        })
+        $('#collapse_couples').on('show.bs.collapse', function () {
+            toggleCollapseIcon('couples_collapse_icon');
+            loadWebsitePageFeatures('couples', populateWebsitePageFeatures)
+        })
+
+        $('#collapse_bridesmaids').on('hide.bs.collapse', function () {
+            toggleCollapseIcon('bridesmaids_collapse_icon');
+        })
+        $('#collapse_bridesmaids').on('show.bs.collapse', function () {
+            toggleCollapseIcon('bridesmaids_collapse_icon');
+            loadWebsitePageFeatures('bridesmaids', populateWebsitePageFeatures)
+        })
+
+        $('#collapse_groomsmen').on('hide.bs.collapse', function () {
+            toggleCollapseIcon('groomsmen_collapse_icon');
+        })
+        $('#collapse_groomsmen').on('show.bs.collapse', function () {
+            toggleCollapseIcon('groomsmen_collapse_icon');
+            loadWebsitePageFeatures('groomsmen', populateWebsitePageFeatures)
         })
 
         $('.save-website-page').click(function(){
@@ -273,6 +484,12 @@
         });
 
         loadWebsitePage(populateWebsitePages);
+        initializeBridesMaidTable();
+        initializeGroomsMenTable();
+
+        $('#btn_add_bridesmaid').click( function(){
+            $.colorbox({href:'edit_event_website_party.jsp'});
+        })
 
     });
 
@@ -490,6 +707,32 @@
         } else {
             displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
         }
+    }
+
+    function initializeBridesMaidTable(){
+
+        objEveryBridesMaidTable =  $('#every_bridesmaid').dataTable({
+            "bPaginate": false,
+            "bInfo": false,
+            "bFilter": false,
+            "aoColumns": [
+                null,
+                { "bSortable": false }
+            ]
+        });
+    }
+
+    function initializeGroomsMenTable(){
+
+        objEveryGroomsMenTable =  $('#every_groomsmen').dataTable({
+            "bPaginate": false,
+            "bInfo": false,
+            "bFilter": false,
+            "aoColumns": [
+                null,
+                { "bSortable": false }
+            ]
+        });
     }
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>
