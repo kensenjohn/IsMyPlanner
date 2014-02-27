@@ -424,4 +424,26 @@ public class Constants {
     public enum EVENT_WEBSITE_PAGE_FEATURETYPE{
         caption_title, caption_tag_line,none, banner_image_name,invite_name,invite_text,invite_date,invite_location_name,invite_address;
     }
+
+    public enum EVENT_PARTY_TYPE{
+        BRIDE("Bride"),GROOM("Groom"),BRIDESMAID("Bridesmaid"),GROOMSMAN("Groomsman"),BESTMAN("Best Man"),MAIDOFHONOR("Maid of Honor"),NONE(Constants.EMPTY);
+        private String text = Constants.EMPTY;
+        EVENT_PARTY_TYPE(String text){
+            this.text = text;
+        }
+        public String getText() {
+            return text;
+        }
+    }
+
+    public enum SOCIAL_MEDIA_TYPE{
+        FACEBOOK("Facebook"),TWITTER("Twitter"),PINTEREST("Pinterest"),NONE("None");
+        private String name = Constants.EMPTY;
+        SOCIAL_MEDIA_TYPE(String name){
+            this.name = name;
+        }
+        public String getName() {
+            return name;
+        }
+    }
 }

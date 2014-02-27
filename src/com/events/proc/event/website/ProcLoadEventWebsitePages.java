@@ -1,16 +1,16 @@
 package com.events.proc.event.website;
 
-import com.events.bean.event.website.EventWebsiteBean;
-import com.events.bean.event.website.EventWebsitePageBean;
-import com.events.bean.event.website.EventWebsiteRequestBean;
+import com.events.bean.event.website.*;
 import com.events.bean.users.UserBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
+import com.events.event.website.AccessEventParty;
 import com.events.event.website.AccessEventWebsite;
 import com.events.event.website.AccessEventWebsitePage;
+import com.events.event.website.AccessSocialMedia;
 import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -57,9 +57,22 @@ public class ProcLoadEventWebsitePages extends HttpServlet {
                     ArrayList<EventWebsitePageBean> arrEventWebsitePageBean = accessEventWebsitePage.getEventWebsitePage(eventWebsiteBean) ;
                     if(arrEventWebsitePageBean!=null && !arrEventWebsitePageBean.isEmpty()) {
 
+                        EventPartyRequest eventPartyRequest = new EventPartyRequest();
+                        eventPartyRequest.setEventWebsiteId(eventWebsiteBean.getEventWebsiteId());
+
+                        AccessEventParty accessEventParty = new AccessEventParty();
+                        ArrayList<EventPartyBean> arrEventPartyBean = accessEventParty.getEventPartyByWebsite(eventPartyRequest);
+
+                        AccessSocialMedia accessSocialMedia = new AccessSocialMedia();
+                        ArrayList<SocialMediaBean> arrSocialMediaBean =  accessSocialMedia.getSocialMediaByWebsite( eventPartyRequest );
+
+                        JSONObject eventPartyJson = accessEventParty.getEventPartyJson( arrEventPartyBean , arrSocialMediaBean );
+                        jsonResponseObj.put("event_party", eventPartyJson );
+
                         JSONObject jsonObject = accessEventWebsitePage.getJsonEventWebsitePage( arrEventWebsitePageBean );
 
                         jsonResponseObj.put("event_website_pages", jsonObject );
+                        jsonResponseObj.put("event_website", eventWebsiteBean.toJson() );
                         Text okText = new OkText("Your changes were successfully updated.","status_mssg") ;
                         arrOkText.add(okText);
                         responseStatus = RespConstants.Status.OK;

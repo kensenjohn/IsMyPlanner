@@ -216,7 +216,7 @@
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <form id="frm_save_couples">
+                                            <form id="frm_save_couples_partner1">
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-md-12">
@@ -253,7 +253,25 @@
                                                             <input type="text" name="partner1_description" id="couples_partner1_description" class="form-control" >
                                                         </div>
                                                     </div>
+                                                    <input type="hidden" name="couple_partner_num"  value="1" >
+                                                    <input type="hidden" name="event_website_id"   id="couples_partner1_event_website_id" value="" >
+                                                    <input type="hidden" name="event_party_id"   id="couples_partner1_event_party_id" value="" >
+                                                    <input type="hidden" name="page_type" value="couples" />
+                                                    <input type="hidden" name="event_party_type" value="<%=Constants.EVENT_PARTY_TYPE.BRIDE.toString()%>" />
+
                                                 </div>
+                                            </form>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <button class="btn btn-filled save-website-party" id="save_couples_partner1" param="couples_partner1">Save</button>
+                                                </div>
+                                            </div>
+                                            <form id="frm_save_couples_partner2">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         &nbsp;
@@ -295,8 +313,24 @@
                                                             <input type="text" name="partner2_description" id="couples_partner2_description" class="form-control" >
                                                         </div>
                                                     </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            &nbsp;
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" name="couple_partner_num"  value="2" >
+                                                    <input type="hidden" name="event_website_id"   id="couples_partner2_event_website_id" value="" >
+                                                    <input type="hidden" name="event_party_id"   id="couples_partner2_event_party_id" value="" >
+                                                    <input type="hidden" name="page_type" value="couples" />
+                                                    <input type="hidden" name="event_party_type" value="<%=Constants.EVENT_PARTY_TYPE.GROOM.toString()%>" />
                                                 </div>
                                             </form>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <button class="btn btn-filled save-website-party" id="save_couples_partner2" param="couples_partner2">Save</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -308,7 +342,7 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_bridesmaids">
-                                        <i id="bridesmaids_collapse_icon" class="fa fa-chevron-circle-right"></i> Bride's Maids</a>
+                                        <i id="bridesmaids_collapse_icon" class="fa fa-chevron-circle-right"></i> Bridesmaids</a>
                                     &nbsp;&nbsp;
                                     <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="bridesmaids_hide" id="bridesmaids_hide" param="bridesmaids">
                                     </a>
@@ -350,7 +384,7 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_groomsmen">
-                                        <i id="groomsmen_collapse_icon" class="fa fa-chevron-circle-right"></i> Grooms's Men</a>
+                                        <i id="groomsmen_collapse_icon" class="fa fa-chevron-circle-right"></i> Groomssmen</a>
                                     &nbsp;&nbsp;
                                     <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="groomsmen_hide" id="groomsmen_hide" param="groomsmen">
                                     </a>
@@ -462,7 +496,10 @@
 
         $('.save-website-page').click(function(){
             saveWebsitePageFeatureSetting(getResult , $(this).attr('param'));
-        })
+        });
+        $('.save-website-party').click(function(){
+            saveWebsitePageFeaturePartySettings(getResult , $(this).attr('param'));
+        });
 
         $('.hide-page').on('switchChange', function (e, data) {
             var $element = $(data.el);
@@ -488,7 +525,7 @@
         initializeGroomsMenTable();
 
         $('#btn_add_bridesmaid').click( function(){
-            $.colorbox({href:'edit_event_website_party.jsp'});
+            $.colorbox({href:'edit_event_website_party.jsp?party=bm&event_id=<%=sEventId%>'});
         })
 
     });
@@ -500,6 +537,13 @@
         var actionUrl = "/proc_save_event_website_page.aeve";
         var methodType = "POST";
         var dataString = $("#frm_save_web_page" ).serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function saveWebsitePageFeaturePartySettings(callbackmethod , pageType) {
+        console.log('pageType : '+pageType);
+        var actionUrl = "/proc_save_event_website_features_party.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_save_"+pageType).serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
     function saveWebsitePageFeatureSetting(callbackmethod , pageType) {
@@ -531,11 +575,15 @@
     var WebsitePageView = Backbone.View.extend({
         initialize: function(){
             this.varArrayOfEventWebsitePages = this.model.get('bb_arr_event_website_page');
+            this.varEventWebsite = this.model.get('bb_event_website');
         },
         render:function(){
             for (var key in this.varArrayOfEventWebsitePages) {
                 $('#'+key+'_hide').bootstrapSwitch('state', this.varArrayOfEventWebsitePages[key].is_show );
             }
+            console.log( this.varEventWebsite.event_website_id );
+            $('#couples_partner1_event_website_id').val( this.varEventWebsite.event_website_id);
+            $('#couples_partner2_event_website_id').val( this.varEventWebsite.event_website_id);
         }
     } );
 
@@ -547,6 +595,8 @@
             this.varFeatures = this.model.get('bb_event_website_page_features');
             this.varImageHost = this.model.get('bb_image_host');
             this.varImageFolderLocation = this.model.get('bb_image_folder_location');
+            this.varEventParty = this.model.get('bb_event_party');
+
         },
         render:function(){
             for (var key in this.varFeatures) {
@@ -568,7 +618,9 @@
     });
     function generateWebsitePages( varJsonResponse ) {
         this.websitePageModel = new WebsitePageModel({
-            'bb_arr_event_website_page' : varJsonResponse.event_website_pages
+            'bb_arr_event_website_page' : varJsonResponse.event_website_pages,
+            'bb_event_website' : varJsonResponse.event_website
+
         });
 
         var webpagesView = new WebsitePageView({model:this.websitePageModel});
@@ -580,7 +632,8 @@
             'bb_page_type' : varJsonResponse.page_type,
             'bb_event_website_page_features' : varJsonResponse.event_website_page_feature ,
             'bb_image_host' : varJsonResponse.image_host,
-            'bb_image_folder_location' : varJsonResponse.image_folder_location
+            'bb_image_folder_location' : varJsonResponse.image_folder_location ,
+            'bb_event_party' : varJsonResponse.event_party
         });
         var webpageFeaturesView = new WebsitePageFeaturesView({model:this.websitePageFeaturesModel});
         webpageFeaturesView.render();
