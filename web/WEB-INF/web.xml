@@ -213,6 +213,14 @@
         <servlet-name>Process Upload Event Image</servlet-name>
         <url-pattern>/proc_upload_event_image.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Upload Event Party Image</servlet-name>
+        <servlet-class>com.events.proc.upload.ProcUploadEventPartyImage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Upload Event Party Image</servlet-name>
+        <url-pattern>/proc_upload_partner_image.aeve</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>Process Send Reset Password Link</servlet-name>
@@ -510,7 +518,7 @@
 
     <servlet>
         <servlet-name>Process Load Website Page Features</servlet-name>
-        <servlet-class>com.events.proc.event.website.ProcLoadEventWebsitePageRecords</servlet-class>
+        <servlet-class>com.events.proc.event.website.ProcLoadEventWebsitePageFeatures</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Process Load Website Page Features</servlet-name>
@@ -534,11 +542,19 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Process Load Website Feature Party</servlet-name>
-        <servlet-class>com.events.proc.event.website.ProcSaveEventWebsiteFeatureParty</servlet-class>
+        <servlet-class>com.events.proc.event.website.ProcLoadEventWebsiteFeatureParty</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Process Load Website Feature Party</servlet-name>
         <url-pattern>/proc_load_event_website_features_party.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Event Party</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcDeleteEventParty</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Event Party</servlet-name>
+        <url-pattern>/proc_delete_event_party.aeve</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>Process Save Website Page</servlet-name>
@@ -556,6 +572,7 @@
         <servlet-name>Process Load Website Page</servlet-name>
         <url-pattern>/proc_load_website_page.aeve</url-pattern>
     </servlet-mapping>
+
 
 
 

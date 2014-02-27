@@ -1,5 +1,6 @@
 package com.events.event.website;
 
+import com.events.bean.event.website.EventPartyBean;
 import com.events.bean.event.website.EventPartyRequest;
 import com.events.bean.event.website.SocialMediaBean;
 import com.events.common.Utility;
@@ -26,7 +27,26 @@ public class AccessSocialMedia {
         return arrSocialMediaBean;
     }
 
+    public ArrayList<SocialMediaBean> getSocialMedia(ArrayList<EventPartyBean> arrEventPartyBean ){
+        ArrayList<SocialMediaBean> arrSocialMediaBean =  new ArrayList<SocialMediaBean>();
+        if(arrEventPartyBean!=null && !arrEventPartyBean.isEmpty() ){
+
+            AccessSocialMediaData accessSocialMediaData = new AccessSocialMediaData();
+            arrSocialMediaBean = accessSocialMediaData.getSocialMedia( arrEventPartyBean );
+        }
+        return arrSocialMediaBean;
+    }
+
     public ArrayList<SocialMediaBean> getSocialMediaByWebsite(EventPartyRequest eventPartyRequest){
+        ArrayList<SocialMediaBean> arrSocialMediaBean =  eventPartyRequest.getArrSocialMediaBean();
+        if(eventPartyRequest!=null && !Utility.isNullOrEmpty(eventPartyRequest.getEventWebsiteId()) ){
+            AccessSocialMediaData accessSocialMediaData = new AccessSocialMediaData();
+            arrSocialMediaBean = accessSocialMediaData.getSocialMediaByWebsite( eventPartyRequest );
+        }
+        return arrSocialMediaBean;
+    }
+
+    public ArrayList<SocialMediaBean> getSocialMediaByTypeWebsite(EventPartyRequest eventPartyRequest){
         ArrayList<SocialMediaBean> arrSocialMediaBean =  eventPartyRequest.getArrSocialMediaBean();
         if(eventPartyRequest!=null && !Utility.isNullOrEmpty(eventPartyRequest.getEventWebsiteId()) ){
             AccessSocialMediaData accessSocialMediaData = new AccessSocialMediaData();

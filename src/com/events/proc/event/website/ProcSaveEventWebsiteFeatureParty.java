@@ -49,10 +49,25 @@ public class ProcSaveEventWebsiteFeatureParty extends HttpServlet {
                     String sEventWebsiteId =  ParseUtil.checkNull(request.getParameter("event_website_id"));
                     String sEventPartyId =  ParseUtil.checkNull(request.getParameter("event_party_id"));
                     String sEventPartyType =  ParseUtil.checkNull(request.getParameter("event_party_type"));
+                    String sUploadId =  ParseUtil.checkNull(request.getParameter("upload_id"));
+
+                    if(Utility.isNullOrEmpty(sEventWebsiteId)){
+                        EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
+                        eventWebsiteRequestBean.setEventId( sEventId );
+
+                        AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
+                        EventWebsiteBean eventWebsiteBean = accessEventWebsite.getEventWebsite(eventWebsiteRequestBean);
+
+                        if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
+                            sEventWebsiteId = eventWebsiteBean.getEventWebsiteId();
+                        }
+
+                    }
+
 
 
                     String sPartnerNum =  ParseUtil.checkNull(request.getParameter("couple_partner_num"));
-                    if(!Utility.isNullOrEmpty(sPartnerNum) && !Utility.isNullOrEmpty(sEventPartyType) ){
+                    if(!Utility.isNullOrEmpty(sEventPartyType) ){
                         String sName = ParseUtil.checkNull(request.getParameter("partner"+sPartnerNum+"_name"));
                         String sFacebookUrl = ParseUtil.checkNull(request.getParameter("partner"+sPartnerNum+"_facebook"));
                         String sTwitterUrl = ParseUtil.checkNull(request.getParameter("partner"+sPartnerNum+"_twitter"));
@@ -92,6 +107,7 @@ public class ProcSaveEventWebsiteFeatureParty extends HttpServlet {
                         eventPartyRequest.setArrSocialMediaBean( arrSocialMediaBean );
                         eventPartyRequest.setEventPartyType( Constants.EVENT_PARTY_TYPE.valueOf(sEventPartyType)  );
                         eventPartyRequest.setEventPartyTypeName( sEventPartyType );
+                        eventPartyRequest.setUploadId( sUploadId );
 
 
                         BuildEventParty buildEventParty = new BuildEventParty();

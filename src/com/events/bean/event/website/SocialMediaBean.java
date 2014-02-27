@@ -3,6 +3,8 @@ package com.events.bean.event.website;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -24,7 +26,7 @@ public class SocialMediaBean {
     public SocialMediaBean(){}
     public SocialMediaBean(HashMap<String, String> hmResult){
         this.socialMediaId = ParseUtil.checkNull(hmResult.get("SOCIALMEDIAID"));
-        this.eventPartyId = ParseUtil.checkNull(hmResult.get("EVENTPARTYID"));
+        this.eventPartyId = ParseUtil.checkNull(hmResult.get("FK_EVENTPARTYID"));
         this.socialMediaName = ParseUtil.checkNull(hmResult.get("SOCIALMEDIATYPE"));
         this.url = ParseUtil.checkNull(hmResult.get("URL"));
 
@@ -82,5 +84,19 @@ public class SocialMediaBean {
         sb.append(", url='").append(url).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public JSONObject toJson() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("social_media_id", this.socialMediaId );
+            jsonObject.put("event_party_id", this.eventPartyId );
+            jsonObject.put("social_media_name", this.socialMediaName );
+            jsonObject.put("url", this.url );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }

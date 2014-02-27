@@ -66,10 +66,12 @@ public class BuildEventParty {
 
     public boolean  deleteEventParty(EventPartyRequest eventPartyRequest) {
         boolean isSuccess = false;
-        EventPartyBean eventPartyBean = new EventPartyBean();
-        if(eventPartyRequest!=null){
-            eventPartyBean = generateEventPartyBean(eventPartyRequest);
-            eventPartyBean.setEventPartyId( Utility.getNewGuid());
+        if(eventPartyRequest!=null && !Utility.isNullOrEmpty(eventPartyRequest.getEventPartyId())){
+            BuildEventPartyData buildEventPartyData = new BuildEventPartyData();
+            Integer numOfRowsDeleted = buildEventPartyData.deleteEventParty(eventPartyRequest);
+            if(numOfRowsDeleted > 0 ){
+                isSuccess = true;
+            }
         }
         return isSuccess;
     }
@@ -82,6 +84,7 @@ public class BuildEventParty {
             eventPartyBean.setEventPartyType(Constants.EVENT_PARTY_TYPE.valueOf(ParseUtil.checkNull(eventPartyRequest.getEventPartyTypeName())));
             eventPartyBean.setName( ParseUtil.checkNull(eventPartyRequest.getName())  );
             eventPartyBean.setDescription(ParseUtil.checkNull(eventPartyRequest.getDescription()));
+            eventPartyBean.setUploadId(ParseUtil.checkNull(eventPartyRequest.getUploadId()));
         }
         return eventPartyBean;
     }

@@ -216,13 +216,48 @@
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <form id="frm_save_couples_partner1">
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h3>The Bride</h3>
+                                                </div>
+                                            </div>
+                                            <form method="post" id="frm_partner1_image"  action="/proc_upload_partner_image.aeve" method="POST" enctype="multipart/form-data">
                                                 <div class="form-group">
                                                     <div class="row">
-                                                        <div class="col-md-12">
-                                                            <h3>The Bride</h3>
+                                                        <div class="col-md-5">
+                                                            <label for="partner1_image" class="form_label">Photo</label>
+                                                            <input type="file" name="files[]" id="partner1_image" class="fileinput-button btn btn-default">
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="form_label">&nbsp;</label>
+                                                            <div>
+                                                                <button type="button" class="btn btn-default btn-sm" id="btn_upload_partner1_image">Upload</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="form_label">&nbsp;</label>
+                                                            <div id="partner1_image_progress">
+                                                                <div class="bar" style="width: 0%;"></div>
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            &nbsp;
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-offset-1 col-md-4" id="partner1_image_name">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="event_id" value="<%=sEventId%>" />
+                                                <input type="hidden" name="page_type" value="couples" />
+                                                <input type="hidden" name="party" value="partner1" />
+                                            </form>
+                                            <form id="frm_save_couples_partner1">
+                                                <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <label for="couples_partner1_name" class="form_label">Bride's Name</label>
@@ -256,6 +291,7 @@
                                                     <input type="hidden" name="couple_partner_num"  value="1" >
                                                     <input type="hidden" name="event_website_id"   id="couples_partner1_event_website_id" value="" >
                                                     <input type="hidden" name="event_party_id"   id="couples_partner1_event_party_id" value="" >
+                                                    <input type="hidden" name="upload_id"   id="couples_partner1_upload_id" value="" >
                                                     <input type="hidden" name="page_type" value="couples" />
                                                     <input type="hidden" name="event_party_type" value="<%=Constants.EVENT_PARTY_TYPE.BRIDE.toString()%>" />
 
@@ -271,17 +307,52 @@
                                                     <button class="btn btn-filled save-website-party" id="save_couples_partner1" param="couples_partner1">Save</button>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h3>The Groom</h3>
+                                                </div>
+                                            </div>
+
+                                            <form method="post" id="frm_partner2_image"  action="/proc_upload_partner_image.aeve" method="POST" enctype="multipart/form-data">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <label for="partner2_image" class="form_label">Photo</label>
+                                                            <input type="file" name="files[]" id="partner2_image" class="fileinput-button btn btn-default">
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="form_label">&nbsp;</label>
+                                                            <div>
+                                                                <button type="button" class="btn btn-default btn-sm" id="btn_upload_partner2_image">Upload</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="form_label">&nbsp;</label>
+                                                            <div id="partner2_image_progress">
+                                                                <div class="bar" style="width: 0%;"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            &nbsp;
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-offset-1 col-md-4" id="partner2_image_name">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="event_id" value="<%=sEventId%>" />
+                                                <input type="hidden" name="page_type" value="couples" />
+                                                <input type="hidden" name="party" value="partner2" />
+                                            </form>
                                             <form id="frm_save_couples_partner2">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        &nbsp;
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <h3>The Groom</h3>
-                                                    </div>
-                                                </div>
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-md-12">
@@ -321,6 +392,7 @@
                                                     <input type="hidden" name="couple_partner_num"  value="2" >
                                                     <input type="hidden" name="event_website_id"   id="couples_partner2_event_website_id" value="" >
                                                     <input type="hidden" name="event_party_id"   id="couples_partner2_event_party_id" value="" >
+                                                    <input type="hidden" name="upload_id"   id="couples_partner2_upload_id" value="" >
                                                     <input type="hidden" name="page_type" value="couples" />
                                                     <input type="hidden" name="event_party_type" value="<%=Constants.EVENT_PARTY_TYPE.GROOM.toString()%>" />
                                                 </div>
@@ -365,12 +437,12 @@
                                             <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_bridesmaid" >
                                                 <thead>
                                                 <tr role="row">
-                                                    <th class="sorting col-md-3" role="columnheader">Name</th>
-                                                    <th class="center" role="columnheader"></th>
+                                                    <th role="columnheader">Name</th>
+                                                    <th role="columnheader"></th>
                                                 </tr>
                                                 </thead>
 
-                                                <tbody role="alert" id="every_bridesmaid_rows">
+                                                <tbody role="alert" id="every_bridesmaids_rows">
                                                 </tbody>
                                             </table>
                                         </div>
@@ -434,11 +506,35 @@
     <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
     <input type="hidden" id="load_page_type" name="page_type" value=""/>
 </form>
+<form id="frm_load_couples_event_party">
+    <input type="hidden"  name="event_party_type[]" value="<%=Constants.EVENT_PARTY_TYPE.BRIDE%>"/>
+    <input type="hidden"  name="event_party_type[]" value="<%=Constants.EVENT_PARTY_TYPE.GROOM%>"/>
+    <input type="hidden"  name="page_type" value="couples"/>
+    <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
+</form>
+<form id="frm_load_bridesmaids_event_party">
+    <input type="hidden"  name="event_party_type[]" value="<%=Constants.EVENT_PARTY_TYPE.BRIDESMAID%>"/>
+    <input type="hidden"  name="event_party_type[]" value="<%=Constants.EVENT_PARTY_TYPE.MAIDOFHONOR%>"/>
+    <input type="hidden"  name="page_type" value="bridesmaids"/>
+    <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
+</form>
+<form id="frm_load_groomsmen_event_party">
+    <input type="hidden"  name="event_party_type[]" value="<%=Constants.EVENT_PARTY_TYPE.GROOMSMAN%>"/>
+    <input type="hidden"  name="event_party_type[]" value="<%=Constants.EVENT_PARTY_TYPE.BESTMAN%>"/>
+    <input type="hidden"  name="page_type" value="groomsmen"/>
+    <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
+</form>
 <form id="frm_save_web_page">
     <input type="hidden" name="event_id" value="<%=sEventId%>"/>
     <input type="hidden" id="save_web_page_type" name="page_type" value=""/>
     <input type="hidden" id="save_action" name="action" value=""/>
 </form>
+<form id="frm_delete_event_party_partner">
+    <input type="hidden" name="event_id" value="<%=sEventId%>"/>
+    <input type="hidden" id="delete_event_party_id" name="event_party_id" value=""/>
+    <input type="hidden" id="delete_page_type" name="page_type" value=""/>
+</form>
+
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
@@ -475,7 +571,7 @@
         })
         $('#collapse_couples').on('show.bs.collapse', function () {
             toggleCollapseIcon('couples_collapse_icon');
-            loadWebsitePageFeatures('couples', populateWebsitePageFeatures)
+            loadWebsitePageFeatureParty('couples', populateWebsitePageCouples)
         })
 
         $('#collapse_bridesmaids').on('hide.bs.collapse', function () {
@@ -483,7 +579,7 @@
         })
         $('#collapse_bridesmaids').on('show.bs.collapse', function () {
             toggleCollapseIcon('bridesmaids_collapse_icon');
-            loadWebsitePageFeatures('bridesmaids', populateWebsitePageFeatures)
+            loadWebsitePageFeatureParty('bridesmaids', populateWebsitePagePartyMembers)
         })
 
         $('#collapse_groomsmen').on('hide.bs.collapse', function () {
@@ -491,7 +587,7 @@
         })
         $('#collapse_groomsmen').on('show.bs.collapse', function () {
             toggleCollapseIcon('groomsmen_collapse_icon');
-            loadWebsitePageFeatures('groomsmen', populateWebsitePageFeatures)
+            loadWebsitePageFeatureParty('groomsmen', populateWebsitePagePartyMembers);
         })
 
         $('.save-website-page').click(function(){
@@ -517,7 +613,6 @@
             } else {
 
             }
-            // console.log( 'value = ' + data.value + ' - ' + $element.attr('param') );
         });
 
         loadWebsitePage(populateWebsitePages);
@@ -525,7 +620,27 @@
         initializeGroomsMenTable();
 
         $('#btn_add_bridesmaid').click( function(){
-            $.colorbox({href:'edit_event_website_party.jsp?party=bm&event_id=<%=sEventId%>'});
+            $.colorbox({
+                href:'edit_event_website_party.jsp?party=bm&event_id=<%=sEventId%>',
+                iframe:true,
+                innerWidth: '90%',
+                innerHeight: '85%',
+                scrolling: true,
+                onClosed : function() {
+                    loadWebsitePageFeatureParty('bridesmaids', populateWebsitePagePartyMembers)
+                }});
+        })
+
+        $('#btn_add_groomsmen').click( function(){
+            $.colorbox({
+                href:'edit_event_website_party.jsp?party=gm&event_id=<%=sEventId%>',
+                iframe:true,
+                innerWidth: '90%',
+                innerHeight: '85%',
+                scrolling: true,
+                onClosed : function() {
+                    loadWebsitePageFeatureParty('groomsmen', populateWebsitePagePartyMembers)
+                }});
         })
 
     });
@@ -540,7 +655,6 @@
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
     function saveWebsitePageFeaturePartySettings(callbackmethod , pageType) {
-        console.log('pageType : '+pageType);
         var actionUrl = "/proc_save_event_website_features_party.aeve";
         var methodType = "POST";
         var dataString = $("#frm_save_"+pageType).serialize();
@@ -571,6 +685,17 @@
             displayMssgBoxAlert('Oops!! We were unable to load any information for this page. Please try again later', true);
         }
     }
+    function loadWebsitePageFeatureParty(pageType,callbackmethod) {
+        if(pageType!=undefined) {
+            $('#load_page_type').val( pageType );
+            var actionUrl = "/proc_load_event_website_features_party.aeve";
+            var methodType = "POST";
+            var dataString = $("#frm_load_"+pageType+"_event_party").serialize();
+            makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to load any information for this page. Please try again later', true);
+        }
+    }
     var WebsitePageModel = Backbone.Model.extend({});
     var WebsitePageView = Backbone.View.extend({
         initialize: function(){
@@ -581,7 +706,6 @@
             for (var key in this.varArrayOfEventWebsitePages) {
                 $('#'+key+'_hide').bootstrapSwitch('state', this.varArrayOfEventWebsitePages[key].is_show );
             }
-            console.log( this.varEventWebsite.event_website_id );
             $('#couples_partner1_event_website_id').val( this.varEventWebsite.event_website_id);
             $('#couples_partner2_event_website_id').val( this.varEventWebsite.event_website_id);
         }
@@ -595,7 +719,6 @@
             this.varFeatures = this.model.get('bb_event_website_page_features');
             this.varImageHost = this.model.get('bb_image_host');
             this.varImageFolderLocation = this.model.get('bb_image_folder_location');
-            this.varEventParty = this.model.get('bb_event_party');
 
         },
         render:function(){
@@ -616,6 +739,197 @@
             }
         }
     });
+
+    var WebsitePageCouplesModel = Backbone.Model.extend({});
+    var WebsitePageCouplesView = Backbone.View.extend({
+        initialize: function(){
+            this.varNumOfEventParty = this.model.get('bb_num_of_event_party');
+            this.varEventParty = this.model.get('bb_event_party');
+            this.varEventPartyPage = this.model.get('bb_event_party_page');
+            this.varImageHost = this.model.get('bb_image_host');
+            this.varImageFolderLocation = this.model.get('bb_image_folder_location');
+
+
+        },
+        render:function(){
+            if(this.varNumOfEventParty>0){
+                for (var i = 0;i < this.varNumOfEventParty;i++) {
+                    var varCoupleEventParty = this.varEventParty[i];
+                    var varPartnerPos = 0;
+                    if(varCoupleEventParty.event_party_type == '<%=Constants.EVENT_PARTY_TYPE.BRIDE%>') {
+                        varPartnerPos = 1;
+                    } else  if(varCoupleEventParty.event_party_type == '<%=Constants.EVENT_PARTY_TYPE.GROOM%>') {
+                        varPartnerPos = 2;
+                    }
+
+                    $('#couples_partner'+varPartnerPos+'_name').val( varCoupleEventParty.name );
+                    $('#couples_partner'+varPartnerPos+'_description').val( varCoupleEventParty.description );
+                    $('#couples_partner'+varPartnerPos+'_upload_id').val( varCoupleEventParty.upload_id );
+
+                    var numOfSocialMedia = varCoupleEventParty.num_of_social_media;
+                    var varSocialMediaList = varCoupleEventParty.social_media_bean;
+                    if(numOfSocialMedia>0 && varSocialMediaList!=undefined){
+                        for(var j = 0;j<numOfSocialMedia; j++){
+                            var varSocialMedia = varSocialMediaList[j];
+                            $('#couples_partner'+varPartnerPos+'_'+varSocialMedia.social_media_name.toLowerCase() ).val( varSocialMedia.url );
+                        }
+                    }
+
+                    var varUploadedImage = varCoupleEventParty.image_uploaded;
+
+
+                    var imagePath = this.varImageHost+'/'+this.varImageFolderLocation+'/'+varUploadedImage.filename;
+                    createImage(imagePath, 'partner'+varPartnerPos+'_image_name');
+
+                    enableImagePreview(imagePath,'partner'+varPartnerPos+'_image_name');
+                }
+            }
+        }
+    });
+
+    var WebsitePagePartyPartnerModel = Backbone.Model.extend({});
+    var WebsitePagePartyPartnerView = Backbone.View.extend({
+        initialize: function(){
+            this.varNumOfEventParty = this.model.get('bb_num_of_event_party');
+            this.varEventParty = this.model.get('bb_event_party');
+            this.varEventPartyPage = this.model.get('bb_event_party_page');
+            this.varImageHost = this.model.get('bb_image_host');
+            this.varImageFolderLocation = this.model.get('bb_image_folder_location');
+            this.varPageType = this.model.get('bb_page_type');
+
+
+
+        },
+        render:function(){
+            if(this.varNumOfEventParty>0){
+
+                var oTable = getTable(this.varPageType);
+
+                if(oTable!='' && oTable!=undefined){
+                    oTable.fnClearTable();
+                    for (var i = 0;i < this.varNumOfEventParty;i++) {
+                        var vaEventPartyPartner = this.varEventParty[i];
+                        var varEventPartyId = vaEventPartyPartner.event_party_id;
+                        var varEventPartyPartnerName = vaEventPartyPartner.name;
+
+                        var ai = oTable.fnAddData( [varEventPartyPartnerName, createPartyPartnerButtons(varEventPartyId) ] );
+                        var nRow = oTable.fnSettings().aoData[ ai[0] ].nTr;
+                        $(nRow).attr('id','row_'+varEventPartyId);
+
+
+                        addPartyPartnerEditClickEvent(varEventPartyId, this.varPageType, i);
+                        addPartyPartnerDeleteClickEvent(varEventPartyId,varEventPartyPartnerName,this.varPageType, i);
+                    }
+                }
+
+            }
+        }
+    });
+    function getTable(varPageType){
+        var oTable = '';
+        if(varPageType == 'bridesmaids') {
+            oTable = objEveryBridesMaidTable;
+        } else if(varPageType == 'groomsmen') {
+            oTable = objEveryGroomsMenTable;
+        }
+        return oTable;
+    }
+    function addPartyPartnerEditClickEvent(varEventPartyId , varPageType, varRowNum) {
+        var varParty = '';
+        if(varPageType == 'bridesmaids') {
+            varParty = 'bm';
+        } else if(varPageType == 'groomsmen') {
+            varParty = 'gm';
+        }
+        $('#edit_'+varEventPartyId).click( function(){
+            $.colorbox({
+                href:'edit_event_website_party.jsp?party='+varParty+'&event_id=<%=sEventId%>&event_party_id='+varEventPartyId,
+                iframe:true,
+                innerWidth: '90%',
+                innerHeight: '85%',
+                scrolling: true,
+                onClosed : function() {
+                    loadWebsitePageFeatureParty(varPageType, populateWebsitePagePartyMembers)
+                }});
+        });
+
+    }
+    function addPartyPartnerDeleteClickEvent(varEventPartyId ,varEventPartyName , varPageType, varRowNum) {
+        var party_partner_obj = {
+            event_party_id: varEventPartyId,
+            event_party_name:varEventPartyName,
+            page_type:varPageType,
+            row_num: varRowNum,
+            printObj: function () {
+                return this.event_party_id + ' row : ' + this.row_num;
+            }
+        }
+
+        $('#del_'+varEventPartyId).click({param_party_partner_obj:party_partner_obj},function(e){
+            displayConfirmBox(
+                    "Are you sure you want to remove - " + e.data.param_party_partner_obj.event_party_name ,
+                    "Delete",
+                    "Yes", "No", deleteEventPartyPartner,e.data.param_party_partner_obj);
+        });
+    }
+    function deleteEventPartyPartner( varEventPartyObj ){
+        $('#delete_event_party_id').val(varEventPartyObj.event_party_id);
+        $('#delete_page_type').val(varEventPartyObj.page_type);
+
+        var actionUrl = "/proc_delete_event_party.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_delete_event_party_partner").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,processEventPartyPartnerDeletion);
+    }
+    function processEventPartyPartnerDeletion(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+
+                    var jsonResponseObj = varResponseObj.payload;
+                    var varIsRoleDeleted = jsonResponseObj.is_deleted;
+
+                    if(varIsRoleDeleted){
+
+                        $('#delete_event_party_id').val('');
+
+                        var varPageType = jsonResponseObj.page_type;
+                        var varEventPartyId = jsonResponseObj.deleted_event_party_id;
+                        var oTable = getTable(varPageType);
+                        if(oTable!='' && oTable!=undefined) {
+                            oTable.fnDeleteRow((oTable.$('#row_'+varEventPartyId))[0] );
+                        }
+
+                    } else {
+                        displayMssgBoxAlert("The role was not deleted. Please try again later.", true);
+                    }
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (deleteRole - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (deleteRole - 2)", true);
+        }
+    }
+
+    function createPartyPartnerButtons( varEventPartyId ){
+        var varButtons = '';
+            varButtons = varButtons + createPartyPartnerEditButton( varEventPartyId );
+            varButtons = varButtons + '&nbsp;&nbsp;&nbsp;';
+            varButtons = varButtons + createPartyPartnerDeleteButton( varEventPartyId );
+        return varButtons;
+    }
+    function createPartyPartnerEditButton(varEventPartyId){
+        return '<a id="edit_'+varEventPartyId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>';
+    }
+    function createPartyPartnerDeleteButton(varEventPartyId){
+        return '<a id="del_'+varEventPartyId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>';
+    }
+
     function generateWebsitePages( varJsonResponse ) {
         this.websitePageModel = new WebsitePageModel({
             'bb_arr_event_website_page' : varJsonResponse.event_website_pages,
@@ -638,6 +952,32 @@
         var webpageFeaturesView = new WebsitePageFeaturesView({model:this.websitePageFeaturesModel});
         webpageFeaturesView.render();
     }
+    function generateWebsiteCouples( varJsonResponse ) {
+        this.websitePageCouplesModel = new WebsitePageCouplesModel({
+
+            'bb_num_of_event_party' : varJsonResponse.num_of_event_party,
+            'bb_event_party' : varJsonResponse.event_party,
+            'bb_event_party_page' : varJsonResponse.event_website_page,
+            'bb_image_host' : varJsonResponse.image_host ,
+            'bb_image_folder_location' : varJsonResponse.image_folder_location
+        });
+        var websitePageCouplesView = new WebsitePageCouplesView({model:this.websitePageCouplesModel});
+        websitePageCouplesView.render();
+    }
+    function generateWebsitePartyPartner( varJsonResponse ) {
+        this.websitePagePartyPartnerModel = new WebsitePagePartyPartnerModel({
+
+            'bb_num_of_event_party' : varJsonResponse.num_of_event_party,
+            'bb_event_party' : varJsonResponse.event_party,
+            'bb_event_party_page' : varJsonResponse.event_website_page,
+            'bb_image_host' : varJsonResponse.image_host ,
+            'bb_image_folder_location' : varJsonResponse.image_folder_location ,
+            'bb_page_type' : varJsonResponse.page_type
+        });
+        var websitePagePartyPartnerView = new WebsitePagePartyPartnerView({model:this.websitePagePartyPartnerModel});
+        websitePagePartyPartnerView.render();
+    }
+
     function populateWebsitePages(jsonResult){
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
@@ -681,6 +1021,50 @@
         }
     }
 
+    function populateWebsitePageCouples(jsonResult){
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    if(jsonResponseObj!=undefined) {
+                        generateWebsiteCouples( jsonResponseObj );
+                    }
+
+                }
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (populateWPC 1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (populateWPC 3)', true);
+        }
+    }
+
+    function populateWebsitePagePartyMembers(jsonResult){
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    if(jsonResponseObj!=undefined) {
+                        generateWebsitePartyPartner( jsonResponseObj );
+                    }
+
+                }
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (populateWPC 1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (populateWPC 3)', true);
+        }
+    }
+
     $(function () {
         $('#frm_welcome_banner').fileupload({
             dataType: 'json',
@@ -712,6 +1096,80 @@
             progressall: function (e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
                 $('#welcome_banner_progress .bar').css(
+                        'width',
+                        progress + '%'
+                );
+            }
+        });
+    });
+    $(function () {
+        $('#frm_partner1_image').fileupload({
+            dataType: 'json',
+            replaceFileInput: false,
+            add: function (e, data) {
+                data.context = $('#btn_upload_partner1_image').click(function () {
+                    data.submit();
+                });
+            },
+            done: function (e, data) {
+                if( data.result != undefined ) {
+                    var varDataResult = data.result[0];
+
+                    if(varDataResult.success) {
+                        displayMssgBoxAlert("The image was successfully uploaded", false);
+                        var imagePath = varDataResult.imagehost+'/'+varDataResult.foldername+'/'+varDataResult.name;
+                        //console.log(varDataResult.upload_image.upload_id);
+                        $('#couples_partner1_upload_id').val(varDataResult.upload_image.upload_id);
+                        createImage(imagePath, 'partner1_image_name');
+
+                        enableImagePreview(imagePath,'partner1_image_name');
+                    } else {
+                        displayMssgBoxAlert("Oops!! We were unable to upload the banner  . Please try again later.", true);
+                    }
+                }
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#partner1_image_progress .bar').css(
+                        'width',
+                        progress + '%'
+                );
+            }
+        });
+    });
+    $(function () {
+        $('#frm_partner2_image').fileupload({
+            dataType: 'json',
+            replaceFileInput: false,
+            add: function (e, data) {
+                data.context = $('#btn_upload_partner2_image').click(function () {
+                    data.submit();
+                });
+            },
+            done: function (e, data) {
+                if( data.result != undefined ) {
+                    var varDataResult = data.result[0];
+
+                    if(varDataResult.success) {
+                        displayMssgBoxAlert("The image was successfully uploaded", false);
+                        //$('#banner_imagename').val( varDataResult.name );
+                        //$('#banner_imagehost').val( varDataResult.imagehost);
+                        //$('#banner_foldername').val(varDataResult.foldername);
+                        //couples_partner1_upload_id
+                        var imagePath = varDataResult.imagehost+'/'+varDataResult.foldername+'/'+varDataResult.name;
+                        //console.log(varDataResult.upload_image.upload_id);
+                        $('#couples_partner2_upload_id').val(varDataResult.upload_image.upload_id);
+                        createImage(imagePath, 'partner2_image_name');
+
+                        enableImagePreview(imagePath,'partner2_image_name');
+                    } else {
+                        displayMssgBoxAlert("Oops!! We were unable to upload the image. Please try again later.", true);
+                    }
+                }
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#partner2_image_progress .bar').css(
                         'width',
                         progress + '%'
                 );
@@ -769,8 +1227,8 @@
             "bInfo": false,
             "bFilter": false,
             "aoColumns": [
-                null,
-                { "bSortable": false }
+                {"bSortable": true,"sClass":"col-md-5"},
+                { "bSortable": false,"sClass": "center" }
             ]
         });
     }
@@ -781,9 +1239,9 @@
             "bPaginate": false,
             "bInfo": false,
             "bFilter": false,
-            "aoColumns": [
-                null,
-                { "bSortable": false }
+            "aoColumns":  [
+                {"bSortable": true,"sClass":"col-md-5"},
+                { "bSortable": false,"sClass": "center" }
             ]
         });
     }

@@ -1,16 +1,13 @@
 package com.events.proc.event.website;
 
-import com.events.bean.event.website.*;
+import com.events.bean.event.website.EventPartyRequest;
 import com.events.bean.users.UserBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.event.website.AccessEventParty;
-import com.events.event.website.AccessEventWebsite;
-import com.events.event.website.AccessEventWebsitePage;
-import com.events.event.website.AccessSocialMedia;
+import com.events.event.website.BuildEventParty;
 import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -26,11 +23,11 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 2/25/14
- * Time: 11:28 AM
+ * Date: 2/27/14
+ * Time: 12:28 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadEventWebsitePages extends HttpServlet {
+public class ProcDeleteEventParty extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,30 +43,44 @@ public class ProcLoadEventWebsitePages extends HttpServlet {
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
                     String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
+                    String sPageType =  ParseUtil.checkNull(request.getParameter("page_type"));
+                    String sEventPartyId =  ParseUtil.checkNull(request.getParameter("event_party_id"));
 
-                    EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
-                    eventWebsiteRequestBean.setEventId( sEventId );
+                    if(!Utility.isNullOrEmpty(sEventId) && !Utility.isNullOrEmpty(sEventPartyId) && !Utility.isNullOrEmpty(sPageType)) {
 
-                    AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
-                    EventWebsiteBean eventWebsiteBean = accessEventWebsite.getEventWebsite( eventWebsiteRequestBean );
+                        EventPartyRequest eventPartyRequest = new EventPartyRequest();
+                        eventPartyRequest.setEventPartyId( sEventPartyId );
 
-                    AccessEventWebsitePage accessEventWebsitePage = new AccessEventWebsitePage();
-                    ArrayList<EventWebsitePageBean> arrEventWebsitePageBean = accessEventWebsitePage.getEventWebsitePage(eventWebsiteBean) ;
-                    if(arrEventWebsitePageBean!=null && !arrEventWebsitePageBean.isEmpty()) {
+                        BuildEventParty buildEventParty = new BuildEventParty();
+                        boolean isDeleted = false;
+                        if( buildEventParty.deleteEventParty( eventPartyRequest ) ) {
+                            isDeleted = true;
 
-                        jsonResponseObj.put("event_website", eventWebsiteBean.toJson() );
-                        Text okText = new OkText("Your changes were successfully updated.","status_mssg") ;
-                        arrOkText.add(okText);
-                        responseStatus = RespConstants.Status.OK;
+                            jsonResponseObj.put("deleted_event_party_id",sEventPartyId);
+                            jsonResponseObj.put("page_type",sPageType);
+
+                            Text okText = new OkText("Successfully Deleted..","status_mssg") ;
+                            arrOkText.add(okText);
+                            responseStatus = RespConstants.Status.OK;
+                        } else {
+                            appLogging.info("Unable to delete " + ParseUtil.checkNull(sEventPartyId) );
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(delEventParty - 004)","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
+                        }
+                        jsonResponseObj.put("is_deleted" , isDeleted );
                     } else {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventWebPage - 002)","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(delEventParty - 003)","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
                     }
+
+
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventWebPage - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(delEventParty - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -83,7 +94,7 @@ public class ProcLoadEventWebsitePages extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventWebPage - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(delEventParty - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;
@@ -100,3 +111,4 @@ public class ProcLoadEventWebsitePages extends HttpServlet {
         response.getWriter().write( responseObject.getJson().toString() );
     }
 }
+

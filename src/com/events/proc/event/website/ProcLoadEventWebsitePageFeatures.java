@@ -34,7 +34,7 @@ import java.util.ArrayList;
  * Time: 5:56 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadEventWebsitePageRecords extends HttpServlet {
+public class ProcLoadEventWebsitePageFeatures extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

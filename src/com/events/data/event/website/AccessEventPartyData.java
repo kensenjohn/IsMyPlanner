@@ -47,13 +47,37 @@ public class AccessEventPartyData {
             String sQuery = "SELECT * FROM  GTEVENTPARTY WHERE FK_EVENTWEBSITEID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint(eventPartyRequest.getEventWebsiteId() );
 
-            ArrayList<HashMap<String, String>> arrResult =  DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventPartyData.java", "getEventParty()");
+            ArrayList<HashMap<String, String>> arrResult =  DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventPartyData.java", "getEventPartyByWebsite()");
             if(arrResult!=null && !arrResult.isEmpty()){
                 for(HashMap<String, String> hmResult : arrResult ) {
                     EventPartyBean eventPartyBean = new EventPartyBean(hmResult);
                     arrEventPartyBean.add( eventPartyBean );
                 }
             }
+        }
+        return arrEventPartyBean;
+    }
+
+    public ArrayList<EventPartyBean> getEventPartyByTypeAndWebsite(EventPartyRequest eventPartyRequest) {
+        ArrayList<EventPartyBean> arrEventPartyBean = new ArrayList<EventPartyBean>();
+        if(eventPartyRequest!=null) {
+            ArrayList<Constants.EVENT_PARTY_TYPE> arrEventPartyType = eventPartyRequest.getArrEventPartyType();
+            if(arrEventPartyType!=null && !arrEventPartyType.isEmpty()){
+                String sQuery = "SELECT * FROM  GTEVENTPARTY WHERE FK_EVENTWEBSITEID = ? AND EVENTPARTYTYPE IN ( " + DBDAO.createParamQuestionMarks(arrEventPartyType.size()) + ")";
+                ArrayList<Object> aParams = DBDAO.createConstraint(eventPartyRequest.getEventWebsiteId() );
+                for(Constants.EVENT_PARTY_TYPE eventPartyType : arrEventPartyType ) {
+                    aParams.add( eventPartyType.toString() );
+                }
+
+                ArrayList<HashMap<String, String>> arrResult =  DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventPartyData.java", "getEventPartyByTypeAndWebsite()");
+                if(arrResult!=null && !arrResult.isEmpty()){
+                    for(HashMap<String, String> hmResult : arrResult ) {
+                        EventPartyBean eventPartyBean = new EventPartyBean(hmResult);
+                        arrEventPartyBean.add( eventPartyBean );
+                    }
+                }
+            }
+
         }
         return arrEventPartyBean;
     }

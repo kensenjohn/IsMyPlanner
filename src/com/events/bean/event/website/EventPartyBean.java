@@ -23,6 +23,7 @@ public class EventPartyBean {
     private String eventPartyTypeName = Constants.EMPTY;
     private String name = Constants.EMPTY;
     private String description = Constants.EMPTY;
+    private String uploadId = Constants.EMPTY;
 
     public EventPartyBean(){}
     public EventPartyBean(HashMap<String,String> hmResult) {
@@ -31,12 +32,23 @@ public class EventPartyBean {
         this.eventPartyTypeName = ParseUtil.checkNull(hmResult.get("EVENTPARTYTYPE"));
         this.name = ParseUtil.checkNull(hmResult.get("NAME"));
         this.description = ParseUtil.checkNull(hmResult.get("DESCRIPTION"));
+        this.uploadId = ParseUtil.checkNull(hmResult.get("FK_UPLOADID"));
+
 
         if(!Utility.isNullOrEmpty(this.eventPartyTypeName)) {
             eventPartyType = Constants.EVENT_PARTY_TYPE.valueOf( this.eventPartyTypeName );
         }
 
     }
+
+    public String getUploadId() {
+        return uploadId;
+    }
+
+    public void setUploadId(String uploadId) {
+        this.uploadId = uploadId;
+    }
+
     public String getEventPartyId() {
         return eventPartyId;
     }

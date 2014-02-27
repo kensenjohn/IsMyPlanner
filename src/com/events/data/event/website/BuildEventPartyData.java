@@ -1,6 +1,7 @@
 package com.events.data.event.website;
 
 import com.events.bean.event.website.EventPartyBean;
+import com.events.bean.event.website.EventPartyRequest;
 import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.db.DBDAO;
@@ -27,10 +28,10 @@ public class BuildEventPartyData {
     public Integer insertEventParty(EventPartyBean eventPartyBean) {
         Integer numOfRowsInserted = 0;
         if(eventPartyBean!=null) {
-            String sQuery = "INSERT into GTEVENTPARTY(EVENTPARTYID,FK_EVENTWEBSITEID,EVENTPARTYTYPE,    NAME,DESCRIPTION) VALUES " +
-                    " (?,?,?,    ?,? )";
+            String sQuery = "INSERT into GTEVENTPARTY(EVENTPARTYID,FK_EVENTWEBSITEID,EVENTPARTYTYPE,    NAME,DESCRIPTION,FK_UPLOADID) VALUES " +
+                    " (?,?,?,    ?,?,? )";
             ArrayList<Object> aParams = DBDAO.createConstraint(eventPartyBean.getEventPartyId(), eventPartyBean.getEventWebsiteId(), eventPartyBean.getEventPartyType().toString(),
-                    eventPartyBean.getName(), eventPartyBean.getDescription());
+                    eventPartyBean.getName(), eventPartyBean.getDescription(),eventPartyBean.getUploadId());
 
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildEventPartyData.java", "insertEventParty() ");
         }
@@ -40,10 +41,20 @@ public class BuildEventPartyData {
     public Integer updateEventParty(EventPartyBean eventPartyBean) {
         Integer numOfRowsInserted = 0;
         if(eventPartyBean!=null) {
-            String sQuery = "UPDATE GTEVENTPARTY SET NAME = ?, DESCRIPTION = ?,EVENTPARTYTYPE= ? WHERE   EVENTPARTYID=? ";
-            ArrayList<Object> aParams = DBDAO.createConstraint(eventPartyBean.getName(), eventPartyBean.getDescription(),eventPartyBean.getEventPartyType().toString(),
+            String sQuery = "UPDATE GTEVENTPARTY SET NAME = ?, DESCRIPTION = ?,EVENTPARTYTYPE= ?,FK_UPLOADID = ? WHERE   EVENTPARTYID=? ";
+            ArrayList<Object> aParams = DBDAO.createConstraint(eventPartyBean.getName(), eventPartyBean.getDescription(),eventPartyBean.getEventPartyType().toString(),eventPartyBean.getUploadId(),
                     eventPartyBean.getEventPartyId() );
-            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildEventWebsiteData.java", "updateEventParty() ");
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildEventPartyData.java", "updateEventParty() ");
+        }
+        return numOfRowsInserted;
+    }
+
+    public Integer deleteEventParty(EventPartyRequest eventPartyRequest) {
+        Integer numOfRowsInserted = 0;
+        if(eventPartyRequest!=null) {
+            String sQuery = "DELETE FROM GTEVENTPARTY  WHERE   EVENTPARTYID=? ";
+            ArrayList<Object> aParams = DBDAO.createConstraint( eventPartyRequest.getEventPartyId() );
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildEventWebsiteData.java", "deleteEventParty() ");
         }
         return numOfRowsInserted;
     }

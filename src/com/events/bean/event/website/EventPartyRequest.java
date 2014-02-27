@@ -19,6 +19,24 @@ public class EventPartyRequest {
     private String name = Constants.EMPTY;
     private String description = Constants.EMPTY;
     private ArrayList<SocialMediaBean> arrSocialMediaBean = new ArrayList<SocialMediaBean>();
+    private ArrayList<Constants.EVENT_PARTY_TYPE> arrEventPartyType = new ArrayList<Constants.EVENT_PARTY_TYPE>();
+    private String uploadId = Constants.EMPTY;
+
+    public String getUploadId() {
+        return uploadId;
+    }
+
+    public void setUploadId(String uploadId) {
+        this.uploadId = uploadId;
+    }
+
+    public ArrayList<Constants.EVENT_PARTY_TYPE> getArrEventPartyType() {
+        return arrEventPartyType;
+    }
+
+    public void setArrEventPartyType(ArrayList<Constants.EVENT_PARTY_TYPE> arrEventPartyType) {
+        this.arrEventPartyType = arrEventPartyType;
+    }
 
     public ArrayList<SocialMediaBean> getArrSocialMediaBean() {
         return arrSocialMediaBean;

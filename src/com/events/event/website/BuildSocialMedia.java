@@ -19,10 +19,18 @@ public class BuildSocialMedia {
         ArrayList<SocialMediaBean> arrSocialMediaBean =  eventPartyRequest.getArrSocialMediaBean();
         if(eventPartyRequest!=null && !Utility.isNullOrEmpty(eventPartyRequest.getEventPartyId()) ){
 
+            final String sEventPartyId = eventPartyRequest.getEventPartyId();
             BuildSocialMediaData buildSocialMediaData = new BuildSocialMediaData();
             Integer numOfRowsInserted = buildSocialMediaData.deleteSocialMedia( eventPartyRequest ) ;
             if(arrSocialMediaBean!=null && !arrSocialMediaBean.isEmpty()){
-                buildSocialMediaData.insertSocialMedia( arrSocialMediaBean );
+                ArrayList<SocialMediaBean> arrNewSocialMediaBean = new ArrayList<SocialMediaBean>();
+                for( SocialMediaBean socialMediaBean : arrSocialMediaBean ){
+                    socialMediaBean.setSocialMediaId( Utility.getNewGuid());
+                    socialMediaBean.setEventPartyId( sEventPartyId );
+
+                    arrNewSocialMediaBean.add(socialMediaBean );
+                }
+                buildSocialMediaData.insertSocialMedia( arrNewSocialMediaBean );
             }
         }
     }

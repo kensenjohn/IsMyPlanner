@@ -28,10 +28,32 @@ public class AccessSocialMediaData {
 
     ////GTSOCIALMEDIA(SOCIALMEDIAID VARCHAR(45) NOT NULL, FK_EVENTPARTYID VARCHAR(45) NOT NULL,SOCIALMEDIATYPE  VARCHAR(250) NOT NULL, URL  VARCHAR(1000) NOT NULL ,
     public ArrayList<SocialMediaBean> getSocialMedia(EventPartyRequest eventPartyRequest){
+        Integer numOfRowsInserted = 0;
         ArrayList<SocialMediaBean> arrSocialMediaBean = new ArrayList<SocialMediaBean>();
         if( eventPartyRequest!=null  ) {
             String sQuery = "SELECT * FROM GTSOCIALMEDIA WHERE FK_EVENTPARTYID = ? ";
             ArrayList<Object> aParams = DBDAO.createConstraint( eventPartyRequest.getEventPartyId()  );
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessSocialMediaData.java", "getSocialMedia()");
+            if(arrResult!=null && !arrResult.isEmpty()){
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    SocialMediaBean socialMediaBean = new SocialMediaBean(hmResult);
+                    arrSocialMediaBean.add( socialMediaBean );
+                }
+            }
+        }
+        return arrSocialMediaBean;
+    }
+
+    public ArrayList<SocialMediaBean> getSocialMedia(ArrayList<EventPartyBean> arrEventPartyBean){
+        Integer numOfRowsInserted = 0;
+        ArrayList<SocialMediaBean> arrSocialMediaBean = new ArrayList<SocialMediaBean>();
+        if( arrEventPartyBean!=null && !arrEventPartyBean.isEmpty() ) {
+            String sQuery = "SELECT * FROM GTSOCIALMEDIA WHERE FK_EVENTPARTYID IN ( " + DBDAO.createParamQuestionMarks(arrEventPartyBean.size()) + ")";
+            ArrayList<Object> aParams = new ArrayList<Object>();
+            for(EventPartyBean eventPartyBean : arrEventPartyBean ) {
+                aParams.add( eventPartyBean.getEventPartyId() );
+            }
 
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessSocialMediaData.java", "getSocialMedia()");
             if(arrResult!=null && !arrResult.isEmpty()){

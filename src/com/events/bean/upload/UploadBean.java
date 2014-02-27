@@ -2,6 +2,8 @@ package com.events.bean.upload;
 
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -78,5 +80,18 @@ public class UploadBean {
         sb.append(", humanCreateDate='").append(humanCreateDate).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public JSONObject toJson() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("upload_id", this.uploadId );
+            jsonObject.put("filename", this.filename );
+            jsonObject.put("path", this.path );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }
