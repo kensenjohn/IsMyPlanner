@@ -19,12 +19,12 @@ import java.util.HashMap;
 public class AccessEventHotels {
 
     public EventHotelsBean getEventHotel(EventHotelRequest eventHotelRequest){
-        EventHotelsBean eventPartyBean = new EventHotelsBean();
+        EventHotelsBean eventHotelsBean = new EventHotelsBean();
         if(eventHotelRequest!=null){
             AccessEventHotelData accessEventPartyData = new AccessEventHotelData();
-            eventPartyBean = accessEventPartyData.getEventHotel( eventHotelRequest );
+            eventHotelsBean = accessEventPartyData.getEventHotel( eventHotelRequest );
         }
-        return eventPartyBean;
+        return eventHotelsBean;
     }
 
     public ArrayList<EventHotelsBean> getEventHotelByWebsite(EventHotelRequest eventHotelRequest){
@@ -42,8 +42,8 @@ public class AccessEventHotels {
 
 
             Integer iNumOfEventParty = 0;
-            for(EventHotelsBean eventPartyBean : arrEventHotelsBean ){
-                JSONObject jsonEventParty = eventPartyBean.toJson();
+            for(EventHotelsBean eventHotelsBean : arrEventHotelsBean ){
+                JSONObject jsonEventParty = eventHotelsBean.toJson();
 
 
                 jsonObject.put(iNumOfEventParty.toString(), jsonEventParty) ;

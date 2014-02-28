@@ -1,7 +1,7 @@
 package com.events.proc.event.website;
 
-import com.events.bean.event.website.EventHotelRequest;
-import com.events.bean.event.website.EventHotelsBean;
+import com.events.bean.event.website.EventRegistryBean;
+import com.events.bean.event.website.EventRegistryRequest;
 import com.events.bean.event.website.EventWebsiteBean;
 import com.events.bean.event.website.EventWebsiteRequestBean;
 import com.events.bean.users.UserBean;
@@ -10,8 +10,7 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.data.event.website.AccessEventHotelData;
-import com.events.event.website.AccessEventHotels;
+import com.events.event.website.AccessEventRegistry;
 import com.events.event.website.AccessEventWebsite;
 import com.events.json.*;
 import org.json.JSONObject;
@@ -29,10 +28,10 @@ import java.util.ArrayList;
  * Created with IntelliJ IDEA.
  * User: root
  * Date: 2/28/14
- * Time: 12:26 PM
+ * Time: 2:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadEventWebsiteHotel extends HttpServlet {
+public class ProcLoadEventWebsiteRegistry  extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,24 +57,24 @@ public class ProcLoadEventWebsiteHotel extends HttpServlet {
                         EventWebsiteBean eventWebsiteBean = accessEventWebsite.getEventWebsite(eventWebsiteRequestBean);
                         if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
 
-                            EventHotelRequest eventHotelRequest = new EventHotelRequest();
-                            eventHotelRequest.setEventWebsiteId( eventWebsiteBean.getEventWebsiteId() );
+                            EventRegistryRequest eventRegistryRequest = new EventRegistryRequest();
+                            eventRegistryRequest.setEventWebsiteId( eventWebsiteBean.getEventWebsiteId() );
 
-                            AccessEventHotels accessEventHotels = new AccessEventHotels();
-                            ArrayList<EventHotelsBean> arrEventHotelsBean =  accessEventHotels.getEventHotelByWebsite(eventHotelRequest);
+                            AccessEventRegistry accessEventRegistry = new AccessEventRegistry();
+                            ArrayList<EventRegistryBean> arrEventRegistryBean =  accessEventRegistry.getEventRegistryByWebsite(eventRegistryRequest);
 
-                            JSONObject jsonEventHotels = accessEventHotels.getEventHotelJson( arrEventHotelsBean );
+                            JSONObject jsonEventRegistry = accessEventRegistry.getEventRegistryJson( arrEventRegistryBean );
                             Integer iNumOfHotels = 0;
-                            if(jsonEventHotels!=null){
-                                iNumOfHotels = jsonEventHotels.optInt("num_of_event_hotels");
+                            if(jsonEventRegistry!=null){
+                                iNumOfHotels = jsonEventRegistry.optInt("num_of_event_registry");
                                 if(iNumOfHotels>0){
-                                    jsonResponseObj.put("event_hotels", jsonEventHotels );
+                                    jsonResponseObj.put("event_registry", jsonEventRegistry );
                                 }
                             }
-                            jsonResponseObj.put("num_of_event_hotels", iNumOfHotels);
+                            jsonResponseObj.put("num_of_event_registry", iNumOfHotels);
                             jsonResponseObj.put("page_type" , sPageType );
 
-                            Text okText = new OkText("Website Hotels loaded","status_mssg") ;
+                            Text okText = new OkText("Website Registry loaded","status_mssg") ;
                             arrOkText.add(okText);
                             responseStatus = RespConstants.Status.OK;
                         } else {
@@ -87,7 +86,7 @@ public class ProcLoadEventWebsiteHotel extends HttpServlet {
 
 
                     } else {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventHotelList - 003)","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventRegistryList - 003)","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
@@ -97,7 +96,7 @@ public class ProcLoadEventWebsiteHotel extends HttpServlet {
 
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventHotelList - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventRegistryList - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -111,7 +110,7 @@ public class ProcLoadEventWebsiteHotel extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventHotelList - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventRegistryList - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

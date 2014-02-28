@@ -743,13 +743,7 @@
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <form id="frm_save_registry">
-                                                <div class="form-group">
-                                                    Registry
-                                                </div>
-                                                <input type="hidden" name="event_id" value="<%=sEventId%>" />
-                                                <input type="hidden" name="page_type" value="registry" />
-                                            </form>
+                                            <button type="button" class="btn btn-filled" id="btn_add_registry">Add New</button>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -759,7 +753,17 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <button class="btn btn-filled save-website-page" id="save_registry" param="registry">Save</button>
+                                            <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_registry" >
+                                                <thead>
+                                                <tr role="row">
+                                                    <th class="sorting col-md-3" role="columnheader">Name</th>
+                                                    <th class="center" role="columnheader"></th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody role="alert" id="every_registry_rows">
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -780,28 +784,7 @@
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <form id="frm_save_rsvp">
-                                                <div class="form-group">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <label for="rsvp_rsvp_instruction" class="form_label">Instructions </label>
-                                                            <input type="text" name="rsvp_instruction" id="rsvp_rsvp_instruction" class="form-control" >
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" name="event_id" value="<%=sEventId%>" />
-                                                <input type="hidden" name="page_type" value="rsvp" />
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <button class="btn btn-filled save-website-page" id="save_rsvp" param="rsvp">Save</button>
+                                            <h5>Your Guests can use this form to RSVP online. </h5>
                                         </div>
                                     </div>
                                 </div>
@@ -823,18 +806,7 @@
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <form id="frm_save_contactus">
-                                                <div class="form-group">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <label for="contactus_contactus_instruction" class="form_label">Instructions </label>
-                                                            <input type="text" name="contactus_instruction" id="contactus_contactus_instruction" class="form-control" >
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" name="event_id" value="<%=sEventId%>" />
-                                                <input type="hidden" name="page_type" value="contactus" />
-                                            </form>
+                                            <button type="button" class="btn btn-filled" id="btn_add_registry">Add New</button>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -844,7 +816,19 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <button class="btn btn-filled save-website-page" id="save_contactus" param="contactus">Save</button>
+                                            <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_contactus" >
+                                                <thead>
+                                                <tr role="row">
+                                                    <th class="sorting" role="columnheader">Name</th>
+                                                    <th class="sorting" role="columnheader">Phone</th>
+                                                    <th class="sorting" role="columnheader">Email</th>
+                                                    <th class="center" role="columnheader"></th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody role="alert" id="every_contactus_rows">
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -889,6 +873,10 @@
     <input type="hidden"  name="page_type" value="hotels"/>
     <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
 </form>
+<form id="frm_load_registry_list">
+    <input type="hidden"  name="page_type" value="registry"/>
+    <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
+</form>
 <form id="frm_save_web_page">
     <input type="hidden" name="event_id" value="<%=sEventId%>"/>
     <input type="hidden" id="save_web_page_type" name="page_type" value=""/>
@@ -903,6 +891,11 @@
     <input type="hidden" name="event_id" value="<%=sEventId%>"/>
     <input type="hidden" id="delete_event_hotel_id" name="event_hotel_id" value=""/>
     <input type="hidden" name="page_type" value="hotels"/>
+</form>
+<form id="frm_delete_event_registry">
+    <input type="hidden" name="event_id" value="<%=sEventId%>"/>
+    <input type="hidden" id="delete_event_registry_id" name="event_registry_id" value=""/>
+    <input type="hidden" name="page_type" value="registry"/>
 </form>
 
 <jsp:include page="/com/events/common/footer_top.jsp"/>
@@ -985,7 +978,6 @@
         })
         $('#collapse_travel').on('show.bs.collapse', function () {
             toggleCollapseIcon('travel_collapse_icon');
-            //loadWebsitePageFeatures('reception', populateWebsitePageFeatures)
         })
 
         $('#collapse_hotels').on('hide.bs.collapse', function () {
@@ -1001,7 +993,7 @@
         })
         $('#collapse_registry').on('show.bs.collapse', function () {
             toggleCollapseIcon('registry_collapse_icon');
-            //loadWebsitePageFeatures('reception', populateWebsitePageFeatures)
+            loadWebsitePageRegistry('reception', populateWebsitePageRegistry)
         })
 
         $('#collapse_rsvp').on('hide.bs.collapse', function () {
@@ -1068,7 +1060,8 @@
         loadWebsitePage(populateWebsitePages);
         initializeBridesMaidTable();
         initializeGroomsMenTable();
-        initializeHotesTable();
+        initializeHotelsTable();
+        initializeRegistryTable();
 
         $('#btn_add_bridesmaid').click( function(){
             $.colorbox({
@@ -1105,6 +1098,18 @@
                     loadWebsitePageHotels('hotels', populateWebsitePageHotels)
                 }});
         })
+        $('#btn_add_registry').click( function(){
+            $.colorbox({
+                href:'edit_event_website_registry.jsp?event_id=<%=sEventId%>',
+                iframe:true,
+                innerWidth: '90%',
+                innerHeight: '85%',
+                scrolling: true,
+                onClosed : function() {
+                    loadWebsitePageRegistry('registry', populateWebsitePageRegistry)
+                }});
+        })
+
 
 
 
@@ -1171,6 +1176,16 @@
             displayMssgBoxAlert('Oops!! We were unable to load any information for this page. Please try again later', true);
         }
     }
+    function loadWebsitePageRegistry(pageType,callbackmethod) {
+        if(pageType!=undefined) {
+            var actionUrl = "/proc_load_event_website_registry_list.aeve";
+            var methodType = "POST";
+            var dataString = $("#frm_load_registry_list").serialize();
+            makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to load any information for this page. Please try again later', true);
+        }
+    }
 
     var WebsitePageModel = Backbone.Model.extend({});
     var WebsitePageView = Backbone.View.extend({
@@ -1180,6 +1195,7 @@
         },
         render:function(){
             for (var key in this.varArrayOfEventWebsitePages) {
+                console.log('key : ' + key + ' -> ' + this.varArrayOfEventWebsitePages[key].is_show );
                 $('#'+key+'_hide').bootstrapSwitch('state', this.varArrayOfEventWebsitePages[key].is_show );
             }
             $('#couples_partner1_event_website_id').val( this.varEventWebsite.event_website_id);
@@ -1272,6 +1288,37 @@
             }
         }
     });
+    var WebsitePageRegistryModel = Backbone.Model.extend({});
+    var WebsitePageRegistryView = Backbone.View.extend({
+        initialize: function(){
+            this.varNumOfEventRegistry = this.model.get('bb_num_of_event_registry');
+            this.varEventRegistryList = this.model.get('bb_event_registry');
+            this.varPageType = this.model.get('bb_page_type');
+        },
+        render:function(){
+
+            if(this.varNumOfEventRegistry>0){
+                var oTable = getTable(this.varPageType);
+                if(oTable!='' && oTable!=undefined){
+                    oTable.fnClearTable();
+                    for (var i = 0;i < this.varNumOfEventRegistry;i++) {
+                        var vaEventRegistry = this.varEventRegistryList[i];
+                        var varEventRegistryId = vaEventRegistry.event_registry_id;
+                        var varEventRegistryName = vaEventRegistry.name;
+
+                        var ai = oTable.fnAddData( [varEventRegistryName, createButtons(varEventRegistryId) ] );
+                        var nRow = oTable.fnSettings().aoData[ ai[0] ].nTr;
+                        $(nRow).attr('id','row_'+varEventRegistryId);
+
+
+                        addRegistryEditClickEvent(varEventRegistryId, this.varPageType, i);
+                        addRegistryDeleteClickEvent(varEventRegistryId,varEventRegistryName,this.varPageType, i);
+                    }
+                }
+            }
+        }
+    });
+
     var WebsitePageHotelsModel = Backbone.Model.extend({});
     var WebsitePageHotelsView = Backbone.View.extend({
         initialize: function(){
@@ -1349,9 +1396,43 @@
             oTable = objEveryGroomsMenTable;
         }  else if(varPageType == 'hotels') {
             oTable = objEveryHotelsTable;
+        } else if(varPageType == 'registry') {
+            oTable = objEveryRegistryTable;
         }
         return oTable;
     }
+    function addRegistryEditClickEvent(varEventRegistryId , varPageType, varRowNum){
+        $('#edit_'+varEventRegistryId).click( function(){
+            $.colorbox({
+                href:'edit_event_website_registry.jsp?event_id=<%=sEventId%>&event_registry_id='+varEventRegistryId,
+                iframe:true,
+                innerWidth: '90%',
+                innerHeight: '85%',
+                scrolling: true,
+                onClosed : function() {
+                    loadWebsitePageRegistry(varPageType, populateWebsitePageRegistry )
+                }});
+        });
+    }
+    function addRegistryDeleteClickEvent(varEventRegistryId ,varEventRegistryName , varPageType, varRowNum) {
+        var registry_obj = {
+            event_registry_id: varEventRegistryId,
+            event_registry_name:varEventRegistryName,
+            page_type:varPageType,
+            row_num: varRowNum,
+            printObj: function () {
+                return this.event_registry_id + ' row : ' + this.row_num;
+            }
+        }
+
+        $('#del_'+varEventRegistryId).click({param_registry_obj:registry_obj},function(e){
+            displayConfirmBox(
+                    "Are you sure you want to remove - " + e.data.param_registry_obj.event_registry_name ,
+                    "Delete Registry",
+                    "Yes", "No", deleteEventRegistry,e.data.param_registry_obj);
+        });
+    }
+
     function addHotelsEditClickEvent(varEventHotelId , varPageType, varRowNum){
         $('#edit_'+varEventHotelId).click( function(){
             $.colorbox({
@@ -1421,6 +1502,50 @@
                     "Yes", "No", deleteEventPartyPartner,e.data.param_party_partner_obj);
         });
     }
+    function deleteEventRegistry( varEventRegistryObj ){
+        $('#delete_event_registry_id').val(varEventRegistryObj.event_registry_id);
+
+        var actionUrl = "/proc_delete_event_registry.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_delete_event_registry").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,processEventRegistryDeletion);
+
+    }
+    function processEventRegistryDeletion (jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+
+                    var jsonResponseObj = varResponseObj.payload;
+                    var varIsRegistryDeleted = jsonResponseObj.is_deleted;
+
+                    if(varIsRegistryDeleted){
+
+                        $('#delete_event_registry_id').val('');
+
+                        var varPageType = jsonResponseObj.page_type;
+                        var varEventRegistryId = jsonResponseObj.deleted_event_registry_id;
+                        var oTable = getTable(varPageType);
+                        if(oTable!='' && oTable!=undefined) {
+                            oTable.fnDeleteRow((oTable.$('#row_'+varEventRegistryId))[0] );
+                        }
+
+                    } else {
+                        displayMssgBoxAlert("The registry was not deleted. Please try again later.", true);
+                    }
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (deleteRegistry - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (deleteRegistry - 2)", true);
+        }
+    }
+
     function deleteEventHotel( varEventHotelObj ){
         $('#delete_event_hotel_id').val(varEventHotelObj.event_hotel_id);
 
@@ -1579,6 +1704,16 @@
         var websitePageHotelsView = new WebsitePageHotelsView({model:this.websitePageHotelsModel});
         websitePageHotelsView.render();
     }
+    function generateWebsiteRegistry( varJsonResponse ) {
+        this.websitePageRegistryModel = new WebsitePageRegistryModel({
+
+            'bb_num_of_event_registry' : varJsonResponse.num_of_event_registry,
+            'bb_event_registry' : varJsonResponse.event_registry,
+            'bb_page_type' : varJsonResponse.page_type
+        });
+        var websitePageRegistryView = new WebsitePageRegistryView({model:this.websitePageRegistryModel});
+        websitePageRegistryView.render();
+    }
 
     function populateWebsitePages(jsonResult){
         if(jsonResult!=undefined) {
@@ -1677,6 +1812,27 @@
                     var jsonResponseObj = varResponseObj.payload;
                     if(jsonResponseObj!=undefined) {
                         generateWebsiteHotels( jsonResponseObj );
+                    }
+
+                }
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (populateWPC 1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (populateWPC 3)', true);
+        }
+    }
+    function  populateWebsitePageRegistry(jsonResult){
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    if(jsonResponseObj!=undefined) {
+                        generateWebsiteRegistry( jsonResponseObj );
                     }
 
                 }
@@ -1869,7 +2025,7 @@
         });
     }
 
-    function initializeHotesTable(){
+    function initializeHotelsTable(){
 
         objEveryHotelsTable =  $('#every_hotels').dataTable({
             "bPaginate": false,
@@ -1881,5 +2037,18 @@
             ]
         });
     }
+    function initializeRegistryTable(){
+
+        objEveryRegistryTable =  $('#every_registry').dataTable({
+            "bPaginate": false,
+            "bInfo": false,
+            "bFilter": false,
+            "aoColumns":  [
+                {"bSortable": true,"sClass":"col-md-5"},
+                { "bSortable": false,"sClass": "center" }
+            ]
+        });
+    }
+    
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>

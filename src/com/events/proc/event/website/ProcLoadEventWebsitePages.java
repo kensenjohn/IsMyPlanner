@@ -58,6 +58,9 @@ public class ProcLoadEventWebsitePages extends HttpServlet {
                     if(arrEventWebsitePageBean!=null && !arrEventWebsitePageBean.isEmpty()) {
 
                         jsonResponseObj.put("event_website", eventWebsiteBean.toJson() );
+
+                        JSONObject jsonEventWebsitePages = accessEventWebsitePage.getJsonEventWebsitePage(arrEventWebsitePageBean);
+                        jsonResponseObj.put("event_website_pages", jsonEventWebsitePages );
                         Text okText = new OkText("Your changes were successfully updated.","status_mssg") ;
                         arrOkText.add(okText);
                         responseStatus = RespConstants.Status.OK;

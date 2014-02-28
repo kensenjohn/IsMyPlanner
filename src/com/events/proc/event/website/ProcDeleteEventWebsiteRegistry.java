@@ -1,18 +1,13 @@
 package com.events.proc.event.website;
 
-import com.events.bean.event.website.EventHotelRequest;
-import com.events.bean.event.website.EventHotelsBean;
-import com.events.bean.event.website.EventWebsiteBean;
-import com.events.bean.event.website.EventWebsiteRequestBean;
+import com.events.bean.event.website.EventRegistryRequest;
 import com.events.bean.users.UserBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.data.event.website.AccessEventHotelData;
-import com.events.event.website.AccessEventHotels;
-import com.events.event.website.AccessEventWebsite;
+import com.events.event.website.BuildEventRegistry;
 import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -29,10 +24,10 @@ import java.util.ArrayList;
  * Created with IntelliJ IDEA.
  * User: root
  * Date: 2/28/14
- * Time: 12:26 PM
+ * Time: 3:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadEventWebsiteHotel extends HttpServlet {
+public class ProcDeleteEventWebsiteRegistry  extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -49,55 +44,43 @@ public class ProcLoadEventWebsiteHotel extends HttpServlet {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
                     String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
                     String sPageType =  ParseUtil.checkNull(request.getParameter("page_type"));
+                    String sEventRegistryId =  ParseUtil.checkNull(request.getParameter("event_registry_id"));
 
-                    if(!Utility.isNullOrEmpty(sEventId)){
-                        EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
-                        eventWebsiteRequestBean.setEventId( sEventId );
+                    if(!Utility.isNullOrEmpty(sEventId) && !Utility.isNullOrEmpty(sEventRegistryId) && !Utility.isNullOrEmpty(sPageType)) {
 
-                        AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
-                        EventWebsiteBean eventWebsiteBean = accessEventWebsite.getEventWebsite(eventWebsiteRequestBean);
-                        if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
+                        EventRegistryRequest eventRegistryRequest = new EventRegistryRequest();
+                        eventRegistryRequest.setEventRegistryId( sEventRegistryId );
 
-                            EventHotelRequest eventHotelRequest = new EventHotelRequest();
-                            eventHotelRequest.setEventWebsiteId( eventWebsiteBean.getEventWebsiteId() );
+                        BuildEventRegistry buildEventRegistry = new BuildEventRegistry();
+                        boolean isDeleted = false;
+                        if( buildEventRegistry.deleteEventRegistry( eventRegistryRequest ) ) {
+                            isDeleted = true;
 
-                            AccessEventHotels accessEventHotels = new AccessEventHotels();
-                            ArrayList<EventHotelsBean> arrEventHotelsBean =  accessEventHotels.getEventHotelByWebsite(eventHotelRequest);
+                            jsonResponseObj.put("deleted_event_registry_id",sEventRegistryId);
+                            jsonResponseObj.put("page_type",sPageType);
 
-                            JSONObject jsonEventHotels = accessEventHotels.getEventHotelJson( arrEventHotelsBean );
-                            Integer iNumOfHotels = 0;
-                            if(jsonEventHotels!=null){
-                                iNumOfHotels = jsonEventHotels.optInt("num_of_event_hotels");
-                                if(iNumOfHotels>0){
-                                    jsonResponseObj.put("event_hotels", jsonEventHotels );
-                                }
-                            }
-                            jsonResponseObj.put("num_of_event_hotels", iNumOfHotels);
-                            jsonResponseObj.put("page_type" , sPageType );
-
-                            Text okText = new OkText("Website Hotels loaded","status_mssg") ;
+                            Text okText = new OkText("Successfully Deleted..","status_mssg") ;
                             arrOkText.add(okText);
                             responseStatus = RespConstants.Status.OK;
                         } else {
-                            Text errorText = new ErrorText("Please select a theme for this event's website.","err_mssg") ;
+                            appLogging.info("Unable to delete " + ParseUtil.checkNull(sEventRegistryId) );
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(delEventRegistry - 004)","err_mssg") ;
                             arrErrorText.add(errorText);
 
                             responseStatus = RespConstants.Status.ERROR;
                         }
-
-
+                        jsonResponseObj.put("is_deleted" , isDeleted );
                     } else {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventHotelList - 003)","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(delEventRegistry - 003)","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
                     }
 
 
-
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventHotelList - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(delEventRegistry - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -111,7 +94,7 @@ public class ProcLoadEventWebsiteHotel extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventHotelList - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(delEventRegistry - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;
@@ -128,3 +111,4 @@ public class ProcLoadEventWebsiteHotel extends HttpServlet {
         response.getWriter().write( responseObject.getJson().toString() );
     }
 }
+
