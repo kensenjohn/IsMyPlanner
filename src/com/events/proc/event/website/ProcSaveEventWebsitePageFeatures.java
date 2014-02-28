@@ -67,43 +67,66 @@ public class ProcSaveEventWebsitePageFeatures extends HttpServlet {
                     AccessEventWebsitePage accessEventWebsitePage = new AccessEventWebsitePage();
                     EventWebsitePageBean eventWebsitePageBean = accessEventWebsitePage.getEventWebsitePageByType(eventWebsitePageBeanReq);
 
-                    Map<String,String[]> mapParameters = request.getParameterMap();
-                    for(Map.Entry<String,String[]> requestParameters : mapParameters.entrySet()) {
-                        String sKey =  requestParameters.getKey();
-                        String[] strArrValue =  requestParameters.getValue();
-                        if(!"event_id".equalsIgnoreCase(sKey) &&  !"page_type".equalsIgnoreCase(sKey) ) {
+                    if(eventWebsitePageBean!=null && !Utility.isNullOrEmpty(eventWebsitePageBean.getEventWebsitePageId())) {
+                        Map<String,String[]> mapParameters = request.getParameterMap();
+                        for(Map.Entry<String,String[]> requestParameters : mapParameters.entrySet()) {
+                            String sKey =  requestParameters.getKey();
+                            String[] strArrValue =  requestParameters.getValue();
+                            if(!"event_id".equalsIgnoreCase(sKey) &&  !"page_type".equalsIgnoreCase(sKey) ) {
 
-                            for(String sValue : strArrValue )  {
+                                for(String sValue : strArrValue )  {
+                                    EventWebsitePageFeatureBean requestEWPFBean = new EventWebsitePageFeatureBean();
+                                    requestEWPFBean.setEventWebsitePageId( eventWebsitePageBean.getEventWebsitePageId() );
+                                    requestEWPFBean.setFeatureType( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.valueOf(  sKey ) );
+
+                                    EventWebsitePageFeature eventWebsitePageFeature = new EventWebsitePageFeature();
+                                    EventWebsitePageFeatureBean eventEWPFFromDB = eventWebsitePageFeature.getFeature( requestEWPFBean );
+
+                                    if(eventEWPFFromDB==null || (eventEWPFFromDB!=null && Utility.isNullOrEmpty(eventEWPFFromDB.getEventWebsitePageFeatureId())) ) {
+
+                                        eventEWPFFromDB.setUserId( eventWebsiteBean.getUserId() );
+                                        eventEWPFFromDB.setEventWebsitePageId( eventWebsitePageBean.getEventWebsitePageId() );
+                                        eventEWPFFromDB.setEventWebsitePageFeatureId( Utility.getNewGuid() );
+
+                                        eventEWPFFromDB.setFeatureDescription( "-" );
+                                        eventEWPFFromDB.setFeatureName( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.valueOf(  sKey ).toString() );
+                                        eventEWPFFromDB.setFeatureType( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.valueOf(  sKey ) );
+                                    }
+
+                                    eventEWPFFromDB.setValue( sValue );
+
+                                    Integer iNumOfFeaturesSet = eventWebsitePageFeature.setFeatureValue( eventEWPFFromDB );
+
+                                }
+                            }
+                        }
+
+                        if( "reception".equals(sPageType) || "ceremony".equals(sPageType)) {
+                            String sKey = sPageType+"_showmap";
+                            boolean isShowMap = ParseUtil.sTob( request.getParameter(sKey)) ;
+                            if(!isShowMap){
                                 EventWebsitePageFeatureBean requestEWPFBean = new EventWebsitePageFeatureBean();
                                 requestEWPFBean.setEventWebsitePageId( eventWebsitePageBean.getEventWebsitePageId() );
                                 requestEWPFBean.setFeatureType( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.valueOf(  sKey ) );
 
                                 EventWebsitePageFeature eventWebsitePageFeature = new EventWebsitePageFeature();
                                 EventWebsitePageFeatureBean eventEWPFFromDB = eventWebsitePageFeature.getFeature( requestEWPFBean );
+                                if(eventEWPFFromDB!=null && !Utility.isNullOrEmpty(eventEWPFFromDB.getEventWebsitePageFeatureId())){
+                                    eventEWPFFromDB.setValue( "off" );
 
-                                if(eventEWPFFromDB==null || (eventEWPFFromDB!=null && Utility.isNullOrEmpty(eventEWPFFromDB.getEventWebsitePageFeatureId())) ) {
-
-                                    eventEWPFFromDB.setUserId( eventWebsiteBean.getUserId() );
-                                    eventEWPFFromDB.setEventWebsitePageId( eventWebsitePageBean.getEventWebsitePageId() );
-                                    eventEWPFFromDB.setEventWebsitePageFeatureId( Utility.getNewGuid() );
-
-                                    eventEWPFFromDB.setFeatureDescription( "-" );
-                                    eventEWPFFromDB.setFeatureName( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.valueOf(  sKey ).toString() );
-                                    eventEWPFFromDB.setFeatureType( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.valueOf(  sKey ) );
+                                    Integer iNumOfFeaturesSet = eventWebsitePageFeature.setFeatureValue( eventEWPFFromDB );
                                 }
-
-                                eventEWPFFromDB.setValue( sValue );
-
-                                Integer iNumOfFeaturesSet = eventWebsitePageFeature.setFeatureValue( eventEWPFFromDB );
-
                             }
                         }
+                        Text okText = new OkText("Your changes were successfully updated.","status_mssg") ;
+                        arrOkText.add(okText);
+                        responseStatus = RespConstants.Status.OK;
+                    } else {
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventWebPage - 003)","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
                     }
-
-                    Text okText = new OkText("Your changes were successfully updated.","status_mssg") ;
-                    arrOkText.add(okText);
-                    responseStatus = RespConstants.Status.OK;
-
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
                     Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventWebPage - 002)","err_mssg") ;

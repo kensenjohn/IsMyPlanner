@@ -7,6 +7,9 @@
 <link href="/css/bootstrap-switch.min.css" rel="stylesheet">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
+<link rel="stylesheet" href="/css/datepicker/default.css" id="theme_base">
+<link rel="stylesheet" href="/css/datepicker/default.date.css" id="theme_date">
+<link rel="stylesheet" href="/css/datepicker/default.time.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <link rel="stylesheet" href="/css/colorbox.css" id="theme_time">
 <%
@@ -492,6 +495,156 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Ceremony -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_ceremony">
+                                        <i id="ceremony_collapse_icon" class="fa fa-chevron-circle-right"></i> Ceremony</a>
+                                    &nbsp;&nbsp;
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="ceremony_hide" id="ceremony_hide" param="ceremony">
+                                </h4>
+                            </div>
+                            <div id="collapse_ceremony" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <form id="frm_save_ceremony">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="ceremony_ceremony_day" class="form_label">Date</label><span class="required"> *</span>
+                                                            <input type="text" class="form-control" id="ceremony_ceremony_day" name="ceremony_day" placeholder="Day of the Ceremony">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="ceremony_ceremony_time" class="form_label">Time</label><span class="required"> *</span>
+                                                            <input type="text" class="form-control" id="ceremony_ceremony_time" name="ceremony_time" placeholder="Time of the Ceremony">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="ceremony_ceremony_timezone" class="form_label">Time Zone</label><span class="required"> *</span>
+                                                            <select class="form-control" id="ceremony_ceremony_timezone" name="ceremony_timezone">
+                                                                <%
+                                                                    for(Constants.TIME_ZONE timeZone : Constants.TIME_ZONE.values()) {
+                                                                %>
+                                                                <option value="<%=timeZone.toString()%>"><%=timeZone.getTimeZoneDisplay()%></option>
+                                                                <%
+                                                                    }
+                                                                %>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-10">
+                                                            <label for="ceremony_ceremony_address" class="form_label">Address </label>
+                                                            <input type="text" name="ceremony_address" id="ceremony_ceremony_address" class="form-control" >
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label for="ceremony_ceremony_showmap" class="form_label">&nbsp;</label> <br>
+                                                            <input type="checkbox" name="ceremony_showmap" id="ceremony_ceremony_showmap" param="ceremony"  >  Show Map
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="ceremony_ceremony_instruction" class="form_label">Instructions </label>
+                                                            <input type="text" name="ceremony_instruction" id="ceremony_ceremony_instruction" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="event_id" value="<%=sEventId%>" />
+                                                <input type="hidden" name="page_type" value="ceremony" />
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <button class="btn btn-filled save-website-page" id="save_ceremony" param="ceremony">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reception -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_reception">
+                                        <i id="reception_collapse_icon" class="fa fa-chevron-circle-right"></i> Reception</a>
+                                    &nbsp;&nbsp;
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="reception_hide" id="reception_hide" param="reception">
+                                </h4>
+                            </div>
+                            <div id="collapse_reception" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+
+                                            <form id="frm_save_reception">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="reception_reception_day" class="form_label">Date</label><span class="required"> *</span>
+                                                            <input type="text" class="form-control" id="reception_reception_day" name="reception_day" placeholder="Day of the Event">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="reception_reception_time" class="form_label">Time</label><span class="required"> *</span>
+                                                            <input type="text" class="form-control" id="reception_reception_time" name="reception_time" placeholder="Time of the Event">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="reception_reception_timezone" class="form_label">Time Zone</label><span class="required"> *</span>
+                                                            <select class="form-control" id="reception_reception_timezone" name="reception_timezone">
+                                                                <%
+                                                                    for(Constants.TIME_ZONE timeZone : Constants.TIME_ZONE.values()) {
+                                                                %>
+                                                                <option value="<%=timeZone.toString()%>"><%=timeZone.getTimeZoneDisplay()%></option>
+                                                                <%
+                                                                    }
+                                                                %>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-10">
+                                                            <label for="reception_reception_address" class="form_label">Address </label>
+                                                            <input type="text" name="reception_address" id="reception_reception_address" class="form-control" >
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label for="reception_reception_showmap" class="form_label">&nbsp;</label> <br>
+                                                            <input type="checkbox" name="reception_showmap" id="reception_reception_showmap" param="reception"  >  Show Map
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="reception_reception_instruction" class="form_label">Instructions </label>
+                                                            <input type="text" name="reception_instruction" id="reception_reception_instruction" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="event_id" value="<%=sEventId%>" />
+                                                <input type="hidden" name="page_type" value="reception" />
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <button class="btn btn-filled save-website-page" id="save_reception" param="reception">Save</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -539,6 +692,10 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="/js/datepicker/picker.js"></script>
+<script src="/js/datepicker/picker.date.js"></script>
+<script src="/js/datepicker/picker.time.js"></script>
+<script src="/js/datepicker/legacy.js"></script>
 <script src="/js/jquery.colorbox-min.js"></script>
 <script src="/js/upload/jquery.iframe-transport.js"></script>
 <script src="/js/upload/jquery.fileupload.js"></script>
@@ -590,6 +747,24 @@
             loadWebsitePageFeatureParty('groomsmen', populateWebsitePagePartyMembers);
         })
 
+        $('#collapse_ceremony').on('hide.bs.collapse', function () {
+            toggleCollapseIcon('ceremony_collapse_icon');
+        })
+        $('#collapse_ceremony').on('show.bs.collapse', function () {
+            toggleCollapseIcon('ceremony_collapse_icon');
+            loadWebsitePageFeatures('ceremony', populateWebsitePageFeatures)
+        })
+
+        $('#collapse_reception').on('hide.bs.collapse', function () {
+            toggleCollapseIcon('reception_collapse_icon');
+        })
+        $('#collapse_reception').on('show.bs.collapse', function () {
+            toggleCollapseIcon('reception_collapse_icon');
+            loadWebsitePageFeatures('reception', populateWebsitePageFeatures)
+        })
+
+
+
         $('.save-website-page').click(function(){
             saveWebsitePageFeatureSetting(getResult , $(this).attr('param'));
         });
@@ -610,10 +785,28 @@
 
                 $('#save_web_page_type').val( $element.attr('param') );
                 saveWebsitePageSetting(getResult)
-            } else {
-
             }
         });
+        $('#reception_reception_day').pickadate()
+        $('#reception_reception_time').pickatime({
+            // Time intervals
+            interval: 15,
+            // Minimum and Max time to be shown
+            min: [6,00],
+            max: [23,59]
+        });
+
+        $('#ceremony_ceremony_day').pickadate()
+        $('#ceremony_ceremony_time').pickatime({
+            // Time intervals
+            interval: 15,
+            // Minimum and Max time to be shown
+            min: [6,00],
+            max: [23,59]
+        });
+
+
+
 
         loadWebsitePage(populateWebsitePages);
         initializeBridesMaidTable();
@@ -725,7 +918,17 @@
             for (var key in this.varFeatures) {
                 var testKey = key.split('_image_name');
                 if(testKey == key) {
-                    $('#'+this.varPageType+'_'+key).val( this.varFeatures[key] );
+                    var varFeatureValue = this.varFeatures[key];
+                    if( (this.varPageType == 'reception' ||  this.varPageType == 'ceremony') && (key == (this.varPageType+'_showmap') ) ) {
+
+                        if( varFeatureValue == 'on' ) {
+                            $('#'+this.varPageType+'_'+key).prop( "checked", true );
+                        } else {
+                            $('#'+this.varPageType+'_'+key).prop( "checked", false );
+                        }
+                    } else {
+                        $('#'+this.varPageType+'_'+key).val( varFeatureValue );
+                    }
                 } else {
                     //welcome_banner_image_name
                     if( this.varFeatures[key]!=undefined &&  this.varFeatures[key]!='') {
