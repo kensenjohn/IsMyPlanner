@@ -21,8 +21,8 @@ public class AccessEventHotels {
     public EventHotelsBean getEventHotel(EventHotelRequest eventHotelRequest){
         EventHotelsBean eventHotelsBean = new EventHotelsBean();
         if(eventHotelRequest!=null){
-            AccessEventHotelData accessEventPartyData = new AccessEventHotelData();
-            eventHotelsBean = accessEventPartyData.getEventHotel( eventHotelRequest );
+            AccessEventHotelData accessEventHotelData = new AccessEventHotelData();
+            eventHotelsBean = accessEventHotelData.getEventHotel( eventHotelRequest );
         }
         return eventHotelsBean;
     }
@@ -30,8 +30,8 @@ public class AccessEventHotels {
     public ArrayList<EventHotelsBean> getEventHotelByWebsite(EventHotelRequest eventHotelRequest){
         ArrayList<EventHotelsBean> arrEventHotelsBean =  new ArrayList<EventHotelsBean>();
         if(eventHotelRequest!=null){
-            AccessEventHotelData accessEventPartyData = new AccessEventHotelData();
-            arrEventHotelsBean = accessEventPartyData.getEventHotelByWebsite(eventHotelRequest);
+            AccessEventHotelData accessEventHotelData = new AccessEventHotelData();
+            arrEventHotelsBean = accessEventHotelData.getEventHotelByWebsite(eventHotelRequest);
         }
         return arrEventHotelsBean;
     }

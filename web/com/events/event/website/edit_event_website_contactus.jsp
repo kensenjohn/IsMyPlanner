@@ -1,9 +1,8 @@
 <%@ page import="com.events.common.ParseUtil" %>
-<%@ page import="com.events.bean.event.website.EventRegistryRequest" %>
-<%@ page import="com.events.bean.event.website.EventRegistryBean" %>
-<%@ page import="com.events.event.website.AccessEventRegistry" %>
+<%@ page import="com.events.bean.event.website.EventContactUsBean" %>
+<%@ page import="com.events.bean.event.website.EventContactUsRequest" %>
 <%@ page import="com.events.common.Utility" %>
-<%@ page import="com.events.common.Constants" %>
+<%@ page import="com.events.event.website.AccessEventContactUs" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -12,17 +11,17 @@
 
     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
     String sEventWebsiteId = ParseUtil.checkNull(request.getParameter("event_website_id"));
-    String sEventRegistryId = ParseUtil.checkNull(request.getParameter("event_registry_id"));
+    String sEventContactUsId = ParseUtil.checkNull(request.getParameter("event_contactus_id"));
 
-    EventRegistryBean eventRegistryBean = new EventRegistryBean();
-    if(!Utility.isNullOrEmpty(sEventRegistryId)) {
-        EventRegistryRequest eventRegistryRequest = new EventRegistryRequest();
-        eventRegistryRequest.setEventRegistryId( sEventRegistryId );
+    EventContactUsBean eventContactUsBean = new EventContactUsBean();
+    if(!Utility.isNullOrEmpty(sEventContactUsId)) {
+        EventContactUsRequest eventContactUsRequest = new EventContactUsRequest();
+        eventContactUsRequest.setEventContactUsId(sEventContactUsId);
 
-        AccessEventRegistry accessEventRegistrys = new AccessEventRegistry();
-        eventRegistryBean = accessEventRegistrys.getEventRegistry(eventRegistryRequest);
+        AccessEventContactUs accessEventContactUss = new AccessEventContactUs();
+        eventContactUsBean = accessEventContactUss.getEventContactUs(eventContactUsRequest);
     }
-    String sTitle = "Registry Information";
+    String sTitle = "Contact Information";
 %>
 <body>
 <div class="page_wrap">
@@ -36,29 +35,29 @@
                             <h4><%=sTitle%></h4>
                         </div>
                     </div>
-                    <form id="frm_save_registry">
+                    <form id="frm_save_contactus">
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label for="registry_name" class="form_label">Name</label>
-                                    <input type="text" name="registry_name" id="registry_name" class="form-control" value="<%=ParseUtil.checkNull(eventRegistryBean.getName())%>">
+                                    <label for="contactus_name" class="form_label">Name</label>
+                                    <input type="text" name="contactus_name" id="contactus_name" class="form-control" value="<%=ParseUtil.checkNull(eventContactUsBean.getName())%>">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label for="registry_url" class="form_label">URL </label>
-                                    <input type="text" name="registry_url" id="registry_url" class="form-control" value="<%=ParseUtil.checkNull(eventRegistryBean.getUrl())%>">
+                                    <label for="contactus_phone" class="form_label">Phone </label>
+                                    <input type="text" name="contactus_phone" id="contactus_phone" class="form-control" value="<%=ParseUtil.checkNull(eventContactUsBean.getPhone())%>">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label for="registry_instructions" class="form_label">Instructions </label>
-                                    <input type="text" name="registry_instructions" id="registry_instructions" class="form-control"  value="<%=ParseUtil.checkNull(eventRegistryBean.getInstructions())%>" >
+                                    <label for="contactus_email" class="form_label">Email </label>
+                                    <input type="text" name="contactus_email" id="contactus_email" class="form-control"  value="<%=ParseUtil.checkNull(eventContactUsBean.getEmail())%>" >
                                 </div>
                             </div>
                         </div>
                         <input type="hidden" name="event_website_id" id="save_event_website_id" value="<%=sEventWebsiteId%>"/>
-                        <input type="hidden" name="event_registry_id" id="save_event_registry_id" value="<%=sEventRegistryId%>"/>
+                        <input type="hidden" name="event_contactus_id" id="save_event_contactus_id" value="<%=sEventContactUsId%>"/>
                         <input type="hidden" name="event_id" value="<%=sEventId%>"/>
                     </form>
 
@@ -87,17 +86,17 @@
             innerHeight:$('body').height()
         });
         $('#save_event_registry').click(function(){
-            saveWebsitePageRegistry(populateEventRegistry);
+            saveWebsitePageContactUs(populateEventContactUs);
         });
     });
-    function saveWebsitePageRegistry(callbackmethod ) {
-        var actionUrl = "/proc_save_event_website_registry.aeve";
+    function saveWebsitePageContactUs(callbackmethod ) {
+        var actionUrl = "/proc_save_event_website_contactus.aeve";
         var methodType = "POST";
-        var dataString = $("#frm_save_registry").serialize();
+        var dataString = $("#frm_save_contactus").serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
 
-    function populateEventRegistry(jsonResult) {
+    function populateEventContactUs(jsonResult) {
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
@@ -106,9 +105,9 @@
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
-                    var varEventRegistryBean = jsonResponseObj.event_registry_bean;
-                    $('#save_event_registry_id').val(varEventRegistryBean.event_registry_id);
-                    $('#save_event_website_id').val(varEventRegistryBean.event_website_id);
+                    var varEventContactUsBean = jsonResponseObj.event_contactus_bean;
+                    $('#save_event_contactus_id').val(varEventContactUsBean.event_contactus_id);
+                    $('#save_event_website_id').val(varEventContactUsBean.event_website_id);
                 }
                 displayAjaxOk(varResponseObj);
             } else {

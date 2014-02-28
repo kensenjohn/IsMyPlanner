@@ -1,7 +1,7 @@
 package com.events.proc.event.website;
 
-import com.events.bean.event.website.EventHotelRequest;
-import com.events.bean.event.website.EventHotelsBean;
+import com.events.bean.event.website.EventContactUsBean;
+import com.events.bean.event.website.EventContactUsRequest;
 import com.events.bean.event.website.EventWebsiteBean;
 import com.events.bean.event.website.EventWebsiteRequestBean;
 import com.events.bean.users.UserBean;
@@ -10,8 +10,8 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
+import com.events.event.website.AccessEventContactUs;
 import com.events.event.website.AccessEventWebsite;
-import com.events.event.website.BuildEventHotels;
 import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -28,10 +28,10 @@ import java.util.ArrayList;
  * Created with IntelliJ IDEA.
  * User: root
  * Date: 2/28/14
- * Time: 11:55 AM
+ * Time: 4:50 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcSaveEventWebsiteHotel  extends HttpServlet {
+public class ProcLoadEventWebsiteContactUs extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -48,54 +48,55 @@ public class ProcSaveEventWebsiteHotel  extends HttpServlet {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
                     String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
                     String sPageType =  ParseUtil.checkNull(request.getParameter("page_type"));
-                    String sEventWebsiteId =  ParseUtil.checkNull(request.getParameter("event_website_id"));
-                    String sEventHotelId =  ParseUtil.checkNull(request.getParameter("event_hotel_id"));
 
-                    if(Utility.isNullOrEmpty(sEventWebsiteId)){
+                    if(!Utility.isNullOrEmpty(sEventId)){
                         EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
                         eventWebsiteRequestBean.setEventId( sEventId );
 
                         AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
                         EventWebsiteBean eventWebsiteBean = accessEventWebsite.getEventWebsite(eventWebsiteRequestBean);
-
                         if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
-                            sEventWebsiteId = eventWebsiteBean.getEventWebsiteId();
+
+                            EventContactUsRequest eventContactUsRequest = new EventContactUsRequest();
+                            eventContactUsRequest.setEventWebsiteId( eventWebsiteBean.getEventWebsiteId() );
+
+                            AccessEventContactUs accessEventContactUs = new AccessEventContactUs();
+                            ArrayList<EventContactUsBean> arrEventContactUsBean =  accessEventContactUs.getEventContactUsByWebsite(eventContactUsRequest);
+
+                            JSONObject jsonEventContactUs = accessEventContactUs.getEventContactUsJson( arrEventContactUsBean );
+                            Integer iNumOfHotels = 0;
+                            if(jsonEventContactUs!=null){
+                                iNumOfHotels = jsonEventContactUs.optInt("num_of_event_contactus");
+                                if(iNumOfHotels>0){
+                                    jsonResponseObj.put("event_contactus", jsonEventContactUs );
+                                }
+                            }
+                            jsonResponseObj.put("num_of_event_contactus", iNumOfHotels);
+                            jsonResponseObj.put("page_type" , sPageType );
+
+                            Text okText = new OkText("Website Contact Us loaded","status_mssg") ;
+                            arrOkText.add(okText);
+                            responseStatus = RespConstants.Status.OK;
+                        } else {
+                            Text errorText = new ErrorText("Please select a theme for this event's website.","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
                         }
 
-                    }
-                    String sName = ParseUtil.checkNull(request.getParameter("hotel_name"));
-                    String sPhone = ParseUtil.checkNull(request.getParameter("hotel_phone"));
-                    String sAddress = ParseUtil.checkNull(request.getParameter("hotel_address"));
-                    String sUrl = ParseUtil.checkNull(request.getParameter("hotel_url"));
-                    String sInstructions = ParseUtil.checkNull(request.getParameter("hotel_instructions"));
 
-                    EventHotelRequest eventHotelRequest = new EventHotelRequest();
-                    eventHotelRequest.setEventHotelId(sEventHotelId);
-                    eventHotelRequest.setEventWebsiteId(sEventWebsiteId);
-                    eventHotelRequest.setName(sName);
-                    eventHotelRequest.setPhone(sPhone);
-                    eventHotelRequest.setAddress(sAddress);
-                    eventHotelRequest.setUrl(sUrl);
-                    eventHotelRequest.setInstructions(sInstructions);
-
-
-                    BuildEventHotels buildEventHotel = new BuildEventHotels();
-                    EventHotelsBean eventHotelBean = buildEventHotel.saveEventHotel( eventHotelRequest ) ;
-                    if(eventHotelBean!=null && !Utility.isNullOrEmpty(eventHotelBean.getEventHotelId())) {
-                        jsonResponseObj.put("event_hotel_bean" , eventHotelBean.toJson());
-                        Text okText = new OkText("Your changes were successfully updated.","status_mssg") ;
-                        arrOkText.add(okText);
-                        responseStatus = RespConstants.Status.OK;
                     } else {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventHotels - 002)","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventContactUsList - 003)","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
                     }
 
+
+
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventHotels - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventContactUsList - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -109,7 +110,7 @@ public class ProcSaveEventWebsiteHotel  extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventHotels - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventContactUsList - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

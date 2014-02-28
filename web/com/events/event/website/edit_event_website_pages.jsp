@@ -806,7 +806,7 @@
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <button type="button" class="btn btn-filled" id="btn_add_registry">Add New</button>
+                                            <button type="button" class="btn btn-filled" id="btn_add_contactus">Add New</button>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -877,6 +877,10 @@
     <input type="hidden"  name="page_type" value="registry"/>
     <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
 </form>
+<form id="frm_load_contactus_list">
+    <input type="hidden"  name="page_type" value="contactus"/>
+    <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
+</form>
 <form id="frm_save_web_page">
     <input type="hidden" name="event_id" value="<%=sEventId%>"/>
     <input type="hidden" id="save_web_page_type" name="page_type" value=""/>
@@ -896,6 +900,11 @@
     <input type="hidden" name="event_id" value="<%=sEventId%>"/>
     <input type="hidden" id="delete_event_registry_id" name="event_registry_id" value=""/>
     <input type="hidden" name="page_type" value="registry"/>
+</form>
+<form id="frm_delete_event_contactus">
+    <input type="hidden" name="event_id" value="<%=sEventId%>"/>
+    <input type="hidden" id="delete_event_contactus_id" name="event_contactus_id" value=""/>
+    <input type="hidden" name="page_type" value="contactus"/>
 </form>
 
 <jsp:include page="/com/events/common/footer_top.jsp"/>
@@ -1009,7 +1018,7 @@
         })
         $('#collapse_contactus').on('show.bs.collapse', function () {
             toggleCollapseIcon('contactus_collapse_icon');
-            //loadWebsitePageFeatures('reception', populateWebsitePageFeatures)
+            loadWebsitePageContactUs('reception', populateWebsitePageContactUs)
         })
 
 
@@ -1062,6 +1071,7 @@
         initializeGroomsMenTable();
         initializeHotelsTable();
         initializeRegistryTable();
+        initializeContactUsTable();
 
         $('#btn_add_bridesmaid').click( function(){
             $.colorbox({
@@ -1107,6 +1117,17 @@
                 scrolling: true,
                 onClosed : function() {
                     loadWebsitePageRegistry('registry', populateWebsitePageRegistry)
+                }});
+        })
+        $('#btn_add_contactus').click( function(){
+            $.colorbox({
+                href:'edit_event_website_contactus.jsp?event_id=<%=sEventId%>',
+                iframe:true,
+                innerWidth: '90%',
+                innerHeight: '85%',
+                scrolling: true,
+                onClosed : function() {
+                    loadWebsitePageContactUs('contactus', populateWebsitePageContactUs)
                 }});
         })
 
@@ -1186,6 +1207,17 @@
             displayMssgBoxAlert('Oops!! We were unable to load any information for this page. Please try again later', true);
         }
     }
+    function loadWebsitePageContactUs(pageType,callbackmethod) {
+        if(pageType!=undefined) {
+            var actionUrl = "/proc_load_event_website_contactus_list.aeve";
+            var methodType = "POST";
+            var dataString = $("#frm_load_contactus_list").serialize();
+            makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to load any information for this page. Please try again later', true);
+        }
+    }
+
 
     var WebsitePageModel = Backbone.Model.extend({});
     var WebsitePageView = Backbone.View.extend({
@@ -1195,7 +1227,6 @@
         },
         render:function(){
             for (var key in this.varArrayOfEventWebsitePages) {
-                console.log('key : ' + key + ' -> ' + this.varArrayOfEventWebsitePages[key].is_show );
                 $('#'+key+'_hide').bootstrapSwitch('state', this.varArrayOfEventWebsitePages[key].is_show );
             }
             $('#couples_partner1_event_website_id').val( this.varEventWebsite.event_website_id);
@@ -1319,6 +1350,37 @@
         }
     });
 
+    var WebsitePageContactUsModel = Backbone.Model.extend({});
+    var WebsitePageContactUsView = Backbone.View.extend({
+        initialize: function(){
+            this.varNumOfEventContactUs = this.model.get('bb_num_of_event_contactus');
+            this.varEventContactUsList = this.model.get('bb_event_contactus');
+            this.varPageType = this.model.get('bb_page_type');
+        },
+        render:function(){
+
+            if(this.varNumOfEventContactUs>0){
+                var oTable = getTable(this.varPageType);
+                if(oTable!='' && oTable!=undefined){
+                    oTable.fnClearTable();
+                    for (var i = 0;i < this.varNumOfEventContactUs;i++) {
+                        var vaEventContactUs = this.varEventContactUsList[i];
+                        var varEventContactUsId = vaEventContactUs.event_contactus_id;
+                        var varEventContactUsName = vaEventContactUs.name;
+
+                        var ai = oTable.fnAddData( [varEventContactUsName,vaEventContactUs.phone,vaEventContactUs.email, createButtons(varEventContactUsId) ] );
+                        var nRow = oTable.fnSettings().aoData[ ai[0] ].nTr;
+                        $(nRow).attr('id','row_'+varEventContactUsId);
+
+
+                        addContactUsEditClickEvent(varEventContactUsId, this.varPageType, i);
+                        addContactUsDeleteClickEvent(varEventContactUsId,varEventContactUsName,this.varPageType, i);
+                    }
+                }
+            }
+        }
+    });
+
     var WebsitePageHotelsModel = Backbone.Model.extend({});
     var WebsitePageHotelsView = Backbone.View.extend({
         initialize: function(){
@@ -1398,9 +1460,43 @@
             oTable = objEveryHotelsTable;
         } else if(varPageType == 'registry') {
             oTable = objEveryRegistryTable;
+        } else if(varPageType == 'contactus') {
+            oTable = objEveryContactUsTable;
         }
         return oTable;
     }
+    function addContactUsEditClickEvent(varEventContactUsId , varPageType, varRowNum){
+        $('#edit_'+varEventContactUsId).click( function(){
+            $.colorbox({
+                href:'edit_event_website_contactus.jsp?event_id=<%=sEventId%>&event_contactus_id='+varEventContactUsId,
+                iframe:true,
+                innerWidth: '90%',
+                innerHeight: '85%',
+                scrolling: true,
+                onClosed : function() {
+                    loadWebsitePageContactUs(varPageType, populateWebsitePageContactUs )
+                }});
+        });
+    }
+    function addContactUsDeleteClickEvent(varEventContactUsId ,varEventContactUsName , varPageType, varRowNum) {
+        var contactus_obj = {
+            event_contactus_id: varEventContactUsId,
+            event_contactus_name:varEventContactUsName,
+            page_type:varPageType,
+            row_num: varRowNum,
+            printObj: function () {
+                return this.event_contactus_id + ' row : ' + this.row_num;
+            }
+        }
+
+        $('#del_'+varEventContactUsId).click({param_contactus_obj:contactus_obj},function(e){
+            displayConfirmBox(
+                    "Are you sure you want to remove - " + e.data.param_contactus_obj.event_contactus_name ,
+                    "Delete Contact",
+                    "Yes", "No", deleteEventContactUs,e.data.param_contactus_obj);
+        });
+    }
+
     function addRegistryEditClickEvent(varEventRegistryId , varPageType, varRowNum){
         $('#edit_'+varEventRegistryId).click( function(){
             $.colorbox({
@@ -1543,6 +1639,50 @@
             }
         } else {
             displayMssgBoxAlert("Please try again later (deleteRegistry - 2)", true);
+        }
+    }
+
+    function deleteEventContactUs( varEventContactUsObj ){
+        $('#delete_event_contactus_id').val(varEventContactUsObj.event_contactus_id);
+
+        var actionUrl = "/proc_delete_event_contactus.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_delete_event_contactus").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,processEventContactUsDeletion);
+
+    }
+    function processEventContactUsDeletion (jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+
+                    var jsonResponseObj = varResponseObj.payload;
+                    var varIsContactUsDeleted = jsonResponseObj.is_deleted;
+
+                    if(varIsContactUsDeleted){
+
+                        $('#delete_event_contactus_id').val('');
+
+                        var varPageType = jsonResponseObj.page_type;
+                        var varEventContactUsId = jsonResponseObj.deleted_event_contactus_id;
+                        var oTable = getTable(varPageType);
+                        if(oTable!='' && oTable!=undefined) {
+                            oTable.fnDeleteRow((oTable.$('#row_'+varEventContactUsId))[0] );
+                        }
+
+                    } else {
+                        displayMssgBoxAlert("The contact was not deleted. Please try again later.", true);
+                    }
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (deleteContact - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (deleteContact - 2)", true);
         }
     }
 
@@ -1714,6 +1854,16 @@
         var websitePageRegistryView = new WebsitePageRegistryView({model:this.websitePageRegistryModel});
         websitePageRegistryView.render();
     }
+    function generateWebsiteContactUs( varJsonResponse ) {
+        this.websitePageContactUsModel = new WebsitePageContactUsModel({
+
+            'bb_num_of_event_contactus' : varJsonResponse.num_of_event_contactus,
+            'bb_event_contactus' : varJsonResponse.event_contactus,
+            'bb_page_type' : varJsonResponse.page_type
+        });
+        var websitePageContactUsView = new WebsitePageContactUsView({model:this.websitePageContactUsModel});
+        websitePageContactUsView.render();
+    }
 
     function populateWebsitePages(jsonResult){
         if(jsonResult!=undefined) {
@@ -1844,6 +1994,28 @@
         }
     }
 
+    function  populateWebsitePageContactUs(jsonResult){
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    if(jsonResponseObj!=undefined) {
+                        generateWebsiteContactUs( jsonResponseObj );
+                    }
+
+                }
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (populateWPC 1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (populateWPC 3)', true);
+        }
+    }
+
     $(function () {
         $('#frm_welcome_banner').fileupload({
             dataType: 'json',
@@ -1897,7 +2069,6 @@
                     if(varDataResult.success) {
                         displayMssgBoxAlert("The image was successfully uploaded", false);
                         var imagePath = varDataResult.imagehost+'/'+varDataResult.foldername+'/'+varDataResult.name;
-                        //console.log(varDataResult.upload_image.upload_id);
                         $('#couples_partner1_upload_id').val(varDataResult.upload_image.upload_id);
                         createImage(imagePath, 'partner1_image_name');
 
@@ -2045,6 +2216,21 @@
             "bFilter": false,
             "aoColumns":  [
                 {"bSortable": true,"sClass":"col-md-5"},
+                { "bSortable": false,"sClass": "center" }
+            ]
+        });
+    }
+
+    function initializeContactUsTable(){
+
+        objEveryContactUsTable =  $('#every_contactus').dataTable({
+            "bPaginate": false,
+            "bInfo": false,
+            "bFilter": false,
+            "aoColumns":  [
+                {"bSortable": true,"sClass":"col-md-5"},
+                {"bSortable": false},
+                {"bSortable": true},
                 { "bSortable": false,"sClass": "center" }
             ]
         });
