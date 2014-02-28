@@ -111,13 +111,27 @@ public class ProcSaveEventWebsiteFeatureParty extends HttpServlet {
 
 
                         BuildEventParty buildEventParty = new BuildEventParty();
-                        buildEventParty.saveEventParty( eventPartyRequest ) ;
+                        EventPartyBean eventPartyBean = buildEventParty.saveEventParty( eventPartyRequest ) ;
 
+                        if(eventPartyBean!=null && !Utility.isNullOrEmpty(eventPartyBean.getEventPartyId())) {
+                            jsonResponseObj.put("event_party_bean" , eventPartyBean.toJson());
+                            Text okText = new OkText("Your changes were successfully updated.","status_mssg") ;
+                            arrOkText.add(okText);
+                            responseStatus = RespConstants.Status.OK;
+                        } else {
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventParty - 004)","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
+                        }
+
+
+                    } else {
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventParty - 003)","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
                     }
-
-                    Text okText = new OkText("Your changes were successfully updated.","status_mssg") ;
-                    arrOkText.add(okText);
-                    responseStatus = RespConstants.Status.OK;
 
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );

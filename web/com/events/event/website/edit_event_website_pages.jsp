@@ -459,7 +459,7 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_groomsmen">
-                                        <i id="groomsmen_collapse_icon" class="fa fa-chevron-circle-right"></i> Groomssmen</a>
+                                        <i id="groomsmen_collapse_icon" class="fa fa-chevron-circle-right"></i> Groomsmen</a>
                                     &nbsp;&nbsp;
                                     <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="groomsmen_hide" id="groomsmen_hide" param="groomsmen">
                                     </a>
@@ -645,6 +645,214 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Travel -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_travel">
+                                        <i id="travel_collapse_icon" class="fa fa-chevron-circle-right"></i> Travel</a>
+                                    &nbsp;&nbsp;
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="ceremony_hide" id="travel_hide" param="travel">
+                                </h4>
+                            </div>
+                            <div id="collapse_travel" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h4>Your guests can access travel website to book flights or car.</h4>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <a href="http://www.hipmunk.com/" class="btn btn-default" target="_blank"> Hipmunk&nbsp;<i class="fa fa-external-link"></i></a>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <a href="http://www.priceline.com/" class="btn btn-default" target="_blank"> Priceline.com&nbsp;<i class="fa fa-external-link"></i></a>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <a href="http://www.travelocity.com/" class="btn btn-default" target="_blank"> Travelocity&nbsp;<i class="fa fa-external-link"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hotels -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_hotels">
+                                        <i id="hotels_collapse_icon" class="fa fa-chevron-circle-right"></i> Hotels</a>
+                                    &nbsp;&nbsp;
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="hotels_hide" id="hotels_hide" param="hotels">
+                                </h4>
+                            </div>
+                            <div id="collapse_hotels" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <button type="button" class="btn btn-filled" id="btn_add_hotels">Add New</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_hotels" >
+                                                <thead>
+                                                <tr role="row">
+                                                    <th class="sorting col-md-3" role="columnheader">Name</th>
+                                                    <th class="center" role="columnheader"></th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody role="alert" id="every_hotels_rows">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gifts/Registry -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_registry">
+                                        <i id="registry_collapse_icon" class="fa fa-chevron-circle-right"></i> Registry</a>
+                                    &nbsp;&nbsp;
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="registry_hide" id="registry_hide" param="registry">
+                                </h4>
+                            </div>
+                            <div id="collapse_registry" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <form id="frm_save_registry">
+                                                <div class="form-group">
+                                                    Registry
+                                                </div>
+                                                <input type="hidden" name="event_id" value="<%=sEventId%>" />
+                                                <input type="hidden" name="page_type" value="registry" />
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <button class="btn btn-filled save-website-page" id="save_registry" param="registry">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RSVP -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_rsvp">
+                                        <i id="rsvp_collapse_icon" class="fa fa-chevron-circle-right"></i> RSVP</a>
+                                    &nbsp;&nbsp;
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="rsvp_hide" id="rsvp_hide" param="rsvp">
+                                </h4>
+                            </div>
+                            <div id="collapse_rsvp" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <form id="frm_save_rsvp">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="rsvp_rsvp_instruction" class="form_label">Instructions </label>
+                                                            <input type="text" name="rsvp_instruction" id="rsvp_rsvp_instruction" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="event_id" value="<%=sEventId%>" />
+                                                <input type="hidden" name="page_type" value="rsvp" />
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <button class="btn btn-filled save-website-page" id="save_rsvp" param="rsvp">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Contact Us -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_contactus">
+                                        <i id="contactus_collapse_icon" class="fa fa-chevron-circle-right"></i> Contact Us</a>
+                                    &nbsp;&nbsp;
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="contactus_hide" id="contactus_hide" param="contactus">
+                                </h4>
+                            </div>
+                            <div id="collapse_contactus" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <form id="frm_save_contactus">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="contactus_contactus_instruction" class="form_label">Instructions </label>
+                                                            <input type="text" name="contactus_instruction" id="contactus_contactus_instruction" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="event_id" value="<%=sEventId%>" />
+                                                <input type="hidden" name="page_type" value="contactus" />
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <button class="btn btn-filled save-website-page" id="save_contactus" param="contactus">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
                     </div>
                 </div>
             </div>
@@ -677,6 +885,10 @@
     <input type="hidden"  name="page_type" value="groomsmen"/>
     <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
 </form>
+<form id="frm_load_hotels_list">
+    <input type="hidden"  name="page_type" value="hotels"/>
+    <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
+</form>
 <form id="frm_save_web_page">
     <input type="hidden" name="event_id" value="<%=sEventId%>"/>
     <input type="hidden" id="save_web_page_type" name="page_type" value=""/>
@@ -686,6 +898,11 @@
     <input type="hidden" name="event_id" value="<%=sEventId%>"/>
     <input type="hidden" id="delete_event_party_id" name="event_party_id" value=""/>
     <input type="hidden" id="delete_page_type" name="page_type" value=""/>
+</form>
+<form id="frm_delete_event_hotel">
+    <input type="hidden" name="event_id" value="<%=sEventId%>"/>
+    <input type="hidden" id="delete_event_hotel_id" name="event_hotel_id" value=""/>
+    <input type="hidden" name="page_type" value="hotels"/>
 </form>
 
 <jsp:include page="/com/events/common/footer_top.jsp"/>
@@ -763,6 +980,46 @@
             loadWebsitePageFeatures('reception', populateWebsitePageFeatures)
         })
 
+        $('#collapse_travel').on('hide.bs.collapse', function () {
+            toggleCollapseIcon('travel_collapse_icon');
+        })
+        $('#collapse_travel').on('show.bs.collapse', function () {
+            toggleCollapseIcon('travel_collapse_icon');
+            //loadWebsitePageFeatures('reception', populateWebsitePageFeatures)
+        })
+
+        $('#collapse_hotels').on('hide.bs.collapse', function () {
+            toggleCollapseIcon('hotels_collapse_icon');
+        })
+        $('#collapse_hotels').on('show.bs.collapse', function () {
+            toggleCollapseIcon('hotels_collapse_icon');
+            loadWebsitePageHotels('hotels', populateWebsitePageHotels);
+        })
+
+        $('#collapse_registry').on('hide.bs.collapse', function () {
+            toggleCollapseIcon('registry_collapse_icon');
+        })
+        $('#collapse_registry').on('show.bs.collapse', function () {
+            toggleCollapseIcon('registry_collapse_icon');
+            //loadWebsitePageFeatures('reception', populateWebsitePageFeatures)
+        })
+
+        $('#collapse_rsvp').on('hide.bs.collapse', function () {
+            toggleCollapseIcon('rsvp_collapse_icon');
+        })
+        $('#collapse_rsvp').on('show.bs.collapse', function () {
+            toggleCollapseIcon('rsvp_collapse_icon');
+            //loadWebsitePageFeatures('reception', populateWebsitePageFeatures)
+        })
+
+        $('#collapse_contactus').on('hide.bs.collapse', function () {
+            toggleCollapseIcon('contactus_collapse_icon');
+        })
+        $('#collapse_contactus').on('show.bs.collapse', function () {
+            toggleCollapseIcon('contactus_collapse_icon');
+            //loadWebsitePageFeatures('reception', populateWebsitePageFeatures)
+        })
+
 
 
         $('.save-website-page').click(function(){
@@ -811,6 +1068,7 @@
         loadWebsitePage(populateWebsitePages);
         initializeBridesMaidTable();
         initializeGroomsMenTable();
+        initializeHotesTable();
 
         $('#btn_add_bridesmaid').click( function(){
             $.colorbox({
@@ -834,7 +1092,21 @@
                 onClosed : function() {
                     loadWebsitePageFeatureParty('groomsmen', populateWebsitePagePartyMembers)
                 }});
+        });
+
+        $('#btn_add_hotels').click( function(){
+            $.colorbox({
+                href:'edit_event_website_hotels.jsp?event_id=<%=sEventId%>',
+                iframe:true,
+                innerWidth: '90%',
+                innerHeight: '85%',
+                scrolling: true,
+                onClosed : function() {
+                    loadWebsitePageHotels('hotels', populateWebsitePageHotels)
+                }});
         })
+
+
 
     });
 
@@ -889,6 +1161,17 @@
             displayMssgBoxAlert('Oops!! We were unable to load any information for this page. Please try again later', true);
         }
     }
+    function loadWebsitePageHotels(pageType,callbackmethod) {
+        if(pageType!=undefined) {
+            var actionUrl = "/proc_load_event_website_hotels_list.aeve";
+            var methodType = "POST";
+            var dataString = $("#frm_load_hotels_list").serialize();
+            makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to load any information for this page. Please try again later', true);
+        }
+    }
+
     var WebsitePageModel = Backbone.Model.extend({});
     var WebsitePageView = Backbone.View.extend({
         initialize: function(){
@@ -989,6 +1272,36 @@
             }
         }
     });
+    var WebsitePageHotelsModel = Backbone.Model.extend({});
+    var WebsitePageHotelsView = Backbone.View.extend({
+        initialize: function(){
+            this.varNumOfEventHotels = this.model.get('bb_num_of_event_hotels');
+            this.varEventHotels = this.model.get('bb_event_hotels');
+            this.varPageType = this.model.get('bb_page_type');
+        },
+        render:function(){
+
+            if(this.varNumOfEventHotels>0){
+                var oTable = getTable(this.varPageType);
+                if(oTable!='' && oTable!=undefined){
+                    oTable.fnClearTable();
+                    for (var i = 0;i < this.varNumOfEventHotels;i++) {
+                        var vaEventHotel = this.varEventHotels[i];
+                        var varEventHotelId = vaEventHotel.event_hotel_id;
+                        var varEventHotelsName = vaEventHotel.name;
+
+                        var ai = oTable.fnAddData( [varEventHotelsName, createButtons(varEventHotelId) ] );
+                        var nRow = oTable.fnSettings().aoData[ ai[0] ].nTr;
+                        $(nRow).attr('id','row_'+varEventHotelId);
+
+
+                        addHotelsEditClickEvent(varEventHotelId, this.varPageType, i);
+                        addHotelsDeleteClickEvent(varEventHotelId,varEventHotelsName,this.varPageType, i);
+                    }
+                }
+            }
+        }
+    });
 
     var WebsitePagePartyPartnerModel = Backbone.Model.extend({});
     var WebsitePagePartyPartnerView = Backbone.View.extend({
@@ -1015,7 +1328,7 @@
                         var varEventPartyId = vaEventPartyPartner.event_party_id;
                         var varEventPartyPartnerName = vaEventPartyPartner.name;
 
-                        var ai = oTable.fnAddData( [varEventPartyPartnerName, createPartyPartnerButtons(varEventPartyId) ] );
+                        var ai = oTable.fnAddData( [varEventPartyPartnerName, createButtons(varEventPartyId) ] );
                         var nRow = oTable.fnSettings().aoData[ ai[0] ].nTr;
                         $(nRow).attr('id','row_'+varEventPartyId);
 
@@ -1034,8 +1347,41 @@
             oTable = objEveryBridesMaidTable;
         } else if(varPageType == 'groomsmen') {
             oTable = objEveryGroomsMenTable;
+        }  else if(varPageType == 'hotels') {
+            oTable = objEveryHotelsTable;
         }
         return oTable;
+    }
+    function addHotelsEditClickEvent(varEventHotelId , varPageType, varRowNum){
+        $('#edit_'+varEventHotelId).click( function(){
+            $.colorbox({
+                href:'edit_event_website_hotels.jsp?event_id=<%=sEventId%>&event_hotel_id='+varEventHotelId,
+                iframe:true,
+                innerWidth: '90%',
+                innerHeight: '85%',
+                scrolling: true,
+                onClosed : function() {
+                    loadWebsitePageHotels(varPageType, populateWebsitePageHotels )
+                }});
+        });
+    }
+    function addHotelsDeleteClickEvent(varEventHotelId ,varEventHotelName , varPageType, varRowNum) {
+        var hotel_obj = {
+            event_hotel_id: varEventHotelId,
+            event_hotel_name:varEventHotelName,
+            page_type:varPageType,
+            row_num: varRowNum,
+            printObj: function () {
+                return this.event_hotel_id + ' row : ' + this.row_num;
+            }
+        }
+
+        $('#del_'+varEventHotelId).click({param_hotel_obj:hotel_obj},function(e){
+            displayConfirmBox(
+                    "Are you sure you want to remove - " + e.data.param_hotel_obj.event_hotel_name ,
+                    "Delete Hotel",
+                    "Yes", "No", deleteEventHotel,e.data.param_hotel_obj);
+        });
     }
     function addPartyPartnerEditClickEvent(varEventPartyId , varPageType, varRowNum) {
         var varParty = '';
@@ -1074,6 +1420,49 @@
                     "Delete",
                     "Yes", "No", deleteEventPartyPartner,e.data.param_party_partner_obj);
         });
+    }
+    function deleteEventHotel( varEventHotelObj ){
+        $('#delete_event_hotel_id').val(varEventHotelObj.event_hotel_id);
+
+        var actionUrl = "/proc_delete_event_hotel.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_delete_event_hotel").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,processEventHotelDeletion);
+
+    }
+    function processEventHotelDeletion (jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+
+                    var jsonResponseObj = varResponseObj.payload;
+                    var varIsHotelDeleted = jsonResponseObj.is_deleted;
+
+                    if(varIsHotelDeleted){
+
+                        $('#delete_event_hotel_id').val('');
+
+                        var varPageType = jsonResponseObj.page_type;
+                        var varEventHotelId = jsonResponseObj.deleted_event_hotel_id;
+                        var oTable = getTable(varPageType);
+                        if(oTable!='' && oTable!=undefined) {
+                            oTable.fnDeleteRow((oTable.$('#row_'+varEventHotelId))[0] );
+                        }
+
+                    } else {
+                        displayMssgBoxAlert("The role was not deleted. Please try again later.", true);
+                    }
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (deleteRole - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (deleteRole - 2)", true);
+        }
     }
     function deleteEventPartyPartner( varEventPartyObj ){
         $('#delete_event_party_id').val(varEventPartyObj.event_party_id);
@@ -1119,18 +1508,18 @@
         }
     }
 
-    function createPartyPartnerButtons( varEventPartyId ){
+    function createButtons( varId ){
         var varButtons = '';
-            varButtons = varButtons + createPartyPartnerEditButton( varEventPartyId );
+            varButtons = varButtons + createEditButton( varId );
             varButtons = varButtons + '&nbsp;&nbsp;&nbsp;';
-            varButtons = varButtons + createPartyPartnerDeleteButton( varEventPartyId );
+            varButtons = varButtons + createDeleteButton( varId );
         return varButtons;
     }
-    function createPartyPartnerEditButton(varEventPartyId){
-        return '<a id="edit_'+varEventPartyId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>';
+    function createEditButton(varId){
+        return '<a id="edit_'+varId+'" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>';
     }
-    function createPartyPartnerDeleteButton(varEventPartyId){
-        return '<a id="del_'+varEventPartyId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>';
+    function createDeleteButton(varId){
+        return '<a id="del_'+varId+'" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Delete</a>';
     }
 
     function generateWebsitePages( varJsonResponse ) {
@@ -1179,6 +1568,16 @@
         });
         var websitePagePartyPartnerView = new WebsitePagePartyPartnerView({model:this.websitePagePartyPartnerModel});
         websitePagePartyPartnerView.render();
+    }
+    function generateWebsiteHotels( varJsonResponse ) {
+        this.websitePageHotelsModel = new WebsitePageHotelsModel({
+
+            'bb_num_of_event_hotels' : varJsonResponse.num_of_event_hotels,
+            'bb_event_hotels' : varJsonResponse.event_hotels,
+            'bb_page_type' : varJsonResponse.page_type
+        });
+        var websitePageHotelsView = new WebsitePageHotelsView({model:this.websitePageHotelsModel});
+        websitePageHotelsView.render();
     }
 
     function populateWebsitePages(jsonResult){
@@ -1257,6 +1656,27 @@
                     var jsonResponseObj = varResponseObj.payload;
                     if(jsonResponseObj!=undefined) {
                         generateWebsitePartyPartner( jsonResponseObj );
+                    }
+
+                }
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (populateWPC 1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (populateWPC 3)', true);
+        }
+    }
+    function populateWebsitePageHotels(jsonResult){
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    if(jsonResponseObj!=undefined) {
+                        generateWebsiteHotels( jsonResponseObj );
                     }
 
                 }
@@ -1439,6 +1859,19 @@
     function initializeGroomsMenTable(){
 
         objEveryGroomsMenTable =  $('#every_groomsmen').dataTable({
+            "bPaginate": false,
+            "bInfo": false,
+            "bFilter": false,
+            "aoColumns":  [
+                {"bSortable": true,"sClass":"col-md-5"},
+                { "bSortable": false,"sClass": "center" }
+            ]
+        });
+    }
+
+    function initializeHotesTable(){
+
+        objEveryHotelsTable =  $('#every_hotels').dataTable({
             "bPaginate": false,
             "bInfo": false,
             "bFilter": false,

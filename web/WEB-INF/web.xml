@@ -572,6 +572,31 @@
         <servlet-name>Process Load Website Page</servlet-name>
         <url-pattern>/proc_load_website_page.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Event Website Hotel</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcSaveEventWebsiteHotel</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Event Website Hotel</servlet-name>
+        <url-pattern>/proc_save_event_website_hotel.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Event Website Hotel List</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcLoadEventWebsiteHotel</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Event Website Hotel List</servlet-name>
+        <url-pattern>/proc_load_event_website_hotels_list.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Event Website Hotel </servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcDeleteEventWebsiteHotel</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Event Website Hotel </servlet-name>
+        <url-pattern>/proc_delete_event_hotel.aeve</url-pattern>
+    </servlet-mapping>
+
 
 
 

@@ -175,8 +175,8 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" name="event_party_id" value="<%=sEventPartyId%>"/>
-                        <input type="hidden" name="event_website_id" value="<%=sEventWebsiteId%>"/>
+                        <input type="hidden" name="event_party_id" name="save_event_party_id"value="<%=sEventPartyId%>"/>
+                        <input type="hidden" name="event_website_id" name="save_event_website_id" value="<%=sEventWebsiteId%>"/>
                         <input type="hidden" name="event_id" value="<%=sEventId%>"/>
                         <input type="hidden" name="upload_id" id="party_image_upload_id" value="<%=sUploadId%>"/>
                     </form>
@@ -209,7 +209,7 @@
             innerHeight:$('body').height()
         });
         $('#save_event_party').click(function(){
-            saveWebsitePageFeaturePartySettings(getResult);
+            saveWebsitePageFeaturePartySettings(populateEventParty);
         });
     });
     function saveWebsitePageFeaturePartySettings(callbackmethod ) {
@@ -219,7 +219,7 @@
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
 
-    function getResult(jsonResult) {
+    function populateEventParty(jsonResult) {
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
@@ -228,6 +228,9 @@
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
+                    var varEventPartyBean = jsonResponseObj.event_party_bean;
+                    $('#save_event_party_id').val(varEventPartyBean.event_party_id);
+                    $('#save_event_website_id').val(varEventPartyBean.event_website_id);
 
                 }
                 displayAjaxOk(varResponseObj);
