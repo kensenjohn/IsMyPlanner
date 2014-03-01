@@ -11,6 +11,7 @@ import com.events.common.exception.ExceptionHandler;
 import com.events.common.feature.Feature;
 import com.events.common.feature.FeatureType;
 import com.events.common.security.DataSecurityChecker;
+import com.events.event.website.AccessEventWebsite;
 import com.events.event.website.BuildEventWebsite;
 import com.events.json.*;
 import org.json.JSONObject;
@@ -48,6 +49,7 @@ public class ProcSaveEventWebsiteTheme  extends HttpServlet {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
                     String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
                     String sWebsiteThemeId =  ParseUtil.checkNull(request.getParameter("website_theme_id"));
+                    String sEventWebsiteId =  ParseUtil.checkNull(request.getParameter("event_website_id"));
                     String sVendorId = Constants.EMPTY;
 
                     if(!Utility.isNullOrEmpty(sEventId) && !Utility.isNullOrEmpty(sWebsiteThemeId) ) {
@@ -57,6 +59,15 @@ public class ProcSaveEventWebsiteTheme  extends HttpServlet {
                         eventWebsiteRequestBean.setEventId( sEventId );
                         eventWebsiteRequestBean.setWebsiteThemId( sWebsiteThemeId );
                         eventWebsiteRequestBean.setUserId( sUserId );
+                        eventWebsiteRequestBean.setEventWebsiteId( sEventWebsiteId );
+
+                        /*AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
+                        EventWebsiteBean eventWebsiteBeanFromDB = accessEventWebsite.getEventWebsite(eventWebsiteRequestBean);
+                        if(eventWebsiteBeanFromDB!=null && !Utility.isNullOrEmpty(eventWebsiteBeanFromDB.getEventWebsiteId())) {
+                            if(sWebsiteThemeId.equalsIgnoreCase(eventWebsiteBeanFromDB.getWebsiteThemeId())) {
+                                eventWebsiteRequestBean.setEventWebsiteId( eventWebsiteBeanFromDB.getEventWebsiteId() );
+                            }
+                        }*/
 
                         BuildEventWebsite buildEventWebsite = new BuildEventWebsite();
                         EventWebsiteBean eventWebsiteBean = buildEventWebsite.saveEventWebsite( eventWebsiteRequestBean );

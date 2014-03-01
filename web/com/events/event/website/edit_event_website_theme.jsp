@@ -74,6 +74,7 @@
 <form id="frm_select_event_website_theme">
     <input type="hidden" name="event_id" id="selected_event_id" value="<%=sEventId%>"/>
     <input type="hidden" name="website_theme_id" id="selected_website_theme_id" value=""/>
+    <input type="hidden" name="event_website_id" id="current_event_website_id" value=""/>
 </form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
@@ -187,7 +188,7 @@
                     if(varNumOfThemes!=undefined && varNumOfThemes>0){
                         var varWebsiteThemes = jsonResponseObj.website_themes;
                         var varEventWebsite = jsonResponseObj.event_website;
-
+                         $('#current_event_website_id').val(varEventWebsite.event_website_id);
                         generateCurrentThemeThumbnailModel(varWebsiteThemes , varNumOfThemes, createCurrentThemeButtons , varEventWebsite);
                         var themeThumbnailView = generateCurrentThemeThumbnail();
                         $('#current_theme').html( themeThumbnailView.el );

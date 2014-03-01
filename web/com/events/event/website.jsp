@@ -46,7 +46,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <button id="edit_website" class="btn btn-filled" target="_blank">
-                        <span><i class="fa fa-desktop"></i> Create a Website</span>
+                        <span><i class="fa fa-desktop"></i> Edit Website</span>
                     </button>
                 </div>
             </div>
@@ -55,8 +55,11 @@
 </div>
 </body>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
+<script src="/js/event/event_info.js"></script>
 <script type="text/javascript">
+    var varEventId = '<%=sEventId%>';
     $(window).load(function() {
+        loadEventInfo(populateEventInfo,varEventId);
         $('#edit_website').click(function(){
             window.open("/com/events/event/website/edit_event_website_theme.jsp?event_id=<%=sEventId%>","edit_event_website");
         });
