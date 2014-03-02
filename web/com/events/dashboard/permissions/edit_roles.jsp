@@ -38,7 +38,6 @@
             userRolePermRequest.setRoleId( sRoleId);
             userRolePermRequest.setUserType(loggedInUserType);
             UserRolePermission userRolePermission = new UserRolePermission();
-            appLogging.info("Before getting role permissions");
             UserRolePermissionResponseBean userRolePermissionResponseBean = userRolePermission.getRolePermissions(userRolePermRequest);
             if(userRolePermissionResponseBean!=null){
                 arrPermissionGroupBean = userRolePermissionResponseBean.getArrPermissionGroupBean();
@@ -56,6 +55,11 @@
         if((roleBean!=null && !roleBean.isSiteAdmin()) && checkPermission.can(Perm.EDIT_ROLE_PERMISSION)  ) {
             canEditRolePermissions = true;
         }
+    }
+
+    String sRoleActionTitle= "Create Role and Permissions";
+    if(loadRolePermissions){
+        sRoleActionTitle = "Edit Role and Permissions";
     }
 %>
 <body>
@@ -84,7 +88,12 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    &nbsp;
+                   &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h4><span id="role_action_title"><%=sRoleActionTitle%></span></h4>
                 </div>
             </div>
             <%
@@ -249,6 +258,7 @@
                     var jsonResponseObj = varResponseObj.payload;
                     if(jsonResponseObj!=undefined) {
                         $('#role_id').val(jsonResponseObj.role_id);
+                        $('role_action_title').val('Edit Role and Permissions')
                     }
                 }
                 displayMssgBoxAlert('Your changes were saved successfully.', false);

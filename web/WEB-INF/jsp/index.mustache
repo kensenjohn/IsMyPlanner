@@ -1,9 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-  <title>Welcome!</title>
-</head>
+<jsp:include page="/com/events/common/header_top.jsp">
+    <jsp:param name="page_title" value=""/>
+</jsp:include>
+<jsp:include page="/com/events/common/header_bottom.jsp"/>
 <body>
   <h1>Welcome and Hello, {{ username }}!!</h1>
   <br>
@@ -13,4 +11,14 @@
   {{.}}<br>
   {{/items}}
 </body>
+<jsp:include page="/com/events/common/footer_top.jsp"/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
+
+<script type="text/javascript">
+    $(window).load(function() {
+       alert( 'Hello from JS {{ username }} ')
+       displayMssgBoxAlert('Yolo {{ username }}', true);
+    });
+</script>
 </html>

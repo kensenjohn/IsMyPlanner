@@ -1,35 +1,9 @@
-<%@ page import="com.events.common.ParseUtil" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
-
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
-
-<%
-    boolean loadSingleClientContactInfo = false;
-    boolean loadSingleClientEvents = false;
-
-    boolean isShowClientContactInfo = false;
-    boolean isShowClientEvents = false;
-    boolean isShowClientTab = false;
-    String sClientId = ParseUtil.checkNull(request.getParameter("client_id"));
-    String sClientDataType = ParseUtil.checkNull(request.getParameter("client_datatype"));
-
-    if( !"".equalsIgnoreCase(sClientId) && "contact_info".equalsIgnoreCase(sClientDataType)) {
-        isShowClientContactInfo = true;
-        loadSingleClientContactInfo = true;
-        isShowClientTab = true;
-    } else if(!"".equalsIgnoreCase(sClientId) && "event_info".equalsIgnoreCase(sClientDataType)) {
-        isShowClientEvents = true;
-        loadSingleClientEvents = true;
-        isShowClientTab = true;
-    }
-    if( ("".equalsIgnoreCase(sClientId) || "".equalsIgnoreCase(sClientDataType)) ) {
-        isShowClientContactInfo = true;
-    }
-%>
 <body>
 <div class="page_wrap">
     <jsp:include page="/com/events/common/top_nav.jsp">
@@ -40,112 +14,56 @@
     </jsp:include>
     <div class="breadcrumb_format">
         <div class="container">
-            <div class="page-title">Clients <span id="client_name_title"> - Add a Client</span></div>
+            <div class="page-title">Clients</div>
         </div>
     </div>
+
     <div class="container">
         <div class="content_format">
-            <div class="use_left_sidebar col-md-9 no_left_padding">
-                <div id="tabs">
-
-
-                        <%
-                            if(isShowClientTab && isShowClientContactInfo) {
-                        %>
-                                <jsp:include page="/com/events/clients/client_tab.jsp">
-                                    <jsp:param name="client_contact_info_active" value="active"/>
-                                </jsp:include>
-                        <%
-                            } else if (isShowClientTab && isShowClientEvents) {
-                        %>
-                                <jsp:include page="/com/events/clients/client_tab.jsp">
-                                    <jsp:param name="client_events_active" value="active"/>
-                                </jsp:include>
-                        <%
-                            }
-                        %>
-
-                    <div class="tab-container">
-
-                        <div id="tab1" class="tab-content" style="display: block;">
-                            <div style="padding-top:15px;">
-                                <%
-                                    if(isShowClientContactInfo) {
-                                %>
-                                        <jsp:include page="/com/events/clients/client_contact_form.jsp"/>
-                                <%
-                                    } else if (isShowClientEvents) {
-                                %>
-                                        <jsp:include page="/com/events/clients/client_events.jsp"/>
-                                <%
-                                    }
-                                %>
-
-                            </div>
-                        </div>
-                    </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div  style="float:left"><button type="button" class="btn btn-filled" id="btn_new_client">
+                        <i class="fa fa-plus"></i> Add a Client</button></div>
                 </div>
             </div>
-            <aside class="sidebar left-sidebar col-md-3">
-                <div class="row">
-                    <div>
-                        <h4>
-                            <div  style="float:left"><button type="button" class="btn btn-filled" id="btn_new_client">
-                                <span class="glyphicon glyphicon-user"></span> Add a Client</button></div>
-                        </h4>
-                    </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_client" >
+                        <thead>
+                        <tr role="row">
+                            <th role="columnheader">Name</th>
+                            <th role="columnheader">Email</th>
+                            <th role="columnheader"></th>
+                        </tr>
+                        </thead>
+
+                        <tbody role="alert" id="every_client_rows">
+
+                        </tbody>
+                    </table>
                 </div>
-                <div class="row">
-                    <div id="div_client_list" class="unordered_menu">
-                    </div>
-                </div>
-            </aside>
+            </div>
         </div>
     </div>
 </div>
 </body>
-<form id="frm_new_client" action="/com/events/clients/clients.jsp">
-</form>
-<form id="frm_load_client">
-    <input type="hidden"  id="load_client_id" name="client_id" value="">
-    <input type="hidden"  id="load_client_datatype" name="client_datatype" value="">
-</form>
+<script id="template_client_row" type="text/x-handlebars-template">
+    <td>{{client_name}}</td>
+    <td>{{client_email}}</td>
+    <td>
+        <a id="edit_{{client_id}}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+        &nbsp;&nbsp;
+        <a id="delete_{{client_id}}" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Delete</a>
+    </td>
+</script>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
-<%
-    if(loadSingleClientEvents) {
-%>
-        <script src="/js/jquery.dataTables.min.js"></script>
-<%
-    }
-%>
-
-<script src="/js/clients/clientcontactinfo.js"></script>
+<script src="/js/handlebars-v1.3.0.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 <script   type="text/javascript">
-    var varCurrentClientId = '<%=sClientId%>';
     $(window).load(function() {
-        $('#btn_save_client').click(function(){
-            saveClient(getResult);
-        });
-        $('#btn_new_client').click(function(){
-            $('#frm_new_client').submit();
-        });
-        var varLoadSingleClientContactDetail = <%=loadSingleClientContactInfo%>;
-        if(varLoadSingleClientContactDetail) {
-            var varClientId = '<%=sClientId%>';
-            var varClientDataType = '<%=sClientDataType%>';
-            loadClientDetail(varClientId, varClientDataType , populateClientDetail);
-        }
-
-        var varLoadSingleClientEvents = <%=loadSingleClientEvents%>;
-        if(varLoadSingleClientEvents) {
-            var varClientId = '<%=sClientId%>';
-            var varClientDataType = '<%=sClientDataType%>';
-            loadClientDetail(varClientId, varClientDataType , populateClientMinimum);
-            loadClientEvents(varClientId, varClientDataType , populateClientEvents);
-        }
         loadClients(populateClientList);
     });
-
     function loadClients(callbackmethod) {
         var actionUrl = "/proc_load_clients.aeve";
         var methodType = "POST";
@@ -169,6 +87,12 @@
                     var jsonResponseObj = varResponseObj.payload;
                     var varNumOfClients = jsonResponseObj.num_of_clients;
                     if(varNumOfClients>0){
+                        this.clientsSummaryListModel = new ClientsSummaryListModel({
+                            'bb_num_of_clients' : varNumOfClients,
+                            'bb_client_list_summary' : jsonResponseObj.all_client_summary
+                        });
+                        var clientsSummaryView = new ClientsSummaryListView({model:this.clientsSummaryListModel});
+                        clientsSummaryView.render();
                         processClientListSummary(varNumOfClients,jsonResponseObj.all_client_summary);
                     } else {
                         //displayMssgBoxAlert("Create a new client here.", true);
@@ -182,18 +106,28 @@
             displayMssgBoxAlert("Please try again later (populateClientList - 2)", true);
         }
     }
-    function processClientListSummary(varNumOfClients,clientSummaryList) {
-        var varUnorderClientList = $('<ul></ul>');
-        for(i=0;i<varNumOfClients;i++){
-            var varClientBean = clientSummaryList[i];
-            var active_link = '';
-            if ( varCurrentClientId == varClientBean.client_id ) {
-                active_link = 'active_link';
-            }
-            varUnorderClientList.append('<li class=\"'+active_link+'\"><a href=\"/com/events/clients/clients.jsp?client_id='+varClientBean.client_id+'&client_datatype=contact_info\">'+varClientBean.client_name+'</a></li>');
+
+    var ClientsSummaryListModel = Backbone.Model.extend({
+        defaults: {
+            bb_num_of_clients: 0 ,
+            bb_client_list_summary: undefined
         }
-        $('#div_client_list').empty();
-        $('#div_client_list').append(varUnorderClientList);
-    }
+    });
+    var ClientsSummaryListView = Backbone.View.extend({
+        tagName: "tr",
+        initialize: function(){
+            this.varNumOfClients = this.model.get('bb_num_of_clients');
+            this.varClientListSummary = this.model.get('bb_client_list_summary');
+        },
+        template : Handlebars.compile( $('#template_client_row').html() ),
+        render : function() {
+            for(i=0;i<this.varNumOfClients;i++){
+                var varClientBean = this.varClientListSummary[i];
+
+                var clientRow = this.template(  eval(varClientBean)  );
+                $(this.el).append( fontColumn );
+            }
+        }
+    });
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>

@@ -725,4 +725,12 @@
         <url-pattern>*.jsp</url-pattern>
         <url-pattern>*.eve</url-pattern>
     </filter-mapping>
+    <filter>
+        <filter-name>Routing Filter </filter-name>
+        <filter-class>com.events.common.service.RoutingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Routing Filter </filter-name>
+        <url-pattern>/plan/*</url-pattern>
+    </filter-mapping>
 </web-app>

@@ -520,4 +520,7 @@ ul.tabs li.active, html ul.tabs li.active a,  html ul.tabs li.active a:hover  {
 .red { color: #CA3E3D;}
 .green { color: #0AA65B;}
 
+/** Toggle Div Link **/
+toggle-link{cursor: pointer}
+
 
