@@ -100,7 +100,7 @@ function initializeTable(){
     objEveryEventTable =  $('#client_event_table').dataTable({
         "bPaginate": false,
         "bInfo": false,
-        "bFilter": false,
+        "bFilter": true,
         "aoColumns": [
             null,
             null,

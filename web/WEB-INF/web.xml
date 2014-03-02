@@ -116,6 +116,14 @@
         <servlet-name>Process Load Client Events</servlet-name>
         <url-pattern>/proc_load_client_events.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Clients</servlet-name>
+        <servlet-class>com.events.proc.clients.ProcDeleteClient</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Clients</servlet-name>
+        <url-pattern>/proc_delete_client.aeve</url-pattern>
+    </servlet-mapping>
 
 
     <servlet>

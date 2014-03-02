@@ -45,4 +45,14 @@ public class BuildClientData {
         }
         return  numOfRowsInserted;
     }
+
+    public Integer deleteClientData(ClientBean clientBean) {
+        int numOfRowsDeleted = 0;
+        if(clientBean!=null) {
+            String sQuery = "DELETE FROM GTCLIENT WHERE CLIENTID =?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(clientBean.getClientId() );
+            numOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildClientData.java", "deleteClientData() ");
+        }
+        return numOfRowsDeleted;
+    }
 }

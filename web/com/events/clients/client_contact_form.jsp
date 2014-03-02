@@ -24,11 +24,20 @@
     </jsp:include>
     <div class="breadcrumb_format">
         <div class="container">
-            <div class="page-title">Clients - Contact Information</div>
+            <div class="page-title">Client - Contact Information</div>
         </div>
     </div>
     <div class="container">
         <div class="content_format">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="tabs">
+                        <jsp:include page="/com/events/clients/client_tab.jsp">
+                            <jsp:param name="client_contact_info_active" value="active"/>
+                        </jsp:include>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-8">
                     <h4><%=sTitle%></h4>
@@ -170,7 +179,10 @@
 <script   type="text/javascript">
     var varClientId = '<%=sClientId%>';
     $(window).load(function() {
-        loadClientDetail(varClientId, 'contact_info',populateClientDetail);
+        if(varClientId!='') {
+            loadClientDetail(varClientId, 'contact_info',populateClientDetail);
+        }
+
 
         $('#btn_save_client').click(function(){
             saveClient(getResult);

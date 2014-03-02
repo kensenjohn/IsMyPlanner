@@ -12,6 +12,7 @@ function loadClientDetail(varClientId, varClientDataType , callbackmethod) {
     var dataString = 'client_id=' + varClientId + '&client_datatype='+varClientDataType;
     makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
 }
+
 function populateClientMinimum(jsonResult) {
     if(jsonResult!=undefined) {
         var varResponseObj = jsonResult.response;

@@ -148,4 +148,18 @@ public class BuildClients {
         }
         return  clientResponseBean;
     }
+
+    public boolean deleteClient(ClientRequestBean clientRequestBean) {
+        boolean isSuccess = false;
+        if(clientRequestBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId())) {
+            ClientBean clientBean = new ClientBean();
+            clientBean.setClientId( clientRequestBean.getClientId() );
+            BuildClientData buildClientData = new BuildClientData();
+            Integer iNumOfRowsDeleted = buildClientData.deleteClientData(clientBean);
+            if(iNumOfRowsDeleted>0) {
+                isSuccess = true;
+            }
+        }
+        return isSuccess;
+    }
 }
