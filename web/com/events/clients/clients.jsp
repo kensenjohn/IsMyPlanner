@@ -22,13 +22,13 @@
     <div class="container">
         <div class="content_format">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-12">
                     <div  style="float:left"><a href="/com/events/clients/client_contact_form.jsp" class="btn btn-filled" id="btn_new_client">
                         <i class="fa fa-plus"></i> Add a Client</a></div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-12">
                     <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_client" >
                         <thead>
                         <tr role="row">
