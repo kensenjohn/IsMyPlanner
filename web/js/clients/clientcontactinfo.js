@@ -82,8 +82,8 @@ function processClientResponse(clientResponse) {
         $('#load_client_datatype').val('contact_info');
 
         //loadClients(populateClientList);
-        //displayMssgBoxAlert('Your changes were successfully updated.', false);
-        $('#frm_load_client').submit();
+        displayMssgBoxAlert('Your changes were successfully updated.', false);
+        //$('#frm_load_client').submit();
 
     } else {
         displayMssgBoxAlert('Oops!! Something went wrong. Please try again later. (client_response)', false);

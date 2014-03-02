@@ -36,10 +36,6 @@
                             <th role="columnheader"></th>
                         </tr>
                         </thead>
-
-                        <tbody role="alert" id="every_client_rows">
-
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -48,18 +44,22 @@
 </div>
 </body>
 <script id="template_client_row" type="text/x-handlebars-template">
-    <td>{{client_name}}</td>
-    <td>{{client_email}}</td>
-    <td>
-        <a id="edit_{{client_id}}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
-        &nbsp;&nbsp;
-        <a id="delete_{{client_id}}" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Delete</a>
-    </td>
+    <tr>
+        <td>{{client_name}}</td>
+        <td>{{client_email}}</td>
+        <td>
+            <a id="edit_{{client_id}}" href="/com/events/clients/client_contact_form.jsp?client_id={{client_id}}&client_datatype=contact_info" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+            &nbsp;&nbsp;
+            <a id="delete_{{client_id}}" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Delete</a>
+        </td>
+    </tr>
 </script>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/handlebars-v1.3.0.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
 <script   type="text/javascript">
     $(window).load(function() {
         loadClients(populateClientList);
@@ -93,11 +93,11 @@
                         });
                         var clientsSummaryView = new ClientsSummaryListView({model:this.clientsSummaryListModel});
                         clientsSummaryView.render();
-                        processClientListSummary(varNumOfClients,jsonResponseObj.all_client_summary);
+                        $("#every_client").append(clientsSummaryView.el);
                     } else {
                         //displayMssgBoxAlert("Create a new client here.", true);
                     }
-
+                    initializeContactUsTable();
                 }
             } else {
                 displayMssgBoxAlert("Please try again later (populateClientList - 1)", true);
@@ -114,7 +114,8 @@
         }
     });
     var ClientsSummaryListView = Backbone.View.extend({
-        tagName: "tr",
+        tagName: "tbody",
+        id : "every_client_rows",
         initialize: function(){
             this.varNumOfClients = this.model.get('bb_num_of_clients');
             this.varClientListSummary = this.model.get('bb_client_list_summary');
@@ -125,9 +126,22 @@
                 var varClientBean = this.varClientListSummary[i];
 
                 var clientRow = this.template(  eval(varClientBean)  );
-                $(this.el).append( fontColumn );
+                $(this.el).append( clientRow );
             }
         }
     });
+    function initializeContactUsTable(){
+
+        objEveryClientTable =  $('#every_client').dataTable({
+            "bPaginate": false,
+            "bInfo": false,
+            "bFilter": false,
+            "aoColumns":  [
+                {"bSortable": true,"sClass":"col-md-5"},
+                {"bSortable": true},
+                { "bSortable": false,"sClass": "center" }
+            ]
+        });
+    }
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>

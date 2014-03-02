@@ -131,18 +131,7 @@
             $('#frm_new_client').submit();
         });
 
-        $('#edit_client_contact').click(function(){
-            $( "#client_contact" ).slideToggle( "slow", function() {
-                if($('#client_contact').css('display') == 'block') {
-                    $('#edit_client_contact_icon').removeClass("fa-chevron-circle-right").addClass("fa-chevron-circle-down");
-                }
-                if($('#client_contact').css('display') == 'none') {
-                    $('#edit_client_contact_icon').removeClass("fa-chevron-circle-down").addClass("fa-chevron-circle-right");
-                }
-            });
 
-
-        });
 
 
         var varLoadSingleClientContactDetail = <%=loadSingleClientContactInfo%>;

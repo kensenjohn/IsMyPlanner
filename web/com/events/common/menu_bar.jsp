@@ -32,7 +32,7 @@
                                 </button>
                             </li>
                             <li class="<%=sDashBoardLinkCurrentlyActive%>"><a href="/com/events/dashboard/dashboard.jsp">Dashboard</a></li>
-                            <li class="<%=sClientLinkCurrentlyActive%>"><a href="/com/events/clients/clients_1.jsp">Clients</a></li>
+                            <li class="<%=sClientLinkCurrentlyActive%>"><a href="/com/events/clients/clients.jsp">Clients</a></li>
                             <li class="<%=sEventLinkCurrentlyActive%>"><a href="/com/events/event/events.jsp">Events</a></li>
                         </ul>
                 <%
