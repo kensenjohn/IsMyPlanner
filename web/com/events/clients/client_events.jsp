@@ -64,7 +64,6 @@
     var varClientId = '<%=sClientId%>';
     $(window).load(function() {
          if(varClientId !='') {
-             console.log('invoking load Client detail minimum = ' + varClientId);
              loadClientDetail(varClientId, 'event_info' , populateClientMinimum);
              loadClientEvents(varClientId, 'event_info' , populateClientEvents);
          } else {

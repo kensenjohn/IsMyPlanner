@@ -33,14 +33,14 @@
                 <div class="col-md-12">
                     <div id="tabs">
                         <jsp:include page="/com/events/clients/client_tab.jsp">
-                            <jsp:param name="client_contact_info_active" value="active"/>
+                            <jsp:param name="client_account_active" value="active"/>
                         </jsp:include>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    <h4><%=sTitle%></h4>
+                    <h4>Contact Information</h4>
                 </div>
             </div>
             <div class="row">
@@ -167,7 +167,22 @@
                         <input type="hidden"  id="userId" name="userId" value="">
                         <input type="hidden"  id="userInfoId" name="userInfoId" value="">
                     </form>
-                    <button type="button" class="btn  btn-filled" id="btn_save_client">Save Changes</button>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button type="button" class="btn  btn-filled" id="btn_save_client">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    &nbsp;
                 </div>
             </div>
         </div>

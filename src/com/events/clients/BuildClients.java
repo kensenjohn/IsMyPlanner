@@ -57,8 +57,6 @@ public class BuildClients {
 
                 buildUsers.createUserInfo(userInfoBean);
                 buildUsers.createUser(userBean);
-                appLogging.info("userBean : " + userBean);
-                appLogging.info("userInfoBean : " + userInfoBean );
 
                 clientBean.setClientName(clientRequestBean.getClientName());
                 clientBean.setUserBeanId( userBean.getUserId() );

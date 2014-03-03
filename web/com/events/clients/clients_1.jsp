@@ -73,7 +73,7 @@
                                 <%
                                     if(isShowClientContactInfo) {
                                 %>
-                                        <jsp:include page="/com/events/clients/client_contact_form.jsp"/>
+                                        <jsp:include page="/com/events/clients/client_account.jsp"/>
                                 <%
                                     } else if (isShowClientEvents) {
                                 %>

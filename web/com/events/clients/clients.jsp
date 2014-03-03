@@ -23,7 +23,7 @@
         <div class="content_format">
             <div class="row">
                 <div class="col-md-12">
-                    <div  style="float:left"><a href="/com/events/clients/client_contact_form.jsp" class="btn btn-filled" id="btn_new_client">
+                    <div  style="float:left"><a href="/com/events/clients/client_account.jsp" class="btn btn-filled" id="btn_new_client">
                         <i class="fa fa-plus"></i> Add a Client</a></div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
     <tr id="row_{{client_id}}">
         <td>{{client_name}}</td>
         <td>
-            <a id="edit_{{client_id}}" href="/com/events/clients/client_contact_form.jsp?client_id={{client_id}}&client_datatype=contact_info" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+            <a id="edit_{{client_id}}" href="/com/events/clients/client_account.jsp?client_id={{client_id}}&client_datatype=contact_info" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
             &nbsp;&nbsp;
             <a id="{{client_id}}" name="delete_client" class="btn btn-default btn-xs" row={{row_num}}><i class="fa fa-trash-o"></i> Delete</a>
         </td>
