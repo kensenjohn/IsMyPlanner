@@ -57,7 +57,7 @@ public class ProcLoadAllWebsiteThemes  extends HttpServlet {
                         clientRequestBean.setClientId( loggedInUserBean.getParentId() );
 
                         AccessClients accessClients = new AccessClients();
-                        ClientBean clientBean = accessClients.getClientData( clientRequestBean );
+                        ClientBean clientBean = accessClients.getClientDataByVendorAndClient(clientRequestBean);
                         if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getVendorId())) {
                             sVendorId = ParseUtil.checkNull(clientBean.getVendorId());
                         }

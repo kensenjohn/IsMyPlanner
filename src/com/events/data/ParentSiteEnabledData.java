@@ -32,7 +32,7 @@ public class ParentSiteEnabledData {
         ParentSiteEnabledBean parentSiteEnabledBean = new ParentSiteEnabledBean();
         if(userRequestBean!=null) {
             String sQuery  = "SELECT * FROM GTPARENTSITEENABLED WHERE FK_USERID = ?";
-            ArrayList<Object> aParams = DBDAO.createConstraint(userRequestBean.getEmail());
+            ArrayList<Object> aParams = DBDAO.createConstraint(userRequestBean.getUserId());
 
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "ParentSiteEnabledData.java", "getParentSiteEnabledStatusByUser()");
             if(arrResult!=null) {
@@ -60,7 +60,7 @@ public class ParentSiteEnabledData {
     public Integer updateParentSiteEnabledStatus(ParentSiteEnabledBean parentSiteEnabledBean){
         int numOfRowsInserted = 0 ;
         if(parentSiteEnabledBean!=null && !Utility.isNullOrEmpty(parentSiteEnabledBean.getParentSiteEnabledId())){
-            String sQuery  = "UPDATE GTPARENTSITEENABLED SET IS_ALLOWED_ACCESS = ? WHERE FK_USERID = ? AND  PARENTSITEENABLEDID = ? ";
+            String sQuery  = "UPDATE GTPARENTSITEENABLED SET IS_ALLOWED_ACCESS = ? WHERE  PARENTSITEENABLEDID = ?  AND FK_USERID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint( parentSiteEnabledBean.isAllowed()?"1":"0", parentSiteEnabledBean.getParentSiteEnabledId(), parentSiteEnabledBean.getUserId());
 
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "ParentSiteEnabledData.java", "insertParentSiteEnabledStatus() ");

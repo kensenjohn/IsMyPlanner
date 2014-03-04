@@ -41,20 +41,30 @@ public class AccessClients {
         return  clientBean;
     }
 
-    public ClientBean getClientData ( ClientRequestBean clientRequestBean ) {
+    public ClientBean getClientDataByVendorAndClient(ClientRequestBean clientRequestBean) {
         ClientBean clientBean = new ClientBean();
-        if(clientRequestBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId())  ) {
+        if(clientRequestBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId())  && !"".equalsIgnoreCase(clientRequestBean.getVendorId())  ) {
+            AccessClientData accessClientData = new AccessClientData();
+            clientBean = accessClientData.getClientByVendor(clientRequestBean) ;
+        }
+        return clientBean;
+    }
+
+    public ClientBean getClient(ClientRequestBean clientRequestBean) {
+        ClientBean clientBean = new ClientBean();
+        if(clientRequestBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId()) ) {
             AccessClientData accessClientData = new AccessClientData();
             clientBean = accessClientData.getClient(clientRequestBean) ;
         }
         return clientBean;
     }
 
+
     public ClientResponseBean getClientContactInfo(ClientRequestBean clientRequestBean)  {
         ClientResponseBean clientResponseBean =new ClientResponseBean();
         if(clientRequestBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId()) && !Utility.isNullOrEmpty(clientRequestBean.getVendorId())  ) {
 
-            ClientBean clientBean = getClientData(clientRequestBean);
+            ClientBean clientBean = getClientDataByVendorAndClient(clientRequestBean);
             if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId()) ) {
 
                 UserRequestBean userRequestBean = new UserRequestBean();

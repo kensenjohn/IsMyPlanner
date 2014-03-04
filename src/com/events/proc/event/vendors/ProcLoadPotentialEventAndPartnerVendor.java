@@ -5,8 +5,6 @@ import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.event.vendor.EventVendorRequestBean;
 import com.events.bean.event.vendor.EveryEventVendorBean;
 import com.events.bean.users.UserBean;
-import com.events.bean.vendors.VendorBean;
-import com.events.bean.vendors.VendorRequestBean;
 import com.events.clients.AccessClients;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
@@ -15,7 +13,6 @@ import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.event.vendor.AccessEventVendor;
 import com.events.json.*;
-import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +57,7 @@ public class ProcLoadPotentialEventAndPartnerVendor extends HttpServlet {
                         clientRequestBean.setClientId( loggedInUserBean.getParentId() );
 
                         AccessClients accessClients = new AccessClients();
-                        ClientBean clientBean = accessClients.getClientData( clientRequestBean );
+                        ClientBean clientBean = accessClients.getClientDataByVendorAndClient(clientRequestBean);
                         if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getVendorId())) {
                             sVendorId = ParseUtil.checkNull(clientBean.getVendorId());
                         }

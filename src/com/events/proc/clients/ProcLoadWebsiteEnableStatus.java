@@ -1,17 +1,19 @@
 package com.events.proc.clients;
 
+import com.events.bean.clients.ClientBean;
 import com.events.bean.clients.ClientRequestBean;
+import com.events.bean.common.ParentSiteEnabledBean;
 import com.events.bean.users.UserBean;
+import com.events.bean.users.UserRequestBean;
 import com.events.clients.AccessClients;
 import com.events.common.Constants;
+import com.events.common.ParentSiteEnabled;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.json.ErrorText;
-import com.events.json.RespConstants;
-import com.events.json.RespObjectProc;
-import com.events.json.Text;
+import com.events.json.*;
+import com.events.users.AccessUsers;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,10 +53,35 @@ public class ProcLoadWebsiteEnableStatus extends HttpServlet {
                         clientRequestBean.setClientId( sClientId );
 
                         AccessClients accessClients = new AccessClients();
-                        accessClients.getClientData(clientRequestBean) ;
+                        ClientBean clientBean = accessClients.getClient(clientRequestBean) ;
+
+                        UserRequestBean userRequestBean = new UserRequestBean();
+                        userRequestBean.setUserType(Constants.USER_TYPE.CLIENT);
+                        userRequestBean.setParentId( clientBean.getClientId() );
+                        userRequestBean.setUserId(clientBean.getUserBeanId());
+
+                        AccessUsers accessUsers = new AccessUsers();
+                        UserBean userBean = accessUsers.getUserByParentId(userRequestBean);
+
+                        UserRequestBean newUserRequestBean = new UserRequestBean();
+                        newUserRequestBean.setUserId( userBean.getUserId() );
+
+                        ParentSiteEnabled parentSiteEnabled = new ParentSiteEnabled();
+                        ParentSiteEnabledBean parentSiteEnabledBean = parentSiteEnabled.getParentSiteEnabledStatusForUser( newUserRequestBean ) ;
+
+                        boolean isStatusExists = false;
+                        if(parentSiteEnabledBean!=null && !Utility.isNullOrEmpty(parentSiteEnabledBean.getParentSiteEnabledId() )) {
+                            jsonResponseObj.put("parent_site_enabled_status" , parentSiteEnabledBean.toJson());
+                            isStatusExists = true;
+
+                        }
+                        jsonResponseObj.put("is_status_exists", isStatusExists);
+                        Text okText = new OkText("Loading of Parent Site Enabled Status completed","status_mssg") ;
+                        arrOkText.add(okText);
+                        responseStatus = RespConstants.Status.OK;
 
                     } else {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES- 002)","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES- 003)","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;

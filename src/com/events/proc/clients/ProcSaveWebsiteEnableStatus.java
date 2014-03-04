@@ -1,18 +1,18 @@
-package com.events.proc.event.vendors;
+package com.events.proc.clients;
 
 import com.events.bean.clients.ClientBean;
 import com.events.bean.clients.ClientRequestBean;
-import com.events.bean.event.vendor.EventVendorRequestBean;
-import com.events.bean.event.vendor.EveryEventVendorBean;
 import com.events.bean.users.UserBean;
+import com.events.bean.users.UserRequestBean;
 import com.events.clients.AccessClients;
 import com.events.common.Constants;
+import com.events.common.ParentSiteEnabled;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.event.vendor.AccessEventVendor;
 import com.events.json.*;
+import com.events.users.AccessUsers;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +26,12 @@ import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
- * User: kensen
- * Date: 2/10/14
- * Time: 4:31 PM
+ * User: root
+ * Date: 3/3/14
+ * Time: 1:48 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadEventVendors  extends HttpServlet {
+public class ProcSaveWebsiteEnableStatus extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,47 +46,35 @@ public class ProcLoadEventVendors  extends HttpServlet {
 
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
-                    String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
-                    String sVendorId = Constants.EMPTY;
-
-                    if(Constants.USER_TYPE.VENDOR.equals( loggedInUserBean.getUserType() )) {
-                        sVendorId = loggedInUserBean.getParentId();
-
-                    } else if(Constants.USER_TYPE.CLIENT.equals( loggedInUserBean.getUserType())) {
+                    String sClientId = ParseUtil.checkNull(request.getParameter("client_id"));
+                    if(!Utility.isNullOrEmpty(sClientId)){
                         ClientRequestBean clientRequestBean = new ClientRequestBean();
-                        clientRequestBean.setClientId( loggedInUserBean.getParentId() );
+                        clientRequestBean.setClientId( sClientId );
 
                         AccessClients accessClients = new AccessClients();
-                        ClientBean clientBean = accessClients.getClientDataByVendorAndClient(clientRequestBean);
-                        if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getVendorId())) {
-                            sVendorId = ParseUtil.checkNull(clientBean.getVendorId());
-                        }
-                    }
+                        ClientBean clientBean = accessClients.getClient(clientRequestBean) ;
 
-                    if( !Utility.isNullOrEmpty(sVendorId) && !Utility.isNullOrEmpty(sEventId ) ) {
-                        EventVendorRequestBean eventVendorRequestBean = new EventVendorRequestBean();
-                        eventVendorRequestBean.setVendorId( sVendorId );
-                        eventVendorRequestBean.setEventId( sEventId );
+                        UserRequestBean userRequestBean = new UserRequestBean();
+                        userRequestBean.setUserType(Constants.USER_TYPE.CLIENT);
+                        userRequestBean.setParentId(clientBean.getClientId());
+                        userRequestBean.setUserId(clientBean.getUserBeanId());
 
-                        AccessEventVendor accessEventVendor = new AccessEventVendor();
-                        Integer iNumOfEventVendors = 0;
-                        ArrayList<EveryEventVendorBean> arrEveryEventVendorBean = accessEventVendor.getEventVendorsList( eventVendorRequestBean );
-                        if(arrEveryEventVendorBean!=null && !arrEveryEventVendorBean.isEmpty()){
-                            JSONObject everyEventVendorJSON = accessEventVendor.getEveryEventVendorJSON(arrEveryEventVendorBean);
-                            iNumOfEventVendors = everyEventVendorJSON.optInt("num_of_potential_event_vendors");
-                            if(iNumOfEventVendors>0 && everyEventVendorJSON!=null){
-                                jsonResponseObj.put("event_vendors",everyEventVendorJSON);
-                            }
-                        }
+                        AccessUsers accessUsers = new AccessUsers();
+                        UserBean userBean = accessUsers.getUserByParentId(userRequestBean);
 
-                        jsonResponseObj.put("num_of_event_vendors",iNumOfEventVendors);
+                        UserRequestBean newUserRequestBean = new UserRequestBean();
+                        newUserRequestBean.setUserId( userBean.getUserId() );
 
-                        Text okText = new OkText("Event  Vendors are successfully loaded.","status_mssg") ;
+
+                        ParentSiteEnabled parentSiteEnabled = new ParentSiteEnabled();
+                        boolean isSuccess = parentSiteEnabled.toggleParentSiteEnableStatus( newUserRequestBean ) ;
+
+                        Text okText = new OkText("Loading of Parent Site Enabled Status completed","status_mssg") ;
                         arrOkText.add(okText);
                         responseStatus = RespConstants.Status.OK;
 
-                    }  else {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later,.(loadEventVendors - 003)","err_mssg") ;
+                    } else {
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES- 003)","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
@@ -94,7 +82,7 @@ public class ProcLoadEventVendors  extends HttpServlet {
 
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventVendors - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -108,7 +96,7 @@ public class ProcLoadEventVendors  extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventVendors - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;
@@ -125,3 +113,4 @@ public class ProcLoadEventVendors  extends HttpServlet {
         response.getWriter().write( responseObject.getJson().toString() );
     }
 }
+

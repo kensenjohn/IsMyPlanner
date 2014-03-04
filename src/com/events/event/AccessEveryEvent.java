@@ -7,7 +7,6 @@ import com.events.clients.AccessClients;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
-import com.events.data.clients.AccessClientData;
 import com.events.data.event.AccessEveryEventData;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -98,7 +97,7 @@ public class AccessEveryEvent {
                     clientRequestBean.setVendorId(everyEventBean.getVendorId());
                     clientRequestBean.setClientId(sClientId);
 
-                    ClientBean clientBean = accessClients.getClientData(clientRequestBean);
+                    ClientBean clientBean = accessClients.getClientDataByVendorAndClient(clientRequestBean);
 
                     hmClientBean.put(sClientId,clientBean);
                 }

@@ -10,7 +10,6 @@ import com.events.common.Constants;
 import com.events.common.DateSupport;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
-import com.events.common.exception.users.EditUserException;
 import com.events.data.users.AccessUserData;
 import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
@@ -170,7 +169,7 @@ public class AccessUsers {
                 clientRequestBean.setClientId( userBean.getParentId() );
 
                 AccessClients accessClients = new AccessClients();
-                ClientBean clientBean = accessClients.getClientData( clientRequestBean );
+                ClientBean clientBean = accessClients.getClientDataByVendorAndClient(clientRequestBean);
                 if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getVendorId())) {
                     sVendorId = ParseUtil.checkNull(clientBean.getVendorId());
                 }

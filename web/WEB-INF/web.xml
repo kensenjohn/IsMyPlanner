@@ -108,6 +108,14 @@
         <servlet-name>Process Load Website Enable Status</servlet-name>
         <url-pattern>/proc_load_website_enable_status.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Website Enable Status</servlet-name>
+        <servlet-class>com.events.proc.clients.ProcSaveWebsiteEnableStatus</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Website Enable Status</servlet-name>
+        <url-pattern>/proc_save_website_enable_status.aeve</url-pattern>
+    </servlet-mapping>
 
 
 

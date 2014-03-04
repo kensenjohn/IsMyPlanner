@@ -109,7 +109,7 @@ public class ProcGetClientDetails    extends HttpServlet {
                                     responseStatus = RespConstants.Status.ERROR;
                                 }
                             } else if(  "event_info".equalsIgnoreCase(sClientDataType) ) {
-                                ClientBean clientBean = accessClients.getClientData( clientRequestBean ) ;
+                                ClientBean clientBean = accessClients.getClientDataByVendorAndClient(clientRequestBean) ;
                                 if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId()) ) {
                                     jsonResponseObj.put("client_data",clientBean.toJson());
                                 }

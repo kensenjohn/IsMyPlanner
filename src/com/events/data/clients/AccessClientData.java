@@ -4,6 +4,7 @@ import com.events.bean.clients.ClientBean;
 import com.events.bean.clients.ClientRequestBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
+import com.events.common.Utility;
 import com.events.common.db.DBDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,11 +42,26 @@ public class AccessClientData {
         return hmClientBean;
     }
 
-    public ClientBean getClient(ClientRequestBean clientRequestBean) {
+    public ClientBean getClientByVendor(ClientRequestBean clientRequestBean) {
         ClientBean clientBean = new ClientBean();
         if(clientRequestBean!=null && !"".equalsIgnoreCase(clientRequestBean.getClientId()) && !"".equalsIgnoreCase(clientRequestBean.getVendorId())) {
-            String sQuery  = "SELECT * FROM GTCLIENT WHERE FK_VENDORID = ? AND CLIENTID = ? ORDER BY CREATEDATE DESC";
+            String sQuery  = "SELECT * FROM GTCLIENT WHERE FK_VENDORID = ? AND CLIENTID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint(clientRequestBean.getVendorId(),clientRequestBean.getClientId());
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessClientData.java", "getClientByVendor()");
+
+            for( HashMap<String, String> hmResult : arrResult ) {
+                clientBean = new ClientBean(hmResult);
+            }
+        }
+        return  clientBean;
+    }
+
+    public ClientBean getClient(ClientRequestBean clientRequestBean) {
+        ClientBean clientBean = new ClientBean();
+        if(clientRequestBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId()) ) {
+            String sQuery  = "SELECT * FROM GTCLIENT WHERE CLIENTID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(clientRequestBean.getClientId());
 
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessClientData.java", "getClient()");
 
