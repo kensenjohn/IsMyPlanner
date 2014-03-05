@@ -94,7 +94,7 @@ public class ForgotPassword {
         return forgotPasswordBean;
     }
 
-    private boolean createChangePasswordRecord(ForgotPasswordBean forgotPasswordBean) {
+    public boolean createChangePasswordRecord(ForgotPasswordBean forgotPasswordBean) {
         boolean isSuccess = false;
         if(forgotPasswordBean!=null && !Utility.isNullOrEmpty(forgotPasswordBean.getForgotPasswordId())) {
 

@@ -3,6 +3,7 @@ package com.events.proc.clients;
 import com.events.bean.clients.ClientBean;
 import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.common.ParentSiteEnabledBean;
+import com.events.bean.users.ForgotPasswordBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserRequestBean;
 import com.events.clients.AccessClients;
@@ -74,9 +75,20 @@ public class ProcSaveWebsiteEnableStatus extends HttpServlet {
                             boolean isPasswordReset = parentSiteEnabled.resetParentSitePassword(newUserRequestBean);
 
                             if(isPasswordReset ){
-                                if(parentSiteEnabledBean.isAllowed() ) {
 
+                                if(parentSiteEnabledBean.isAllowed() ) {
+                                    boolean isPasswordResetEmailSent = false;
+                                    ForgotPasswordBean forgotPasswordBean = parentSiteEnabled.createParentSiteNewPasswordUserRequest(clientBean , newUserRequestBean );
+                                    if(forgotPasswordBean!=null && !Utility.isNullOrEmpty(forgotPasswordBean.getForgotPasswordId())){
+                                        isPasswordResetEmailSent = true;
+                                        jsonResponseObj.put("is_email_sent", true);
+                                    } else {
+                                        isPasswordResetEmailSent = false;
+                                    }
+                                    jsonResponseObj.put("is_email_sent", isPasswordResetEmailSent);
                                 }
+
+
 
                                 jsonResponseObj.put("is_status_exists", true);
                                 jsonResponseObj.put("parent_site_enabled_status" , parentSiteEnabledBean.toJson());

@@ -1,16 +1,36 @@
 package com.events.common;
 
+import com.events.bean.clients.ClientBean;
+import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.common.ParentSiteEnabledBean;
-import com.events.bean.users.PasswordRequestBean;
-import com.events.bean.users.UserBean;
-import com.events.bean.users.UserInfoBean;
-import com.events.bean.users.UserRequestBean;
+import com.events.bean.common.email.EmailQueueBean;
+import com.events.bean.common.email.EmailSchedulerBean;
+import com.events.bean.common.email.EmailTemplateBean;
+import com.events.bean.users.*;
+import com.events.bean.vendors.VendorBean;
+import com.events.bean.vendors.VendorRequestBean;
+import com.events.clients.AccessClients;
+import com.events.common.email.creator.EmailCreator;
+import com.events.common.email.creator.MailCreator;
+import com.events.common.email.send.QuickMailSendThread;
 import com.events.common.exception.users.ManagePasswordException;
 import com.events.data.ParentSiteEnabledData;
+import com.events.data.email.EmailServiceData;
 import com.events.users.AccessUsers;
+import com.events.users.ForgotPassword;
 import com.events.users.ManageUserPassword;
+import com.events.vendors.AccessVendors;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,6 +40,7 @@ import org.slf4j.LoggerFactory;
  * To change this template use File | Settings | File Templates.
  */
 public class ParentSiteEnabled {
+    private Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     public ParentSiteEnabledBean getParentSiteEnabledStatusForUser(UserRequestBean userRequestBean){
         ParentSiteEnabledBean parentSiteEnabledBean = new ParentSiteEnabledBean();
@@ -103,5 +124,178 @@ public class ParentSiteEnabled {
             appLogging.error("Password not reset. Invalid User Id in ParentSiteEnabledBean used - " + ParseUtil.checkNullObject(parentSiteEnabledBean) );
         }
         return isSuccess;
+    }
+
+
+    public ForgotPasswordBean createParentSiteNewPasswordUserRequest(ClientBean clientBean , UserRequestBean userRequestBean) {
+
+        ForgotPasswordBean forgotPasswordBean = new ForgotPasswordBean();
+        appLogging.info("Password Reset request for "+ ParseUtil.checkNull(userRequestBean.getEmail()) + " recieved.");
+        if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getUserId())) {
+
+            //
+            AccessUsers accessUsers = new AccessUsers();
+            UserInfoBean userInfoBean = accessUsers.getUserInfoFromUserId(userRequestBean);
+            UserBean userBean = accessUsers.getUserById(userRequestBean);
+
+            if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId()) && userInfoBean!=null && !Utility.isNullOrEmpty(userInfoBean.getEmail()) ) {
+
+
+                userBean.setUserInfoId(userInfoBean.getUserInfoId() );
+                userBean.setUserInfoBean( userInfoBean );
+
+                String sEmailAddress = userInfoBean.getEmail();
+
+                forgotPasswordBean.setForgotPasswordId(Utility.getNewGuid());
+                forgotPasswordBean.setUserId(userBean.getUserId());
+
+                String sSecureTokenId = Utility.getNewGuid();
+                forgotPasswordBean.setSecureTokenId(sSecureTokenId);
+
+                forgotPasswordBean.setCreateDate(DateSupport.getEpochMillis());
+                forgotPasswordBean.setHumanCreateDate(DateSupport.getUTCDateTime());
+
+                forgotPasswordBean.setUsable(true);
+
+                ForgotPassword forgotPassword = new ForgotPassword();
+                boolean isSuccess = forgotPassword.createChangePasswordRecord(forgotPasswordBean);
+
+                if(isSuccess) {
+                    appLogging.info("Password Reset request : The request was created successfully "  + sEmailAddress);
+                    boolean isSendEmailSuccess = sendParentSitePasswordResetEmail(forgotPasswordBean, userBean, clientBean );
+
+                    if(isSendEmailSuccess) {
+                        appLogging.info("Password Reset request : Success sending email : " + sEmailAddress);
+                    }  else  {
+
+                        forgotPasswordBean.setForgotPasswordId(Constants.EMPTY);
+                        appLogging.info("Password Reset request : Sending email failed : " + sEmailAddress);
+                    }
+                } else {
+                    forgotPasswordBean.setForgotPasswordId(Constants.EMPTY);
+                    appLogging.info("Password Reset request : The request failed for " + sEmailAddress);
+                }
+            } else {
+                appLogging.info("Password Reset request : Admin account does not exist for "  + ParseUtil.checkNullObject(userRequestBean) );
+            }
+        } else  {
+            appLogging.info("Password Reset request : Invalid email address ");
+        }
+        return forgotPasswordBean;
+    }
+
+    private boolean sendParentSitePasswordResetEmail(ForgotPasswordBean forgotPasswordBean, UserBean userBean , ClientBean clientBean) {
+        boolean isSuccess = false;
+        if(forgotPasswordBean!=null && !Utility.isNullOrEmpty(forgotPasswordBean.getForgotPasswordId()) &&
+                userBean!=null && userBean.getUserInfoBean() !=null && !Utility.isNullOrEmpty(userBean.getUserInfoBean().getUserInfoId()) ) {
+
+            if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getVendorId())){
+                VendorRequestBean vendorRequestBean = new VendorRequestBean();
+                vendorRequestBean.setVendorId( clientBean.getVendorId() );
+
+                AccessVendors accessVendors = new AccessVendors();
+                VendorBean vendorBean = accessVendors.getVendor( vendorRequestBean );
+
+                if(vendorBean!=null && !Utility.isNullOrEmpty(vendorBean.getVendorId())){
+                    EmailServiceData emailServiceData = new EmailServiceData();
+                    EmailTemplateBean emailTemplateBean = emailServiceData.getEmailTemplate(Constants.EMAIL_TEMPLATE.CLIENT_PARENTSITE_ACCESS);
+
+
+                    String sHtmlTemplate = emailTemplateBean.getHtmlBody();
+                    String sTxtTemplate = emailTemplateBean.getTextBody();
+
+                    EmailQueueBean emailQueueBean = new EmailQueueBean();
+                    emailQueueBean.setEmailSubject(emailTemplateBean.getEmailSubject());
+                    emailQueueBean.setFromAddress(emailTemplateBean.getFromAddress());
+                    emailQueueBean.setFromAddressName(emailTemplateBean.getFromAddressName());
+
+                    UserInfoBean userInfoBean = userBean.getUserInfoBean();
+                    String sFirstName = ParseUtil.checkNull(userInfoBean.getFirstName());
+                    String sLastName = ParseUtil.checkNull(userInfoBean.getLastName());
+                    String sGivenName = sFirstName + " " + sLastName;
+
+                    emailQueueBean.setToAddress( userInfoBean.getEmail() );
+                    emailQueueBean.setToAddressName(userInfoBean.getEmail() );
+                    emailQueueBean.setHtmlBody(sHtmlTemplate);
+                    emailQueueBean.setTextBody(sTxtTemplate);
+
+                    // mark it as sent so that it wont get picked up by email service. The email gets sent below
+                    emailQueueBean.setStatus(Constants.EMAIL_STATUS.SENT.getStatus());
+
+
+                    // We are just creating a record in the database with this action.
+                    // The new password will be sent separately.
+                    // This must be changed so that user will have to click link to
+                    // generate the new password.
+                    MailCreator dummyEailCreator = new EmailCreator();
+                    dummyEailCreator.create(emailQueueBean , new EmailSchedulerBean());
+
+                    // Now here we will be putting the correct password in the email
+                    // text and
+                    // send it out directly.
+                    // This needs to be changed. Warning bells are rining.
+                    // Lots of potential to fail.
+
+                    Map<String, Object> mapTextEmailValues = new HashMap<String, Object>();
+                    Map<String, Object> mapHtmlEmailValues = new HashMap<String, Object>();
+                    mapTextEmailValues.put("VENDOR_NAME",vendorBean.getVendorName());
+                    mapHtmlEmailValues.put("VENDOR_NAME", vendorBean.getVendorName());
+                    mapTextEmailValues.put("FIRST_NAME",sFirstName);
+                    mapHtmlEmailValues.put("FIRST_NAME", sFirstName);
+                    mapTextEmailValues.put("LAST_NAME",sLastName);
+                    mapHtmlEmailValues.put("LAST_NAME", sLastName);
+                    mapTextEmailValues.put("GIVEN_NAME",sGivenName);
+                    mapHtmlEmailValues.put("GIVEN_NAME", sGivenName);
+
+                    String sResetDomain = ParseUtil.checkNull(applicationConfig.get(Constants.DOMAIN));
+                    if(sResetDomain!=null && !"".equalsIgnoreCase(sResetDomain)) {
+
+
+                        String sPortalLink = ParseUtil.checkNull("https://" + sResetDomain + "/com/events/common/set_password.jsp?lotophagi="+forgotPasswordBean.getSecureTokenId());
+
+                        mapTextEmailValues.put("PORAL_LINK",sPortalLink);
+                        mapHtmlEmailValues.put("PORAL_LINK","<a href=\""+sPortalLink+"\" target=\"_blank\">Set New Password</a>");
+
+                        String sProductName = ParseUtil.checkNull(applicationConfig.get(Constants.PRODUCT_NAME));
+
+                        mapTextEmailValues.put("PRODUCT_NAME",sProductName);
+                        mapHtmlEmailValues.put("PRODUCT_NAME",sProductName);
+
+
+                        MustacheFactory mf = new DefaultMustacheFactory();
+                        Mustache mustacheText =  mf.compile(new StringReader(sTxtTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_text");
+                        Mustache mustacheHtml = mf.compile(new StringReader(sHtmlTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_html");
+
+                        StringWriter txtWriter = new StringWriter();
+                        StringWriter htmlWriter = new StringWriter();
+                        try {
+                            mustacheText.execute(txtWriter, mapTextEmailValues).flush();
+                            mustacheHtml.execute(htmlWriter, mapHtmlEmailValues).flush();
+                        } catch (IOException e) {
+                            txtWriter = new StringWriter();
+                            htmlWriter = new StringWriter();
+                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        }
+
+                        emailQueueBean.setHtmlBody(htmlWriter.toString());
+                        emailQueueBean.setTextBody(txtWriter.toString());
+
+                        emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
+
+                        appLogging.error("Using the Mustache API to generate Email Querue Bean : " + emailQueueBean);
+                        // This will actually send the email. Spawning a thread and continue
+                        // execution.
+                        Thread quickEmail = new Thread(new QuickMailSendThread( emailQueueBean), "Quick Email Password Reset");
+                        quickEmail.start();
+                        isSuccess = true;
+                    }
+
+                }
+
+            }
+
+        }
+        return isSuccess;
+
     }
 }
