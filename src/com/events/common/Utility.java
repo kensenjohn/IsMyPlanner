@@ -3,6 +3,8 @@ package com.events.common;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -85,6 +87,12 @@ public class Utility {
         Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
         String fileHost = ParseUtil.checkNull(applicationConfig.get(Constants.FILE_HOST));
         return fileHost;
+    }
+
+
+    public static String generateRandomPassword(){
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(130, random).toString(32);
     }
 
 }

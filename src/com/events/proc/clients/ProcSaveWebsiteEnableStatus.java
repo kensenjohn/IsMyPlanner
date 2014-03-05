@@ -2,6 +2,7 @@ package com.events.proc.clients;
 
 import com.events.bean.clients.ClientBean;
 import com.events.bean.clients.ClientRequestBean;
+import com.events.bean.common.ParentSiteEnabledBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserRequestBean;
 import com.events.clients.AccessClients;
@@ -67,11 +68,37 @@ public class ProcSaveWebsiteEnableStatus extends HttpServlet {
 
 
                         ParentSiteEnabled parentSiteEnabled = new ParentSiteEnabled();
-                        boolean isSuccess = parentSiteEnabled.toggleParentSiteEnableStatus( newUserRequestBean ) ;
+                        ParentSiteEnabledBean parentSiteEnabledBean = parentSiteEnabled.toggleParentSiteEnableStatus( newUserRequestBean ) ;
 
-                        Text okText = new OkText("Loading of Parent Site Enabled Status completed","status_mssg") ;
-                        arrOkText.add(okText);
-                        responseStatus = RespConstants.Status.OK;
+                        if(parentSiteEnabledBean!=null && !Utility.isNullOrEmpty(parentSiteEnabledBean.getParentSiteEnabledId())){
+                            boolean isPasswordReset = parentSiteEnabled.resetParentSitePassword(newUserRequestBean);
+
+                            if(isPasswordReset ){
+                                if(parentSiteEnabledBean.isAllowed() ) {
+
+                                }
+
+                                jsonResponseObj.put("is_status_exists", true);
+                                jsonResponseObj.put("parent_site_enabled_status" , parentSiteEnabledBean.toJson());
+
+                                Text okText = new OkText("Loading of Parent Site Enabled Status completed","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
+                            } else {
+                                appLogging.info("Password was not reset ");
+
+                                Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES- 005)","err_mssg") ;
+                                arrErrorText.add(errorText);
+
+                                responseStatus = RespConstants.Status.ERROR;
+                            }
+
+                        } else {
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES- 004)","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
+                        }
 
                     } else {
                         Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES- 003)","err_mssg") ;

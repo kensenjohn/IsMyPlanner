@@ -105,9 +105,23 @@ public class ManageUserPassword {
         return isAuthenticated;
     }
 
-    public void sendResetPasswordLink( PasswordRequestBean passwordRequest) {
-        if(passwordRequest!=null && !Utility.isNullOrEmpty(passwordRequest.getEmailAddress())) {
+    public boolean resetUserPassword( PasswordRequestBean passwordRequest) throws ManagePasswordException {
+        boolean isSuccess = false;
+        if(passwordRequest!=null && !Utility.isNullOrEmpty(passwordRequest.getUserId())) {
+            PasswordBean passwordBean = getUserPassword(passwordRequest);
 
+            passwordRequest.setPassword( Utility.generateRandomPassword());
+            Integer iNumOfRows = 0;
+            if(passwordBean!=null && !Utility.isNullOrEmpty(passwordBean.getUserId())) {
+                iNumOfRows = updatePassword( passwordRequest );
+            } else {
+                iNumOfRows = createPassword( passwordRequest );
+            }
+
+            if(iNumOfRows>0) {
+                isSuccess = true;
+            }
         }
+        return isSuccess;
     }
 }

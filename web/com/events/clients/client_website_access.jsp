@@ -52,10 +52,10 @@
             </div>
             <div class="row" id="disable_access"  style="display:none;">
                 <div class="col-md-3">
-                    <button type="button" class="btn" id="btn_reset_password"><i class="fa fa-refresh"></i> Reset Password</button>
+                    <button type="button" class="btn  btn-filled" id="btn_disable_access"><i class="fa fa-ban red"></i> Disable Access To Website</button>
                 </div>
                 <div class="col-md-3">
-                    <button type="button" class="btn  btn-filled" id="btn_disable_access"><i class="fa fa-ban red"></i> Disable Access To Website</button>
+                    <button type="button" class="btn" id="btn_reset_password"><i class="fa fa-refresh"></i> Reset Password</button>
                 </div>
             </div>
         </div>
@@ -99,19 +99,7 @@
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
-                    var varIsStatusExists = jsonResponseObj.is_status_exists;
-                    var varParentSiteEnabled = '';
-                    if(varIsStatusExists == true){
-                        varParentSiteEnabled = jsonResponseObj.parent_site_enabled_status;
-                    }
-
-
-                    this.clientsParentSiteEnableStatusModel = new ClientsParentSiteEnableStatusModel({
-                        'bb_is_status_exists' : varIsStatusExists,
-                        'bb_parent_site_enabled_status' : varParentSiteEnabled
-                    });
-                    var clientsParentSiteEnableStatusView = new ClientsParentSiteEnableStatusView({model:this.clientsParentSiteEnableStatusModel});
-                    clientsParentSiteEnableStatusView.render();
+                    refreshView(jsonResponseObj)
                 }
             } else {
                 displayMssgBoxAlert("Please try again later (populateClientDetail - 1)", true);
@@ -120,6 +108,24 @@
             displayMssgBoxAlert("Please try again later (populateClientDetail - 2)", true);
         }
     }
+
+    function refreshView(jsonResponseObj){
+        var varIsStatusExists = jsonResponseObj.is_status_exists;
+        var varParentSiteEnabled = '';
+        if(varIsStatusExists == true){
+            varParentSiteEnabled = jsonResponseObj.parent_site_enabled_status;
+        }
+
+
+        this.clientsParentSiteEnableStatusModel = new ClientsParentSiteEnableStatusModel({
+            'bb_is_status_exists' : varIsStatusExists,
+            'bb_parent_site_enabled_status' : varParentSiteEnabled
+        });
+        var clientsParentSiteEnableStatusView = new ClientsParentSiteEnableStatusView({model:this.clientsParentSiteEnableStatusModel});
+        clientsParentSiteEnableStatusView.render();
+
+    }
+
     var ClientsParentSiteEnableStatusModel = Backbone.Model.extend({
         defaults: {
             bb_is_status_exists: false ,
@@ -207,7 +213,12 @@
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
                 displayAjaxError(varResponseObj);
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
-                console.log('getResult ');
+
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    refreshView(jsonResponseObj)
+                }
             } else {
                 displayMssgBoxAlert("Please try again later (deleteClient - 1)", true);
             }

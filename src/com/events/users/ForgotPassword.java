@@ -13,8 +13,17 @@ import com.events.common.email.creator.MailCreator;
 import com.events.common.email.send.QuickMailSendThread;
 import com.events.data.email.EmailServiceData;
 import com.events.data.users.ForgotPasswordData;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -143,32 +152,54 @@ public class ForgotPassword {
             // This needs to be changed. Warning bells are rining.
             // Lots of potential to fail.
 
-            sTxtTemplate = sTxtTemplate.replaceAll("__FIRST_NAME__",  sFirstName );
-            sHtmlTemplate = sHtmlTemplate.replaceAll("__FIRST_NAME__", sFirstName );
+            Map<String, Object> mapTextEmailValues = new HashMap<String, Object>();
+            Map<String, Object> mapHtmlEmailValues = new HashMap<String, Object>();
+            mapTextEmailValues.put("FIRST_NAME",sFirstName);
+            mapHtmlEmailValues.put("FIRST_NAME", sFirstName);
+            mapTextEmailValues.put("LAST_NAME",sLastName);
+            mapHtmlEmailValues.put("LAST_NAME", sLastName);
+            mapTextEmailValues.put("GIVEN_NAME",sGivenName);
+            mapHtmlEmailValues.put("GIVEN_NAME", sGivenName);
 
 
             String sResetDomain = ParseUtil.checkNull(applicationConfig.get(Constants.DOMAIN));
             if(sResetDomain!=null && !"".equalsIgnoreCase(sResetDomain)) {
 
-                sTxtTemplate = sTxtTemplate.replaceAll("__GIVENNAME__",sGivenName );
-                sHtmlTemplate = sHtmlTemplate.replaceAll("__GIVENNAME__",sGivenName );
 
                 String sResetLink = ParseUtil.checkNull("https://" + sResetDomain + "/com/events/common/reset_password.jsp?lotophagi="+forgotPasswordBean.getSecureTokenId());
-                sTxtTemplate = sTxtTemplate.replaceAll("__NEW_PASSWORD_RESET_LINK__", sResetLink);
-                sHtmlTemplate = sHtmlTemplate.replaceAll("__NEW_PASSWORD_RESET_LINK__", "<a href=\""+sResetLink+"\" target=\"_blank\">Reset Password</a>");
+
+                mapTextEmailValues.put("NEW_PASSWORD_RESET_LINK",sResetLink);
+                mapHtmlEmailValues.put("NEW_PASSWORD_RESET_LINK","<a href=\""+sResetLink+"\" target=\"_blank\">Reset Password</a>");
 
                 String sProductName = ParseUtil.checkNull(applicationConfig.get(Constants.PRODUCT_NAME));
-                sTxtTemplate = sTxtTemplate.replaceAll("__PRODUCT_NAME__",  sProductName );
-                sHtmlTemplate = sHtmlTemplate.replaceAll("__PRODUCT_NAME__",  sProductName );
+
+                mapTextEmailValues.put("PRODUCT_NAME",sProductName);
+                mapHtmlEmailValues.put("PRODUCT_NAME",sProductName);
 
 
 
-                emailQueueBean.setHtmlBody(sHtmlTemplate);
-                emailQueueBean.setTextBody(sTxtTemplate);
+
+                MustacheFactory mf = new DefaultMustacheFactory();
+                Mustache mustacheText =  mf.compile(new StringReader(sTxtTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_text");
+                Mustache mustacheHtml = mf.compile(new StringReader(sHtmlTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_html");
+
+                StringWriter txtWriter = new StringWriter();
+                StringWriter htmlWriter = new StringWriter();
+                try {
+                    mustacheText.execute(txtWriter, mapTextEmailValues).flush();
+                    mustacheHtml.execute(htmlWriter, mapHtmlEmailValues).flush();
+                } catch (IOException e) {
+                    txtWriter = new StringWriter();
+                    htmlWriter = new StringWriter();
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+
+                emailQueueBean.setHtmlBody(htmlWriter.toString());
+                emailQueueBean.setTextBody(txtWriter.toString());
 
                 emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
 
-                appLogging.error("Email Querue Bean : " + emailQueueBean);
+                appLogging.error("Using the Mustache API to generate Email Querue Bean : " + emailQueueBean);
                 // This will actually send the email. Spawning a thread and continue
                 // execution.
                 Thread quickEmail = new Thread(new QuickMailSendThread( emailQueueBean), "Quick Email Password Reset");
