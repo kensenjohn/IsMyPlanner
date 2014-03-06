@@ -12,12 +12,12 @@ function setupColorPanel(varColorPallete) {
     /** Website Colors */
     $('#collapse_website_colors').collapse( 'hide');
     $('#collapse_website_colors').on('hide.bs.collapse', function () {
-        $('#website_color_icon').removeClass("glyphicon glyphicon-collapse-down");
-        $('#website_color_icon').addClass("glyphicon glyphicon-collapse-right");
+        $('#website_color_icon').removeClass("fa-chevron-circle-down");
+        $('#website_color_icon').addClass("fa-chevron-circle-right");
     })
     $('#collapse_website_colors').on('show.bs.collapse', function () {
-        $('#website_color_icon').removeClass("glyphicon glyphicon-collapse-right");
-        $('#website_color_icon').addClass("glyphicon glyphicon-collapse-down");
+        $('#website_color_icon').removeClass("fa-chevron-circle-right");
+        $('#website_color_icon').addClass("fa-chevron-circle-down");
     })
     $(".pick-a-color").spectrum({
         showInput: true,

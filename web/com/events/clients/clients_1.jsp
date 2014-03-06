@@ -3,7 +3,7 @@
     <jsp:param name="page_title" value=""/>
 </jsp:include>
 
-<link href="/css/font-awesome.min.css" rel="stylesheet">
+
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>

@@ -1,12 +1,12 @@
 function setupLogoPanel() {
     $('#collapse_logo').collapse( 'hide');
     $('#collapse_logo').on('hide.bs.collapse', function () {
-        $('#logo_icon').removeClass("glyphicon glyphicon-collapse-down");
-        $('#logo_icon').addClass("glyphicon glyphicon-collapse-right");
+        $('#logo_icon').removeClass("fa-chevron-circle-down");
+        $('#logo_icon').addClass("fa-chevron-circle-right");
     })
     $('#collapse_logo').on('show.bs.collapse', function () {
-        $('#logo_icon').removeClass("glyphicon glyphicon-collapse-right");
-        $('#logo_icon').addClass("glyphicon glyphicon-collapse-down");
+        $('#logo_icon').removeClass("fa-chevron-circle-right");
+        $('#logo_icon').addClass("fa-chevron-circle-down");
     })
 
     enablePreviewOfLogo();

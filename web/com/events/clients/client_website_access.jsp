@@ -3,7 +3,7 @@
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
-<link href="/css/font-awesome.min.css" rel="stylesheet">
+
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
@@ -68,9 +68,13 @@
 <form id="frm_save_parent_site_enabled_status">
     <input type="hidden" name="client_id" value="<%=sClientId%>"/>
 </form>
+<script  id="template_no_client_selected" type="text/x-handlebars-template">
+    <h3>Please create or select a client. We were unable to process your request at this time.</h3>
+</script>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
+<script src="/js/handlebars-v1.3.0.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 <script src="/js/clients/clientcontactinfo.js"></script>
 <script   type="text/javascript">
     var varClientId = '<%=sClientId%>';
@@ -79,6 +83,14 @@
             loadClientDetail(varClientId, 'event_info' , populateClientMinimum);
             loadwebsiteEnableStatus(varClientId, 'event_info' , populateParentSiteEnabled);
         } else {
+
+            $("#enable_access").empty();
+            $("#disable_access").empty();
+            $("#enable_access").show();
+            this.noClientSelectedModel = new NoClientSelectedModel({});
+            var noClientSelectedView = new NoClientSelectedView({model:this.noClientSelectedModel});
+            noClientSelectedView.render();
+            $("#enable_access").append(noClientSelectedView.el);
             displayMssgBoxAlert("We were unable to process your request. Please try again later (loadClientEvent - 1)", true);
         }
     });
@@ -125,7 +137,13 @@
         clientsParentSiteEnableStatusView.render();
 
     }
-
+    var NoClientSelectedModel = Backbone.Model.extend({ });
+    var NoClientSelectedView = Backbone.View.extend({
+        template : Handlebars.compile( $('#template_no_client_selected').html() ),
+        render : function() {
+            $(this.el).append( this.template() );
+        }
+    });
     var ClientsParentSiteEnableStatusModel = Backbone.Model.extend({
         defaults: {
             bb_is_status_exists: false ,

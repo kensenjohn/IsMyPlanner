@@ -4,6 +4,7 @@
 </jsp:include>
 <meta http-equiv="x-ua-compatible" content="IE=10">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/spectrum.css">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <link rel="stylesheet" href="/css/colorbox.css" id="theme_time">

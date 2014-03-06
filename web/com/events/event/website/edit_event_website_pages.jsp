@@ -3,7 +3,7 @@
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
-<link href="/css/font-awesome.min.css" rel="stylesheet">
+
 <link href="/css/bootstrap-switch.min.css" rel="stylesheet">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
@@ -928,98 +928,86 @@
 
         $('#collapse_welcome').on('hide.bs.collapse', function () {
             toggleCollapseIcon('welcome_collapse_icon');
-        })
-        $('#collapse_welcome').on('show.bs.collapse', function () {
-            toggleCollapseIcon('welcome_collapse_icon');
-            loadWebsitePageFeatures('welcome', populateWebsitePageFeatures)
-        })
+        }).on('show.bs.collapse', function () {
+                    toggleCollapseIcon('welcome_collapse_icon');
+                    loadWebsitePageFeatures('welcome', populateWebsitePageFeatures);
+                });
 
         $('#collapse_invitation').on('hide.bs.collapse', function () {
             toggleCollapseIcon('invitation_collapse_icon');
-        })
-        $('#collapse_invitation').on('show.bs.collapse', function () {
+        }).on('show.bs.collapse', function () {
             toggleCollapseIcon('invitation_collapse_icon');
-            loadWebsitePageFeatures('invitation', populateWebsitePageFeatures)
-        })
+            loadWebsitePageFeatures('invitation', populateWebsitePageFeatures);
+        });
 
         $('#collapse_couples').on('hide.bs.collapse', function () {
             toggleCollapseIcon('couples_collapse_icon');
-        })
-        $('#collapse_couples').on('show.bs.collapse', function () {
+        }).on('show.bs.collapse', function () {
             toggleCollapseIcon('couples_collapse_icon');
-            loadWebsitePageFeatureParty('couples', populateWebsitePageCouples)
-        })
+            loadWebsitePageFeatureParty('couples', populateWebsitePageCouples);
+        });
 
         $('#collapse_bridesmaids').on('hide.bs.collapse', function () {
             toggleCollapseIcon('bridesmaids_collapse_icon');
-        })
-        $('#collapse_bridesmaids').on('show.bs.collapse', function () {
+        }).on('show.bs.collapse', function () {
             toggleCollapseIcon('bridesmaids_collapse_icon');
-            loadWebsitePageFeatureParty('bridesmaids', populateWebsitePagePartyMembers)
-        })
+            loadWebsitePageFeatureParty('bridesmaids', populateWebsitePagePartyMembers);
+        });
 
         $('#collapse_groomsmen').on('hide.bs.collapse', function () {
             toggleCollapseIcon('groomsmen_collapse_icon');
-        })
-        $('#collapse_groomsmen').on('show.bs.collapse', function () {
+        }).on('show.bs.collapse', function () {
             toggleCollapseIcon('groomsmen_collapse_icon');
             loadWebsitePageFeatureParty('groomsmen', populateWebsitePagePartyMembers);
-        })
+        });
 
         $('#collapse_ceremony').on('hide.bs.collapse', function () {
             toggleCollapseIcon('ceremony_collapse_icon');
-        })
-        $('#collapse_ceremony').on('show.bs.collapse', function () {
+        }).on('show.bs.collapse', function () {
             toggleCollapseIcon('ceremony_collapse_icon');
-            loadWebsitePageFeatures('ceremony', populateWebsitePageFeatures)
-        })
+            loadWebsitePageFeatures('ceremony', populateWebsitePageFeatures);
+        });
 
         $('#collapse_reception').on('hide.bs.collapse', function () {
             toggleCollapseIcon('reception_collapse_icon');
-        })
-        $('#collapse_reception').on('show.bs.collapse', function () {
+        }).on('show.bs.collapse', function () {
             toggleCollapseIcon('reception_collapse_icon');
-            loadWebsitePageFeatures('reception', populateWebsitePageFeatures)
-        })
+            loadWebsitePageFeatures('reception', populateWebsitePageFeatures);
+        });
 
         $('#collapse_travel').on('hide.bs.collapse', function () {
             toggleCollapseIcon('travel_collapse_icon');
-        })
-        $('#collapse_travel').on('show.bs.collapse', function () {
+        }).on('show.bs.collapse', function () {
             toggleCollapseIcon('travel_collapse_icon');
-        })
+        });
 
         $('#collapse_hotels').on('hide.bs.collapse', function () {
             toggleCollapseIcon('hotels_collapse_icon');
-        })
-        $('#collapse_hotels').on('show.bs.collapse', function () {
+        }).on('show.bs.collapse', function () {
             toggleCollapseIcon('hotels_collapse_icon');
             loadWebsitePageHotels('hotels', populateWebsitePageHotels);
-        })
+        });
 
         $('#collapse_registry').on('hide.bs.collapse', function () {
             toggleCollapseIcon('registry_collapse_icon');
-        })
-        $('#collapse_registry').on('show.bs.collapse', function () {
+        }).on('show.bs.collapse', function () {
             toggleCollapseIcon('registry_collapse_icon');
-            loadWebsitePageRegistry('reception', populateWebsitePageRegistry)
-        })
+            loadWebsitePageRegistry('reception', populateWebsitePageRegistry);
+        });
 
         $('#collapse_rsvp').on('hide.bs.collapse', function () {
             toggleCollapseIcon('rsvp_collapse_icon');
-        })
-        $('#collapse_rsvp').on('show.bs.collapse', function () {
+        }).on('show.bs.collapse', function () {
             toggleCollapseIcon('rsvp_collapse_icon');
             //loadWebsitePageFeatures('reception', populateWebsitePageFeatures)
-        })
+        });
 
         $('#collapse_contactus').on('hide.bs.collapse', function () {
             toggleCollapseIcon('contactus_collapse_icon');
-        })
-        $('#collapse_contactus').on('show.bs.collapse', function () {
+        }).on('show.bs.collapse', function () {
             toggleCollapseIcon('contactus_collapse_icon');
-            loadWebsitePageContactUs('reception', populateWebsitePageContactUs)
-        })
+            loadWebsitePageContactUs('reception', populateWebsitePageContactUs);
+        });
 
 
 
@@ -1042,15 +1030,15 @@
                 }
 
                 $('#save_web_page_type').val( $element.attr('param') );
-                saveWebsitePageSetting(getResult)
+                saveWebsitePageSetting(getResult);
             }
         });
-        $('#reception_reception_day').pickadate()
+        $('#reception_reception_day').pickadate();
         $('#reception_reception_time').pickatime({
             // Time intervals
             interval: 15,
             // Minimum and Max time to be shown
-            min: [6,00],
+            min: [6,0],
             max: [23,59]
         });
 
@@ -1059,7 +1047,7 @@
             // Time intervals
             interval: 15,
             // Minimum and Max time to be shown
-            min: [6,00],
+            min: [6,0],
             max: [23,59]
         });
 

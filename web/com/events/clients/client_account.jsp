@@ -3,7 +3,7 @@
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
-<link href="/css/font-awesome.min.css" rel="stylesheet">
+
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
@@ -189,6 +189,10 @@
     </div>
 </div>
 </body>
+<form id="frm_load_client" >
+    <input type="hidden" id="load_client_id" name="client_id" value="<%=sClientId%>"/>
+    <input type="hidden" name="client_datatype" value="contact_info"/>
+</form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/clients/clientcontactinfo.js"></script>
 <script   type="text/javascript">

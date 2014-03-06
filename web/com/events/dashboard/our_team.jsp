@@ -1,6 +1,7 @@
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
+
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
@@ -181,10 +182,10 @@
         return varButtons;
     }
     function createEditButton(varUserId , varUserInfoId){
-        return '<a href="/com/events/dashboard/team/edit_teammember.jsp?user_id='+varUserId+'&userinfo_id=' + varUserInfoId +'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>';
+        return '<a href="/com/events/dashboard/team/edit_teammember.jsp?user_id='+varUserId+'&userinfo_id=' + varUserInfoId +'" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>';
     }
     function createDeleteButton(varUserId){
-        return '<a id="del_'+varUserId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>';
+        return '<a id="del_'+varUserId+'" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Delete</a>';
     }
 
     function initializeTable(){

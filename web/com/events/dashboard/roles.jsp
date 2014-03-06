@@ -185,10 +185,10 @@
         return varButtons;
     }
     function createEditButton(varRoleId){
-        return '<a href="/com/events/dashboard/permissions/edit_roles.jsp?role_id='+varRoleId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>';
+        return '<a href="/com/events/dashboard/permissions/edit_roles.jsp?role_id='+varRoleId+'" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>';
     }
     function createDeleteButton(varRoleId){
-        return '<a id="del_'+varRoleId+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>';
+        return '<a id="del_'+varRoleId+'" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Delete</a>';
     }
     function createViewButtons( varRoleId){
         return '<a href="/com/events/dashboard/permissions/edit_roles.jsp?role_id='+varRoleId+'" class="btn btn-default btn-xs"></span> View</a>'

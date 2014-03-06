@@ -1,12 +1,12 @@
 function setupLandingPagePanel() {
     $('#collapse_landingpage_layout').collapse( 'hide');
     $('#collapse_landingpage_layout').on('hide.bs.collapse', function () {
-        $('#landingpage_layout_icon').removeClass("glyphicon glyphicon-collapse-down");
-        $('#landingpage_layout_icon').addClass("glyphicon glyphicon-collapse-right");
+        $('#landingpage_layout_icon').removeClass("fa-chevron-circle-down");
+        $('#landingpage_layout_icon').addClass("fa-chevron-circle-right");
     })
     $('#collapse_landingpage_layout').on('show.bs.collapse', function () {
-        $('#landingpage_layout_icon').removeClass("glyphicon glyphicon-collapse-right");
-        $('#landingpage_layout_icon').addClass("glyphicon glyphicon-collapse-down");
+        $('#landingpage_layout_icon').removeClass("fa-chevron-circle-right");
+        $('#landingpage_layout_icon').addClass("fa-chevron-circle-down");
     })
 
     enablePreviewOfLandingPage();

@@ -3,7 +3,7 @@
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
-<link href="/css/font-awesome.min.css" rel="stylesheet">
+
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
@@ -68,7 +68,8 @@
              loadClientDetail(varClientId, 'event_info' , populateClientMinimum);
              loadClientEvents(varClientId, 'event_info' , populateClientEvents);
          } else {
-             displayMssgBoxAlert("We were unable to process your request. Please try again later (loadClientEvent - 1)", true);
+             initializeTable();  //empty table with no data in it.
+             displayMssgBoxAlert("Please create or select a client. We were unable to process your request.", true);
          }
     });
 </script>

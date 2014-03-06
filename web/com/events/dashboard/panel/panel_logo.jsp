@@ -5,7 +5,7 @@
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#collapse_logo_body" href="#collapse_logo_body">
-                            <span id="logo_icon" class="glyphicon glyphicon-expand"></span> Logo
+                            <i id="logo_icon" class="fa fa-chevron-circle-right"></i> Logo
                         </a>
                     </h4>
                 </div>

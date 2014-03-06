@@ -27,12 +27,12 @@
                             sName = sName.substring(0,8);
                         }
                 %>
-                        <li><a href="/com/events/common/credentials.jsp">Hi <%=sName%></a></li>
-                        <li><a href="/com/events/common/logout.jsp">Logout</a></li>
+                        <li><a href="/com/events/common/my_account.jsp"><i class="fa fa-user"></i> <%=sName%></a></li>
+                        <li><a href="/com/events/common/logout.jsp"> Logout <i class="fa fa-sign-out"></i></a></li>
                 <%
                     } else {
                 %>
-                        <li><a href="/com/events/common/credentials.jsp">Login</a></li>
+                        <li><a href="/com/events/common/credentials.jsp"><i class="fa fa-sign-in"></i> Sign In</a></li>
                         <li><a href="/com/events/common/credentials.jsp">Register</a></li>
                 <%
                     }

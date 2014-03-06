@@ -2,7 +2,7 @@
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
-<link href="/css/font-awesome.min.css" rel="stylesheet">
+
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));

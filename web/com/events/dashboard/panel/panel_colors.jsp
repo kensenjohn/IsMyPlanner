@@ -8,7 +8,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#collapse_website_colors" href="#collapse_colors">
-                                    <span id="website_color_icon" class="glyphicon glyphicon-expand"></span> Colors
+                                    <i id="website_color_icon" class="fa fa-chevron-circle-right"></i> Colors
                                 </a>
                             </h4>
                         </div>

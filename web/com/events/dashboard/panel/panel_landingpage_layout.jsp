@@ -5,7 +5,7 @@
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#collapse_landingpage_layout_body" href="#collapse_landingpage_layout_body">
-                            <span id="landingpage_layout_icon" class="glyphicon glyphicon-expand"></span> Layout and Content
+                            <i id="landingpage_layout_icon" class="fa fa-chevron-circle-right"></i> Layout and Content
                         </a>
                     </h4>
                 </div>

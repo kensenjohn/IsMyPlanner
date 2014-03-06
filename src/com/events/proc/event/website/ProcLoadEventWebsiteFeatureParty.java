@@ -119,7 +119,7 @@ public class ProcLoadEventWebsiteFeatureParty extends HttpServlet {
                                 arrOkText.add(okText);
                                 responseStatus = RespConstants.Status.OK;
                             } else {
-                                Text errorText = new ErrorText("Please select a theme for this website. We were unable to load the colors and fonts.","err_mssg") ;
+                                Text errorText = new ErrorText("Please select a theme for this website. We were unable to load the the requested information.","err_mssg") ;
                                 arrErrorText.add(errorText);
 
                                 responseStatus = RespConstants.Status.ERROR;

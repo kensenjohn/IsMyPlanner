@@ -3,6 +3,7 @@
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
+
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <body>
     <div class="page_wrap">
