@@ -60,6 +60,7 @@
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/clients/clientcontactinfo.js"></script>
 <script src="/js/clients/clientEvents.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
 <script   type="text/javascript">
     var varClientId = '<%=sClientId%>';
     $(window).load(function() {
