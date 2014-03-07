@@ -44,15 +44,12 @@ public class ProcLoadMyAccountContact  extends HttpServlet {
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
 
                     UserInfoBean userInfoBean = loggedInUserBean.getUserInfoBean();
-                    if(userInfoBean==null || (userInfoBean!=null && Utility.isNullOrEmpty(userInfoBean.getUserInfoId()) )) {
-                        UserRequestBean userRequestBean = new UserRequestBean();
-                        userRequestBean.setUserInfoId( loggedInUserBean.getUserInfoId() );
+                    UserRequestBean userRequestBean = new UserRequestBean();
+                    userRequestBean.setUserInfoId( loggedInUserBean.getUserInfoId() );
+                    AccessUsers accessUsers = new AccessUsers();
+                    userInfoBean = accessUsers.getUserInfoFromInfoId( userRequestBean );
 
-                        AccessUsers accessUsers = new AccessUsers();
-                        userInfoBean = accessUsers.getUserInfoFromInfoId( userRequestBean );
-
-                        loggedInUserBean.setUserInfoBean( userInfoBean );
-                    }
+                    loggedInUserBean.setUserInfoBean( userInfoBean );
 
                     if(loggedInUserBean.getUserInfoBean()!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserInfoBean().getUserInfoId()) ) {
                         jsonResponseObj.put("user_bean" , loggedInUserBean.toJson() );

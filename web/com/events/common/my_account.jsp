@@ -26,6 +26,11 @@
 
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12" id="div_button_save_contact_info">
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -110,14 +115,15 @@
         </div>
     </div>
     <input type="hidden" name="userinfo_id" value="{{userinfo_id}}">
-</script>
-<script  id="template_my_account_user_bean" type="text/x-handlebars-template">
     <input type="hidden" name="user_id" value="{{user_id}}">
     <input type="hidden" name="user_type" value="{{user_type}}">
 </script>
 <script  id="template_button_save_my_account_contact_info" type="text/x-handlebars-template">
-    <input type="hidden" name="user_id" value="{{user_id}}">
-    <input type="hidden" name="user_type" value="{{user_type}}">
+    <div class="row">
+        <div class="col-md-6">
+            <button class="btn btn-filled" id="save_account_contact_info"  >Save</button>
+        </div>
+    </div>
 </script>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/handlebars-v1.3.0.js"></script>
@@ -133,7 +139,36 @@
         var dataString = ''
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
-
+    function saveMyAccountContactInfo(callbackmethod) {
+        //console.log( $("#frm_my_account_contact_info").serialize() )
+        var actionUrl = "/proc_save_my_account_contact.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_my_account_contact_info").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function getResult(jsonResult){
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    console.log('Is Saved' + jsonResponseObj.is_saved );
+                    if( jsonResponseObj.is_saved == true ) {
+                        displayMssgBoxAlert("Contact Information was successfully saved.", false);
+                    } else {
+                        displayMssgBoxAlert("We were unable to process your request. Please try again later. (saveAccountContact - 3)", true);
+                    }
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (saveAccountContact - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (saveAccountContact - 2)", true);
+        }
+    }
     function populateMyAccountContact(jsonResult) {
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
@@ -157,6 +192,11 @@
                         myAccountContactInfoView.render();
                         $('#div_account_contact_info').append( myAccountContactInfoView.el );
 
+                        var saveAccountContactInfoView  = new SaveAccountContactInfoView();
+                        saveAccountContactInfoView.render();
+                        $('#div_button_save_contact_info').append( saveAccountContactInfoView.el );
+
+
                     } else {
                         //displayMssgBoxAlert("Create a new client here.", true);
                     }
@@ -168,6 +208,21 @@
             displayMssgBoxAlert("Please try again later (populateEventList - 2)", true);
         }
     }
+    var SaveAccountContactInfoModel = Backbone.Model.extend({});
+    var SaveAccountContactInfoView = Backbone.View.extend({
+
+        events : {
+            "click #save_account_contact_info" : 'assignEventHandling'
+        },
+        template: Handlebars.compile( $('#template_button_save_my_account_contact_info').html() ),
+        render:function(){
+            var saveButton = this.template( );
+            $(this.el).append( saveButton );
+        },
+        assignEventHandling : function(event) {
+            saveMyAccountContactInfo(getResult)
+        }
+    });
 
     var MyAccountContactInfoModel = Backbone.Model.extend({});
     var MyAccountContactInfoView = Backbone.View.extend({
@@ -179,7 +234,24 @@
         id : "frm_my_account_contact_info",
         template : Handlebars.compile( $('#template_my_account_contact_info').html() ),
         render: function() {
-            $(this.el).append( this.template( eval(this.varUserInfoBean)  ) );
+            var varUserAccountContactInfo = {
+                "userinfo_id" : this.varUserInfoBean.userinfo_id ,
+                "user_id" : this.varUserBean.user_id ,
+                "user_type" : this.varUserBean.user_type  ,
+                "first_name" : this.varUserInfoBean.first_name ,
+                "last_name" : this.varUserInfoBean.last_name ,
+                "address1" : this.varUserInfoBean.address1 ,
+                "address2" : this.varUserInfoBean.address2 ,
+                "city" : this.varUserInfoBean.city ,
+                "state" : this.varUserInfoBean.state ,
+                "country" : this.varUserInfoBean.country ,
+                "email" : this.varUserInfoBean.email ,
+                "cell_phone" : this.varUserInfoBean.cell_phone ,
+                "phone_num" : this.varUserInfoBean.phone_num ,
+                "company" : this.varUserInfoBean.company ,
+                "zipcode" : this.varUserInfoBean.zipcode
+            }
+            $(this.el).append( this.template( eval(varUserAccountContactInfo)  ) );
         }
     });
 
