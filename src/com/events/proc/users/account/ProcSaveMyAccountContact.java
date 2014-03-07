@@ -42,10 +42,6 @@ public class ProcSaveMyAccountContact   extends HttpServlet {
                 UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
-                    //email=SandraLRoy%40armyspy.com&
-                    // first_name=Sandra&last_name=Roy&company=&cell_phone=&phone_num=&address1=&
-                    // address2=&
-                    // city=&state=&zipcode=&country=&userinfo_id=bac03365-b13c-4b99-ba44-576db4ddc519&user_id=1202bbb1-5d67-42e9-9a55-cea049f73234&user_type=VENDOR
                     String email = ParseUtil.checkNull(request.getParameter("email"));
                     String firstName = ParseUtil.checkNull(request.getParameter("first_name"));
                     String lastName = ParseUtil.checkNull(request.getParameter("last_name"));

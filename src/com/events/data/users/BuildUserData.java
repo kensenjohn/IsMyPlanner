@@ -7,10 +7,12 @@ import com.events.common.Constants;
 import com.events.common.DateSupport;
 import com.events.common.Utility;
 import com.events.common.db.DBDAO;
+import com.events.common.nosql.redis.RedisDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -86,7 +88,6 @@ public class BuildUserData {
                 userInfoBean.getDeleteRow(), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(), userInfoBean.getCompany(),userInfoBean.getZipcode(),
                 userInfoBean.getUserInfoId());
         int numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB,  "BuildUserData.java", "updateUserInfo() ");
-
         return numOfRowsInserted;
     }
 }

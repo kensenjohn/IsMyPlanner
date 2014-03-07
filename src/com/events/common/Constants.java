@@ -26,6 +26,7 @@ public class Constants {
     public final static String SCHEDULER_PROCESS_PROP = PROP_FILE_PATH + "scheduler_processor.prop";
     public final static String EMAILER_PROP = PROP_FILE_PATH + "emailer.prop";
     public final static String COLOR_CSS_TEMPLATE_PROP = PROP_FILE_PATH + "color_css_template.properties";
+    public final static String NO_SQL_PROP = PROP_FILE_PATH + "nosql.properties";
 
     public final static String PROP_ENABLE_EMAIL_SENDER_THREAD = "enable_email_sender_thread";
     public final static String PROP_ENABLE_EMAIL_CREATOR_THREAD = "enable_email_creator_thread";
