@@ -6,6 +6,7 @@ import redis.clients.jedis.JedisPool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,6 +53,36 @@ public class RedisDAO {
             }
         }
         return lId;
+    }
+
+    public static ArrayList<String> getIdList( String sResource, String key){
+        ArrayList<String> arrId = new ArrayList<String>();
+        if(!Utility.isNullOrEmpty(key) ) {
+            Jedis jedis = getJedis(sResource);
+            if(jedis!=null){
+                Long lNumOfId = getNumOfIdInList(jedis , key );
+                if(lNumOfId>0){
+                    arrId = (ArrayList<String>)jedis.lrange(key , 0, lNumOfId);
+                }
+            }
+        }
+        return arrId;
+    }
+
+    public static Long getNumOfIdInList(String sResource, String key) {
+        Long lNumOfId = 0L;
+        if(!Utility.isNullOrEmpty(key) ) {
+            Jedis jedis = getJedis(sResource);
+            lNumOfId = getNumOfIdInList(jedis , key );
+        }
+        return lNumOfId;
+    }
+    private static Long getNumOfIdInList(Jedis jedis, String key ) {
+        Long lNumOfId = 0L;
+        if(jedis!=null){
+            lNumOfId = jedis.llen(key);
+        }
+        return lNumOfId;
     }
 
     private static Jedis getJedis(String sResource){

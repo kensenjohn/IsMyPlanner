@@ -30,6 +30,7 @@ public class Constants {
 
     public final static String PROP_ENABLE_EMAIL_SENDER_THREAD = "enable_email_sender_thread";
     public final static String PROP_ENABLE_EMAIL_CREATOR_THREAD = "enable_email_creator_thread";
+    public final static String PROP_ENABLE_NOTIFICATION_SENDER_THREAD = "enable_notification_sender_thread";
     public final static String PROP_EMAIL_SCHEDULE_PICKUPTIME_PADDING = "schedule_email_pickuptime_padding";
 
     public static String EVENTADMIN_DB = "event_admin_db";

@@ -14,3 +14,5 @@ amazon.secret_key=
 product_name=Ever Plan
 domain=localhost
 application_domain=localhost
+
+enable_notification_sender_thread=true
