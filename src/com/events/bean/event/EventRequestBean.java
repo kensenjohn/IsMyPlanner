@@ -24,6 +24,15 @@ public class EventRequestBean {
     private Long eventDate = 0L;
     private String eventHumanDate =  Constants.EMPTY;
     private boolean eventDelete = false;
+    private String userId = Constants.EMPTY;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getEventId() {
         return eventId;

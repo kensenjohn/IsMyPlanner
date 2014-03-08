@@ -5,8 +5,10 @@ import com.events.bean.clients.ClientBean;
 import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.clients.ClientResponseBean;
 import com.events.bean.common.FeatureBean;
+import com.events.bean.common.notify.NotifyBean;
 import com.events.bean.event.EventRequestBean;
 import com.events.bean.event.EventResponseBean;
+import com.events.bean.users.UserBean;
 import com.events.bean.users.UserInfoBean;
 import com.events.bean.users.UserRequestBean;
 import com.events.clients.BuildClients;
@@ -15,7 +17,9 @@ import com.events.common.exception.ExceptionHandler;
 import com.events.common.exception.clients.EditClientException;
 import com.events.common.feature.Feature;
 import com.events.common.feature.FeatureType;
+import com.events.common.notify.Notification;
 import com.events.data.event.BuildEventData;
+import com.events.users.AccessUsers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,12 +48,29 @@ public class BuildEvent {
             eventRequestBean.setEventId(Utility.getNewGuid());
             eventResponseBean = createEvent(eventRequestBean);
 
-            Feature feature = new Feature();
-            FeatureBean featureBeanEventLocation = new FeatureBean();
-            featureBeanEventLocation.setEventId( eventResponseBean.getEventId() );
-            featureBeanEventLocation.setFeatureType(FeatureType.image_location);
-            featureBeanEventLocation.setValue( Utility.getNewGuid());
-            feature.setFeatureValue( featureBeanEventLocation );
+            if(eventResponseBean!=null && !Utility.isNullOrEmpty(eventResponseBean.getEventId())){
+                UserRequestBean userRequestBean = new UserRequestBean();
+                userRequestBean.setUserId( eventRequestBean.getUserId() );
+
+                AccessUsers accessUsers = new AccessUsers();
+                UserBean userBean = accessUsers.getUserById(userRequestBean );
+                if( userBean!=null && Constants.USER_TYPE.CLIENT.getType().equalsIgnoreCase( userBean.getUserType().getType() )) {
+                    NotifyBean notifyBean = new NotifyBean();
+                    notifyBean.setFrom(eventRequestBean.getUserId());
+                    notifyBean.setTo("ALL_PLANNERS");
+                    notifyBean.setMessage("Create an event.");
+
+                    Notification.createNewNotifyRecord( notifyBean );
+
+                    Feature feature = new Feature();
+                    FeatureBean featureBeanEventLocation = new FeatureBean();
+                    featureBeanEventLocation.setEventId( eventResponseBean.getEventId() );
+                    featureBeanEventLocation.setFeatureType(FeatureType.image_location);
+                    featureBeanEventLocation.setValue( Utility.getNewGuid());
+                    feature.setFeatureValue( featureBeanEventLocation );
+
+                }
+            }
 
         } else {
             appLogging.info("Update Event invoked");

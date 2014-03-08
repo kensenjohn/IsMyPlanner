@@ -24,7 +24,7 @@
 
 5)  Copy the template configuration file you'll find in the root directory of the Redis distribution into /etc/redis/
     using the port number as name, for instance:
-        sudo cp redis.conf /etc/redis/6379.con
+        sudo cp redis.conf /etc/redis/6379.conf
 
 6)  Create a directory inside /var/redis that will work as data and working directory for this Redis instance:
         sudo mkdir /var/redis/6379

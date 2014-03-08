@@ -1,5 +1,6 @@
 package com.events.proc.event;
 
+import com.events.bean.common.notify.NotifyBean;
 import com.events.bean.event.EventRequestBean;
 import com.events.bean.event.EventResponseBean;
 import com.events.bean.users.UserBean;
@@ -91,6 +92,7 @@ public class ProcSaveEvent   extends HttpServlet {
                         eventRequestBean.setEventClientEmail(sClientEmail);
                         eventRequestBean.setEventClientCorporate( isEventClientCorporate );
                         eventRequestBean.setEventVendorId( vendorBean.getVendorId() );
+                        eventRequestBean.setUserId( loggedInUserBean.getUserId() );
 
                         BuildEvent buildEvent = new BuildEvent();
                         EventResponseBean eventResponseBean =  buildEvent.saveEvent(eventRequestBean);
