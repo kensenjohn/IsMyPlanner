@@ -24,6 +24,16 @@ public class Notification {
     private static String EVENTADMIN_DB = applicationConfig.get(Constants.EVENTADMIN_DB);
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
+    private static final String QUE_NEW_NOTIFY = "queue.new.notify";
+    private static final String DISPLAY_UNREAD_NOTIFY = "display.unread.notify";
+
+    public static void createUnReadNotifyRecord( NotifyBean notifyBean ) {
+        createUnReadNotifyRecord(notifyBean , EVENTADMIN_DB );
+    }
+    public static void createUnReadNotifyRecord( NotifyBean notifyBean, String sResource ) {
+
+    }
+
     public static void createNewNotifyRecord( NotifyBean notifyBean ) {
         createNewNotifyRecord(notifyBean , EVENTADMIN_DB );
     }
@@ -31,30 +41,51 @@ public class Notification {
     public static void createNewNotifyRecord( NotifyBean notifyBean, String sResource ) {
         if(notifyBean!=null && !Utility.isNullOrEmpty(notifyBean.getFrom()) && !Utility.isNullOrEmpty(notifyBean.getTo() )
                 && !Utility.isNullOrEmpty(sResource) ) {
-            Long lId = RedisDAO.getId(sResource, "disp.notify.id");
+            Long lId = RedisDAO.getId(sResource, QUE_NEW_NOTIFY + ".id"); // queue.new.notify.id
             if(lId>0){
-                StringBuilder strKey = new StringBuilder("disp.notify.");
-                strKey.append(lId).append(".");
+                StringBuilder strKey = new StringBuilder(QUE_NEW_NOTIFY).append(".").append(lId); // queue.new.notify.1
 
                 HashMap<String,String> hmRecords = new HashMap<String, String>();
-                hmRecords.put( strKey.toString()+"from", notifyBean.getFrom() );
-                hmRecords.put( strKey.toString()+"to", notifyBean.getTo() );
-                hmRecords.put( strKey.toString()+"message", notifyBean.getMessage() );
-                int iRowsAffected = RedisDAO.put(EVENTADMIN_DB , hmRecords) ;
+                hmRecords.put( "from", notifyBean.getFrom() );
+                hmRecords.put( "to", notifyBean.getTo() );
+                hmRecords.put( "message", notifyBean.getMessage() );
+                int iRowsAffected = RedisDAO.putInHash(EVENTADMIN_DB, strKey.toString(), hmRecords) ;
 
                 if(iRowsAffected>0) {
-                    RedisDAO.pushId(EVENTADMIN_DB, "queue.new.notify", ParseUtil.LToS(lId));
+                    RedisDAO.pushId(EVENTADMIN_DB, QUE_NEW_NOTIFY , ParseUtil.LToS(lId));
                 }
             }
         }
     }
-    public static void getNewNotificationFromQueue() {
-        getNewNotificationFromQueue(EVENTADMIN_DB);
+    public HashMap<String, NotifyBean> getNewNotificationFromQueue() {
+        return getNewNotificationFromQueue(EVENTADMIN_DB);
     }
-    public static void getNewNotificationFromQueue(String sResource) {
+    public HashMap<String, NotifyBean> getNewNotificationFromQueue(String sResource) {
+        HashMap<String, NotifyBean> hmNotifyBean = new HashMap<String, NotifyBean>();
         if(!Utility.isNullOrEmpty(sResource))  {
-            ArrayList<String> arrId = RedisDAO.getIdList( sResource , "queue.new.notify" );
+            ArrayList<String> arrId = RedisDAO.getIdList( sResource , QUE_NEW_NOTIFY );
             appLogging.info("Ids in Queue : " + arrId);
+            if(arrId!=null && !arrId.isEmpty() ) {
+                for(String id : arrId ){
+
+                    StringBuilder strHashKey = new StringBuilder(QUE_NEW_NOTIFY).append(".").append(id);
+                    HashMap<String,String> hmResult = RedisDAO.getFromHash(EVENTADMIN_DB , strHashKey.toString() ) ;
+
+                    NotifyBean notifyBean = new NotifyBean(hmResult);
+                    hmNotifyBean.put(id, notifyBean);
+                }
+            }
         }
+        return hmNotifyBean;
+    }
+    public String removeNotificationIdFromQueue() {
+        return removeNotificationIdFromQueue(EVENTADMIN_DB);
+    }
+    public String removeNotificationIdFromQueue(String sResource) {
+        String poppedId = Constants.EMPTY;
+        if(!Utility.isNullOrEmpty(sResource))  {
+            poppedId = RedisDAO.popFromList( sResource , QUE_NEW_NOTIFY );
+        }
+        return poppedId;
     }
 }

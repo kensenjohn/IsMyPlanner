@@ -27,6 +27,7 @@ public class ScheduledServiceExecutions implements ServletContextListener {
 
     private ScheduledExecutorService emailSenderThread;
     private ScheduledExecutorService emailCreatorThread;
+    private ScheduledExecutorService notificationSenderThread;
     private ScheduledExecutorService imapReaderThread;
 
     @Override
@@ -56,6 +57,14 @@ public class ScheduledServiceExecutions implements ServletContextListener {
                 ParseUtil.sToL(configSchedulerProc.get( Constants.SCHEDULER.CREATE_EMAIL_DELAY_BETWEEN_CALL.getPropName() , "600" ) ),
                 TimeUnit.SECONDS  );
         schedulerLogging.info("imap Reader started : startup context");*/
+
+        // Creating EmailObject to be inserted into the queue - from a Schedule that
+        notificationSenderThread = Executors.newSingleThreadScheduledExecutor();
+        notificationSenderThread.scheduleWithFixedDelay(new NotificationSenderThread(),
+                ParseUtil.sToL(configSchedulerProc.get( Constants.SCHEDULER.SEND_NOTIFICATION_STARTUP_DELAY.getPropName(), "10" ) ),
+                ParseUtil.sToL(configSchedulerProc.get( Constants.SCHEDULER.SEND_NOTIFICATION_DELAY_BETWEEN_CALL.getPropName() , "30" ) ),
+                TimeUnit.SECONDS  );
+        schedulerLogging.info("notificationSender Scheduler started : startup context");
     }
 
     @Override
@@ -63,6 +72,11 @@ public class ScheduledServiceExecutions implements ServletContextListener {
         if (emailSenderThread != null) {
             emailSenderThread.shutdownNow();
             schedulerLogging.info("emailSenderThread  : shut down ");
+        }
+
+        if(notificationSenderThread!=null) {
+            notificationSenderThread.shutdownNow();
+            schedulerLogging.info("notificationSenderThread  : shut down ");
         }
 
         if(emailCreatorThread!=null) {

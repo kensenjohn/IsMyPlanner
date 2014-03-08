@@ -187,7 +187,8 @@ public class Constants {
 
     public enum SCHEDULER{
         SEND_EMAIL_STARTUP_DELAY("send_email.startup_delay"),SEND_EMAIL_DELAY_BETWEEN_CALL("send_email.delay_between_call"),
-        CREATE_EMAIL_STARTUP_DELAY("create_email.startup_delay"),CREATE_EMAIL_DELAY_BETWEEN_CALL("create_email.delay_between_call");
+        CREATE_EMAIL_STARTUP_DELAY("create_email.startup_delay"),CREATE_EMAIL_DELAY_BETWEEN_CALL("create_email.delay_between_call"),
+        SEND_NOTIFICATION_STARTUP_DELAY("send_notification.startup_delay"),SEND_NOTIFICATION_DELAY_BETWEEN_CALL("send_email.delay_between_call");
 
         private String propName = Constants.EMPTY;
 
@@ -450,5 +451,9 @@ public class Constants {
         public String getName() {
             return name;
         }
+    }
+
+    public enum NOTIFICATION_RECEPIENTS {
+        ALL_PLANNERS, ALL_CLIENTS;
     }
 }

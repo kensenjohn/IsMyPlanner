@@ -54,13 +54,27 @@ public class BuildEvent {
 
                 AccessUsers accessUsers = new AccessUsers();
                 UserBean userBean = accessUsers.getUserById(userRequestBean );
-                if( userBean!=null && Constants.USER_TYPE.CLIENT.getType().equalsIgnoreCase( userBean.getUserType().getType() )) {
+                if( userBean!=null && Constants.USER_TYPE.VENDOR.getType().equalsIgnoreCase( userBean.getUserType().getType() )) {
                     NotifyBean notifyBean = new NotifyBean();
                     notifyBean.setFrom(eventRequestBean.getUserId());
                     notifyBean.setTo("ALL_PLANNERS");
                     notifyBean.setMessage("Create an event.");
 
                     Notification.createNewNotifyRecord( notifyBean );
+
+                    NotifyBean notifyBean1 = new NotifyBean();
+                    notifyBean1.setFrom(eventRequestBean.getUserId());
+                    notifyBean1.setTo("ALL_PLANNERS");
+                    notifyBean1.setMessage("Drank Slupry.");
+
+                    Notification.createNewNotifyRecord( notifyBean1 );
+
+                    NotifyBean notifyBean2 = new NotifyBean();
+                    notifyBean2.setFrom(eventRequestBean.getUserId());
+                    notifyBean2.setTo("ALL_PLANNERS");
+                    notifyBean2.setMessage("Slept in the shire.");
+
+                    Notification.createNewNotifyRecord( notifyBean2 );
 
                     Feature feature = new Feature();
                     FeatureBean featureBeanEventLocation = new FeatureBean();

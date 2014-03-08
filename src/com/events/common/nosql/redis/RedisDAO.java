@@ -1,5 +1,6 @@
 package com.events.common.nosql.redis;
 
+import com.events.common.Constants;
 import com.events.common.Utility;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -31,6 +32,30 @@ public class RedisDAO {
             }
         }
         return iRowsAffected;
+    }
+
+    public static int putInHash(String sResource, String key, HashMap<String,String> hmRecords) {
+        int iRowsAffected = 0;
+        if(hmRecords!=null && !hmRecords.isEmpty() ) {
+            Jedis jedis = getJedis(sResource);
+            if(jedis!=null){
+                String response = jedis.hmset(key , hmRecords );
+                if("OK".equalsIgnoreCase(response)) {
+                    iRowsAffected = 1;
+                }
+            }
+        }
+        return iRowsAffected;
+    }
+    public static HashMap<String,String> getFromHash(String sResource, String key ) {
+        HashMap<String,String> hmResult = new HashMap<String, String>();
+        if(!Utility.isNullOrEmpty(key) ) {
+            Jedis jedis = getJedis(sResource);
+            if(jedis!=null){
+                hmResult = (HashMap<String,String>)jedis.hgetAll(key);
+            }
+        }
+        return hmResult;
     }
 
     public static Long getId( String sResource, String key ) {
@@ -67,6 +92,17 @@ public class RedisDAO {
             }
         }
         return arrId;
+    }
+
+    public static String popFromList( String sResource, String key){
+        String listRecord = Constants.EMPTY;
+        if(!Utility.isNullOrEmpty(key) ) {
+            Jedis jedis = getJedis(sResource);
+            if(jedis!=null){
+                listRecord = jedis.lpop(key);
+            }
+        }
+        return listRecord;
     }
 
     public static Long getNumOfIdInList(String sResource, String key) {
