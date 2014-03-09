@@ -57,21 +57,21 @@ public class BuildEvent {
                 if( userBean!=null && Constants.USER_TYPE.VENDOR.getType().equalsIgnoreCase( userBean.getUserType().getType() )) {
                     NotifyBean notifyBean = new NotifyBean();
                     notifyBean.setFrom(eventRequestBean.getUserId());
-                    notifyBean.setTo("ALL_PLANNERS");
+                    notifyBean.setTo(Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString());
                     notifyBean.setMessage("Create an event.");
 
                     Notification.createNewNotifyRecord( notifyBean );
 
                     NotifyBean notifyBean1 = new NotifyBean();
                     notifyBean1.setFrom(eventRequestBean.getUserId());
-                    notifyBean1.setTo("ALL_PLANNERS");
+                    notifyBean1.setTo(Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString());
                     notifyBean1.setMessage("Drank Slupry.");
 
                     Notification.createNewNotifyRecord( notifyBean1 );
 
                     NotifyBean notifyBean2 = new NotifyBean();
                     notifyBean2.setFrom(eventRequestBean.getUserId());
-                    notifyBean2.setTo("ALL_PLANNERS");
+                    notifyBean2.setTo(Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString());
                     notifyBean2.setMessage("Slept in the shire.");
 
                     Notification.createNewNotifyRecord( notifyBean2 );

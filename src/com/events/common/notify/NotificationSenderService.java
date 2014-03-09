@@ -35,10 +35,11 @@ public class NotificationSenderService {
             for(int i = 0; i<hmNotifyBean.size(); i++){
                 String topIdFromQueue = notification.removeNotificationIdFromQueue();
 
+                appLogging.info("Popped from Queue : " + topIdFromQueue );
                 NotifyBean topNotifyBean = hmNotifyBean.get( topIdFromQueue );
 
                 if(topNotifyBean!=null){
-
+                    createVerboseNotification(topNotifyBean);
                 }
             }
         }
@@ -66,18 +67,20 @@ public class NotificationSenderService {
 
 
             String sTo = topNotifyBean.getTo();
+            appLogging.info("Recepient : " + sTo );
 
             ArrayList<NotifyBean> arrRecepientNotifyBean = new ArrayList<NotifyBean>();
             if(Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString().equalsIgnoreCase(sTo)) {
                 ArrayList<UserBean> arrAllPlannersUserBean = getAllPlanners(fromUserBean ,fromUserInfoBean );
                 if(arrAllPlannersUserBean!=null && !arrAllPlannersUserBean.isEmpty()) {
-                    arrRecepientNotifyBean = generateRecipientNotification(fromUserBean ,fromUserInfoBean , arrAllPlannersUserBean ,topNotifyBean );
+                    arrRecepientNotifyBean = generateRecipientNotificationBeans(fromUserBean ,fromUserInfoBean , arrAllPlannersUserBean ,topNotifyBean );
                 }
             } else if(Constants.NOTIFICATION_RECEPIENTS.ALL_CLIENTS.toString().equalsIgnoreCase(sTo)) {
 
             } else {
 
             }
+            appLogging.info("Recepeint notiifivation beans  : " + arrRecepientNotifyBean );
             if(arrRecepientNotifyBean!=null && !arrRecepientNotifyBean.isEmpty()) {
                 createNotifications(arrRecepientNotifyBean);
             }
@@ -87,6 +90,7 @@ public class NotificationSenderService {
     private ArrayList<UserBean> getAllPlanners(UserBean userBean, UserInfoBean userInfoBean)  {
         String vendorId = Constants.EMPTY;
         ArrayList<UserBean> arrAllPlannersUserBean = new ArrayList<UserBean>();
+        appLogging.info("From usertype type  : " + userBean.getUserType().getType() );
         if(Constants.USER_TYPE.CLIENT.getType().equalsIgnoreCase(userBean.getUserType().getType())) {
             ClientRequestBean clientRequestBean = new ClientRequestBean();
             clientRequestBean.setClientId( userBean.getParentId() );
@@ -99,6 +103,7 @@ public class NotificationSenderService {
             vendorId = userBean.getParentId();
         }
 
+        appLogging.info("From vendorId  : " + vendorId );
         if(!Utility.isNullOrEmpty(vendorId)) {
             UserRequestBean userRequestBean = new UserRequestBean();
             userRequestBean.setParentId(vendorId);
@@ -107,6 +112,8 @@ public class NotificationSenderService {
             AccessUsers accessUsers = new AccessUsers();
             arrAllPlannersUserBean = accessUsers.getAllUsersByParentId( userRequestBean );
         }
+
+        appLogging.info("Recepeint ALL Planners  : " + arrAllPlannersUserBean );
         return arrAllPlannersUserBean;
     }
 
@@ -114,7 +121,7 @@ public class NotificationSenderService {
 
     }
 
-    private ArrayList<NotifyBean> generateRecipientNotification(UserBean fromUserBean , UserInfoBean fromUserInfoBean,
+    private ArrayList<NotifyBean> generateRecipientNotificationBeans(UserBean fromUserBean , UserInfoBean fromUserInfoBean,
                                                                 ArrayList<UserBean> arrRecepientUserBean, NotifyBean sourceNotifyBean) {
         ArrayList<NotifyBean> arrNotifyBean = new ArrayList<NotifyBean>();
         if(fromUserBean!=null && fromUserInfoBean!=null && arrRecepientUserBean!=null && !arrRecepientUserBean.isEmpty()
@@ -143,8 +150,7 @@ public class NotificationSenderService {
     private void createNotifications(ArrayList<NotifyBean> arrRecepientNotifyBean) {
         if(arrRecepientNotifyBean!=null && !arrRecepientNotifyBean.isEmpty()){
             for(NotifyBean notifyBean : arrRecepientNotifyBean ){
-
-
+                appLogging.info("before create notifyBean : " + notifyBean );
                 Notification.createUnReadNotifyRecord( notifyBean );
             }
         }

@@ -31,7 +31,30 @@ public class Notification {
         createUnReadNotifyRecord(notifyBean , EVENTADMIN_DB );
     }
     public static void createUnReadNotifyRecord( NotifyBean notifyBean, String sResource ) {
+        if(notifyBean!=null && !Utility.isNullOrEmpty(notifyBean.getFrom()) && !Utility.isNullOrEmpty(notifyBean.getTo() )
+                && !Utility.isNullOrEmpty(sResource) ) {
+            String unReadNotifyUserKey = DISPLAY_UNREAD_NOTIFY + "." + notifyBean.getTo();
 
+            appLogging.info("unReadNotifyUserKey : " + unReadNotifyUserKey );
+            Long lId = RedisDAO.getId(sResource,  unReadNotifyUserKey + ".id"); // display.unread.notify.{{userid}}.id
+
+            if(lId>0){
+                appLogging.info("unReadNotifyUserKey ID : " + lId );
+                StringBuilder strKey = new StringBuilder(unReadNotifyUserKey).append(".").append(lId); // queue.new.notify.1
+
+                HashMap<String,String> hmRecords = new HashMap<String, String>();
+                hmRecords.put( "from", notifyBean.getFrom() );
+                hmRecords.put( "from_name", notifyBean.getFromName() );
+                hmRecords.put( "to", notifyBean.getTo() );
+                hmRecords.put( "message", notifyBean.getMessage() );
+                int iRowsAffected = RedisDAO.putInHash(EVENTADMIN_DB, strKey.toString(), hmRecords) ;
+
+                appLogging.info("Rows Affected key : " + strKey.toString() +  " : (" + iRowsAffected + ")");
+                if(iRowsAffected>0) {
+                    RedisDAO.pushId(EVENTADMIN_DB, unReadNotifyUserKey , ParseUtil.LToS(lId));
+                }
+            }
+        }
     }
 
     public static void createNewNotifyRecord( NotifyBean notifyBean ) {
