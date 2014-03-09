@@ -35,7 +35,6 @@ public class NotificationSenderService {
             for(int i = 0; i<hmNotifyBean.size(); i++){
                 String topIdFromQueue = notification.removeNotificationIdFromQueue();
 
-                appLogging.info("Popped from Queue : " + topIdFromQueue );
                 NotifyBean topNotifyBean = hmNotifyBean.get( topIdFromQueue );
 
                 if(topNotifyBean!=null){
@@ -67,7 +66,6 @@ public class NotificationSenderService {
 
 
             String sTo = topNotifyBean.getTo();
-            appLogging.info("Recepient : " + sTo );
 
             ArrayList<NotifyBean> arrRecepientNotifyBean = new ArrayList<NotifyBean>();
             if(Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString().equalsIgnoreCase(sTo)) {
@@ -80,7 +78,6 @@ public class NotificationSenderService {
             } else {
 
             }
-            appLogging.info("Recepeint notiifivation beans  : " + arrRecepientNotifyBean );
             if(arrRecepientNotifyBean!=null && !arrRecepientNotifyBean.isEmpty()) {
                 createNotifications(arrRecepientNotifyBean);
             }
@@ -90,7 +87,6 @@ public class NotificationSenderService {
     private ArrayList<UserBean> getAllPlanners(UserBean userBean, UserInfoBean userInfoBean)  {
         String vendorId = Constants.EMPTY;
         ArrayList<UserBean> arrAllPlannersUserBean = new ArrayList<UserBean>();
-        appLogging.info("From usertype type  : " + userBean.getUserType().getType() );
         if(Constants.USER_TYPE.CLIENT.getType().equalsIgnoreCase(userBean.getUserType().getType())) {
             ClientRequestBean clientRequestBean = new ClientRequestBean();
             clientRequestBean.setClientId( userBean.getParentId() );
@@ -103,7 +99,6 @@ public class NotificationSenderService {
             vendorId = userBean.getParentId();
         }
 
-        appLogging.info("From vendorId  : " + vendorId );
         if(!Utility.isNullOrEmpty(vendorId)) {
             UserRequestBean userRequestBean = new UserRequestBean();
             userRequestBean.setParentId(vendorId);
@@ -113,7 +108,6 @@ public class NotificationSenderService {
             arrAllPlannersUserBean = accessUsers.getAllUsersByParentId( userRequestBean );
         }
 
-        appLogging.info("Recepeint ALL Planners  : " + arrAllPlannersUserBean );
         return arrAllPlannersUserBean;
     }
 
@@ -150,7 +144,6 @@ public class NotificationSenderService {
     private void createNotifications(ArrayList<NotifyBean> arrRecepientNotifyBean) {
         if(arrRecepientNotifyBean!=null && !arrRecepientNotifyBean.isEmpty()){
             for(NotifyBean notifyBean : arrRecepientNotifyBean ){
-                appLogging.info("before create notifyBean : " + notifyBean );
                 Notification.createUnReadNotifyRecord( notifyBean );
             }
         }

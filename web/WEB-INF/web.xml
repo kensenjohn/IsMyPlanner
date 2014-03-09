@@ -100,6 +100,25 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>Process Load Dashboard Summary</servlet-name>
+        <servlet-class>com.events.proc.dashboard.ProcLoadDashboardSummary</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Dashboard Summary</servlet-name>
+        <url-pattern>/proc_load_dashboard_summary.aeve</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>Process Load Un Read Notifications</servlet-name>
+        <servlet-class>com.events.proc.notify.ProcLoadUnreadNotifications</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Un Read Notifications</servlet-name>
+        <url-pattern>/proc_load_unread_notifications.aeve</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Process Save Clients</servlet-name>
         <servlet-class>com.events.proc.clients.ProcSaveClient</servlet-class>
     </servlet>

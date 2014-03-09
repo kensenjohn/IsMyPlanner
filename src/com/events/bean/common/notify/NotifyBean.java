@@ -2,6 +2,8 @@ package com.events.bean.common.notify;
 
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -80,5 +82,20 @@ public class NotifyBean {
         sb.append(", message='").append(message).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public JSONObject toJson() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("from", this.from );
+            jsonObject.put("from_name", this.fromName );
+            jsonObject.put("to", this.to );
+            jsonObject.put("to_name", this.toName );
+            jsonObject.put("message", this.message );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }

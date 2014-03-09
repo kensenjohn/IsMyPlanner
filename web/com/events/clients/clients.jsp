@@ -76,13 +76,7 @@
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
-                var varIsMessageExist = varResponseObj.is_message_exist;
-                if(varIsMessageExist == true) {
-                    var jsonResponseMessage = varResponseObj.messages;
-                    var varArrErrorMssg = jsonResponseMessage.error_mssg;
-                    displayMssgBoxMessages(varArrErrorMssg, true);
-                }
-
+                displayAjaxError(varResponseObj);
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 if(varIsPayloadExist == true) {

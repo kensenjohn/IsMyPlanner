@@ -2,6 +2,8 @@ package com.events.common.nosql.redis;
 
 import com.events.common.Constants;
 import com.events.common.Utility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -18,6 +20,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class RedisDAO {
+    private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     public static int put(String sResource, HashMap<String,String> hmRecords) {
         int iRowsAffected = 0;
         if(hmRecords!=null && !hmRecords.isEmpty() ) {
@@ -32,6 +35,17 @@ public class RedisDAO {
             }
         }
         return iRowsAffected;
+    }
+
+    public static String get(String sResource, String key){
+        String sValue = Constants.EMPTY;
+        if(!Utility.isNullOrEmpty(key)) {
+            Jedis jedis = getJedis(sResource);
+            if(jedis!=null){
+                sValue = jedis.get(key);
+            }
+        }
+        return sValue;
     }
 
     public static int putInHash(String sResource, String key, HashMap<String,String> hmRecords) {
@@ -67,6 +81,28 @@ public class RedisDAO {
             }
         }
         return lId;
+    }
+
+    public static Long incrementCounter( String sResource, String key, int incrementBy ) {
+        Long counter = 0L;
+        if(!Utility.isNullOrEmpty(key) ) {
+            Jedis jedis = getJedis(sResource);
+            if(jedis!=null){
+                counter = jedis.incrBy( key , incrementBy );
+            }
+        }
+        return counter;
+    }
+
+    public static Long decrementCounter( String sResource, String key, int decrementBy ) {
+        Long counter = 0L;
+        if(!Utility.isNullOrEmpty(key) ) {
+            Jedis jedis = getJedis(sResource);
+            if(jedis!=null){
+                counter = jedis.decrBy(key , decrementBy );
+            }
+        }
+        return counter;
     }
 
     public static Long pushId( String sResource, String key, String id ) {

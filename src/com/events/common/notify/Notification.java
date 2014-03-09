@@ -35,11 +35,9 @@ public class Notification {
                 && !Utility.isNullOrEmpty(sResource) ) {
             String unReadNotifyUserKey = DISPLAY_UNREAD_NOTIFY + "." + notifyBean.getTo();
 
-            appLogging.info("unReadNotifyUserKey : " + unReadNotifyUserKey );
             Long lId = RedisDAO.getId(sResource,  unReadNotifyUserKey + ".id"); // display.unread.notify.{{userid}}.id
 
             if(lId>0){
-                appLogging.info("unReadNotifyUserKey ID : " + lId );
                 StringBuilder strKey = new StringBuilder(unReadNotifyUserKey).append(".").append(lId); // queue.new.notify.1
 
                 HashMap<String,String> hmRecords = new HashMap<String, String>();
@@ -49,12 +47,68 @@ public class Notification {
                 hmRecords.put( "message", notifyBean.getMessage() );
                 int iRowsAffected = RedisDAO.putInHash(EVENTADMIN_DB, strKey.toString(), hmRecords) ;
 
-                appLogging.info("Rows Affected key : " + strKey.toString() +  " : (" + iRowsAffected + ")");
                 if(iRowsAffected>0) {
-                    RedisDAO.pushId(EVENTADMIN_DB, unReadNotifyUserKey , ParseUtil.LToS(lId));
+                    Long iIndex = RedisDAO.pushId(EVENTADMIN_DB, unReadNotifyUserKey , ParseUtil.LToS(lId));
+                    if(iIndex>0){
+                        RedisDAO.incrementCounter(EVENTADMIN_DB , unReadNotifyUserKey + ".counter", 1 );
+                    }
                 }
             }
         }
+    }
+    public HashMap<String,NotifyBean> getUnreadNotifyRecords(NotifyBean notifyBean){
+        return getUnreadNotifyRecords(notifyBean , EVENTADMIN_DB );
+    }
+    public HashMap<String,NotifyBean> getUnreadNotifyRecords(NotifyBean notifyBean, String sResource){
+        HashMap<String,NotifyBean> hmUnReadRecords = new HashMap<String,NotifyBean>();
+        if(notifyBean!=null && !Utility.isNullOrEmpty(notifyBean.getTo())) {
+            Long iNumOfUnreadNotifications = getNumberOfUnreadNotifyRecords(notifyBean , sResource );
+            if(iNumOfUnreadNotifications>0){
+                String unReadNotifyUserKey = DISPLAY_UNREAD_NOTIFY + "." + notifyBean.getTo();
+                appLogging.info("unReadNotifyUserKey : " + unReadNotifyUserKey );
+                ArrayList<String> arrId = RedisDAO.getIdList(EVENTADMIN_DB ,  unReadNotifyUserKey);
+                if(arrId!=null && !arrId.isEmpty()) {
+                    for(String id : arrId ) {
+                        StringBuilder strHashKey = new StringBuilder(unReadNotifyUserKey).append(".").append(id);
+                        HashMap<String,String> hmResult = RedisDAO.getFromHash(EVENTADMIN_DB , strHashKey.toString() ) ;
+
+                        NotifyBean newNotifyBean = new NotifyBean(hmResult);
+
+                        String topIdFromQueue = removeUnReadNotificationId(newNotifyBean.getTo());
+
+                        hmUnReadRecords.put(id , newNotifyBean);
+
+                        RedisDAO.decrementCounter(EVENTADMIN_DB , unReadNotifyUserKey + ".counter", 1 );
+                    }
+                }
+/*
+                Integer iNumOfUnReadRecords = 0;
+                if(hmUnReadRecords!=null && !hmUnReadRecords.isEmpty()){
+                    for(int i = 0; i<hmUnReadRecords.size(); i++){
+                        String topIdFromQueue = removeUnReadNotificationId(notifyBean.getTo());
+
+                        NotifyBean topUnReadNotifyBean = hmUnReadRecords.get( topIdFromQueue );
+
+                        if(topUnReadNotifyBean!=null){
+
+                        }
+                    }
+                }*/
+            }
+        }
+        return hmUnReadRecords;
+    }
+
+    public Long getNumberOfUnreadNotifyRecords(NotifyBean notifyBean){
+        return getNumberOfUnreadNotifyRecords(notifyBean, EVENTADMIN_DB);
+    }
+
+    public Long getNumberOfUnreadNotifyRecords(NotifyBean notifyBean, String sResource ){
+        Long iNumOfUnreadNotifications = 0L;
+        if(notifyBean!=null && !Utility.isNullOrEmpty(notifyBean.getTo())) {
+            iNumOfUnreadNotifications = ParseUtil.sToL( RedisDAO.get(sResource, DISPLAY_UNREAD_NOTIFY+"."+notifyBean.getTo()+ ".counter") );
+        }
+        return iNumOfUnreadNotifications;
     }
 
     public static void createNewNotifyRecord( NotifyBean notifyBean ) {
@@ -87,7 +141,6 @@ public class Notification {
         HashMap<String, NotifyBean> hmNotifyBean = new HashMap<String, NotifyBean>();
         if(!Utility.isNullOrEmpty(sResource))  {
             ArrayList<String> arrId = RedisDAO.getIdList( sResource , QUE_NEW_NOTIFY );
-            appLogging.info("Ids in Queue : " + arrId);
             if(arrId!=null && !arrId.isEmpty() ) {
                 for(String id : arrId ){
 
@@ -108,6 +161,20 @@ public class Notification {
         String poppedId = Constants.EMPTY;
         if(!Utility.isNullOrEmpty(sResource))  {
             poppedId = RedisDAO.popFromList( sResource , QUE_NEW_NOTIFY );
+        }
+        return poppedId;
+    }
+
+
+    public String removeUnReadNotificationId(String sUserId) {
+        return removeUnReadNotificationId(EVENTADMIN_DB, sUserId);
+    }
+    public String removeUnReadNotificationId(String sResource, String sUserId) {
+        String poppedId = Constants.EMPTY;
+        if(!Utility.isNullOrEmpty(sResource) && !Utility.isNullOrEmpty(sResource) )  {
+            String unReadNotifyUserKey = DISPLAY_UNREAD_NOTIFY + "." + sUserId ;
+
+            poppedId = RedisDAO.popFromList( sResource , unReadNotifyUserKey );
         }
         return poppedId;
     }
