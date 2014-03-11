@@ -158,6 +158,7 @@
                     console.log('Is Saved' + jsonResponseObj.is_saved );
                     if( jsonResponseObj.is_saved == true ) {
                         displayMssgBoxAlert("Contact Information was successfully saved.", false);
+                        $('#top_nave_hello_name').text( $('#first_name').val() );
                     } else {
                         displayMssgBoxAlert("We were unable to process your request. Please try again later. (saveAccountContact - 3)", true);
                     }

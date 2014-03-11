@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -80,6 +81,15 @@ public class ProcSaveMyAccountContact   extends HttpServlet {
                         UserInfoBean userInfoBean =  buildUsers.generateExistingUserInfoBean( userRequestBean );
                         Integer iNumOfRecords = buildUsers.updateUserInfo( userInfoBean );
                         if(iNumOfRecords>0){
+                            HttpSession loggedInUserSession = request.getSession(false);
+                            if(loggedInUserSession!=null){
+                                loggedInUserBean.setUserInfoBean( userInfoBean );
+
+                                request.getSession().removeAttribute(Constants.USER_LOGGED_IN_BEAN);
+                                request.getSession().setAttribute(Constants.USER_LOGGED_IN_BEAN,loggedInUserBean);
+
+                            }
+
                             jsonResponseObj.put("is_saved" , true );
                             Text okText = new OkText("User Contact Info saved","status_mssg") ;
                             arrOkText.add(okText);

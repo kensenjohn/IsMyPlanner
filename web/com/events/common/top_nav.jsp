@@ -23,11 +23,11 @@
                         UserInfoBean userInfoBean = userBean.getUserInfoBean();
 
                         String sName =  userInfoBean.getFirstName();
-                        if(sName.length()>8) {
+                        /*if(sName.length()>8) {
                             sName = sName.substring(0,8);
-                        }
+                        }*/
                 %>
-                        <li><a href="/com/events/common/my_account.jsp"><i class="fa fa-user"></i> <%=sName%></a></li>
+                        <li><a href="/com/events/common/my_account.jsp"><i class="fa fa-user"></i> <span id="top_nave_hello_name"><%=sName%></span></a></li>
                         <li><a href="/com/events/common/logout.jsp"> Logout <i class="fa fa-sign-out"></i></a></li>
                 <%
                     } else {
