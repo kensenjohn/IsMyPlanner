@@ -381,7 +381,14 @@
     </servlet-mapping>
 
 
-
+    <servlet>
+        <servlet-name>Process  Save Publish  Vendor Website URL Domain</servlet-name>
+        <servlet-class>com.events.proc.vendors.ProcSavePublishUrlDomainPanel</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process  Save Publish  Vendor Website URL Domain</servlet-name>
+        <url-pattern>/proc_save_publish_vendor_website_url_domain.aeve</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>Process Save Publish Vendor Website Colors</servlet-name>
         <servlet-class>com.events.proc.vendors.ProcSavePublishWebsiteColorPanel</servlet-class>
@@ -749,6 +756,14 @@
 
 
 
+    <filter>
+        <filter-name>User Identifier Filter</filter-name>
+        <filter-class>com.events.common.service.UserIdentifier</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>User Identifier Filter </filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <filter>
         <filter-name>Data Secure Filter</filter-name>
         <filter-class>com.events.common.security.DataSecureFilter</filter-class>

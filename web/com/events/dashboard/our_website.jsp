@@ -39,6 +39,16 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
+                    <jsp:include page="/com/events/dashboard/panel/panel_website_url_domain.jsp"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     <jsp:include page="/com/events/dashboard/panel/panel_colors.jsp"/>
                 </div>
             </div>
@@ -160,6 +170,19 @@
 
                     var varImageHost = jsonResponseObj.imagehost;
                     var varFolderName = jsonResponseObj.foldername;
+
+                    /*=====Website URL Domain Panel======= {Start}*/
+                    var varSubdomainName = jsonResponseObj.subdomain_name;
+
+                    if(varSubdomainName!='' && varSubdomainName!=undefined){
+                        $('#website_subdomain').val(varSubdomainName);
+                        $('#preview_website_subdomain').val(varSubdomainName);
+                    }
+                    cachedScript( "/js/dashboard/set_url_domain.js" ).done(function( script, textStatus ) {
+                        setupUrlDomainPagePanel();
+                    });
+
+                    /*=====Website URL Domain Panel======= {End}*/
 
                     /*=====Colors Panel======= {Start}*/
                     $('#website_color_bkg').val(jsonResponseObj.saved_bkg_color);

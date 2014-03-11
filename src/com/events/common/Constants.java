@@ -324,6 +324,9 @@ public class Constants {
         saved_filled_button_color,saved_filled_button_text_color,saved_plain_button_color,saved_plain_button_text_color,
         published_bkg_color,published_highlighted_color,published_text_color,published_navbar_breadcrumb_tab_color,published_border_color,
         published_filled_button_color,published_filled_button_text_color,published_plain_button_color,published_plain_button_text_color,
+
+        subdomain_name,custom_domain_name,is_custom_domain_name_used,
+
         none;
     }
 

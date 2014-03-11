@@ -49,16 +49,15 @@ public class ProcRegister  extends HttpServlet {
         try{
             if( !DataSecurityChecker.isInsecureInputResponse(request) ) {
 
-                String sFirstName = ParseUtil.checkNull(request.getParameter("registerFirstName"));
-                String sLastName = ParseUtil.checkNull(request.getParameter("registerLastName"));
+                String sFirstName = "Welcome";
+                String sLastName = "Planner";
                 String sEmail = ParseUtil.checkNull(request.getParameter("registerEmail"));
                 String sPassword = ParseUtil.checkNull(request.getParameter("registerPassword"));
                 String sVerifyPassword = ParseUtil.checkNull(request.getParameter("registerVerifyPassword"));
                 boolean isPlanner = ParseUtil.sTob( request.getParameter("registerIsPlanner") );
                 isPlanner = true; // default set it to true.
 
-                if("".equalsIgnoreCase(sFirstName) || "".equalsIgnoreCase(sLastName) || "".equalsIgnoreCase(sEmail)
-                        || "".equalsIgnoreCase(sPassword) || "".equalsIgnoreCase(sVerifyPassword)) {
+                if(Utility.isNullOrEmpty( sEmail ) || Utility.isNullOrEmpty( sPassword ) || Utility.isNullOrEmpty( sVerifyPassword ) ) {
                     appLogging.info("Please fill in all required fields");
                     Text errorText = new ErrorText("Please fill in all required fields","account_num") ;
                     arrErrorText.add(errorText);
@@ -66,7 +65,7 @@ public class ProcRegister  extends HttpServlet {
 
                 } else if ( !sPassword.equalsIgnoreCase(sVerifyPassword)) {
                     appLogging.info("Password does not match.");
-                    Text errorText = new ErrorText("Password does not match","account_num") ;
+                    Text errorText = new ErrorText("Please make sure the Password and Confirm Password matches","account_num") ;
                     arrErrorText.add(errorText);
                     responseStatus = RespConstants.Status.ERROR;
                 } else {
@@ -92,7 +91,7 @@ public class ProcRegister  extends HttpServlet {
                             userRequestBean.setPlanner(isPlanner);
 
                             UserBean userBean = buildUsers.registerUser(userRequestBean);
-                            if(userBean!=null && "".equalsIgnoreCase(ParseUtil.checkNull(userBean.getUserId())))  {
+                            if(userBean!=null && Utility.isNullOrEmpty(userBean.getUserId()) )  {
                                 appLogging.info("There was an error registering a new user " + ParseUtil.checkNullObject(userBean));
                                 isError = true;
                             } else {

@@ -19,6 +19,10 @@ public class VendorWebsiteRequestBean {
     private String facebookFeedScript = Constants.EMPTY;
     private String pinterestFeedScript = Constants.EMPTY;
 
+    private String subDomain = Constants.EMPTY;
+    private String customDomain = Constants.EMPTY;
+    private boolean isCustomDomainUsed = false;
+
 
     private String background = Constants.EMPTY;
     private String highlightedTextOrLink = Constants.EMPTY;
@@ -36,6 +40,30 @@ public class VendorWebsiteRequestBean {
     private String action = Constants.EMPTY;
 
     private String vendorWebsiteId = Constants.EMPTY;
+
+    public String getSubDomain() {
+        return subDomain;
+    }
+
+    public void setSubDomain(String subDomain) {
+        this.subDomain = subDomain;
+    }
+
+    public String getCustomDomain() {
+        return customDomain;
+    }
+
+    public void setCustomDomain(String customDomain) {
+        this.customDomain = customDomain;
+    }
+
+    public boolean isCustomDomainUsed() {
+        return isCustomDomainUsed;
+    }
+
+    public void setCustomDomainUsed(boolean customDomainUsed) {
+        isCustomDomainUsed = customDomainUsed;
+    }
 
     public String getVendorWebsiteId() {
         return vendorWebsiteId;

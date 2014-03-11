@@ -34,6 +34,29 @@ public class BuildVendorWebsite extends VendorWebsite {
         }
         return vendorWebsiteResponseBean;
     }
+
+    public VendorWebsiteResponseBean saveAndPublishWebsiteDomain(VendorWebsiteRequestBean vendorWebsiteRequestBean){
+        VendorWebsiteResponseBean vendorWebsiteResponseBean = saveWebsite( vendorWebsiteRequestBean );
+        boolean isError = false;
+        if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId())) {
+            String sVendorWebsiteId = vendorWebsiteResponseBean.getVendorWebsiteId();
+            VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();
+
+            VendorWebsiteFeatureBean landingPagePicFeatureBean = generateVendorWebsiteFeatureBean(sVendorWebsiteId, Constants.VENDOR_WEBSITE_FEATURETYPE.subdomain_name,
+                    vendorWebsiteRequestBean.getSubDomain(), vendorWebsiteRequestBean.getModifiedByUserId() );
+            Integer iNumOfRows =  vendorWebsiteFeature.setFeatureValue( landingPagePicFeatureBean );
+            if(iNumOfRows<=0){
+                isError = true;
+            }
+        }  else {
+            isError = true;
+        }
+        if(isError) {
+            vendorWebsiteResponseBean = new VendorWebsiteResponseBean();
+        }
+        return vendorWebsiteResponseBean;
+
+    }
     public VendorWebsiteResponseBean saveLandingPageLayoutContent(VendorWebsiteRequestBean vendorWebsiteRequestBean) {
         VendorWebsiteResponseBean vendorWebsiteResponseBean = saveWebsite( vendorWebsiteRequestBean );
         boolean isError = false;

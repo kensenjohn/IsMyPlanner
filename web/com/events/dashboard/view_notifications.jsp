@@ -70,7 +70,7 @@
                     }
                 }
             } else {
-                displayMssgBoxAlert("Please try again later (populateClientList - 1)", true);
+                displayMssgBoxAlert("Please try again later (populateClientList - 1)", true);                                           P
             }
         } else {
             displayMssgBoxAlert("Please try again later (populateClientList - 2)", true);

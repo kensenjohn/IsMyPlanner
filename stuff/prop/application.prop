@@ -12,7 +12,7 @@ amazon.access_key=
 amazon.secret_key=
 
 product_name=Ever Plan
-domain=localhost
+domain=eventlocalhost.com
 application_domain=localhost
 
 enable_notification_sender_thread=true

@@ -61,18 +61,6 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <label for="registerFirstName" class="form_label">First Name</label><span class="required"> *</span>
-                                                    <input type="text" class="form-control" id="registerFirstName" name="registerFirstName" placeholder="First Name">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="registerLastName" class="form_label">Last Name</label><span class="required"> *</span>
-                                                    <input type="text" class="form-control" id="registerLastName" name="registerLastName" placeholder="Last Name">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-md-6">
                                                     <label for="registerPassword"  class="form_label">Password</label><span class="required"> *</span>
                                                     <input type="password" class="form-control" id="registerPassword" name="registerPassword" placeholder="Password">
                                                 </div>
@@ -84,7 +72,7 @@
                                         </div>
                                         <div class="checkbox">
                                             <label for="registerIsPlanner" class="form_label">
-                                                <input type="checkbox" id="registerIsPlanner" name = "registerIsPlanner" disabled checked>
+                                                <input type="checkbox" id="registerIsPlanner" name = "registerIsPlanner"  onclick="return false" checked>
                                                 I am a planner
                                             </label>
                                         </div>
