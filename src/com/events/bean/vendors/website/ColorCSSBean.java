@@ -1,6 +1,10 @@
 package com.events.bean.vendors.website;
 
 import com.events.common.Constants;
+import com.events.common.ParseUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,6 +14,7 @@ import com.events.common.Constants;
  * To change this template use File | Settings | File Templates.
  */
 public class ColorCSSBean {
+
 
     private String background = Constants.EMPTY;
     private String highlightedTextOrLink = Constants.EMPTY;
@@ -21,6 +26,50 @@ public class ColorCSSBean {
 
     private String plainButton = Constants.EMPTY;
     private String plainButtonText = Constants.EMPTY;
+
+    public ColorCSSBean(){}
+    public ColorCSSBean(HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmVendorWebsiteFeatureBean) {
+        if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
+            VendorWebsiteFeatureBean publishedBkgColor = hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_bkg_color);
+            if(publishedBkgColor!=null){
+                background = ParseUtil.checkNull(publishedBkgColor.getValue());
+            }
+
+            VendorWebsiteFeatureBean publishedHighlightTextOrLinkColor = hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_highlighted_color);
+            if(publishedBkgColor!=null){
+                highlightedTextOrLink = ParseUtil.checkNull(publishedHighlightTextOrLinkColor.getValue());
+            }
+            VendorWebsiteFeatureBean publishedTextColor = hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_text_color);
+            if(publishedBkgColor!=null){
+                text = ParseUtil.checkNull(publishedTextColor.getValue());
+            }
+            VendorWebsiteFeatureBean publishedNavBreadTabBackgroun = hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_navbar_breadcrumb_tab_color);
+            if(publishedNavBreadTabBackgroun!=null){
+                navBreadTabBackground = ParseUtil.checkNull(publishedNavBreadTabBackgroun.getValue());
+            }
+            VendorWebsiteFeatureBean publishedBorder = hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_border_color);
+            if(publishedBorder!=null){
+                border = ParseUtil.checkNull(publishedBorder.getValue());
+            }
+            VendorWebsiteFeatureBean publishedFilledButtonColor = hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_filled_button_color);
+            if(publishedFilledButtonColor!=null){
+                filledButton = ParseUtil.checkNull(publishedFilledButtonColor.getValue());
+            }
+            VendorWebsiteFeatureBean publishedFilledButtonText = hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_filled_button_text_color);
+            if(publishedFilledButtonText!=null){
+                filledButtonText = ParseUtil.checkNull(publishedFilledButtonText.getValue());
+            }
+            VendorWebsiteFeatureBean publishedPlainButton = hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_plain_button_color);
+            if(publishedPlainButton!=null){
+                plainButton = ParseUtil.checkNull(publishedPlainButton.getValue());
+            }
+
+            VendorWebsiteFeatureBean publishedPlainButtonTextColor = hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_plain_button_text_color);
+            if(publishedPlainButtonTextColor!=null){
+                plainButtonText = ParseUtil.checkNull(publishedPlainButtonTextColor.getValue());
+            }
+        }
+    }
 
     public String getBackground() {
         return background;

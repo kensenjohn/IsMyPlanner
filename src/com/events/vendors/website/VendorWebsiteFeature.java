@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,6 +37,15 @@ public class VendorWebsiteFeature {
             arrMultipleFeatureBean = vendorWebsiteFeatureData.getMultipleFeatures(arrVendorWebsiteFeatureBean , sVendorLandingPageId );
         }
         return arrMultipleFeatureBean;
+    }
+
+    public HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> getMultipleFeaturesWithDefaultValue(HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmDefaultVendorWebsiteFeatureBean, String sVendorLandingPageId) {
+        HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmVendorWebsiteFeatureBean =  new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE, VendorWebsiteFeatureBean>();
+        if(hmDefaultVendorWebsiteFeatureBean!=null && !hmDefaultVendorWebsiteFeatureBean.isEmpty()) {
+            VendorWebsiteFeatureData vendorWebsiteFeatureData = new VendorWebsiteFeatureData();
+            hmVendorWebsiteFeatureBean = vendorWebsiteFeatureData.getMultipleFeaturesWithDefaultValue(hmDefaultVendorWebsiteFeatureBean, sVendorLandingPageId);
+        }
+        return hmVendorWebsiteFeatureBean;
     }
 
     public Integer setFeatureValue(VendorWebsiteFeatureBean vendorWebsiteFeatureBean) {

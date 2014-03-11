@@ -176,7 +176,7 @@
 
                     if(varSubdomainName!='' && varSubdomainName!=undefined){
                         $('#website_subdomain').val(varSubdomainName);
-                        $('#preview_website_subdomain').val(varSubdomainName);
+                        $('#preview_website_subdomain').text(varSubdomainName);
                     }
                     cachedScript( "/js/dashboard/set_url_domain.js" ).done(function( script, textStatus ) {
                         setupUrlDomainPagePanel();
@@ -194,8 +194,9 @@
                     $('#website_color_filled_button_txt').val(jsonResponseObj.saved_filled_button_text_color);
                     $('#website_color_plain_button').val(jsonResponseObj.saved_plain_button_color);
                     $('#website_color_plain_button_txt').val(jsonResponseObj.saved_plain_button_text_color);
+
                     cachedScript( "/js/dashboard/set_color_combinations.js" ).done(function( script, textStatus ) {
-                        if(vendorWebsiteId=='') {
+                        if(jsonResponseObj.saved_bkg_color == undefined || jsonResponseObj.saved_bkg_color == '' || vendorWebsiteId=='') {
                             setupColorPanel('pre_load_default_colors');
                         } else {
                             setupColorPanel();

@@ -35,10 +35,10 @@ function setupColorPanel(varColorPallete) {
         setColorCombination(  $('#website_color_combination').val()  );
     });
     $('#btn_website_color_save').click(function() {
-        save_publish_ColorCombination( getResult, 'save' );
+        save_publish_ColorCombination( getColorCombinationResult, 'save' );
     });
     $('#btn_website_color_publish').click(function() {
-        save_publish_ColorCombination( getResult, 'publish' );
+        save_publish_ColorCombination( getColorCombinationResult, 'publish' );
     });
 }
 function save_publish_ColorCombination( callbackmethod, varAction ) {
@@ -51,7 +51,7 @@ function save_publish_ColorCombination( callbackmethod, varAction ) {
     makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
 }
 
-function getResult(jsonResult) {
+function getColorCombinationResult(jsonResult) {
     if(jsonResult!=undefined) {
         var varResponseObj = jsonResult.response;
         if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {

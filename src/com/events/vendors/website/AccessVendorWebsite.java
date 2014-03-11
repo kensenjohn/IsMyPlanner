@@ -1,5 +1,7 @@
 package com.events.vendors.website;
 
+import com.events.bean.vendors.VendorBean;
+import com.events.bean.vendors.VendorResponseBean;
 import com.events.bean.vendors.website.VendorWebsiteBean;
 import com.events.bean.vendors.website.VendorWebsiteFeatureBean;
 import com.events.bean.vendors.website.VendorWebsiteRequestBean;
@@ -10,6 +12,7 @@ import com.events.common.Utility;
 import com.events.data.vendors.website.AccessVendorWebsiteData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,6 +22,16 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class AccessVendorWebsite extends VendorWebsite{
+
+    public VendorResponseBean getVendorBySubDomain(VendorWebsiteRequestBean vendorWebsiteRequestBean) {
+        VendorResponseBean vendorResponseBean = new VendorResponseBean();
+        if(vendorWebsiteRequestBean != null && !Utility.isNullOrEmpty(vendorWebsiteRequestBean.getSubDomain())
+                && !"www".equalsIgnoreCase(vendorWebsiteRequestBean.getSubDomain())) {
+            AccessVendorWebsiteData accessVendorWebsiteData = new AccessVendorWebsiteData();
+            vendorResponseBean = accessVendorWebsiteData.getVendorBySubDomain(vendorWebsiteRequestBean);
+        }
+        return vendorResponseBean;
+    }
     public VendorWebsiteResponseBean getVendorWebsiteByVendorId(VendorWebsiteRequestBean vendorWebsiteRequestBean) {
         VendorWebsiteResponseBean vendorWebsiteResponseBean = new VendorWebsiteResponseBean();
         if(vendorWebsiteRequestBean!=null && !Utility.isNullOrEmpty(vendorWebsiteRequestBean.getVendorId())) {
@@ -68,6 +81,7 @@ public class AccessVendorWebsite extends VendorWebsite{
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_plain_button_text_color) );
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_text_color) );
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_themename) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.subdomain_name) );
 
             String sVendorWebsiteId = ParseUtil.checkNull(vendorWebsiteBean.getVendorWebsiteId());
             VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();
@@ -75,5 +89,30 @@ public class AccessVendorWebsite extends VendorWebsite{
 
         }
         return arrMultipleFeatureBean;
+    }
+
+    public HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> getPublishedFeaturesForWebPages( VendorWebsiteBean vendorWebsiteBean) {
+        HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmVendorWebsiteFeatureBean =   new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE, VendorWebsiteFeatureBean>();
+        if(vendorWebsiteBean!=null && !Utility.isNullOrEmpty(vendorWebsiteBean.getVendorWebsiteId())) {
+
+
+            HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmDefaultVendorWebsiteFeatureBean = new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean>();
+            hmDefaultVendorWebsiteFeatureBean.put( Constants.VENDOR_WEBSITE_FEATURETYPE.published_bkg_color, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_bkg_color , "#ffffff") );
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_border_color, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_border_color, "#dbf1ff"));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_filled_button_color, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_filled_button_color, "#3F9CFF"));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_filled_button_text_color, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_filled_button_text_color, "#ffffff"));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_highlighted_color, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_highlighted_color, "#3F9CFF"));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_logo, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_logo, "logo.jsp"));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_navbar_breadcrumb_tab_color, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_navbar_breadcrumb_tab_color, "#FCFCFC"));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_plain_button_color, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_plain_button_color, "#ffffff"));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_plain_button_text_color, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_plain_button_text_color, "#333333"));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_text_color, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_text_color, "#666666"));
+
+            String sVendorWebsiteId = ParseUtil.checkNull(vendorWebsiteBean.getVendorWebsiteId());
+            VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();
+            hmVendorWebsiteFeatureBean = vendorWebsiteFeature.getMultipleFeaturesWithDefaultValue(hmDefaultVendorWebsiteFeatureBean, sVendorWebsiteId);
+
+        }
+        return hmVendorWebsiteFeatureBean;
     }
 }

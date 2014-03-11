@@ -27,10 +27,15 @@ public class VendorWebsite {
         return vendorWebsiteFeatureBean;
     }
 
-    public VendorWebsiteFeatureBean generateVendorWebsiteFeatureBean (Constants.VENDOR_WEBSITE_FEATURETYPE vendorWebsiteFeaturetype) {
+    public VendorWebsiteFeatureBean generateVendorWebsiteFeatureBean (Constants.VENDOR_WEBSITE_FEATURETYPE vendorWebsiteFeaturetype, String defaultValue) {
         VendorWebsiteFeatureBean vendorWebsiteFeatureBean = new VendorWebsiteFeatureBean();
         vendorWebsiteFeatureBean.setFeatureType( vendorWebsiteFeaturetype );
+        vendorWebsiteFeatureBean.setValue( ParseUtil.checkNull(defaultValue));
         return vendorWebsiteFeatureBean;
+    }
+
+    public VendorWebsiteFeatureBean generateVendorWebsiteFeatureBean (Constants.VENDOR_WEBSITE_FEATURETYPE vendorWebsiteFeaturetype) {
+        return generateVendorWebsiteFeatureBean(vendorWebsiteFeaturetype , Constants.EMPTY) ;
     }
 
     protected VendorWebsiteBean generateVendorWebsiteBean(VendorWebsiteRequestBean vendorWebsiteRequestBean ) {

@@ -1,3 +1,8 @@
+<%@ page import="com.events.common.Configuration" %>
+<%@ page import="com.events.common.Constants" %><%
+    Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+    String sApplicationDomain = applicationConfig.get(Constants.APPLICATION_DOMAIN);
+%>
 <div class="row">
     <div class="col-md-12">
         <div class="panel-group" id="collapse_url_domain">
@@ -16,9 +21,9 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label for="website_subdomain" class="form_label">Your Business Name in the URL</label><br>
+                                        <label for="website_subdomain" class="form_label">Your Business Name</label><br>
                                         <input type="text" name="website_subdomain"  id="website_subdomain" class="form-control" placeholder="YourBusinessName (no spaces,no punctuations,no special characters)">
-                                        http://<span id="preview_website_subdomain">yourbusinessname</span>.ismyplanner.com
+                                        http://<span id="preview_website_subdomain">yourbusinessname</span>.<%=sApplicationDomain%>
                                     </div>
                                 </div>
                             </div>

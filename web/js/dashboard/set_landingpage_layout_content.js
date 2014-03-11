@@ -16,10 +16,10 @@ function setupLandingPagePanel() {
     displayLandingPage();
 
     $('#btn_landing_page_save').click(function() {
-        save_publish_LandingPage( getResult, 'save' );
+        save_publish_LandingPage( getLandingPageLayoutResult, 'save' );
     });
     $('#btn_landing_page_publish').click(function() {
-        save_publish_LandingPage( getResult, 'publish' );
+        save_publish_LandingPage( getLandingPageLayoutResult, 'publish' );
     });
 
     $('#btn_landing_page_preview').click(function(){
@@ -37,7 +37,7 @@ function save_publish_LandingPage( callbackmethod, varAction ) {
     dataString = dataString + '&' + $('#frm_landingpage').serialize();
     makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
 }
-function getResult(jsonResult) {
+function getLandingPageLayoutResult(jsonResult) {
     if(jsonResult!=undefined) {
         var varResponseObj = jsonResult.response;
         if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {

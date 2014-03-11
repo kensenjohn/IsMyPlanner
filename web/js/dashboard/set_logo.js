@@ -12,10 +12,10 @@ function setupLogoPanel() {
     enablePreviewOfLogo();
 
     $('#btn_logo_save').click(function() {
-        save_publish_Logo( getResult, 'save' );
+        save_publish_Logo( getLogoResult, 'save' );
     });
     $('#btn_logo_publish').click(function() {
-        save_publish_Logo( getResult, 'publish' );
+        save_publish_Logo( getLogoResult, 'publish' );
     });
 }
 function save_publish_Logo( callbackmethod, varAction ) {
@@ -27,7 +27,7 @@ function save_publish_Logo( callbackmethod, varAction ) {
     var dataString = $('#frm_website_logo').serialize();
     makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
 }
-function getResult(jsonResult) {
+function getLogoResult(jsonResult) {
     if(jsonResult!=undefined) {
         var varResponseObj = jsonResult.response;
         if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {

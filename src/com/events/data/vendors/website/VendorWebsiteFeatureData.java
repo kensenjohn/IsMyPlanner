@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -87,5 +88,41 @@ public class VendorWebsiteFeatureData {
             }
         }
         return arrMultipleFeatureBean;
+    }
+
+    public HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> getMultipleFeaturesWithDefaultValue(HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmDefaultVendorWebsiteFeatureBean, String sVendorLandingPageId) {
+
+        HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmFinalVendorWebsiteFeatureBean = new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE, VendorWebsiteFeatureBean>();
+
+        ArrayList<VendorWebsiteFeatureBean> arrMultipleFeatureBean = new ArrayList<VendorWebsiteFeatureBean>();
+
+        String sQuery = "SELECT * FROM GTVENDORWEBSITEFEATURES WHERE FK_VENDORWEBSITEID = ? ";
+        ArrayList<Object> aParams = DBDAO.createConstraint(sVendorLandingPageId);
+        if(hmDefaultVendorWebsiteFeatureBean!=null && !hmDefaultVendorWebsiteFeatureBean.isEmpty()) {
+            sQuery = sQuery +" AND FEATURENAME IN (" + DBDAO.createParamQuestionMarks(hmDefaultVendorWebsiteFeatureBean.size()) + ")";
+
+            for(Map.Entry<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean > mapVendorWebsiteFeatureBean : hmDefaultVendorWebsiteFeatureBean.entrySet()) {
+                aParams.add(mapVendorWebsiteFeatureBean.getKey().toString());
+            }
+        }
+        ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "VendorWebsiteFeatureData.java", "getMultipleFeatures()");
+        HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmFromDBVendorWebsiteFeatureBean = new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE, VendorWebsiteFeatureBean>();
+
+        if( arrResult!=null && !arrResult.isEmpty() ) {
+
+            for(HashMap<String, String> hmResult : arrResult ) {
+                VendorWebsiteFeatureBean vendorWebsiteFeatureBean = new VendorWebsiteFeatureBean(hmResult);
+                hmFromDBVendorWebsiteFeatureBean.put(vendorWebsiteFeatureBean.getFeatureType() , vendorWebsiteFeatureBean );
+            }
+        }
+        for(Map.Entry<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean > mapVendorWebsiteFeatureBean : hmDefaultVendorWebsiteFeatureBean.entrySet()) {
+            VendorWebsiteFeatureBean tmpVendorWebsiteFeatureBean = hmFromDBVendorWebsiteFeatureBean.get( mapVendorWebsiteFeatureBean.getKey() );
+            if(tmpVendorWebsiteFeatureBean != null && !Utility.isNullOrEmpty(tmpVendorWebsiteFeatureBean.getValue())) {
+                hmFinalVendorWebsiteFeatureBean.put(tmpVendorWebsiteFeatureBean.getFeatureType() ,tmpVendorWebsiteFeatureBean );
+            } else {
+                hmFinalVendorWebsiteFeatureBean.put(mapVendorWebsiteFeatureBean.getKey() ,mapVendorWebsiteFeatureBean.getValue() );
+            }
+        }
+        return hmFinalVendorWebsiteFeatureBean;
     }
 }

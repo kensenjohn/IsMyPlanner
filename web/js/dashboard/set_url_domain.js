@@ -10,7 +10,7 @@ function setupUrlDomainPagePanel() {
     })
 
     $('#btn_url_domain_save_publish').click(function() {
-        save_publish_URLDomain( getResult  );
+        save_publish_URLDomain( getURLDomainResult  );
     });
 }
 
@@ -23,7 +23,7 @@ function save_publish_URLDomain( callbackmethod, varAction ) {
     makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
 }
 
-function getResult(jsonResult) {
+function getURLDomainResult(jsonResult) {
     if(jsonResult!=undefined) {
         var varResponseObj = jsonResult.response;
         if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
@@ -35,7 +35,6 @@ function getResult(jsonResult) {
                 $('#url_domain_vendorwebsite_id').val( jsonResponseObj.vendorwebsite_id ) ;
                 vendorWebsiteId = jsonResponseObj.vendorwebsite_id;
                 $('#preview_website_subdomain').text( jsonResponseObj.vendorwebsite_subdomain ) ;
-
             }
             displayAjaxOk(varResponseObj);
         } else {

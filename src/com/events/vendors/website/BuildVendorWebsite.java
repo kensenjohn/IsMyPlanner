@@ -385,7 +385,7 @@ public class BuildVendorWebsite extends VendorWebsite {
                     isError = true;
                 }
             }
-            appLogging.info("isError 2" + isError );
+
             if(!isError){
                 VendorWebsiteFeatureBean tmpHighlightedColorFeatureBean = generateVendorWebsiteFeatureBean(sVendorWebsiteId, Constants.VENDOR_WEBSITE_FEATURETYPE.saved_highlighted_color,
                         Constants.EMPTY , vendorWebsiteRequestBean.getModifiedByUserId() );
@@ -504,7 +504,7 @@ public class BuildVendorWebsite extends VendorWebsite {
                     isError = true;
                 }
             }
-            appLogging.info("isError last" + isError );
+
             if(!isError) {
                 vendorWebsiteResponseBean.setVendorWebsiteId( sVendorWebsiteId );
             }

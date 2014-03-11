@@ -17,19 +17,19 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <label for="website_color_bkg" class="form_label">Background</label><br>
-                                        <input type="text" value="FFFFFF" name="website_color_bkg"  id="website_color_bkg" class="pick-a-color">
+                                        <input type="text" value="000000" name="website_color_bkg"  id="website_color_bkg" class="pick-a-color">
                                     </div>
                                     <div class="col-md-3">
                                         <label for="website_color_highlighted" class="form_label">Highlighted Button/Tabs/Links</label><br>
-                                        <input type="text" value="FFFFFF" name="website_color_highlighted"  id="website_color_highlighted" class="pick-a-color">
+                                        <input type="text" value="000000" name="website_color_highlighted"  id="website_color_highlighted" class="pick-a-color">
                                     </div>
                                     <div class="col-md-3">
                                         <label for="website_color_text" class="form_label">Text</label><br>
-                                        <input type="text" value="FFFFFF" name="website_color_text"  id="website_color_text" class="pick-a-color">
+                                        <input type="text" value="000000" name="website_color_text"  id="website_color_text" class="pick-a-color">
                                     </div>
                                     <div class="col-md-3">
                                         <label for="website_color_nav_bread_tab_bkg" class="form_label">Top Nav/Bread Crumb/Tabs Background</label><br>
-                                        <input type="text" value="FFFFFF" name="website_color_nav_bread_tab_bkg"  id="website_color_nav_bread_tab_bkg" class="pick-a-color">
+                                        <input type="text" value="000000" name="website_color_nav_bread_tab_bkg"  id="website_color_nav_bread_tab_bkg" class="pick-a-color">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -40,19 +40,19 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <label for="website_color_filled_button" class="form_label">Filled Button Text</label><br>
-                                        <input type="text" value="FFFFFF" name="website_color_filled_button"  id="website_color_filled_button" class="pick-a-color">
+                                        <input type="text" value="000000" name="website_color_filled_button"  id="website_color_filled_button" class="pick-a-color">
                                     </div>
                                     <div class="col-md-3">
                                         <label for="website_color_filled_button_txt" class="form_label">Filled Button Text</label><br>
-                                        <input type="text" value="FFFFFF" name="website_color_filled_button_txt"  id="website_color_filled_button_txt" class="pick-a-color">
+                                        <input type="text" value="000000" name="website_color_filled_button_txt"  id="website_color_filled_button_txt" class="pick-a-color">
                                     </div>
                                     <div class="col-md-3">
                                         <label for="website_color_plain_button" class="form_label">Plain Button</label><br>
-                                        <input type="text" value="FFFFFF" name="website_color_plain_button"  id="website_color_plain_button" class="pick-a-color">
+                                        <input type="text" value="000000" name="website_color_plain_button"  id="website_color_plain_button" class="pick-a-color">
                                     </div>
                                     <div class="col-md-3">
                                         <label for="website_color_filled_button_txt" class="form_label">Plain Button Text</label><br>
-                                        <input type="text" value="FFFFFF" name="website_color_plain_button_txt"  id="website_color_plain_button_txt" class="pick-a-color">
+                                        <input type="text" value="000000" name="website_color_plain_button_txt"  id="website_color_plain_button_txt" class="pick-a-color">
                                     </div>
                                 </div>
                                 <div class="row">
