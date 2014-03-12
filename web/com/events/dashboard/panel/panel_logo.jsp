@@ -60,10 +60,7 @@
                                 <button type="button" class="btn btn-default btn-sm" id="btn_logo_preview">Preview</button>
                             </div>
                             <div class="col-md-2">
-                                <button type="button" class="btn btn-default btn-sm" id="btn_logo_save">Save</button>
-                            </div>
-                            <div class="col-md-3">
-                                <button type="button" class="btn btn-default btn-sm" id="btn_logo_publish">Publish (To Public Site)</button>
+                                <button type="button" class="btn btn-default btn-sm" id="btn_logo_save">Save & Publish</button>
                             </div>
                         </div>
                         <form id="frm_website_logo">

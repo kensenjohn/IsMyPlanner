@@ -57,8 +57,14 @@ function enablePreviewOfLogo( ) {
         $( '#btn_logo_preview').click( function(){
             $.colorbox({href:varLinkToImage});
         });
+        $( '#logo_image_name').click( function(){
+            $.colorbox({href:varLinkToImage});
+        });
     } else {
         $( '#btn_logo_preview').click( function(){
+            displayMssgBoxAlert('Oops!! We were unable to find the logo.', true)
+        });
+        $( '#logo_image_name').click( function(){
             displayMssgBoxAlert('Oops!! We were unable to find the logo.', true)
         });
     }

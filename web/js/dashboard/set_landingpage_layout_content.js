@@ -25,7 +25,57 @@ function setupLandingPagePanel() {
     $('#btn_landing_page_preview').click(function(){
         $.colorbox({width:"100%", height:"100%",iframe:true,href:"preview_vendor_landingpage.jsp?featuretype=facebook_url&vendor_website_id="+vendorWebsiteId});
     });
+
+    $('#btn_landing_page_image_save').click( function(){
+        save_publish_LandingPage_Image( getLandingPageLayoutResult, 'save_image' );
+    });
+
+    $('#btn_landing_page_greeting_save').click( function(){
+        save_publish_LandingPage_Greeting( getLandingPageLayoutResult, 'save_greeting' );
+    });
+
+    $('#btn_landing_page_social_media_save').click( function(){
+        save_publish_LandingPage_SocialMedia( getLandingPageLayoutResult, 'save_social_media' );
+    });
+
+
+    $('.layout-hide-feature').bootstrapSwitch('size', 'mini');
+    $('.layout-hide-feature').bootstrapSwitch('readonly', false);
 }
+
+function setGeneralLandingPageParams(varAction){
+    $('#landingpage_vendorwebsite_id').val( vendorWebsiteId );
+    $('#landingpage_vendor_id').val( vendorId );
+    $('#website_landingpage_panel_action').val(varAction);
+}
+function save_publish_LandingPage_SocialMedia( callbackmethod, varAction ) {
+    setGeneralLandingPageParams(varAction);
+    var actionUrl = "/proc_save_publish_vendor_landingpage.aeve";
+    var methodType = "POST";
+    var dataString = $('#frm_landingpage_socialmedia').serialize();
+    dataString = dataString + '&' + $('#frm_landingpage').serialize();
+    makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+
+}
+function save_publish_LandingPage_Greeting( callbackmethod, varAction ) {
+    setGeneralLandingPageParams(varAction);
+    var actionUrl = "/proc_save_publish_vendor_landingpage.aeve";
+    var methodType = "POST";
+    var dataString = $('#frm_landingpage_greeting').serialize();
+    dataString = dataString + '&' + $('#frm_landingpage').serialize();
+    makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+
+}
+function save_publish_LandingPage_Image( callbackmethod, varAction ) {
+    setGeneralLandingPageParams(varAction);
+    var actionUrl = "/proc_save_publish_vendor_landingpage.aeve";
+    var methodType = "POST";
+    var dataString = $('#frm_landingpage_image').serialize();
+    dataString = dataString + '&' + $('#frm_landingpage').serialize();
+    makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+
+}
+
 function save_publish_LandingPage( callbackmethod, varAction ) {
     $('#landingpage_vendorwebsite_id').val( vendorWebsiteId );
     $('#landingpage_vendor_id').val( vendorId );
@@ -59,14 +109,14 @@ function getLandingPageLayoutResult(jsonResult) {
 }
 
 function displayLandingPage() {
-    if($('#landingpage_theme').val() == 'simple_landingpage') {
+    /*if($('#landingpage_theme').val() == 'simple_landingpage') {
         $('#social_media_feed').hide("slow");
         $('#theme_img').attr('src', '/img/theme_thmb/simple_landingpagephoto.png');
     }
     if($('#landingpage_theme').val() == 'simple_landingpage_socialmedia') {
         $('#social_media_feed').show("slow");
         $('#theme_img').attr('src','/img/theme_thmb/simple_landingpagephoto_socialmedia.png');
-    }
+    }*/
 }
 
 function enablePreviewOfLandingPage( ) {

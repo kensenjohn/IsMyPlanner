@@ -18,6 +18,8 @@ public class VendorWebsiteRequestBean {
     private String landingPageImage = Constants.EMPTY;
     private String facebookFeedScript = Constants.EMPTY;
     private String pinterestFeedScript = Constants.EMPTY;
+    private String greetingHeader = Constants.EMPTY;
+    private String greetingText = Constants.EMPTY;
 
     private String subDomain = Constants.EMPTY;
     private String customDomain = Constants.EMPTY;
@@ -40,6 +42,22 @@ public class VendorWebsiteRequestBean {
     private String action = Constants.EMPTY;
 
     private String vendorWebsiteId = Constants.EMPTY;
+
+    public String getGreetingHeader() {
+        return greetingHeader;
+    }
+
+    public void setGreetingHeader(String greetingHeader) {
+        this.greetingHeader = greetingHeader;
+    }
+
+    public String getGreetingText() {
+        return greetingText;
+    }
+
+    public void setGreetingText(String greetingText) {
+        this.greetingText = greetingText;
+    }
 
     public String getSubDomain() {
         return subDomain;

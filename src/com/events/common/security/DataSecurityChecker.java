@@ -31,7 +31,7 @@ public class DataSecurityChecker {
 
     public static boolean isStringSafe(String sUserInput , DataSecurityRequestBean dataSecurityRequestBean ) throws PropertyFileException {
         boolean isUserInputUnSafe = false;
-        if( !"".equalsIgnoreCase(ParseUtil.checkNull(sUserInput)) && dataSecurityRequestBean!=null)
+        if( !Utility.isNullOrEmpty(sUserInput) && dataSecurityRequestBean!=null)
         {
             sUserInput = ESAPI.encoder().canonicalize(sUserInput);      // We use thi
             sUserInput = sUserInput.toLowerCase();

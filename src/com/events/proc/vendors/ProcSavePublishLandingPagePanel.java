@@ -45,70 +45,91 @@ public class ProcSavePublishLandingPagePanel extends HttpServlet {
                     String sLandingPageAction = ParseUtil.checkNull(request.getParameter("website_landingpage_panel_action"));
                     String sVendorWebsiteId = ParseUtil.checkNull(request.getParameter("vendorwebsite_id"));
                     String sVendorId = ParseUtil.checkNull(request.getParameter("vendor_id"));
-                    String sLandingpagePictureName = ParseUtil.checkNull(request.getParameter("landingpage_picture"));
                     String sThemeName = ParseUtil.checkNull(request.getParameter("landingpage_theme"));
-                    String sFacebookFeedScript = ParseUtil.checkNull(request.getParameter("landingpage_facebook"));
-                    String sPinteredFeedScript = ParseUtil.checkNull(request.getParameter("landingpage_pinterest"));
 
-                    if ( Utility.isNullOrEmpty(sLandingpagePictureName)  )  {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request. Please upload a landing page picture.","err_mssg") ;
-                        arrErrorText.add(errorText);
-                        responseStatus = RespConstants.Status.ERROR;
-                    } else if ( ("simple_landingpage_socialmedia".equalsIgnoreCase(sThemeName)
-                            && (Utility.isNullOrEmpty(sFacebookFeedScript) || Utility.isNullOrEmpty(sPinteredFeedScript) )  ) )  {
-                        appLogging.info("Facebook : " + sFacebookFeedScript + " sPinteredFeedScript : " + sPinteredFeedScript);
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request. Please use valid social media feed scripts.","err_mssg") ;
-                        arrErrorText.add(errorText);
-                        responseStatus = RespConstants.Status.ERROR;
+
+
+                    VendorWebsiteRequestBean vendorWebsiteRequestBean = new VendorWebsiteRequestBean();
+                    vendorWebsiteRequestBean.setModifiedByUserId( loggedInUserBean.getUserId() );
+                    vendorWebsiteRequestBean.setVendorId( sVendorId);
+                    vendorWebsiteRequestBean.setVendorWebsiteId( sVendorWebsiteId );
+
+                    boolean isErrorExists = false;
+                    if("save_image".equalsIgnoreCase(sLandingPageAction)) {
+                        String sLandingpagePictureName = ParseUtil.checkNull(request.getParameter("landingpage_picture"));
+                        if ( Utility.isNullOrEmpty(sLandingpagePictureName)  )  {
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request. Please upload a landing page picture.","err_mssg") ;
+                            arrErrorText.add(errorText);
+                            responseStatus = RespConstants.Status.ERROR;
+                            isErrorExists = true;
+                        } else {
+                            vendorWebsiteRequestBean.setLandingPageImage( sLandingpagePictureName );
+                        }
+                    } else if("save_greeting".equalsIgnoreCase(sLandingPageAction)){
+                        String sLandingpageGreetingHeader = ParseUtil.checkNull(request.getParameter("landingpage_greeting_header"));
+                        String sLandingpageGreetingText = ParseUtil.checkNull(request.getParameter("landingpage_greeting_text"));
+
+                        if ( Utility.isNullOrEmpty(sLandingpageGreetingHeader)  )  {
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request. Please use a valid Greeting Header.","err_mssg") ;
+                            arrErrorText.add(errorText);
+                            responseStatus = RespConstants.Status.ERROR;
+                            isErrorExists = true;
+                        }  else {
+                            vendorWebsiteRequestBean.setGreetingHeader( sLandingpageGreetingHeader );
+                            vendorWebsiteRequestBean.setGreetingText( sLandingpageGreetingText );
+                        }
+                    } else if("save_social_media".equalsIgnoreCase(sLandingPageAction)){
+                        String sFacebookFeedScript = ParseUtil.checkNull(request.getParameter("landingpage_facebook"));
+                        String sPinterestFeedScript = ParseUtil.checkNull(request.getParameter("landingpage_pinterest"));
+
+                        if ( Utility.isNullOrEmpty(sFacebookFeedScript)  )  {
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request. Please use a valid Facebook script.","err_mssg") ;
+                            arrErrorText.add(errorText);
+                            responseStatus = RespConstants.Status.ERROR;
+                            isErrorExists = true;
+                        } else if ( Utility.isNullOrEmpty(sPinterestFeedScript)  )  {
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request. Please use a valid Pinterest script.","err_mssg") ;
+                            arrErrorText.add(errorText);
+                            responseStatus = RespConstants.Status.ERROR;
+                            isErrorExists = true;
+                        }  else {
+                            /*
+                            <a data-pin-do="embedBoard" href="http://www.pinterest.com/pinterest/pin-pets/">Follow Pinterest's board Pin pets on Pinterest.</a>
+<!-- Please call pinit.js only once per page -->
+<script type="text/javascript" async src="//assets.pinterest.com/js/pinit.js"></script>
+                             */
+                            sPinterestFeedScript = sPinterestFeedScript.replace("<script type=\"text/javascript\" async src=\"//assets.pinterest.com/js/pinit.js\"></script>" , "");
+                            vendorWebsiteRequestBean.setFacebookFeedScript( sFacebookFeedScript );
+                            vendorWebsiteRequestBean.setPinterestFeedScript( sPinterestFeedScript );
+                        }
                     }
-                    else if ( Utility.isNullOrEmpty(sLandingPageAction) ) {
+
+
+                    if(!isErrorExists) {
+                        BuildVendorWebsite buildVendorWebsite = new BuildVendorWebsite();
+                        VendorWebsiteResponseBean savedVendorWebsiteResponseBean = buildVendorWebsite.saveLandingPageLayoutContent(vendorWebsiteRequestBean);
+                        VendorWebsiteResponseBean publishedVendorWebsiteResponseBean = buildVendorWebsite.publishLandingPageLayoutContent(vendorWebsiteRequestBean);
+
+                        if(savedVendorWebsiteResponseBean!=null && publishedVendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(savedVendorWebsiteResponseBean.getVendorWebsiteId())
+                                && !Utility.isNullOrEmpty(publishedVendorWebsiteResponseBean.getVendorWebsiteId()) ) {
+                            jsonResponseObj.put("vendorwebsite_id",publishedVendorWebsiteResponseBean.getVendorWebsiteId());
+                            Text okText = new OkText("The landing page layout was successfully updated.","status_mssg") ;
+                            arrOkText.add(okText);
+                            responseStatus = RespConstants.Status.OK;
+                        } else {
+                            Text errorText = new ErrorText("Oops!! We were unable to save the landing page layout. Please try again later.","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
+                        }
+                    }
+
+                    if ( Utility.isNullOrEmpty(sLandingPageAction) ) {
                         appLogging.info("An invalid action used by the user : " + loggedInUserBean.getUserId() );
                         Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(landingPage - 003)","err_mssg") ;
                         arrErrorText.add(errorText);
                         responseStatus = RespConstants.Status.ERROR;
-                    } else {
-                        VendorWebsiteRequestBean vendorWebsiteRequestBean = new VendorWebsiteRequestBean();
-                        vendorWebsiteRequestBean.setModifiedByUserId( loggedInUserBean.getUserId() );
-                        vendorWebsiteRequestBean.setVendorId( sVendorId);
-                        vendorWebsiteRequestBean.setVendorWebsiteId( sVendorWebsiteId );
-                        vendorWebsiteRequestBean.setLandingPageImage( sLandingpagePictureName );
-                        vendorWebsiteRequestBean.setThemeName( sThemeName );
-                        vendorWebsiteRequestBean.setFacebookFeedScript( sFacebookFeedScript );
-                        vendorWebsiteRequestBean.setPinterestFeedScript( sPinteredFeedScript );
-
-
-                        BuildVendorWebsite buildVendorWebsite = new BuildVendorWebsite();
-                        if("save".equalsIgnoreCase(sLandingPageAction)){
-                            VendorWebsiteResponseBean vendorWebsiteResponseBean = buildVendorWebsite.saveLandingPageLayoutContent(vendorWebsiteRequestBean);
-
-                            if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId())) {
-                                jsonResponseObj.put("vendorwebsite_id",vendorWebsiteResponseBean.getVendorWebsiteId());
-                                Text okText = new OkText("The landing page layout was successfully updated.","status_mssg") ;
-                                arrOkText.add(okText);
-                                responseStatus = RespConstants.Status.OK;
-                            } else {
-                                Text errorText = new ErrorText("Oops!! We were unable to save the landing page layout. Please try again later.","err_mssg") ;
-                                arrErrorText.add(errorText);
-
-                                responseStatus = RespConstants.Status.ERROR;
-                            }
-                        } else if( "publish".equalsIgnoreCase(sLandingPageAction)){
-                            VendorWebsiteResponseBean vendorWebsiteResponseBean = buildVendorWebsite.publishLandingPageLayoutContent(vendorWebsiteRequestBean);
-                            if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId())) {
-                                jsonResponseObj.put("vendorwebsite_id",vendorWebsiteResponseBean.getVendorWebsiteId());
-                                Text okText = new OkText("The landing page layout was successfully published.","status_mssg") ;
-                                arrOkText.add(okText);
-                                responseStatus = RespConstants.Status.OK;
-                            } else {
-                                Text errorText = new ErrorText("Oops!! We were unable to publish the landing page layout. Please try again later.","err_mssg") ;
-                                arrErrorText.add(errorText);
-                                responseStatus = RespConstants.Status.ERROR;
-                            }
-                        }
-
-
                     }
-
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
                     Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(landingPage - 002)","err_mssg") ;

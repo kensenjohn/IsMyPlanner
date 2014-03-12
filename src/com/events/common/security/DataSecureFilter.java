@@ -62,6 +62,11 @@ public class DataSecureFilter implements Filter {
                                 } else {
                                     appLogging.info("Request value array is empty");
                                 }
+                            } else {
+                                // These parameters should be ignored : eg. facebook feed , pinterst script, tinymce email
+                                // All the parameters WILL have html script. so if we do not ignore it, the user will not
+                                // be able to save it.
+                                isUnsafeParametersDetected = false;
                             }
 
                             if(isUnsafeParametersDetected) {

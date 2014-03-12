@@ -238,5 +238,38 @@ bootstrap-switch.bootstrap-switch-focused {
     outline: none;
 }
 
+/** Messi Buttons **/
+
+.messi .btn:hover,
+.messi .btn:focus {
+    color: #3F9CFF;
+    background-color: #ebebeb;
+    border-color: #3F9CFF;
+}
+
+.messi .btn:active,
+.messi .btn.active {
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.messi .btn-default {
+    color: #333333;
+    background-color: #ffffff;
+    border-color: #cccccc;
+}
+
+.messi .btn-default:hover,
+.messi .btn-default:focus,
+.messi .btn-default:active,
+.messi .btn-default.active,
+.open .dropdown-toggle.btn-default {
+    color: #3F9CFF;
+    background-color: #ebebeb;
+    border-color: #3F9CFF;
+}
+
 
 

@@ -65,9 +65,30 @@ public class BuildVendorWebsite extends VendorWebsite {
             VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();
 
             if(!Utility.isNullOrEmpty(vendorWebsiteRequestBean.getLandingPageImage() )) {
-                VendorWebsiteFeatureBean landingPagePicFeatureBean = generateVendorWebsiteFeatureBean(sVendorWebsiteId, Constants.VENDOR_WEBSITE_FEATURETYPE.saved_landingpagephoto,
+                VendorWebsiteFeatureBean landingPagePicSavedFeatureBean = generateVendorWebsiteFeatureBean(sVendorWebsiteId, Constants.VENDOR_WEBSITE_FEATURETYPE.saved_landingpagephoto,
                         vendorWebsiteRequestBean.getLandingPageImage(), vendorWebsiteRequestBean.getModifiedByUserId() );
-                Integer iNumOfRows =  vendorWebsiteFeature.setFeatureValue( landingPagePicFeatureBean );
+                Integer iNumOfRows =  vendorWebsiteFeature.setFeatureValue( landingPagePicSavedFeatureBean );
+                if(iNumOfRows<=0){
+                    isError = true;
+                }
+
+            }
+
+            if(!Utility.isNullOrEmpty(vendorWebsiteRequestBean.getGreetingHeader() )) {
+                VendorWebsiteFeatureBean landingPageThemeNameFeatureBean = generateVendorWebsiteFeatureBean(sVendorWebsiteId,
+                        Constants.VENDOR_WEBSITE_FEATURETYPE.saved_greeting_header,
+                        vendorWebsiteRequestBean.getGreetingHeader(), vendorWebsiteRequestBean.getModifiedByUserId() );
+                Integer iNumOfRows =  vendorWebsiteFeature.setFeatureValue( landingPageThemeNameFeatureBean );
+                if(iNumOfRows<=0){
+                    isError = true;
+                }
+            }
+
+            if(!Utility.isNullOrEmpty(vendorWebsiteRequestBean.getGreetingText() )) {
+                VendorWebsiteFeatureBean landingPageThemeNameFeatureBean = generateVendorWebsiteFeatureBean(sVendorWebsiteId,
+                        Constants.VENDOR_WEBSITE_FEATURETYPE.saved_greeting_text,
+                        vendorWebsiteRequestBean.getGreetingText(), vendorWebsiteRequestBean.getModifiedByUserId() );
+                Integer iNumOfRows =  vendorWebsiteFeature.setFeatureValue( landingPageThemeNameFeatureBean );
                 if(iNumOfRows<=0){
                     isError = true;
                 }
@@ -129,6 +150,38 @@ public class BuildVendorWebsite extends VendorWebsite {
                 if(!Utility.isNullOrEmpty(tmpLandingPagePicFeatureBean.getVendorWebsiteFeatureId())) {
                     tmpLandingPagePicFeatureBean.setFeatureType( Constants.VENDOR_WEBSITE_FEATURETYPE.published_landingpagephoto );
                     Integer iNumOfRows =  vendorWebsiteFeature.setFeatureValue( tmpLandingPagePicFeatureBean );
+                    if(iNumOfRows<=0){
+                        isError = true;
+                    }
+                } else {
+                    isError = true;
+                }
+            }
+
+            if(!isError){
+                VendorWebsiteFeatureBean tmpGreetingHeaderFeatureBean = generateVendorWebsiteFeatureBean(sVendorWebsiteId,
+                        Constants.VENDOR_WEBSITE_FEATURETYPE.saved_greeting_header,
+                        Constants.EMPTY , vendorWebsiteRequestBean.getModifiedByUserId() );
+                tmpGreetingHeaderFeatureBean = vendorWebsiteFeature.getFeature( tmpGreetingHeaderFeatureBean );
+                if(!Utility.isNullOrEmpty(tmpGreetingHeaderFeatureBean.getVendorWebsiteFeatureId())) {
+                    tmpGreetingHeaderFeatureBean.setFeatureType( Constants.VENDOR_WEBSITE_FEATURETYPE.published_greeting_header );
+                    Integer iNumOfRows =  vendorWebsiteFeature.setFeatureValue( tmpGreetingHeaderFeatureBean );
+                    if(iNumOfRows<=0){
+                        isError = true;
+                    }
+                } else {
+                    isError = true;
+                }
+            }
+
+            if(!isError){
+                VendorWebsiteFeatureBean tmpGreetingTextFeatureBean = generateVendorWebsiteFeatureBean(sVendorWebsiteId,
+                        Constants.VENDOR_WEBSITE_FEATURETYPE.saved_greeting_text,
+                        Constants.EMPTY , vendorWebsiteRequestBean.getModifiedByUserId() );
+                tmpGreetingTextFeatureBean = vendorWebsiteFeature.getFeature( tmpGreetingTextFeatureBean );
+                if(!Utility.isNullOrEmpty(tmpGreetingTextFeatureBean.getVendorWebsiteFeatureId())) {
+                    tmpGreetingTextFeatureBean.setFeatureType( Constants.VENDOR_WEBSITE_FEATURETYPE.published_greeting_text);
+                    Integer iNumOfRows =  vendorWebsiteFeature.setFeatureValue( tmpGreetingTextFeatureBean );
                     if(iNumOfRows<=0){
                         isError = true;
                     }

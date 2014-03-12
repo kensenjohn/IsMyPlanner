@@ -26,6 +26,13 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
     <link type="text/css" rel="stylesheet" href="/css/style.css" />
     <link type="text/css" rel="stylesheet" href="/css/color/modern_blue.css" />
+    <%
+        if( session.getAttribute("SUBDOMAIN_COLORS") != null ) {
+            String vendorOverRideColorCss = (String) session.getAttribute("SUBDOMAIN_COLORS");
+
+            %><style type="text/css"><%=ParseUtil.checkNull(vendorOverRideColorCss)%></style><!--Overriding Vendor CSS --><%
+        }
+    %>
 </head>
 <%
 
@@ -115,13 +122,9 @@
                 </div>
             </div>
         </div>
-        <div>
-            <div class="flexslider">
-                <ul class="slides">
-                    <li>
-                        <img src="<%=sLandingPagePic%>" />
-                    </li>
-                </ul>
+        <div class="container">
+            <div style="background-image: url('<%=sLandingPagePic%>');height: 447px;margin-left: 0;margin-right: 0;background-position: 50% 0;">
+
             </div>
         </div>
         <div class="container">
@@ -199,13 +202,16 @@
         </div>
     </div>
 </body>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="/js/jquery.flexslider-min.js"></script>
+<jsp:include page="/com/events/common/footer_top.jsp"/>
 <script   type="text/javascript">
     $(window).load(function() {
-        $('.flexslider').flexslider({
-            animation: "slide"
-        });
+        (function(d){
+            var f = d.getElementsByTagName('SCRIPT')[0], p = d.createElement('SCRIPT');
+            p.type = 'text/javascript';
+            p.async = true;
+            p.src = '//assets.pinterest.com/js/pinit.js';
+            f.parentNode.insertBefore(p, f);
+        }(document));
     });
 </script>
 </html>

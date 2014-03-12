@@ -81,6 +81,8 @@ public class AccessVendorWebsite extends VendorWebsite{
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_plain_button_text_color) );
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_text_color) );
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_themename) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_greeting_header) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_greeting_text) );
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.subdomain_name) );
 
             String sVendorWebsiteId = ParseUtil.checkNull(vendorWebsiteBean.getVendorWebsiteId());
@@ -107,6 +109,26 @@ public class AccessVendorWebsite extends VendorWebsite{
             hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_plain_button_color, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_plain_button_color, "#ffffff"));
             hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_plain_button_text_color, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_plain_button_text_color, "#333333"));
             hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_text_color, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_text_color, "#666666"));
+
+            String sVendorWebsiteId = ParseUtil.checkNull(vendorWebsiteBean.getVendorWebsiteId());
+            VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();
+            hmVendorWebsiteFeatureBean = vendorWebsiteFeature.getMultipleFeaturesWithDefaultValue(hmDefaultVendorWebsiteFeatureBean, sVendorWebsiteId);
+
+        }
+        return hmVendorWebsiteFeatureBean;
+    }
+
+    public HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> getPublishedFeaturesForLandingPage( VendorWebsiteBean vendorWebsiteBean) {
+        HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmVendorWebsiteFeatureBean =   new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE, VendorWebsiteFeatureBean>();
+        if(vendorWebsiteBean!=null && !Utility.isNullOrEmpty(vendorWebsiteBean.getVendorWebsiteId())) {
+
+
+            HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmDefaultVendorWebsiteFeatureBean = new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean>();
+            hmDefaultVendorWebsiteFeatureBean.put( Constants.VENDOR_WEBSITE_FEATURETYPE.published_greeting_header, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_bkg_color)   );
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_greeting_text, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_border_color));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_facebook_feed_script, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_filled_button_color ));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_pinterest_feed_script, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_filled_button_text_color ));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_landingpagephoto, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_highlighted_color));
 
             String sVendorWebsiteId = ParseUtil.checkNull(vendorWebsiteBean.getVendorWebsiteId());
             VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();

@@ -318,7 +318,9 @@ public class Constants {
 
     public enum VENDOR_WEBSITE_FEATURETYPE {
         saved_logo,saved_landingpagephoto,saved_facebook_feed_script,saved_pinterest_feed_script, saved_themename,
+        saved_greeting_header, saved_greeting_text,
         published_logo,published_landingpagephoto,published_facebook_feed_script,published_pinterest_feed_script, published_themename,
+        published_greeting_header, published_greeting_text,
 
         saved_bkg_color,saved_highlighted_color,saved_text_color,saved_navbar_breadcrumb_tab_color,saved_border_color,
         saved_filled_button_color,saved_filled_button_text_color,saved_plain_button_color,saved_plain_button_text_color,

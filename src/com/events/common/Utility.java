@@ -67,8 +67,13 @@ public class Utility {
                 strRequestParams.append( mapEntrysetRequest.getKey() ).append("=[");
                 String[] arrRequestValue = mapEntrysetRequest.getValue();
                 if(arrRequestValue!=null && arrRequestValue.length > 0 ) {
+                    boolean isFirst = true;
                     for(String requestVal : arrRequestValue ) {
-                        strRequestParams.append(requestVal).append("|");
+                        if(!isFirst) {
+                            strRequestParams.append("|");
+                        }
+                        strRequestParams.append(requestVal);
+                        isFirst = false;
                     }
                 }
                 strRequestParams.append("]\n");

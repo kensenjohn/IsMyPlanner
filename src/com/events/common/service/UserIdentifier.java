@@ -64,6 +64,7 @@ public class UserIdentifier implements Filter {
                         if( lTimeDifference > 60000) {
                             httpSession.removeAttribute("SUBDOMAIN");
                             httpSession.removeAttribute("SUBDOMAIN_VENDOR");
+                            httpSession.removeAttribute("SUBDOMAIN_VENDOR_WEBSITE");
                             httpSession.removeAttribute("SUBDOMAIN_TIME");
                             httpSession.removeAttribute("SUBDOMAIN_COLORS");
                             httpSession.removeAttribute("SUBDOMAIN_LOGO");
@@ -96,6 +97,8 @@ public class UserIdentifier implements Filter {
                             httpNewSession.setAttribute("SUBDOMAIN", subDomain );
                             httpNewSession.setAttribute("SUBDOMAIN_VENDOR", vendorBean );
                             httpNewSession.setAttribute("SUBDOMAIN_TIME", DateSupport.getEpochMillis());
+                            httpNewSession.setAttribute("SUBDOMAIN_VENDOR_WEBSITE", vendorResponseBean.getVendorWebsiteBean() );
+
 
                             // Color for Vendor based Website
                             {
@@ -110,7 +113,6 @@ public class UserIdentifier implements Filter {
 
                                 VendorWebsiteFeatureBean vendorWebsiteFeatureBean = hmVendorWebsiteFeatureBean.get( Constants.VENDOR_WEBSITE_FEATURETYPE.published_logo );
                                 if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue()))  {
-                                    String imageUploadLocation = applicationConfig.get(Constants.IMAGE_LOCATION);
                                     String imageHost = Utility.getImageUploadHost();
                                     String sFolderName = ParseUtil.checkNull(vendorBean.getFolder());
 

@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/spectrum.css">
+<link href="/css/bootstrap-switch.min.css" rel="stylesheet">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <link rel="stylesheet" href="/css/colorbox.css" id="theme_time">
 <body>
@@ -84,7 +85,6 @@
 <form id="frm_load_vendor_website_info">
 
 </form>
-<script type="text/javascript" async src="//assets.pinterest.com/js/pinit.js"></script>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script src="/js/upload/jquery.iframe-transport.js"></script>
@@ -92,6 +92,7 @@
 <script src="/js/jquery.colorbox-min.js"></script>
 <script src="/js/collapse.js"></script>
 <script src="/js/spectrum.js"></script>
+<script src="/js/bootstrap-switch.min.js"></script>
 <script type="text/javascript">
     var vendorWebsiteId='';
     var vendorId='';
@@ -118,14 +119,14 @@
         });
     });
     function displayLandingPage() {
-        if($('#landingPageTheme').val() == 'simple_landingpage') {
+        /*if($('#landingPageTheme').val() == 'simple_landingpage') {
             $('#social_media_feed').hide("slow");
             $('#theme_img').attr('src', '/img/theme_thmb/simple_landingpagephoto.png');
         }
         if($('#landingPageTheme').val() == 'simple_landingpage_socialmedia') {
             $('#social_media_feed').show("slow");
             $('#theme_img').attr('src','/img/theme_thmb/simple_landingpagephoto_socialmedia.png');
-        }
+        }*/
     }
     function saveLandingPage( callbackmethod ) {
         var actionUrl = "/proc_save_vendor_landingpage_manager.aeve";
@@ -231,10 +232,7 @@
                     $('#landingpage_imagehost').val(varImageHost);
                     $('#landingpage_foldername').val(varFolderName);
 
-                    var varLandingPageTheme = jsonResponseObj.saved_themename;
-                    if(varLandingPageTheme!=undefined) {
-                        $('#landingpage_theme').val( varLandingPageTheme );
-                    }
+
 
                     var varPinterestUrl = jsonResponseObj.saved_pinterest_feed_script;
                     if(varPinterestUrl!=undefined) {
@@ -254,6 +252,16 @@
                     if(varImageHost!='' && varFolderName!='' && varLandingPagePhoto!='' && varLandingPagePhoto!=undefined){
                         var imagePath = varImageHost+'/'+varFolderName+'/'+varLandingPagePhoto;
                         createOurWebsiteImage(imagePath, 'landingpage_image_name');
+                    }
+
+                    var varGreetingHeader = jsonResponseObj.saved_greeting_header;
+                    if(varGreetingHeader!=undefined) {
+                        $('#landingpage_greeting_header').val( varGreetingHeader );
+                    }
+
+                    var varGreetingText = jsonResponseObj.saved_greeting_text;
+                    if(varGreetingText!=undefined) {
+                        $('#landingpage_greeting_text').val( varGreetingText );
                     }
                     /*=====Landing Page Layour and Content Panel======= {End}*/
 

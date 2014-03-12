@@ -64,32 +64,21 @@ public class ProcSavePublishWebsiteLogoPanel extends HttpServlet {
                         vendorWebsiteRequestBean.setLogoImage(sLogoName);
 
                         BuildVendorWebsite buildVendorWebsite = new BuildVendorWebsite();
-                        if("save".equalsIgnoreCase(sLogoAction)){
-                            VendorWebsiteResponseBean vendorWebsiteResponseBean = buildVendorWebsite.saveWebsiteLogo(vendorWebsiteRequestBean);
 
-                            if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId())) {
-                                jsonResponseObj.put("vendorwebsite_id",vendorWebsiteResponseBean.getVendorWebsiteId());
-                                Text okText = new OkText("The logo for the website was saved successfully.","status_mssg") ;
-                                arrOkText.add(okText);
-                                responseStatus = RespConstants.Status.OK;
-                            } else {
-                                Text errorText = new ErrorText("Oops!! We were unable to save the logo. Please try again later.","err_mssg") ;
-                                arrErrorText.add(errorText);
+                        VendorWebsiteResponseBean saveVendorWebsiteResponseBean = buildVendorWebsite.saveWebsiteLogo(vendorWebsiteRequestBean);
+                        VendorWebsiteResponseBean publishedvendorWebsiteResponseBean = buildVendorWebsite.publishWebsiteLogo(vendorWebsiteRequestBean);
 
-                                responseStatus = RespConstants.Status.ERROR;
-                            }
-                        } else if( "publish".equalsIgnoreCase(sLogoAction)){
-                            VendorWebsiteResponseBean vendorWebsiteResponseBean = buildVendorWebsite.publishWebsiteLogo(vendorWebsiteRequestBean);
-                            if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId())) {
-                                jsonResponseObj.put("vendorwebsite_id",vendorWebsiteResponseBean.getVendorWebsiteId());
-                                Text okText = new OkText("The logo for the website was published successfully.","status_mssg") ;
-                                arrOkText.add(okText);
-                                responseStatus = RespConstants.Status.OK;
-                            } else {
-                                Text errorText = new ErrorText("Oops!! We were unable to publish the website logo. Please try again later.","err_mssg") ;
-                                arrErrorText.add(errorText);
-                                responseStatus = RespConstants.Status.ERROR;
-                            }
+                        if(saveVendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(saveVendorWebsiteResponseBean.getVendorWebsiteId())
+                                && publishedvendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(publishedvendorWebsiteResponseBean.getVendorWebsiteId())) {
+                            jsonResponseObj.put("vendorwebsite_id",saveVendorWebsiteResponseBean.getVendorWebsiteId());
+                            Text okText = new OkText("The logo for the website was saved successfully.","status_mssg") ;
+                            arrOkText.add(okText);
+                            responseStatus = RespConstants.Status.OK;
+                        } else {
+                            Text errorText = new ErrorText("Oops!! We were unable to save the logo. Please try again later.","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
                         }
                     }
 
