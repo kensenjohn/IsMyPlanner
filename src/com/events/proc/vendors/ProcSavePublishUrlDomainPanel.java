@@ -1,6 +1,8 @@
 package com.events.proc.vendors;
 
 import com.events.bean.users.UserBean;
+import com.events.bean.vendors.VendorBean;
+import com.events.bean.vendors.VendorResponseBean;
 import com.events.bean.vendors.website.VendorWebsiteRequestBean;
 import com.events.bean.vendors.website.VendorWebsiteResponseBean;
 import com.events.common.Constants;
@@ -9,6 +11,7 @@ import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
+import com.events.vendors.website.AccessVendorWebsite;
 import com.events.vendors.website.BuildVendorWebsite;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -63,20 +66,40 @@ public class ProcSavePublishUrlDomainPanel extends HttpServlet {
                         vendorWebsiteRequestBean.setVendorId( sVendoId);
                         vendorWebsiteRequestBean.setVendorWebsiteId( sVendorWebsiteId );
 
-                        BuildVendorWebsite buildVendorWebsite = new BuildVendorWebsite();
-                        VendorWebsiteResponseBean vendorWebsiteResponseBean = buildVendorWebsite.saveAndPublishWebsiteDomain(vendorWebsiteRequestBean);
+                        boolean isCreateSubDomainRecord = true;
+                        AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
+                        VendorResponseBean vendorResponseBean = accessVendorWebsite.getVendorBySubDomain( vendorWebsiteRequestBean );
+                        if(vendorResponseBean!=null && vendorResponseBean.getVendorBean()!=null) {
+                            VendorBean existingVendorBean = vendorResponseBean.getVendorBean();
 
-                        if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId())) {
-                            jsonResponseObj.put("vendorwebsite_id",vendorWebsiteResponseBean.getVendorWebsiteId());
-                            jsonResponseObj.put("vendorwebsite_subdomain", sWebsiteSubdomain );
-                            Text okText = new OkText("Your changes where successfully saved and published.","status_mssg") ;
-                            arrOkText.add(okText);
-                            responseStatus = RespConstants.Status.OK;
-                        } else {
-                            Text errorText = new ErrorText("Oops!! We were unable to save your changes. Please try again later.","err_mssg") ;
-                            arrErrorText.add(errorText);
-                            responseStatus = RespConstants.Status.ERROR;
+                            if(!Utility.isNullOrEmpty(existingVendorBean.getVendorId()) && !existingVendorBean.getVendorId().equalsIgnoreCase( sVendoId )) {
+                                // This indicates that there exists another vendor with same subdomain.
+                                // This should not be allowed.
+                                isCreateSubDomainRecord = false;
+
+                                Text errorText = new ErrorText("This business name already exists. Please make changes to your business name and try again.","err_mssg") ;
+                                arrErrorText.add(errorText);
+                            }
                         }
+
+                        if(isCreateSubDomainRecord) {
+                            BuildVendorWebsite buildVendorWebsite = new BuildVendorWebsite();
+
+                            VendorWebsiteResponseBean vendorWebsiteResponseBean = buildVendorWebsite.saveAndPublishWebsiteDomain(vendorWebsiteRequestBean);
+
+                            if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId())) {
+                                jsonResponseObj.put("vendorwebsite_id",vendorWebsiteResponseBean.getVendorWebsiteId());
+                                jsonResponseObj.put("vendorwebsite_subdomain", sWebsiteSubdomain );
+                                Text okText = new OkText("Your changes where successfully saved and published.","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
+                            } else {
+                                Text errorText = new ErrorText("Oops!! We were unable to save your changes. Please try again later.","err_mssg") ;
+                                arrErrorText.add(errorText);
+                                responseStatus = RespConstants.Status.ERROR;
+                            }
+                        }
+
                     }
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
