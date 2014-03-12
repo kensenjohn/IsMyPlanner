@@ -66,6 +66,8 @@ public class UserIdentifier implements Filter {
                             httpSession.removeAttribute("SUBDOMAIN_VENDOR");
                             httpSession.removeAttribute("SUBDOMAIN_TIME");
                             httpSession.removeAttribute("SUBDOMAIN_COLORS");
+                            httpSession.removeAttribute("SUBDOMAIN_LOGO");
+
 
                             loadFromDB = true;
                         }
@@ -80,7 +82,7 @@ public class UserIdentifier implements Filter {
                     VendorResponseBean vendorResponseBean = accessVendorWebsite.getVendorBySubDomain( vendorWebsiteRequestBean );
                     //appLogging.info(vendorBean.toString());
                     if(vendorResponseBean!=null &&  vendorResponseBean.getVendorBean()!=null ) {
-
+                        appLogging.info("User's sub domain from feature : " + vendorResponseBean.getSubDomain());
                         VendorBean vendorBean = vendorResponseBean.getVendorBean();
                         if(vendorBean!=null && !Utility.isNullOrEmpty(vendorBean.getVendorId())) {
 
@@ -95,17 +97,34 @@ public class UserIdentifier implements Filter {
                             httpNewSession.setAttribute("SUBDOMAIN_VENDOR", vendorBean );
                             httpNewSession.setAttribute("SUBDOMAIN_TIME", DateSupport.getEpochMillis());
 
-                            ColorCSSBean colorCSSBean = new ColorCSSBean( hmVendorWebsiteFeatureBean );
-                            BuildColorCss buildColorCss = new BuildColorCss();
-                            String sOverridingColorCss = buildColorCss.getColorCss( colorCSSBean ) ;
+                            // Color for Vendor based Website
+                            {
+                                ColorCSSBean colorCSSBean = new ColorCSSBean( hmVendorWebsiteFeatureBean );
+                                BuildColorCss buildColorCss = new BuildColorCss();
+                                String sOverridingColorCss = buildColorCss.getColorCss( colorCSSBean ) ;
+                                httpNewSession.setAttribute("SUBDOMAIN_COLORS", sOverridingColorCss );
+                            }
+
+                            // Logo for Vendor based Website
+                            {
+
+                                VendorWebsiteFeatureBean vendorWebsiteFeatureBean = hmVendorWebsiteFeatureBean.get( Constants.VENDOR_WEBSITE_FEATURETYPE.published_logo );
+                                if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue()))  {
+                                    String imageUploadLocation = applicationConfig.get(Constants.IMAGE_LOCATION);
+                                    String imageHost = Utility.getImageUploadHost();
+                                    String sFolderName = ParseUtil.checkNull(vendorBean.getFolder());
 
 
-                            httpNewSession.setAttribute("SUBDOMAIN_COLORS", sOverridingColorCss );
+                                    httpNewSession.setAttribute("SUBDOMAIN_LOGO", imageHost + "/" +  sFolderName + "/" + vendorWebsiteFeatureBean.getValue() );
+                                }
+                            }
+
                         } else {
 
                             HttpServletResponse response = (HttpServletResponse) servletResponse;
                             response.sendRedirect( "http://" + APPLICATION_DOMAIN );
                             appLogging.info("User's sub domain has changed : " + subDomain);
+                            return;
                         }
                     }
                 }

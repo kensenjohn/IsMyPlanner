@@ -1,10 +1,21 @@
 <%@ page import="com.events.common.Constants" %>
 <%@ page import="com.events.bean.users.UserBean" %>
 <%@ page import="com.events.common.ParseUtil" %>
+<%@ page import="com.events.common.Utility" %>
+<%
+    String sLogo = Constants.EMPTY;
+    if( session.getAttribute("SUBDOMAIN_COLORS") != null ) {
+        sLogo = ParseUtil.checkNull( (String) session.getAttribute("SUBDOMAIN_LOGO"));
+    }
+    if(Utility.isNullOrEmpty(sLogo)) {
+        sLogo = "/img/logo.png";
+    }
+
+%>
 <div class="menu_bar">
     <div class="container">
         <div class="menu_logo">
-            <a href="#"><img src="/img/logo.png" alt=""></a>
+            <a href="#"><img src="<%=sLogo%>" alt=""></a>
         </div>
         <div class="menu_links">
             <%

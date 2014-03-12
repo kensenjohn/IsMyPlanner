@@ -215,6 +215,8 @@
                     cachedScript( "/js/dashboard/set_logo.js" ).done(function( script, textStatus ) {
                         setupLogoPanel();
                     });
+                    var imagePath = varImageHost+'/'+varFolderName+'/'+varLogo;
+                    createPanelLogoImage(imagePath, 'logo_image_name');
                     /*=====Logo Panel======= {End}*/
 
 
@@ -310,6 +312,15 @@
                 $.colorbox({href:varLinkToImage});
             });
         }
+    }
+
+    function createPanelLogoImage(imagePath, image_div){
+        var varImg = $('<img>');
+        varImg.addClass('img-thumbnail');
+        varImg.attr('src',imagePath );
+
+        $('#'+image_div).empty();
+        $('#'+image_div).append(varImg);
     }
 
 

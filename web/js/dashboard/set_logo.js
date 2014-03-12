@@ -83,6 +83,9 @@ $(function () {
                     $('#logo_imagename').val( varDataResult.name );
                     $('#logo_imagehost').val( varDataResult.imagehost);
                     $('#logo_foldername').val(varDataResult.foldername);
+
+                    var imagePath = varDataResult.imagehost+'/'+varDataResult.foldername+'/'+varDataResult.name;
+                    createLogoImage(imagePath, 'logo_image_name');
                     enablePreviewOfLogo();
                 } else {
                     displayMssgBoxAlert("Oops!! We were unable to upload the logo. Please try again later.", true);
@@ -98,3 +101,12 @@ $(function () {
         }
     });
 });
+
+function createLogoImage(imagePath, image_div){
+    var varImg = $('<img>');
+    varImg.addClass('img-thumbnail');
+    varImg.attr('src',imagePath );
+
+    $('#'+image_div).empty();
+    $('#'+image_div).append(varImg);
+}
