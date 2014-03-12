@@ -215,8 +215,11 @@
                     cachedScript( "/js/dashboard/set_logo.js" ).done(function( script, textStatus ) {
                         setupLogoPanel();
                     });
-                    var imagePath = varImageHost+'/'+varFolderName+'/'+varLogo;
-                    createPanelLogoImage(imagePath, 'logo_image_name');
+                    if(varImageHost!='' && varFolderName!='' && varLogo!='' && varLogo!=undefined){
+                        var imagePath = varImageHost+'/'+varFolderName+'/'+varLogo;
+                        createOurWebsiteImage(imagePath, 'logo_image_name');
+                    }
+
                     /*=====Logo Panel======= {End}*/
 
 
@@ -246,6 +249,12 @@
                     cachedScript( "/js/dashboard/set_landingpage_layout_content.js" ).done(function( script, textStatus ) {
                         setupLandingPagePanel();
                     });
+
+
+                    if(varImageHost!='' && varFolderName!='' && varLandingPagePhoto!='' && varLandingPagePhoto!=undefined){
+                        var imagePath = varImageHost+'/'+varFolderName+'/'+varLandingPagePhoto;
+                        createOurWebsiteImage(imagePath, 'landingpage_image_name');
+                    }
                     /*=====Landing Page Layour and Content Panel======= {End}*/
 
                 }
@@ -314,7 +323,7 @@
         }
     }
 
-    function createPanelLogoImage(imagePath, image_div){
+    function createOurWebsiteImage(imagePath, image_div){
         var varImg = $('<img>');
         varImg.addClass('img-thumbnail');
         varImg.attr('src',imagePath );

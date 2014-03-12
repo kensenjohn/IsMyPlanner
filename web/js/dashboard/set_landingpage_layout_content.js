@@ -104,6 +104,8 @@ $(function () {
                     $('#landingpage_imagehost').val( varDataResult.imagehost);
                     $('#llandingpage_foldername').val(varDataResult.foldername);
                     displayMssgBoxAlert("The picture was successfully uploaded", false);
+                    var imagePath = varDataResult.imagehost+'/'+varDataResult.foldername+'/'+varDataResult.name;
+                    createLandingPageImage(imagePath, 'landingpage_image_name');
                     enablePreviewOfLandingPage();
                 } else {
                     displayMssgBoxAlert("Oops!! We were unable to upload the picture. Please try again later.", true);
@@ -119,3 +121,12 @@ $(function () {
         }
     });
 });
+
+function createLandingPageImage(imagePath, image_div){
+    var varImg = $('<img>');
+    varImg.addClass('img-thumbnail');
+    varImg.attr('src',imagePath );
+
+    $('#'+image_div).empty();
+    $('#'+image_div).append(varImg);
+}

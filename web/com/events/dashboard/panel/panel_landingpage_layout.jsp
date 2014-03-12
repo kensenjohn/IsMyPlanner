@@ -66,6 +66,15 @@
                                                         &nbsp;
                                                     </div>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="col-md-offset-1 col-md-4" id="landingpage_image_name">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        &nbsp;
+                                                    </div>
+                                                </div>
                                             </div>
                                         </form>
                                     </div>
