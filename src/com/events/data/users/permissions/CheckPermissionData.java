@@ -2,10 +2,7 @@ package com.events.data.users.permissions;
 
 import com.events.bean.users.permissions.RolesBean;
 import com.events.bean.users.permissions.UserRolePermissionRequestBean;
-import com.events.common.Configuration;
-import com.events.common.Constants;
-import com.events.common.Perm;
-import com.events.common.Utility;
+import com.events.common.*;
 import com.events.common.db.DBDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +32,10 @@ public class CheckPermissionData {
             ArrayList<Object> aParams = DBDAO.createConstraint( sUserId , perm.toString() );
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "CheckPermissionData.java", "getUserPermission()");
             if( arrResult!=null && !arrResult.isEmpty() ){
-                userPermissionCount = arrResult.size();
+                for(HashMap<String, String> hmResult : arrResult) {
+                    userPermissionCount = ParseUtil.sToI(hmResult.get("PERMISSION_COUNT"));
+                }
+
             }
         }
         return userPermissionCount;

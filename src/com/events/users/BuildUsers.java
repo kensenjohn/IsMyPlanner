@@ -23,6 +23,7 @@ import com.events.data.email.EmailServiceData;
 import com.events.data.users.BuildUserData;
 import com.events.users.permissions.AccessUserRoles;
 import com.events.users.permissions.BuildUserRoles;
+import com.events.users.permissions.CheckPermission;
 import com.events.users.permissions.UserRolePermission;
 import com.events.vendors.AccessVendors;
 import com.events.vendors.BuildVendors;
@@ -266,111 +267,115 @@ public class BuildUsers {
                 EmailServiceData emailServiceData = new EmailServiceData();
                 EmailTemplateBean emailTemplateBean = emailServiceData.getEmailTemplate(Constants.EMAIL_TEMPLATE.NEW_TEAM_MEMBER_ACCESS);
 
+                if(emailTemplateBean!=null && !Utility.isNullOrEmpty(emailTemplateBean.getEmailTemplateId())) {
+                    String sHtmlTemplate = emailTemplateBean.getHtmlBody();
+                    String sTxtTemplate = emailTemplateBean.getTextBody();
+                    String sSubjectTemplate = emailTemplateBean.getEmailSubject();
 
-                String sHtmlTemplate = emailTemplateBean.getHtmlBody();
-                String sTxtTemplate = emailTemplateBean.getTextBody();
-                String sSubjectTemplate = emailTemplateBean.getEmailSubject();
+                    EmailQueueBean emailQueueBean = new EmailQueueBean();
+                    emailQueueBean.setEmailSubject(emailTemplateBean.getEmailSubject());
+                    emailQueueBean.setFromAddress(emailTemplateBean.getFromAddress());
+                    emailQueueBean.setFromAddressName(emailTemplateBean.getFromAddressName());
 
-                EmailQueueBean emailQueueBean = new EmailQueueBean();
-                emailQueueBean.setEmailSubject(emailTemplateBean.getEmailSubject());
-                emailQueueBean.setFromAddress(emailTemplateBean.getFromAddress());
-                emailQueueBean.setFromAddressName(emailTemplateBean.getFromAddressName());
+                    UserInfoBean userInfoBean = userBean.getUserInfoBean();
+                    String sFirstName = ParseUtil.checkNull(userInfoBean.getFirstName());
+                    String sLastName = ParseUtil.checkNull(userInfoBean.getLastName());
+                    String sGivenName = sFirstName + " " + sLastName;
 
-                UserInfoBean userInfoBean = userBean.getUserInfoBean();
-                String sFirstName = ParseUtil.checkNull(userInfoBean.getFirstName());
-                String sLastName = ParseUtil.checkNull(userInfoBean.getLastName());
-                String sGivenName = sFirstName + " " + sLastName;
-
-                emailQueueBean.setToAddress( userInfoBean.getEmail() );
-                emailQueueBean.setToAddressName(userInfoBean.getEmail() );
-                emailQueueBean.setHtmlBody(sHtmlTemplate);
-                emailQueueBean.setTextBody(sTxtTemplate);
-
-                // mark it as sent so that it wont get picked up by email service. The email gets sent below
-                emailQueueBean.setStatus(Constants.EMAIL_STATUS.SENT.getStatus());
+                    emailQueueBean.setToAddress( userInfoBean.getEmail() );
+                    emailQueueBean.setToAddressName(userInfoBean.getEmail() );
+                    emailQueueBean.setHtmlBody(sHtmlTemplate);
+                    emailQueueBean.setTextBody(sTxtTemplate);
 
 
-                // We are just creating a record in the database with this action.
-                // The new password will be sent separately.
-                // This must be changed so that user will have to click link to
-                // generate the new password.
-                MailCreator dummyEailCreator = new EmailCreator();
-                dummyEailCreator.create(emailQueueBean , new EmailSchedulerBean());
-
-                // Now here we will be putting the correct password in the email
-                // text and
-                // send it out directly.
-                // This needs to be changed. Warning bells are rining.
-                // Lots of potential to fail.
-
-                Map<String, Object> mapTextEmailValues = new HashMap<String, Object>();
-                Map<String, Object> mapHtmlEmailValues = new HashMap<String, Object>();
-                mapTextEmailValues.put("VENDOR_NAME",vendorBean.getVendorName());
-                mapHtmlEmailValues.put("VENDOR_NAME", vendorBean.getVendorName());
-                mapTextEmailValues.put("FIRST_NAME",sFirstName);
-                mapHtmlEmailValues.put("FIRST_NAME", sFirstName);
-                mapTextEmailValues.put("LAST_NAME",sLastName);
-                mapHtmlEmailValues.put("LAST_NAME", sLastName);
-                mapTextEmailValues.put("GIVEN_NAME",sGivenName);
-                mapHtmlEmailValues.put("GIVEN_NAME", sGivenName);
+                    Map<String, Object> mapTextEmailValues = new HashMap<String, Object>();
+                    Map<String, Object> mapHtmlEmailValues = new HashMap<String, Object>();
+                    mapTextEmailValues.put("VENDOR_NAME",vendorBean.getVendorName());
+                    mapHtmlEmailValues.put("VENDOR_NAME", vendorBean.getVendorName());
+                    mapTextEmailValues.put("FIRST_NAME",sFirstName);
+                    mapHtmlEmailValues.put("FIRST_NAME", sFirstName);
+                    mapTextEmailValues.put("LAST_NAME",sLastName);
+                    mapHtmlEmailValues.put("LAST_NAME", sLastName);
+                    mapTextEmailValues.put("GIVEN_NAME",sGivenName);
+                    mapHtmlEmailValues.put("GIVEN_NAME", sGivenName);
 
 
-                String sResetDomain = ParseUtil.checkNull(applicationConfig.get(Constants.APPLICATION_DOMAIN));
-                if(sResetDomain!=null && !"".equalsIgnoreCase(sResetDomain)) {
+                    String sResetDomain = ParseUtil.checkNull(applicationConfig.get(Constants.APPLICATION_DOMAIN));
+                    if(sResetDomain!=null && !"".equalsIgnoreCase(sResetDomain)) {
 
 
-                    AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
-                    VendorWebsiteFeatureBean vendorWebsiteFeatureBean = accessVendorWebsite.getSubDomain( vendorBean );
-                    if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue())){
-                        sResetDomain = vendorWebsiteFeatureBean.getValue() + "." + sResetDomain;
+                        AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
+                        VendorWebsiteFeatureBean vendorWebsiteFeatureBean = accessVendorWebsite.getSubDomain( vendorBean );
+                        if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue())){
+                            sResetDomain = vendorWebsiteFeatureBean.getValue() + "." + sResetDomain;
+                        }
+
+                        String sProtocol = applicationConfig.get(Constants.PROP_LINK_PROTOCOL,"http");
+
+                        String sPortalLink = ParseUtil.checkNull(sProtocol + "://" + sResetDomain + "/com/events/common/set_password.jsp?lotophagi="+forgotPasswordBean.getSecureTokenId());
+
+                        mapTextEmailValues.put("PORTAL_LINK",sPortalLink);
+                        mapHtmlEmailValues.put("PORTAL_LINK","<a href=\""+sPortalLink+"\" target=\"_blank\">Set New Password And Login</a>");
+
+                        String sProductName = ParseUtil.checkNull(applicationConfig.get(Constants.PRODUCT_NAME));
+
+                        mapTextEmailValues.put("PRODUCT_NAME",sProductName);
+                        mapHtmlEmailValues.put("PRODUCT_NAME",sProductName);
+
+
+                        MustacheFactory mf = new DefaultMustacheFactory();
+                        Mustache mustacheText =  mf.compile(new StringReader(sTxtTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_text");
+                        Mustache mustacheHtml = mf.compile(new StringReader(sHtmlTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_html");
+                        Mustache mustacheSubject = mf.compile( new StringReader(sSubjectTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_subject" );
+
+                        StringWriter txtWriter = new StringWriter();
+                        StringWriter htmlWriter = new StringWriter();
+                        StringWriter subjectWriter = new StringWriter();
+                        try {
+                            mustacheText.execute(txtWriter, mapTextEmailValues).flush();
+                            mustacheHtml.execute(htmlWriter, mapHtmlEmailValues).flush();
+                            mustacheSubject.execute(subjectWriter, mapHtmlEmailValues ).flush();
+
+                        } catch (IOException e) {
+                            txtWriter = new StringWriter();
+                            htmlWriter = new StringWriter();
+                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        }
+
+                        emailQueueBean.setHtmlBody(htmlWriter.toString());
+                        emailQueueBean.setTextBody(txtWriter.toString());
+                        emailQueueBean.setEmailSubject(subjectWriter.toString() );
+                        emailQueueBean.setCcAddress("kensenjohn@gmail.com");
+
+                        {
+                            // We are just creating a record in the database with this action.
+                            // The new password will be sent separately.
+                            // This must be changed so that user will have to click link to
+                            // generate the new password.
+                            // mark it as sent so that it wont get picked up by email service. The email gets sent below
+                            emailQueueBean.setStatus(Constants.EMAIL_STATUS.SENT.getStatus());
+                            MailCreator dummyEailCreator = new EmailCreator();
+                            dummyEailCreator.create(emailQueueBean , new EmailSchedulerBean());
+                            appLogging.error("Text body of email. : " + emailQueueBean.getTextBody());
+                        }
+
+
+                        emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
+
+                        appLogging.error("Using the Mustache API to generate Email Querue Bean : " + emailQueueBean);
+
+
+
+                        // This will actually send the email. Spawning a thread and continue
+                        // execution.
+                        Thread quickEmail = new Thread(new QuickMailSendThread( emailQueueBean), "Quick Email Password Reset");
+                        quickEmail.start();
+                        isSuccess = true;
                     }
-
-                    String sProtocol = applicationConfig.get(Constants.PROP_LINK_PROTOCOL,"http");
-
-                    String sPortalLink = ParseUtil.checkNull(sProtocol + "://" + sResetDomain + "/com/events/common/set_password.jsp?lotophagi="+forgotPasswordBean.getSecureTokenId());
-
-                    mapTextEmailValues.put("PORTAL_LINK",sPortalLink);
-                    mapHtmlEmailValues.put("PORTAL_LINK","<a href=\""+sPortalLink+"\" target=\"_blank\">Set New Password And Login</a>");
-
-                    String sProductName = ParseUtil.checkNull(applicationConfig.get(Constants.PRODUCT_NAME));
-
-                    mapTextEmailValues.put("PRODUCT_NAME",sProductName);
-                    mapHtmlEmailValues.put("PRODUCT_NAME",sProductName);
-
-
-                    MustacheFactory mf = new DefaultMustacheFactory();
-                    Mustache mustacheText =  mf.compile(new StringReader(sTxtTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_text");
-                    Mustache mustacheHtml = mf.compile(new StringReader(sHtmlTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_html");
-                    Mustache mustacheSubject = mf.compile( new StringReader(sSubjectTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_subject" );
-
-                            StringWriter txtWriter = new StringWriter();
-                    StringWriter htmlWriter = new StringWriter();
-                    StringWriter subjectWriter = new StringWriter();
-                    try {
-                        mustacheText.execute(txtWriter, mapTextEmailValues).flush();
-                        mustacheHtml.execute(htmlWriter, mapHtmlEmailValues).flush();
-                        mustacheSubject.execute(subjectWriter, mapHtmlEmailValues ).flush();
-
-                    } catch (IOException e) {
-                        txtWriter = new StringWriter();
-                        htmlWriter = new StringWriter();
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    }
-
-                    emailQueueBean.setHtmlBody(htmlWriter.toString());
-                    emailQueueBean.setTextBody(txtWriter.toString());
-                    emailQueueBean.setEmailSubject(subjectWriter.toString() );
-                    emailQueueBean.setCcAddress("kensenjohn@gmail.com");
-
-                    emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
-
-                    appLogging.error("Using the Mustache API to generate Email Querue Bean : " + emailQueueBean);
-                    // This will actually send the email. Spawning a thread and continue
-                    // execution.
-                    Thread quickEmail = new Thread(new QuickMailSendThread( emailQueueBean), "Quick Email Password Reset");
-                    quickEmail.start();
-                    isSuccess = true;
+                } else {
+                    appLogging.error("The email template " + Constants.EMAIL_TEMPLATE.NEW_TEAM_MEMBER_ACCESS.getEmailTemplate() + " was not found.");
                 }
+
 
             }
 
@@ -519,5 +524,20 @@ public class BuildUsers {
             throw new EditUserInfoException();
         }
         return iNumOfRecords;
+    }
+
+    public static String getPassThroughLink(UserBean userBean) {
+        String sLink = Constants.EMPTY;
+        if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId())) {
+            CheckPermission checkPermission = new CheckPermission(userBean);
+            if(checkPermission.can(Perm.ACCESS_DASHBOARD_TAB)) {
+                sLink = Constants.DASHBOARD_LINK;
+            } else if(checkPermission.can(Perm.ACCESS_CLIENTS_TAB)) {
+                sLink = Constants.CLIENTS_LINK;
+            } else  if(checkPermission.can(Perm.ACCESS_EVENTS_TAB)) {
+                sLink = Constants.EVENTS_LINK;
+            }
+        }
+        return sLink;
     }
 }

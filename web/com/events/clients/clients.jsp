@@ -1,3 +1,8 @@
+<%@ page import="com.events.bean.users.UserBean" %>
+<%@ page import="com.events.common.Constants" %>
+<%@ page import="com.events.users.permissions.CheckPermission" %>
+<%@ page import="com.events.common.Utility" %>
+<%@ page import="com.events.common.Perm" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -5,6 +10,26 @@
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
+<%
+    UserBean loggedInUserBean = new UserBean();
+    if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
+        loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
+    }
+    CheckPermission checkPermission = null;
+    if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
+        checkPermission = new CheckPermission(loggedInUserBean);
+    }
+
+    boolean canEditClient = false;
+    boolean canDeleteClient = false;
+    if(checkPermission!=null && checkPermission.can(Perm.EDIT_CLIENT)) {
+        canEditClient = true;
+    }
+
+    if(checkPermission!=null && checkPermission.can(Perm.DELETE_CLIENT)) {
+        canDeleteClient = true;
+    }
+%>
 <body>
 <div class="page_wrap">
     <jsp:include page="/com/events/common/top_nav.jsp">
@@ -21,12 +46,18 @@
 
     <div class="container">
         <div class="content_format">
-            <div class="row">
-                <div class="col-md-12">
-                    <div  style="float:left"><a href="/com/events/clients/client_account.jsp" class="btn btn-filled" id="btn_new_client">
-                        <i class="fa fa-plus"></i> Add a Client</a></div>
+            <%
+                if(checkPermission!=null && checkPermission.can(Perm.CREATE_NEW_CLIENT)) {
+            %>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div  style="float:left"><a href="/com/events/clients/client_account.jsp" class="btn btn-filled" id="btn_new_client">
+                            <i class="fa fa-plus"></i> Add a Client</a></div>
+                    </div>
                 </div>
-            </div>
+            <%
+                }
+            %>
             <div class="row">
                 <div class="col-md-12">
                     <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_client" >
@@ -50,9 +81,9 @@
     <tr id="row_{{client_id}}">
         <td>{{client_name}}</td>
         <td>
-            <a id="edit_{{client_id}}" href="/com/events/clients/client_account.jsp?client_id={{client_id}}&client_datatype=contact_info" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+            <a id="edit_{{client_id}}" href="/com/events/clients/client_account.jsp?client_id={{client_id}}&client_datatype=contact_info" class="btn btn-default btn-xs"> <%=canEditClient?"<i class=\"fa fa-pencil\"></i> Edit":"View"%></a>
             &nbsp;&nbsp;
-            <a id="{{client_id}}" name="delete_client" class="btn btn-default btn-xs" row={{row_num}}><i class="fa fa-trash-o"></i> Delete</a>
+            <a id="{{client_id}}" name="delete_client" class="btn btn-default btn-xs <%=canDeleteClient?"":"disabled"%>" row={{row_num}}><i class="fa fa-trash-o"></i> Delete</a>
         </td>
     </tr>
 </script>
@@ -85,7 +116,8 @@
                     if(varNumOfClients>0){
                         this.clientsSummaryListModel = new ClientsSummaryListModel({
                             'bb_num_of_clients' : varNumOfClients,
-                            'bb_client_list_summary' : jsonResponseObj.all_client_summary
+                            'bb_client_list_summary' : jsonResponseObj.all_client_summary ,
+                            'bb_can_delete_client': jsonResponseObj.can_delete_client
                         });
                         var clientsSummaryView = new ClientsSummaryListView({model:this.clientsSummaryListModel});
                         clientsSummaryView.render();
@@ -106,7 +138,8 @@
     var ClientsSummaryListModel = Backbone.Model.extend({
         defaults: {
             bb_num_of_clients: 0 ,
-            bb_client_list_summary: undefined
+            bb_client_list_summary: undefined,
+            bb_can_delete_client: false
         }
     });
     var ClientsSummaryListView = Backbone.View.extend({
@@ -134,22 +167,24 @@
             }
         },
         assignEventHandling : function(event) {
-            var varTargetDeleteButton = $(event.target);
+            if(this.bb_can_delete_client == true ){
+                var varTargetDeleteButton = $(event.target);
 
-            var client_obj = {
-                client_id:  varTargetDeleteButton.attr('id'),
-                row_num:  varTargetDeleteButton.attr('row'),
-                printObj: function () {
-                    return this.client_id  + ' - ' + this.row_num;
+                var client_obj = {
+                    client_id:  varTargetDeleteButton.attr('id'),
+                    row_num:  varTargetDeleteButton.attr('row'),
+                    printObj: function () {
+                        return this.client_id  + ' - ' + this.row_num;
+                    }
                 }
+
+                displayConfirmBox(
+                        "Are you sure you want to delete this client? ",
+                        "Delete Client",
+                        "Yes", "No", deleteClient,client_obj);
+            } else {
+                displayMssgBoxAlert("You are not authorized to perform this action.", true);
             }
-
-            displayConfirmBox(
-                    "Are you sure you want to delete this client? ",
-                    "Delete Client",
-                    "Yes", "No", deleteClient,client_obj);
-
-            //console.log('Event handling assigned. - ' +  client_obj.printObj() );
         }
     });
     function initializeContactUsTable(){

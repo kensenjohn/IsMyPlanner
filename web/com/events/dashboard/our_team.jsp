@@ -86,7 +86,7 @@
                     var jsonResponseObj = varResponseObj.payload;
                     var varNumOfTeamMembers = jsonResponseObj.num_of_team_members;
                     if(varNumOfTeamMembers!=undefined && varNumOfTeamMembers>0){
-                        processTeamMembersList(varNumOfTeamMembers, jsonResponseObj.team_members );
+                        processTeamMembersList(varNumOfTeamMembers, jsonResponseObj.team_members , jsonResponseObj.current_user_id );
                     }
                     initializeTable();
                 }
@@ -98,7 +98,7 @@
         }
 
     }
-    function processTeamMembersList(varNumOfTeamMembers , everyTeamMemberList  ) {
+    function processTeamMembersList(varNumOfTeamMembers , everyTeamMemberList, currentUserId  ) {
         for(i=0;i<varNumOfTeamMembers;i++){
             var varUserBean = everyTeamMemberList[i];
             var varUserId =  varUserBean.user_id;
@@ -116,7 +116,14 @@
                             '<td  class="center" >'+ createButtons(varUserId, varUserInfoId) +'</td>');
             $('#every_team_member_rows').append(rowEveryTeamMember);
 
-            addDeleteClickEvent(varUserId,varEmail, i)
+            if( varUserId == currentUserId ){
+                // disable this delete button. User should not be able to delete their own account.
+                $('#del_' + varUserId).addClass('disabled');
+            } else {
+
+                addDeleteClickEvent(varUserId,varEmail, i)
+            }
+
         }
     }
     function addDeleteClickEvent(varUserId , varEmail ,  varRowNum) {

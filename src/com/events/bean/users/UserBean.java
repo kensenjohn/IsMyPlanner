@@ -159,6 +159,7 @@ public class UserBean {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("user_id", this.userId);
+            jsonObject.put("userinfo_id", this.userInfoId);
             jsonObject.put("user_type", this.userType.getType());
             jsonObject.put("parent_id", this.parentId);
             jsonObject.put("create_date", this.createDate);

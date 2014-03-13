@@ -1,5 +1,7 @@
 <%@ page import="com.events.common.ParseUtil" %>
 <%@ page import="com.events.common.Constants" %>
+<%@ page import="com.events.bean.users.UserBean" %>
+<%@ page import="com.events.common.Utility" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -11,6 +13,13 @@
     boolean isShowRegistrationForm = true;
     if( session.getAttribute("SUBDOMAIN_SHOW_REGISTRATION") != null ) {
         isShowRegistrationForm = (Boolean)session.getAttribute("SUBDOMAIN_SHOW_REGISTRATION") ;
+    }
+
+    if(session!=null && session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null){
+        UserBean loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
+        if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()))  {
+            response.sendRedirect( "/com/events/common/my_account.jsp" );
+        }
     }
 %>
 <body>
@@ -109,7 +118,7 @@
 <%
     String sRedirectAfterLoginReg = ParseUtil.checkNullObject(session.getAttribute(Constants.AFTER_LOGIN_REDIRECT));
 %>
-<form id="frm_passthru" action="<%=Constants.DASHBOARD_LINK%>">
+<form id="frm_passthru">
 
 </form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
@@ -156,8 +165,15 @@
                     if(varCookieUserId!='' && varCookieUserId!=undefined){
                         setUserCookie('<%=Constants.COOKIEUSER_ID%>',varCookieUserId);
                     }
+
+                    var varPassThruLink = jsonResponseObj.pass_thru_link;
+                    console.log('Passtru link : ' + varPassThruLink);
+                    if(varPassThruLink!=undefined) {
+                        $('#frm_passthru').attr('action',varPassThruLink );
+                    }
+                    console.log('Form Action : ' +  $('#frm_passthru').attr('action') );
+                    $('#frm_passthru').submit();
                 }
-                $('#frm_passthru').submit();
             } else {
                 alert("Please try again later 1.");
             }

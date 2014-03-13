@@ -79,6 +79,12 @@ public class ProcLoadTeamMember  extends HttpServlet {
                             }
                             jsonResponseObj.put("user_bean" , userBean.toJson());
 
+                            boolean isTeamMemberCurrentlyLoggedIn = false;
+                            if(userBean.getUserId().equalsIgnoreCase(loggedInUserBean.getUserId() )) {
+                                isTeamMemberCurrentlyLoggedIn = true;
+                            }
+                            jsonResponseObj.put("is_team_member_logged_in" , isTeamMemberCurrentlyLoggedIn );
+
                             Text okText = new OkText("The team members were loaded successfully.","status_mssg") ;
                             arrOkText.add(okText);
                             responseStatus = RespConstants.Status.OK;

@@ -79,6 +79,7 @@ public class ProcLoadAllTeamMembers extends HttpServlet {
 
                         }
                         jsonResponseObj.put("num_of_team_members" ,iNumOfJsonUserBean ) ;
+                        jsonResponseObj.put("current_user_id" , loggedInUserBean.getUserId() );
                         Text okText = new OkText("The team members were loaded successfully.","status_mssg") ;
                         arrOkText.add(okText);
                         responseStatus = RespConstants.Status.OK;

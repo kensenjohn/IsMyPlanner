@@ -10,6 +10,7 @@ import com.events.common.Utility;
 import com.events.data.users.permissions.AccessPermissionsData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -45,21 +46,10 @@ public class AccessPermissions {
         return arrPermissionGroupBean;
     }
 
-    public ArrayList<PermissionsBean> getDefaultPermissionsByRole(  RolesBean rolesBean , ArrayList<PermissionsBean> arrVendorAllPermissionsBean ) {
-        ArrayList<PermissionsBean> arrDefaultPermissionsBean = new ArrayList<PermissionsBean>();
-        if(rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getName()) && !Utility.isNullOrEmpty(rolesBean.getRoleId()) ){
-                if("Lead Coordinator".equalsIgnoreCase(rolesBean.getName()))  {
-                    arrDefaultPermissionsBean = getLeadCoordinatorPermission(arrVendorAllPermissionsBean);
-                } else if("Intern".equalsIgnoreCase(rolesBean.getName()))  {
-                    arrDefaultPermissionsBean = getInternPermission(arrVendorAllPermissionsBean);
-                }  else if("Client".equalsIgnoreCase(rolesBean.getName()))  {
-                    arrDefaultPermissionsBean = getClientPermission(arrVendorAllPermissionsBean);
-                }
-        }
-        return arrDefaultPermissionsBean;
-    }
+    public HashMap<String,  ArrayList<PermissionsBean>> getDefaultRolesDefaultPermissions(ArrayList<PermissionsBean> arrVendorAllPermissionsBean){
 
-    private void getDefaultRolesDefaultPermissions(ArrayList<PermissionsBean> arrVendorAllPermissionsBean){
+        HashMap<String,  ArrayList<PermissionsBean>> hmRolePermissions = new HashMap<String, ArrayList<PermissionsBean>>();
+
         ArrayList<PermissionsBean>  arrSiteAdminPermission = new ArrayList<PermissionsBean>();
         ArrayList<PermissionsBean>  arrLeadCoordinatorPermission = new ArrayList<PermissionsBean>();
         ArrayList<PermissionsBean>  arrInternPermission = new ArrayList<PermissionsBean>();
@@ -75,80 +65,57 @@ public class AccessPermissions {
             if(Perm.ACCESS_CLIENTS_TAB.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
                 arrLeadCoordinatorPermission.add( permissionsBean );
                 arrInternPermission.add( permissionsBean );
-                arrSiteAdminPermission.add( permissionsBean );
             } else  if(Perm.CREATE_NEW_CLIENT.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
                 arrLeadCoordinatorPermission.add( permissionsBean );
-                arrSiteAdminPermission.add( permissionsBean );
-            }  else  if(Perm.SEE_CLIENT_LIST.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
+
+            }  else  if(Perm.DELETE_CLIENT.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
+                arrLeadCoordinatorPermission.add( permissionsBean );
+            } else  if(Perm.EDIT_CLIENT.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
                 arrLeadCoordinatorPermission.add( permissionsBean );
                 arrInternPermission.add( permissionsBean );
-                arrSiteAdminPermission.add( permissionsBean );
-            } else  if(Perm.VIEW_ROLE_PERMMISIONS.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
-                arrLeadCoordinatorPermission.add( permissionsBean );
-                arrSiteAdminPermission.add( permissionsBean );
+
             } else  if(Perm.EDIT_ROLE_PERMISSION.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
-                arrSiteAdminPermission.add( permissionsBean );
+
             } else  if(Perm.DELETE_ROLE.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
-                arrSiteAdminPermission.add( permissionsBean );
+
             }  else  if(Perm.ACCESS_DASHBOARD_TAB.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
                 arrLeadCoordinatorPermission.add( permissionsBean );
                 arrInternPermission.add( permissionsBean );
-                arrSiteAdminPermission.add( permissionsBean );
+
+                arrClientPermission.add(permissionsBean);
             } else  if(Perm.MANAGE_VENDOR_WEBSITE.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
-                arrSiteAdminPermission.add( permissionsBean );
+
             } else  if(Perm.MANAGE_TEAM_MEMBERS.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
-                arrSiteAdminPermission.add( permissionsBean );
+
             } else  if(Perm.MANAGE_ROLE_PERMISSION.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
                 arrLeadCoordinatorPermission.add( permissionsBean );
-                arrSiteAdminPermission.add( permissionsBean );
+
             } else  if(Perm.MANAGE_PARTNER_VENDORS.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
                 arrLeadCoordinatorPermission.add( permissionsBean );
                 arrInternPermission.add( permissionsBean );
-                arrSiteAdminPermission.add( permissionsBean );
+
             }
             else  if(Perm.ACCESS_EVENTS_TAB.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
                 arrLeadCoordinatorPermission.add( permissionsBean );
                 arrInternPermission.add( permissionsBean );
-                arrSiteAdminPermission.add( permissionsBean );
+
                 arrClientPermission.add(permissionsBean);
             } else  if(Perm.CREATE_NEW_EVENT.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
                 arrLeadCoordinatorPermission.add( permissionsBean );
                 arrInternPermission.add( permissionsBean );
-                arrSiteAdminPermission.add( permissionsBean );
+
                 arrClientPermission.add(permissionsBean);
             } else  if(Perm.DELETE_EVENT.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
                 arrLeadCoordinatorPermission.add( permissionsBean );
                 arrInternPermission.add( permissionsBean );
-                arrSiteAdminPermission.add( permissionsBean );
                 arrClientPermission.add(permissionsBean);
             }
-        }
-    }
 
-    private ArrayList<PermissionsBean> getLeadCoordinatorPermission(ArrayList<PermissionsBean> arrAllPermissionsBean){
-        ArrayList<PermissionsBean> arrPermissionsBean = new ArrayList<PermissionsBean>();
-        if(arrAllPermissionsBean!=null && !arrAllPermissionsBean.isEmpty()) {
-            for(PermissionsBean permissionsBean : arrAllPermissionsBean ) {
-
-            }
+            hmRolePermissions.put("Site Admin",arrVendorAllPermissionsBean);
+            hmRolePermissions.put("Lead Coordinator",arrLeadCoordinatorPermission);
+            hmRolePermissions.put("Intern",arrInternPermission);
+            hmRolePermissions.put("Client",arrClientPermission);
         }
-        return arrPermissionsBean;
-    }
-    private ArrayList<PermissionsBean> getInternPermission(ArrayList<PermissionsBean> arrAllPermissionsBean){
-        ArrayList<PermissionsBean> arrPermissionsBean = new ArrayList<PermissionsBean>();
-        if(arrAllPermissionsBean!=null && !arrAllPermissionsBean.isEmpty()) {
-            for(PermissionsBean permissionsBean : arrAllPermissionsBean ) {
-            }
-        }
-        return arrPermissionsBean;
-    }
-    private ArrayList<PermissionsBean> getClientPermission(ArrayList<PermissionsBean> arrAllPermissionsBean){
-        ArrayList<PermissionsBean> arrPermissionsBean = new ArrayList<PermissionsBean>();
-        if(arrAllPermissionsBean!=null && !arrAllPermissionsBean.isEmpty()) {
-            for(PermissionsBean permissionsBean : arrAllPermissionsBean ) {
-
-            }
-        }
-        return arrPermissionsBean;
+        return hmRolePermissions;
     }
 }

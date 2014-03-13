@@ -48,6 +48,8 @@ public class Constants {
     public final static String AFTER_LOGIN_REDIRECT = "AFTER_LOGIN_REDIRECT";
     public final static String USER_LOGGED_IN_BEAN = "USER_LOGGED_IN_BEAN";
     public final static String DASHBOARD_LINK = "/com/events/dashboard/dashboard.jsp";
+    public final static String CLIENTS_LINK = "/com/events/clients/clients.jsp";
+    public final static String EVENTS_LINK = "/com/events/event/events.jsp";
     public final static String J_RESP_SUCCESS = "success";
     public static String DEFAULT_TIMEZONE = "UTC";
     public final static String COOKIEUSER_ID = "cu_id";

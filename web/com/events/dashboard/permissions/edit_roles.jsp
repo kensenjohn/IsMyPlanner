@@ -20,8 +20,11 @@
     if(!Utility.isNullOrEmpty(sRoleId)) {
         loadRolePermissions = true;
     }
+    UserBean loggedInUserBean = new UserBean();
+    if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
+        loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
+    }
 
-    UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
     ArrayList<PermissionGroupBean> arrPermissionGroupBean = new ArrayList<PermissionGroupBean>();
     ArrayList<PermissionsBean> arrDefaultPermissionsBean = new ArrayList<PermissionsBean>();
@@ -30,31 +33,29 @@
 
     boolean canViewRolePermissions = false;
     boolean canEditRolePermissions = false;
-    if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
+    boolean isEditingOwnRolePermission = false;
+    if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
         CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
-        if( checkPermission.can(Perm.VIEW_ROLE_PERMMISIONS ) ) {
-            Constants.USER_TYPE loggedInUserType = loggedInUserBean.getUserType();
-            UserRolePermissionRequestBean userRolePermRequest = new UserRolePermissionRequestBean();
-            userRolePermRequest.setRoleId( sRoleId);
-            userRolePermRequest.setUserType(loggedInUserType);
-            UserRolePermission userRolePermission = new UserRolePermission();
-            UserRolePermissionResponseBean userRolePermissionResponseBean = userRolePermission.getRolePermissions(userRolePermRequest);
-            if(userRolePermissionResponseBean!=null){
-                arrPermissionGroupBean = userRolePermissionResponseBean.getArrPermissionGroupBean();
-                arrDefaultPermissionsBean = userRolePermissionResponseBean.getArrDefaultPermissionsBean();
-                arrRolePermissionsBean = userRolePermissionResponseBean.getArrRolePermissionsBean();
-                roleBean = userRolePermissionResponseBean.getRoleBean();
-                appLogging.info("Role Permissions was not null and there is data.");
-            }
-
-            canViewRolePermissions = true;
-        } else {
-            response.sendRedirect("/com/events/common/error/stop.jsp");
+        Constants.USER_TYPE loggedInUserType = loggedInUserBean.getUserType();
+        UserRolePermissionRequestBean userRolePermRequest = new UserRolePermissionRequestBean();
+        userRolePermRequest.setRoleId( sRoleId);
+        userRolePermRequest.setUserType(loggedInUserType);
+        UserRolePermission userRolePermission = new UserRolePermission();
+        UserRolePermissionResponseBean userRolePermissionResponseBean = userRolePermission.getRolePermissions(userRolePermRequest);
+        if(userRolePermissionResponseBean!=null){
+            arrPermissionGroupBean = userRolePermissionResponseBean.getArrPermissionGroupBean();
+            arrDefaultPermissionsBean = userRolePermissionResponseBean.getArrDefaultPermissionsBean();
+            arrRolePermissionsBean = userRolePermissionResponseBean.getArrRolePermissionsBean();
+            roleBean = userRolePermissionResponseBean.getRoleBean();
         }
+
+        canViewRolePermissions = true;
 
         if((roleBean!=null && !roleBean.isSiteAdmin()) && checkPermission.can(Perm.EDIT_ROLE_PERMISSION)  ) {
             canEditRolePermissions = true;
         }
+    }else {
+        response.sendRedirect("/com/events/common/error/stop.jsp");
     }
 
     String sRoleActionTitle= "Create Role and Permissions";
@@ -197,21 +198,24 @@
                 </div>
             </div>
             <%
-                if( !canEditRolePermissions )  {
+                if( !canEditRolePermissions && roleBean!=null && roleBean.isSiteAdmin() )  {
             %>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="boxedcontent">
                                 <div class="widget">
                                     <div class="content error_background">
-                                        <h5>This role cannot be edited at this time.</h5>
+                                        <h5>Security Warning</h5>
+                                        <span>You are not authorized to </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
             <%
-                } else {
+                } else  if( !canEditRolePermissions && roleBean!=null && roleBean.isSiteAdmin() )  {
+
+                }else {
             %>
                         <div class="row">
                             <div class="col-md-2">

@@ -7,11 +7,13 @@ import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import com.events.common.Perm;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.event.BuildEvent;
 import com.events.json.*;
+import com.events.users.permissions.CheckPermission;
 import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -47,32 +49,40 @@ public class ProcDeleteEvent  extends HttpServlet {
                 if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
 
 
-                    VendorRequestBean vendorRequestBean = new VendorRequestBean();
-                    vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
-                    AccessVendors accessVendor = new AccessVendors();
-                    VendorBean vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
+                    CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
+                    if(checkPermission!=null && !checkPermission.can(Perm.DELETE_CLIENT)) {
+                        VendorRequestBean vendorRequestBean = new VendorRequestBean();
+                        vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
+                        AccessVendors accessVendor = new AccessVendors();
+                        VendorBean vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
 
-                    String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
+                        String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 
-                    EventRequestBean eventRequestBean = new EventRequestBean();
-                    eventRequestBean.setEventId(sEventId);
-                    eventRequestBean.setEventVendorId(ParseUtil.checkNull(vendorBean.getVendorId()));
-                    eventRequestBean.setEventDelete(true);
+                        EventRequestBean eventRequestBean = new EventRequestBean();
+                        eventRequestBean.setEventId(sEventId);
+                        eventRequestBean.setEventVendorId(ParseUtil.checkNull(vendorBean.getVendorId()));
+                        eventRequestBean.setEventDelete(true);
 
-                    BuildEvent buildEvent = new BuildEvent();
-                    EventResponseBean eventResponseBean = buildEvent.toggleEventDelete(eventRequestBean);
-                    if(eventResponseBean!=null){
-                        if(eventResponseBean.isDeleteEvent()){
-                            Text okText = new OkText("The event was deleted successfully. ","status_mssg") ;
-                            arrOkText.add(okText);
-                            responseStatus = RespConstants.Status.OK;
-                        } else {
-                            Text errorText = new ErrorText("Oops!! We were unable to delete the event. Please try again later.","err_mssg") ;
-                            arrErrorText.add(errorText);
-                            responseStatus = RespConstants.Status.ERROR;
+                        BuildEvent buildEvent = new BuildEvent();
+                        EventResponseBean eventResponseBean = buildEvent.toggleEventDelete(eventRequestBean);
+                        if(eventResponseBean!=null){
+                            if(eventResponseBean.isDeleteEvent()){
+                                Text okText = new OkText("The event was deleted successfully. ","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
+                            } else {
+                                Text errorText = new ErrorText("Oops!! We were unable to delete the event. Please try again later.","err_mssg") ;
+                                arrErrorText.add(errorText);
+                                responseStatus = RespConstants.Status.ERROR;
+                            }
+                            jsonResponseObj.put("is_deleted",eventResponseBean.isDeleteEvent());
+                            jsonResponseObj.put("deleted_event_id",sEventId);
                         }
-                        jsonResponseObj.put("is_deleted",eventResponseBean.isDeleteEvent());
-                        jsonResponseObj.put("deleted_event_id",sEventId);
+                    } else {
+                        Text errorText = new ErrorText("Oops!! You are not authorized to perform this action.(delEvent - 004)","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
                     }
 
                 } else {

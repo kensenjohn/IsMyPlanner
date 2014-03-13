@@ -8,10 +8,12 @@ import com.events.bean.vendors.VendorRequestBean;
 import com.events.clients.AccessClients;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import com.events.common.Perm;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
+import com.events.users.permissions.CheckPermission;
 import com.events.vendors.AccessVendors;
 import com.events.vendors.BuildVendors;
 import org.json.JSONObject;
@@ -66,6 +68,13 @@ public class ProcLoadClients   extends HttpServlet {
                         JSONObject jsonObject = accessClients.convertAllClientsSummaryToJson( hmClientBean );
                         jsonResponseObj.put("all_client_summary",jsonObject);
                         jsonResponseObj.put("num_of_clients",hmClientBean.size());
+
+                        boolean canDeleteClient = false;
+                        CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
+                        if(checkPermission!=null) {
+                            canDeleteClient = checkPermission.can(Perm.DELETE_CLIENT);
+                        }
+                        jsonResponseObj.put("can_delete_client", canDeleteClient );
 
                         Text okText = new OkText("Loading of All Client Summary completed","status_mssg") ;
                         arrOkText.add(okText);

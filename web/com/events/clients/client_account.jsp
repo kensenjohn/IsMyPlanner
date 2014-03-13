@@ -1,5 +1,9 @@
 <%@ page import="com.events.common.ParseUtil" %>
 <%@ page import="com.events.common.Utility" %>
+<%@ page import="com.events.common.Constants" %>
+<%@ page import="com.events.bean.users.UserBean" %>
+<%@ page import="com.events.users.permissions.CheckPermission" %>
+<%@ page import="com.events.common.Perm" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -13,6 +17,19 @@
     if(!Utility.isNullOrEmpty(sClientId)) {
         sTitle = "Edit Client";
     }
+
+    boolean canEditClient = false;
+    if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
+        UserBean loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
+        if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
+            CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
+            if(checkPermission!=null ) {
+                canEditClient = checkPermission.can(Perm.EDIT_CLIENT);
+            }
+        }
+    }
+
+
 %>
 <body>
 <div class="page_wrap">
@@ -167,12 +184,18 @@
                         <input type="hidden"  id="userId" name="userId" value="">
                         <input type="hidden"  id="userInfoId" name="userInfoId" value="">
                     </form>
+                    <%
+                        if(canEditClient) {
+                    %>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <button type="button" class="btn  btn-filled" id="btn_save_client">Save Changes</button>
+                                </div>
+                            </div>
+                    <%
+                        }
+                    %>
 
-                    <div class="row">
-                        <div class="col-md-3">
-                            <button type="button" class="btn  btn-filled" id="btn_save_client">Save Changes</button>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="row">

@@ -56,6 +56,11 @@ public class ProcDeleteTeamMember  extends HttpServlet {
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
+                    } else if(loggedInUserBean.getUserId().equalsIgnoreCase(sTeamMemberUserId))  {
+                        Text errorText = new ErrorText("You are not authorized to perform this action.","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
                     } else {
 
                         UserRequestBean userRequestBean = new UserRequestBean();

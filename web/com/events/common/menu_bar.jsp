@@ -2,6 +2,8 @@
 <%@ page import="com.events.bean.users.UserBean" %>
 <%@ page import="com.events.common.ParseUtil" %>
 <%@ page import="com.events.common.Utility" %>
+<%@ page import="com.events.users.permissions.CheckPermission" %>
+<%@ page import="com.events.common.Perm" %>
 <%
     String sLogo = Constants.EMPTY;
     if( session.getAttribute("SUBDOMAIN_COLORS") != null ) {
@@ -11,6 +13,14 @@
         sLogo = "/img/logo.png";
     }
 
+    UserBean loggedInUserBean = new UserBean();
+    if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
+        loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
+    }
+    CheckPermission checkPermission = null;
+    if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
+        checkPermission = new CheckPermission(loggedInUserBean);
+    }
 %>
 <div class="menu_bar">
     <div class="container">
@@ -37,14 +47,41 @@
                         // if user is logged in
                 %>
                         <ul class="nav navbar-nav navbar-right menu">
-                            <li class="navbar-btn navbar-btn-format">
-                                <button  type="button" class="btn  btn-filled" id="btn_create_event">
-                                    <span class="glyphicon glyphicon-plus"></span><a>  Create Event </a>
-                                </button>
-                            </li>
-                            <li class="<%=sDashBoardLinkCurrentlyActive%>"><a href="/com/events/dashboard/dashboard.jsp">Dashboard</a></li>
-                            <li class="<%=sClientLinkCurrentlyActive%>"><a href="/com/events/clients/clients.jsp">Clients</a></li>
-                            <li class="<%=sEventLinkCurrentlyActive%>"><a href="/com/events/event/events.jsp">Events</a></li>
+                            <%
+                                if(checkPermission!=null && checkPermission.can(Perm.CREATE_NEW_EVENT)) {
+                            %>
+                                    <li class="navbar-btn navbar-btn-format">
+                                        <button  type="button" class="btn  btn-filled" id="btn_create_event">
+                                            <span class="glyphicon glyphicon-plus"></span><a>  Create Event </a>
+                                        </button>
+                                    </li>
+                            <%
+                                }
+                            %>
+                            <%
+                                if(checkPermission!=null && checkPermission.can(Perm.ACCESS_DASHBOARD_TAB)) {
+                            %>
+                                    <li class="<%=sDashBoardLinkCurrentlyActive%>"><a href="/com/events/dashboard/dashboard.jsp">Dashboard</a></li>
+                            <%
+                                }
+                            %>
+                            <%
+                                if(checkPermission!=null && checkPermission.can(Perm.ACCESS_CLIENTS_TAB)) {
+                            %>
+                                    <li class="<%=sClientLinkCurrentlyActive%>"><a href="/com/events/clients/clients.jsp">Clients</a></li>
+                            <%
+                                }
+                            %>
+
+                            <%
+                                if(checkPermission!=null && checkPermission.can(Perm.ACCESS_CLIENTS_TAB)) {
+                            %>
+                                    <li class="<%=sEventLinkCurrentlyActive%>"><a href="/com/events/event/events.jsp">Events</a></li>
+                            <%
+                                }
+                            %>
+
+
                         </ul>
                 <%
                     } else {  // when user is not logged in, then only show Home

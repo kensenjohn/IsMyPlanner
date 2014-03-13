@@ -6,10 +6,12 @@ import com.events.bean.users.UserBean;
 import com.events.clients.BuildClients;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import com.events.common.Perm;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
+import com.events.users.permissions.CheckPermission;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +46,15 @@ public class ProcDeleteClient extends HttpServlet {
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
                     String sClientId = ParseUtil.checkNull(request.getParameter("client_id"));
+                    CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
+
                     if(Utility.isNullOrEmpty(sClientId)) {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(delClient - 004)","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(delClient - 005)","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
+                    } else if(checkPermission!=null && !checkPermission.can(Perm.DELETE_CLIENT)) {
+                        Text errorText = new ErrorText("Oops!! You are not authorized to perform this action.(delClient - 004)","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;

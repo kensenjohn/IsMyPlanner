@@ -19,17 +19,9 @@ public class BuildRolePermissions {
     public ArrayList<RolesBean> createRolePermissions(ArrayList<RolesBean> arrRolesBean , ArrayList<PermissionsBean> arrPermissionsBean) {
         ArrayList<RolesBean> arrRolesBeanWithPermissions = new ArrayList<RolesBean>();
         if(arrPermissionsBean!=null && !arrPermissionsBean.isEmpty() && arrRolesBean!=null && !arrRolesBean.isEmpty()) {
-            BuildRolePermissionsData buildRolePermissionsData = new BuildRolePermissionsData();
-            for(RolesBean rolesBean : arrRolesBean ) {
-                Integer iNumOfRows = 0 ;
-                for(PermissionsBean permissionsBean : arrPermissionsBean ) {
-                    RolePermissionsBean rolePermissionsBean = new RolePermissionsBean();
-                    rolePermissionsBean.setRolePermissionId(Utility.getNewGuid() );
-                    rolePermissionsBean.setRoleId( rolesBean.getRoleId() );
-                    rolePermissionsBean.setPermissionId( permissionsBean.getPermissionId() );
 
-                    iNumOfRows = iNumOfRows + buildRolePermissionsData.insertRolePermission( rolePermissionsBean );
-                }
+            for(RolesBean rolesBean : arrRolesBean ) {
+                Integer iNumOfRows = createRolePermission(rolesBean , arrPermissionsBean ) ;
 
                 if(iNumOfRows ==  arrPermissionsBean.size() ) {
                     arrRolesBeanWithPermissions.add( rolesBean );
@@ -37,6 +29,22 @@ public class BuildRolePermissions {
             }
         }
         return arrRolesBeanWithPermissions;
+    }
+
+    public Integer createRolePermission(RolesBean rolesBean , ArrayList<PermissionsBean> arrPermissionsBean ){
+        Integer iNumOfPermsCreated = 0;
+        if(arrPermissionsBean!=null && !arrPermissionsBean.isEmpty() && rolesBean!=null && !Utility.isNullOrEmpty(rolesBean.getRoleId())) {
+            BuildRolePermissionsData buildRolePermissionsData = new BuildRolePermissionsData();
+            for(PermissionsBean permissionsBean : arrPermissionsBean ) {
+                RolePermissionsBean rolePermissionsBean = new RolePermissionsBean();
+                rolePermissionsBean.setRolePermissionId(Utility.getNewGuid() );
+                rolePermissionsBean.setRoleId( rolesBean.getRoleId() );
+                rolePermissionsBean.setPermissionId( permissionsBean.getPermissionId() );
+
+                iNumOfPermsCreated = iNumOfPermsCreated + buildRolePermissionsData.insertRolePermission( rolePermissionsBean );
+            }
+        }
+        return iNumOfPermsCreated;
     }
 
     public boolean deleteRolePermissions(RolesBean rolesBean){

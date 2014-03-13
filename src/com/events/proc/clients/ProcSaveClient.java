@@ -9,10 +9,12 @@ import com.events.bean.vendors.VendorRequestBean;
 import com.events.clients.BuildClients;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
+import com.events.common.Perm;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
+import com.events.users.permissions.CheckPermission;
 import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -74,53 +76,63 @@ public class ProcSaveClient  extends HttpServlet {
                         loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
                     }
                     if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
-                        VendorRequestBean vendorRequestBean = new VendorRequestBean();
-                        vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
-                        AccessVendors accessVendor = new AccessVendors();
-                        VendorBean vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
 
-                        UserRequestBean userRequestBean = new UserRequestBean();
-                        userRequestBean.setFirstName(sClientFirstName);
-                        userRequestBean.setLastName(sClientLastName);
-                        userRequestBean.setEmail(sClientEmail);
-                        userRequestBean.setCompanyName(sClientCompanyName);
-                        userRequestBean.setCellPhone(sClientCellPhone);
-                        userRequestBean.setWorkPhone(sClientWorkPhone);
-                        userRequestBean.setAddress1(sClientAddress1);
-                        userRequestBean.setAddress2(sClientAddress2);
-                        userRequestBean.setCity(sClientCity);
-                        userRequestBean.setState(sClientState);
-                        userRequestBean.setCountry(sClientCountry);
-                        userRequestBean.setPostalCode(sClientPostalCode);
-                        userRequestBean.setUserId(sUserId);
-                        userRequestBean.setUserInfoId(sUserInfoId);
-                        userRequestBean.setUserType(Constants.USER_TYPE.CLIENT);
-                        userRequestBean.setParentId(sClientId);
+                        CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
+                        if(checkPermission!=null && checkPermission.can(Perm.EDIT_CLIENT)) {
+                            VendorRequestBean vendorRequestBean = new VendorRequestBean();
+                            vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
+                            AccessVendors accessVendor = new AccessVendors();
+                            VendorBean vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
+
+                            UserRequestBean userRequestBean = new UserRequestBean();
+                            userRequestBean.setFirstName(sClientFirstName);
+                            userRequestBean.setLastName(sClientLastName);
+                            userRequestBean.setEmail(sClientEmail);
+                            userRequestBean.setCompanyName(sClientCompanyName);
+                            userRequestBean.setCellPhone(sClientCellPhone);
+                            userRequestBean.setWorkPhone(sClientWorkPhone);
+                            userRequestBean.setAddress1(sClientAddress1);
+                            userRequestBean.setAddress2(sClientAddress2);
+                            userRequestBean.setCity(sClientCity);
+                            userRequestBean.setState(sClientState);
+                            userRequestBean.setCountry(sClientCountry);
+                            userRequestBean.setPostalCode(sClientPostalCode);
+                            userRequestBean.setUserId(sUserId);
+                            userRequestBean.setUserInfoId(sUserInfoId);
+                            userRequestBean.setUserType(Constants.USER_TYPE.CLIENT);
+                            userRequestBean.setParentId(sClientId);
 
 
-                        ClientRequestBean clientRequestBean = new ClientRequestBean();
-                        clientRequestBean.setClientName(sClienttName);
-                        clientRequestBean.setCorporateClient(isCorporateClient);
-                        clientRequestBean.setUserRequestBean(userRequestBean);
-                        clientRequestBean.setClientId(sClientId);
-                        clientRequestBean.setVendorId(vendorBean.getVendorId());
+                            ClientRequestBean clientRequestBean = new ClientRequestBean();
+                            clientRequestBean.setClientName(sClienttName);
+                            clientRequestBean.setCorporateClient(isCorporateClient);
+                            clientRequestBean.setUserRequestBean(userRequestBean);
+                            clientRequestBean.setClientId(sClientId);
+                            clientRequestBean.setVendorId(vendorBean.getVendorId());
 
-                        BuildClients buildClients = new BuildClients();
-                        ClientResponseBean clientResponseBean = buildClients.saveClient(clientRequestBean);
-                        if(clientResponseBean!=null && !"".equalsIgnoreCase(clientResponseBean.getClientId())){
-                            appLogging.info("A client's info was successfully edited. " + clientRequestBean );
-                            Text okText = new OkText("Your changes were saved successfully.","status_mssg") ;
-                            arrOkText.add(okText);
-                            responseStatus = RespConstants.Status.OK;
+                            BuildClients buildClients = new BuildClients();
+                            ClientResponseBean clientResponseBean = buildClients.saveClient(clientRequestBean);
+                            if(clientResponseBean!=null && !"".equalsIgnoreCase(clientResponseBean.getClientId())){
+                                appLogging.info("A client's info was successfully edited. " + clientRequestBean );
+                                Text okText = new OkText("Your changes were saved successfully.","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
 
-                            jsonResponseObj.put("client_response",clientResponseBean.toJson());
+                                jsonResponseObj.put("client_response",clientResponseBean.toJson());
+                            } else {
+                                appLogging.info("A client could not be created . " + clientRequestBean );
+                                Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(002)","err_mssg") ;
+                                arrErrorText.add(errorText);
+
+                                responseStatus = RespConstants.Status.ERROR;
+                            }
                         } else {
-                            appLogging.info("A client could not be created . " + clientRequestBean );
-                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(002)","err_mssg") ;
+                            Text errorText = new ErrorText("Oops!! You are not authorized to perform this action.(saveClient - 003)","err_mssg") ;
                             arrErrorText.add(errorText);
 
                             responseStatus = RespConstants.Status.ERROR;
                         }
+
                     } else {
                         appLogging.info("Could identify a logged on user . ");
                         Text errorText = new ErrorText("Oops!! Please login and try again. We were unable to process your request at this time.","err_mssg") ;

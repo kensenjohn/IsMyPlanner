@@ -3,18 +3,27 @@
 <%@ page import="com.events.common.Constants" %>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
+<%@ page import="com.events.bean.users.UserBean" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
-        Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
-        String sUserId = ParseUtil.checkNull(request.getParameter("user_id"));
-        String sUserInfoId = ParseUtil.checkNull(request.getParameter("userinfo_id"));
-        boolean loadTeamMember = false;
-        if(!Utility.isNullOrEmpty(sUserId)) {
-            loadTeamMember = true;
+    Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
+    String sUserId = ParseUtil.checkNull(request.getParameter("user_id"));
+    String sUserInfoId = ParseUtil.checkNull(request.getParameter("userinfo_id"));
+    boolean loadTeamMember = false;
+    if(!Utility.isNullOrEmpty(sUserId)) {
+        loadTeamMember = true;
+    }
+
+    boolean isTeamMemberLoggedInUsed = false;
+    if(session!=null && session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null){
+        UserBean loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
+        if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) && loggedInUserBean.getUserId().equalsIgnoreCase(sUserId))  {
+            isTeamMemberLoggedInUsed = true;
         }
+    }
 %>
 <body>
 <div class="page_wrap">
@@ -95,17 +104,40 @@
                                 &nbsp;
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <button type="button" class="btn  btn-filled" id="btn_save_teammember">Save Changes</button>
-                            </div>
-                            <div class="col-md-4">
-                                <button type="button" class="btn  btn-filled" id="btn_reset_passworf">Reset Password</button>
-                            </div>
-                        </div>
+                            <%
+                                if(isTeamMemberLoggedInUsed) {
+                            %>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="boxedcontent">
+                                                <div class="widget">
+                                                    <div class="content error_background">
+                                                        <h5>Security Warning</h5>
+                                                        <span>You are not authorized to update your Role.<br>
+                                                        Please use your "My Account" by clicking your login name to update your contact information.</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            <%
+                                } else {
+                            %>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn  btn-filled" id="btn_save_teammember">Save Changes</button>
+                                        </div>
+
+                                        <!-- <div class="col-md-4">
+                                            <button type="button" class="btn  btn-filled" id="btn_reset_passworf">Reset Password</button>
+                                        </div> -->
+                                    </div>
+                            <%
+                                }
+                            %>
                         <input type="hidden"  id="vendor_id" name="vendor_id" value="">
-                        <input type="hidden"  id="user_id" name="user_id" value="">
-                        <input type="hidden"  id="userinfo_id" name="userinfo_id" value="">
+                        <input type="hidden"  id="user_id" name="user_id" value="<%=sUserId%>">
+                        <input type="hidden"  id="userinfo_id" name="userinfo_id" value="<%=sUserInfoId%>">
                     </form>
                 </div>
             </div>

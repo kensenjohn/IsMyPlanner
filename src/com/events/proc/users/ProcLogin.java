@@ -8,6 +8,7 @@ import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
 import com.events.users.AccessUsers;
+import com.events.users.BuildUsers;
 import com.events.users.CookieUser;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -71,9 +73,12 @@ public class ProcLogin  extends HttpServlet {
                             userRequestBean.setUserInfoId( userBean.getUserInfoId() );
                             UserInfoBean userInfoBean = accessUsers.getUserInfoFromInfoId(userRequestBean);
                             userBean.setUserInfoBean( userInfoBean );
-                            request.getSession().setAttribute(Constants.USER_LOGGED_IN_BEAN,userBean);
+                            HttpSession httpSession = request.getSession(true);
+                            if(httpSession!=null){
+                                httpSession.setAttribute(Constants.USER_LOGGED_IN_BEAN,userBean);
+                            }
 
-
+                            jsonResponseObj.put("pass_thru_link" , BuildUsers.getPassThroughLink(userBean));
                             if(isRememberMe) {
                                 CookieRequestBean cookieRequestBean = new CookieRequestBean();
                                 cookieRequestBean.setUserId( userBean.getUserId() );

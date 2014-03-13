@@ -26,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -100,7 +101,13 @@ public class ProcRegister  extends HttpServlet {
                                 userBean.setUserInfoBean( userInfoBean );
 
                                 appLogging.info("Successfully registered user "  + ParseUtil.checkNullObject(userBean) );
-                                request.getSession(false).setAttribute(Constants.USER_LOGGED_IN_BEAN,userBean);
+                                HttpSession session = request.getSession(true);
+                                if(session!=null) {
+                                    session.setAttribute(Constants.USER_LOGGED_IN_BEAN,userBean);
+                                }
+
+                                jsonResponseObj.put("pass_thru_link" , BuildUsers.getPassThroughLink(userBean));
+
                             }
                         } catch (EditUserException e) {
                             appLogging.error("Could not create User " + ExceptionHandler.getStackTrace(e));

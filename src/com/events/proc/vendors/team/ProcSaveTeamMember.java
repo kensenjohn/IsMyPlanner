@@ -74,6 +74,12 @@ public class ProcSaveTeamMember  extends HttpServlet {
 
                             responseStatus = RespConstants.Status.ERROR;
                             isError = true;
+                        } else if(loggedInUserBean.getUserId().equalsIgnoreCase(sTeamMemberUserId))  {
+                            Text errorText = new ErrorText("You are not authorized to perform this action.","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
+                            isError = true;
                         } else {
 
                             UserRequestBean userRequestBean = new UserRequestBean();
