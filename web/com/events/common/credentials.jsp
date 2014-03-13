@@ -5,6 +5,14 @@
 </jsp:include>
 
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
+<%
+    // If a user is loggin in from a sub domain do not show the registration form
+    // This will have to be fixed based on some feed back
+    boolean isShowRegistrationForm = true;
+    if( session.getAttribute("SUBDOMAIN_SHOW_REGISTRATION") != null ) {
+        isShowRegistrationForm = (Boolean)session.getAttribute("SUBDOMAIN_SHOW_REGISTRATION") ;
+    }
+%>
 <body>
     <div class="page_wrap">
         <jsp:include page="/com/events/common/top_nav.jsp"/>
@@ -53,31 +61,43 @@
                             <div class="widget">
                                 <div class="content">
                                     <h4>Register</h4>
-                                    <form method="post"  id="frm_register" action="/proc_register.aeve">
-                                        <div class="form-group">
-                                            <label for="registerEmail" class="form_label">Email address</label> <span class="required"> *</span>
-                                            <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder="Enter email">
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <label for="registerPassword"  class="form_label">Password</label><span class="required"> *</span>
-                                                    <input type="password" class="form-control" id="registerPassword" name="registerPassword" placeholder="Password">
+                                    <%
+                                        if(isShowRegistrationForm) {
+                                    %>
+
+                                            <form method="post"  id="frm_register" action="/proc_register.aeve">
+                                                <div class="form-group">
+                                                    <label for="registerEmail" class="form_label">Email address</label> <span class="required"> *</span>
+                                                    <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder="Enter email">
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <label for="registerVerifyPassword"  class="form_label">Verify Password</label><span class="required"> *</span>
-                                                    <input type="password" class="form-control" id="registerVerifyPassword" name="registerVerifyPassword" placeholder="Verify Password">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <label for="registerPassword"  class="form_label">Password</label><span class="required"> *</span>
+                                                            <input type="password" class="form-control" id="registerPassword" name="registerPassword" placeholder="Password">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="registerVerifyPassword"  class="form_label">Verify Password</label><span class="required"> *</span>
+                                                            <input type="password" class="form-control" id="registerVerifyPassword" name="registerVerifyPassword" placeholder="Verify Password">
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="checkbox">
-                                            <label for="registerIsPlanner" class="form_label">
-                                                <input type="checkbox" id="registerIsPlanner" name = "registerIsPlanner"  onclick="return false" checked>
-                                                I am a planner
-                                            </label>
-                                        </div>
-                                        <button type="button" class="btn  btn-filled"  id="btn_register">Submit</button>
-                                    </form>
+                                                <div class="checkbox">
+                                                    <label for="registerIsPlanner" class="form_label">
+                                                        <input type="checkbox" id="registerIsPlanner" name = "registerIsPlanner"  onclick="return false" checked>
+                                                        I am a planner
+                                                    </label>
+                                                </div>
+                                                <button type="button" class="btn  btn-filled"  id="btn_register">Submit</button>
+                                            </form>
+                                    <%
+                                        }else{
+                                    %>
+                                            <span>You may already be registered!<br>Please check your inbox or contact your Event Planner for your login credentials</span>
+                                    <%
+                                        }
+                                    %>
+
                                 </div>
                             </div>
                         </div>

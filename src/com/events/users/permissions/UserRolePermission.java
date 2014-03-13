@@ -6,6 +6,7 @@ import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Perm;
 import com.events.common.Utility;
+import com.events.data.users.permissions.AccessPermissionsData;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,43 +29,69 @@ public class UserRolePermission {
                 && userRolePermRequest.getUserType() != Constants.USER_TYPE.NONE ) {
             appLogging.info("bootstrapping permission for user : " + userRolePermRequest.getUserId() + " userType :" + userRolePermRequest.getUserType().getType() );
             AccessRoles accessRoles = new AccessRoles();
-            ArrayList<RolesBean> arrDefaultRolesBean = accessRoles.getDefaultRoles(userRolePermRequest);
+            ArrayList<RolesBean> arrDefaultRolesBean = accessRoles.getDefaultRoles(userRolePermRequest);  // Get All Possible Roles Allowed for this  Vendor Account
 
             ArrayList<RolesBean> arrRolesBean = new ArrayList<RolesBean>();
             if( arrDefaultRolesBean!=null && !arrDefaultRolesBean.isEmpty() ) {
                 BuildRoles buildRoles = new BuildRoles();
-                arrRolesBean = buildRoles.createRolesFromDefault(arrDefaultRolesBean , userRolePermRequest );
+                arrRolesBean = buildRoles.createRolesFromDefault(arrDefaultRolesBean , userRolePermRequest );  // Assign the Roles to the Vendor. (No Permissions)
             }
 
-            if(arrRolesBean!=null && !arrRolesBean.isEmpty() ) {
+            if(arrRolesBean!=null && !arrRolesBean.isEmpty() ) {   // Going to assign Default(All) Permissions to the Site Admin Role. Then assign Role to the User.
                 ArrayList<RolesBean> arrSiteAdminRolesBean = new ArrayList<RolesBean>();
+                ArrayList<RolesBean> arrNotSiteAdminRolesBean = new ArrayList<RolesBean>();
                 for(RolesBean rolesBean : arrRolesBean ){
                     if(rolesBean.isSiteAdmin()) {
-                        arrSiteAdminRolesBean.add( rolesBean );
+                        arrSiteAdminRolesBean.add( rolesBean ); // Identified the Site Admin Role.
+                    }else {
+                        arrNotSiteAdminRolesBean.add(rolesBean);
                     }
                 }
 
-                if(arrSiteAdminRolesBean!=null && !arrSiteAdminRolesBean.isEmpty() ) {
-                    AccessPermissions accessPermissions = new AccessPermissions();
-                    ArrayList<PermissionsBean> arrDefaultPermissionsBean = accessPermissions.getDefaultPermissions(userRolePermRequest);
 
-                    BuildRolePermissions buildRolePermissions = new BuildRolePermissions();
-                    ArrayList<RolesBean> arrCompletedRolesBeanWithPermissions =  buildRolePermissions.createRolePermissions(  arrSiteAdminRolesBean , arrDefaultPermissionsBean );
+                AccessPermissions accessPermissions = new AccessPermissions();
+                ArrayList<PermissionsBean> arrDefaultPermissionsBean = accessPermissions.getDefaultPermissions(userRolePermRequest); // Getting All possible permissions
+
+                if(arrSiteAdminRolesBean!=null && !arrSiteAdminRolesBean.isEmpty() ) {
+
+                    ArrayList<RolesBean> arrCompletedRolesBeanWithPermissions = createRolePermission( arrSiteAdminRolesBean , arrDefaultPermissionsBean ) ;
 
                     if(arrCompletedRolesBeanWithPermissions!=null && arrCompletedRolesBeanWithPermissions.size() == arrSiteAdminRolesBean.size() ) {
                         BuildUserRoles buildUserRoles = new BuildUserRoles();
-                        ArrayList<UserRolesBean> arrUserRolesBean = buildUserRoles.createUserRole( userRolePermRequest.getUserId(), arrCompletedRolesBeanWithPermissions );
+                        ArrayList<UserRolesBean> arrUserRolesBean = buildUserRoles.createUserRole( userRolePermRequest.getUserId(), arrCompletedRolesBeanWithPermissions );  //Assigning  the Site Admin Role to the User
                         if(arrUserRolesBean!=null && !arrUserRolesBean.isEmpty() ) {
                             isSuccess = true;
                         }
                     }
                 }
+
+                if(arrNotSiteAdminRolesBean!=null && !arrNotSiteAdminRolesBean.isEmpty() ) {
+                    UserRolePermissionRequestBean userRolePermissionRequestBean = new UserRolePermissionRequestBean();
+                    userRolePermissionRequestBean.setParentId(Constants.USER_TYPE.VENDOR.getType());
+
+                    AccessPermissionsData accessPermissionsData = new AccessPermissionsData();
+                    ArrayList<PermissionsBean> arrVendorAllPermissionsBean =  accessPermissionsData.getPermissions( userRolePermissionRequestBean );
+                    for(RolesBean rolesBean : arrRolesBean ){
+
+                        ArrayList<PermissionsBean> arrRolePermissionsBean =  accessPermissions.getDefaultPermissionsByRole(  rolesBean , arrVendorAllPermissionsBean );
+                        ArrayList<RolesBean> arrNewRolesBean = new ArrayList<RolesBean>();
+                        arrNewRolesBean.add( rolesBean );
+
+                        createRolePermission( arrNewRolesBean , arrRolePermissionsBean );
+                    }
+                }
             }
         } else {
-            appLogging.error("Error while bootstrapping permission for user : " + userRolePermRequest.getUserId() + " userType :" + userRolePermRequest.getUserType().getType() );
+            appLogging.error("Error while bootstrapping permission for user : " + userRolePermRequest.getUserId() + " userType :" + userRolePermRequest.getUserType().getType());
 
         }
         return isSuccess;
+    }
+
+    private ArrayList<RolesBean> createRolePermission(ArrayList<RolesBean> arrRolesBean, ArrayList<PermissionsBean> arrPermissionsBean){
+        BuildRolePermissions buildRolePermissions = new BuildRolePermissions();
+        ArrayList<RolesBean> arrCompletedRolesBeanWithPermissions =  buildRolePermissions.createRolePermissions(  arrRolesBean , arrPermissionsBean ); //Assigning all permissions to the Site Admin
+        return arrCompletedRolesBeanWithPermissions;
     }
 
     public UserRolePermissionResponseBean loadRoleDetails( UserRolePermissionRequestBean userRolePermissionRequestBean) {

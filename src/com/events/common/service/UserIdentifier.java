@@ -50,13 +50,13 @@ public class UserIdentifier implements Filter {
 
             String[] arraySubDomain = sLocalName.split("." + APPLICATION_DOMAIN);
             AccessVendorWebsite  accessVendorWebsite = new AccessVendorWebsite();
+            boolean isShowRegistrationForm=true;
             for(String subDomain : arraySubDomain ) {
-
+                isShowRegistrationForm = false;
                 boolean loadFromDB = false;
                 HttpSession httpSession = request.getSession(true);
 
                 if(httpSession!=null ){
-
                     if(httpSession.getAttribute("SUBDOMAIN_TIME")!=null){
                         Long sSubDomainCreatedTime = (Long)httpSession.getAttribute("SUBDOMAIN_TIME");
 
@@ -131,6 +131,20 @@ public class UserIdentifier implements Filter {
                     }
                 }
             }
+
+            HttpSession hideRegSession = request.getSession(true);
+
+            if(hideRegSession!=null ){
+                hideRegSession.setAttribute("SUBDOMAIN_SHOW_REGISTRATION",isShowRegistrationForm);
+            }
+
+            if(hideRegSession!=null && hideRegSession.getAttribute("SUBDOMAIN_SHOW_REGISTRATION") !=null){
+                appLogging.info("Is Show Registration : " + (Boolean) hideRegSession.getAttribute("SUBDOMAIN_SHOW_REGISTRATION"));
+            } else {
+
+                appLogging.info("Show Registration Session Is Null : " );
+            }
+
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }

@@ -1,6 +1,7 @@
 <%@ page import="com.events.common.Constants" %>
 <%@ page import="com.events.bean.users.UserBean" %>
 <%@ page import="com.events.bean.users.UserInfoBean" %>
+<%@ page import="com.events.common.ParseUtil" %>
 <%
     String sRedirectTo = com.events.common.ParseUtil.checkNull(request.getParameter(Constants.AFTER_LOGIN_REDIRECT));
     if(!"".equalsIgnoreCase(sRedirectTo)) {
@@ -12,6 +13,13 @@
     UserBean userBean = new  UserBean();
     if(request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
         userBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
+    }
+
+    // If a user is loggin in from a sub domain do not show the registration form
+    // This will have to be fixed based on some feed back
+    boolean isShowRegistrationForm = true;
+    if( session.getAttribute("SUBDOMAIN_SHOW_REGISTRATION") != null ) {
+        isShowRegistrationForm = (Boolean)session.getAttribute("SUBDOMAIN_SHOW_REGISTRATION");
     }
 %>
 <div class="top_navbar_format">
@@ -33,7 +41,14 @@
                     } else {
                 %>
                         <li><a href="/com/events/common/credentials.jsp"><i class="fa fa-sign-in"></i> Sign In</a></li>
-                        <li><a href="/com/events/common/credentials.jsp">Register</a></li>
+                        <%
+                            if(isShowRegistrationForm) {
+                        %>
+                                <li><a href="/com/events/common/credentials.jsp">Register</a></li>
+                        <%
+                            }
+                        %>
+
                 <%
                     }
                 %>
