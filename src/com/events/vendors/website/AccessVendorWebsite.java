@@ -23,6 +23,33 @@ import java.util.HashMap;
  */
 public class AccessVendorWebsite extends VendorWebsite{
 
+    public VendorWebsiteFeatureBean getSubDomain(VendorBean vendorBean) {
+
+        VendorWebsiteFeatureBean vendorWebsiteFeatureBeanFromDB = new VendorWebsiteFeatureBean();
+        if(vendorBean != null && !Utility.isNullOrEmpty(vendorBean.getVendorId())) {
+
+            VendorWebsiteRequestBean vendorWebsiteRequestBean = new VendorWebsiteRequestBean();
+            vendorWebsiteRequestBean.setVendorId( vendorBean.getVendorId());
+
+            VendorWebsiteBean vendorWebsiteBean = generateVendorWebsiteBean( vendorWebsiteRequestBean );
+            vendorWebsiteBean.setVendorWebsiteId( vendorBean.getVendorId());
+
+            AccessVendorWebsiteData accessVendorWebsiteData = new AccessVendorWebsiteData();
+            vendorWebsiteBean = accessVendorWebsiteData.getVendorWebsiteByVendorId(vendorWebsiteBean);
+
+            if(vendorWebsiteBean!=null && !Utility.isNullOrEmpty(vendorWebsiteBean.getVendorWebsiteId())) {
+
+                VendorWebsiteFeatureBean vendorWebsiteFeatureBean = generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.subdomain_name) ;
+                vendorWebsiteFeatureBean.setVendorWebsiteId( vendorWebsiteBean.getVendorWebsiteId() );
+
+                VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();
+                vendorWebsiteFeatureBeanFromDB =  vendorWebsiteFeature.getFeature(vendorWebsiteFeatureBean);
+            }
+
+        }
+        return vendorWebsiteFeatureBeanFromDB;
+    }
+
     public VendorResponseBean getVendorBySubDomain(VendorWebsiteRequestBean vendorWebsiteRequestBean) {
         VendorResponseBean vendorResponseBean = new VendorResponseBean();
         if(vendorWebsiteRequestBean != null && !Utility.isNullOrEmpty(vendorWebsiteRequestBean.getSubDomain())

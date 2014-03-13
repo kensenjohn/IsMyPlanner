@@ -32,6 +32,8 @@ public class Constants {
     public final static String PROP_ENABLE_EMAIL_CREATOR_THREAD = "enable_email_creator_thread";
     public final static String PROP_ENABLE_NOTIFICATION_SENDER_THREAD = "enable_notification_sender_thread";
     public final static String PROP_EMAIL_SCHEDULE_PICKUPTIME_PADDING = "schedule_email_pickuptime_padding";
+    public final static String PROP_LINK_PROTOCOL = "link_protocol";
+
 
     public static String EVENTADMIN_DB = "event_admin_db";
     public static String EVENTHOST_DB = "event_host_db";
@@ -263,7 +265,8 @@ public class Constants {
         SEATING_CONFIRMATION_EMAIL("SEATING_CONFIRMATION"),
         RSVPRESPONSEDEMO("RSVPRESPONSEDEMO"),
         RSVPRESPONSE("RSVPRESPONSE"),
-        CLIENT_PARENTSITE_ACCESS("CLIENT_PARENTSITE_ACCESS");
+        CLIENT_PARENTSITE_ACCESS("CLIENT_PARENTSITE_ACCESS"),
+        NEW_TEAM_MEMBER_ACCESS("NEW_TEAM_MEMBER_ACCESS");
 
         private String emailTemplate = "";
 

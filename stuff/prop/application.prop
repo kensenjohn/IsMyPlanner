@@ -16,3 +16,4 @@ domain=eventlocalhost.com
 application_domain=localhost
 
 enable_notification_sender_thread=true
+link_protocol=http

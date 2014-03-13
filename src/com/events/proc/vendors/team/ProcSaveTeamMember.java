@@ -1,9 +1,6 @@
 package com.events.proc.vendors.team;
 
-import com.events.bean.users.PasswordRequestBean;
-import com.events.bean.users.UserBean;
-import com.events.bean.users.UserInfoBean;
-import com.events.bean.users.UserRequestBean;
+import com.events.bean.users.*;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
 import com.events.common.Configuration;
@@ -119,8 +116,17 @@ public class ProcSaveTeamMember  extends HttpServlet {
                                     try {
                                         UserBean userBean = buildUsers.createTeamMember(userRequestBean);
                                         if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId())) {
-                                            jsonResponseObj.put("user_id",userBean.getUserId() ) ;
-                                            jsonResponseObj.put("userinfo_id",userBean.getUserInfoId())  ;
+                                            userRequestBean.setUserId(userBean.getUserId());
+                                            ForgotPasswordBean forgotPasswordBean = buildUsers.createNewTeamMemberPasswordUserRequest(vendorBean ,userRequestBean);
+
+                                            if(forgotPasswordBean!=null && !Utility.isNullOrEmpty(forgotPasswordBean.getForgotPasswordId())){
+
+                                                jsonResponseObj.put("user_id",userBean.getUserId() ) ;
+                                                jsonResponseObj.put("userinfo_id",userBean.getUserInfoId())  ;
+                                            }  else {
+                                                appLogging.error("Could not send Email for Password and Login to Team Member" );
+                                                isError = true;
+                                            }
                                         } else {
                                             appLogging.error("Could not create User " );
                                             isError = true;

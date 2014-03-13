@@ -9,6 +9,7 @@ import com.events.bean.common.email.EmailTemplateBean;
 import com.events.bean.users.*;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
+import com.events.bean.vendors.website.VendorWebsiteFeatureBean;
 import com.events.clients.AccessClients;
 import com.events.common.email.creator.EmailCreator;
 import com.events.common.email.creator.MailCreator;
@@ -20,6 +21,7 @@ import com.events.users.AccessUsers;
 import com.events.users.ForgotPassword;
 import com.events.users.ManageUserPassword;
 import com.events.vendors.AccessVendors;
+import com.events.vendors.website.AccessVendorWebsite;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -203,6 +205,7 @@ public class ParentSiteEnabled {
 
                     String sHtmlTemplate = emailTemplateBean.getHtmlBody();
                     String sTxtTemplate = emailTemplateBean.getTextBody();
+                    String sSubjectTemplate = emailTemplateBean.getEmailSubject();
 
                     EmailQueueBean emailQueueBean = new EmailQueueBean();
                     emailQueueBean.setEmailSubject(emailTemplateBean.getEmailSubject());
@@ -251,10 +254,18 @@ public class ParentSiteEnabled {
                     if(sResetDomain!=null && !"".equalsIgnoreCase(sResetDomain)) {
 
 
-                        String sPortalLink = ParseUtil.checkNull("https://" + sResetDomain + "/com/events/common/set_password.jsp?lotophagi="+forgotPasswordBean.getSecureTokenId());
+                        AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
+                        VendorWebsiteFeatureBean vendorWebsiteFeatureBean = accessVendorWebsite.getSubDomain( vendorBean );
+                        if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue())){
+                            sResetDomain = vendorWebsiteFeatureBean.getValue() + "." + sResetDomain;
+                        }
 
-                        mapTextEmailValues.put("PORAL_LINK",sPortalLink);
-                        mapHtmlEmailValues.put("PORAL_LINK","<a href=\""+sPortalLink+"\" target=\"_blank\">Set New Password</a>");
+                        String sProtocol = applicationConfig.get(Constants.PROP_LINK_PROTOCOL,"http");
+
+                        String sPortalLink = ParseUtil.checkNull(sProtocol + "://" + sResetDomain + "/com/events/common/set_password.jsp?lotophagi="+forgotPasswordBean.getSecureTokenId());
+
+                        mapTextEmailValues.put("PORTAL_LINK",sPortalLink);
+                        mapHtmlEmailValues.put("PORTAL_LINK","<a href=\""+sPortalLink+"\" target=\"_blank\">Set New Password</a>");
 
                         String sProductName = ParseUtil.checkNull(applicationConfig.get(Constants.PRODUCT_NAME));
 
@@ -265,20 +276,25 @@ public class ParentSiteEnabled {
                         MustacheFactory mf = new DefaultMustacheFactory();
                         Mustache mustacheText =  mf.compile(new StringReader(sTxtTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_text");
                         Mustache mustacheHtml = mf.compile(new StringReader(sHtmlTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_html");
+                        Mustache mustacheSubject = mf.compile( new StringReader(sSubjectTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_subject" );
 
                         StringWriter txtWriter = new StringWriter();
                         StringWriter htmlWriter = new StringWriter();
+                        StringWriter subjectWriter = new StringWriter();
                         try {
                             mustacheText.execute(txtWriter, mapTextEmailValues).flush();
                             mustacheHtml.execute(htmlWriter, mapHtmlEmailValues).flush();
+                            mustacheSubject.execute(subjectWriter, mapHtmlEmailValues ).flush();
                         } catch (IOException e) {
                             txtWriter = new StringWriter();
                             htmlWriter = new StringWriter();
+                            subjectWriter = new StringWriter();
                             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                         }
 
                         emailQueueBean.setHtmlBody(htmlWriter.toString());
                         emailQueueBean.setTextBody(txtWriter.toString());
+                        emailQueueBean.setEmailSubject(subjectWriter.toString() );
 
                         emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
 
