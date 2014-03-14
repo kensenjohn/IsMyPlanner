@@ -9,6 +9,7 @@
 <%@ page import="com.events.bean.users.permissions.*" %>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
+<%@ page import="com.events.users.permissions.AccessUserRoles" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -35,11 +36,12 @@
     boolean canEditRolePermissions = false;
     boolean isEditingOwnRolePermission = false;
     if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
-        CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
         Constants.USER_TYPE loggedInUserType = loggedInUserBean.getUserType();
+
         UserRolePermissionRequestBean userRolePermRequest = new UserRolePermissionRequestBean();
         userRolePermRequest.setRoleId( sRoleId);
         userRolePermRequest.setUserType(loggedInUserType);
+
         UserRolePermission userRolePermission = new UserRolePermission();
         UserRolePermissionResponseBean userRolePermissionResponseBean = userRolePermission.getRolePermissions(userRolePermRequest);
         if(userRolePermissionResponseBean!=null){
@@ -51,8 +53,22 @@
 
         canViewRolePermissions = true;
 
+        CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
         if((roleBean!=null && !roleBean.isSiteAdmin()) && checkPermission.can(Perm.EDIT_ROLE_PERMISSION)  ) {
             canEditRolePermissions = true;
+        }
+
+        if(canEditRolePermissions) {
+            AccessUserRoles accessUserRoles = new AccessUserRoles();
+            ArrayList<UserRolesBean> arrUserRolesBean = accessUserRoles.getUserRolesByUserId( loggedInUserBean );
+            if(arrUserRolesBean!=null && !arrUserRolesBean.isEmpty() ) {
+                for(UserRolesBean userRolesBean :arrUserRolesBean ){
+                    if(userRolesBean.getRoleId().equalsIgnoreCase( roleBean.getRoleId() )) {
+                        canEditRolePermissions = false;
+                        break;
+                    }
+                }
+            }
         }
     }else {
         response.sendRedirect("/com/events/common/error/stop.jsp");
@@ -206,14 +222,14 @@
                                 <div class="widget">
                                     <div class="content error_background">
                                         <h5>Security Warning</h5>
-                                        <span>You are not authorized to </span>
+                                        <span>This role cannot be updated by you. Please contact your support representative if you would like to change this role.</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
             <%
-                } else  if( !canEditRolePermissions && roleBean!=null && roleBean.isSiteAdmin() )  {
+                } else  if( !canEditRolePermissions && roleBean!=null && !roleBean.isSiteAdmin() )  {
 
                 }else {
             %>

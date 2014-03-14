@@ -3,6 +3,7 @@ package com.events.proc.users.permissions;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.permissions.UserRolePermissionRequestBean;
 import com.events.bean.users.permissions.UserRolePermissionResponseBean;
+import com.events.bean.users.permissions.UserRolesBean;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
 import com.events.common.Constants;
@@ -12,6 +13,7 @@ import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
 import com.events.users.permissions.AccessRoles;
+import com.events.users.permissions.AccessUserRoles;
 import com.events.users.permissions.UserRolePermission;
 import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
@@ -67,6 +69,19 @@ public class ProcLoadAllRoles extends HttpServlet {
                             jsonResponseObj.put("every_role",jsonEveryRoleDetail);
                         }
                         jsonResponseObj.put("num_of_roles" , ParseUtil.iToS(iNumOfRoleObjs) );
+
+                        AccessUserRoles accessUserRoles = new AccessUserRoles();
+                        ArrayList<UserRolesBean> arrUserRolesBean = accessUserRoles.getUserRolesByUserId( loggedInUserBean );
+                        if(arrUserRolesBean!=null && !arrUserRolesBean.isEmpty() ) {
+                            JSONObject jsonUserRole = new JSONObject();
+                            Integer iNumOfRoles = 0 ;
+                            for(UserRolesBean userRolesBean : arrUserRolesBean ) {
+                                jsonUserRole.put(iNumOfRoles.toString() , userRolesBean.toJson());
+                                iNumOfRoles++;
+                            }
+                            jsonUserRole.put("total_logged_in_user_roles", iNumOfRoles);
+                            jsonResponseObj.put("logged_in_user_role" , jsonUserRole );
+                        }
 
 
                         Text okText = new OkText("All Roles were successfully loaded","status_mssg") ;

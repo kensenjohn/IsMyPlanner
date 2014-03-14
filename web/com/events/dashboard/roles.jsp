@@ -1,12 +1,32 @@
 <%@ page import="com.events.common.ParseUtil" %>
 <%@ page import="com.events.common.Utility" %>
+<%@ page import="com.events.bean.users.UserBean" %>
+<%@ page import="com.events.common.Constants" %>
+<%@ page import="com.events.users.permissions.CheckPermission" %>
+<%@ page import="com.events.common.Perm" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
+<%
+    UserBean loggedInUserBean = new UserBean();
+    if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
+        loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
+    }
+    CheckPermission checkPermission = null;
+    if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
+        checkPermission = new CheckPermission(loggedInUserBean);
+    }
 
+    boolean canEditRolePermission = false;
+    boolean canDeleteRole = false;
+    if(checkPermission!=null){
+        canEditRolePermission = checkPermission.can(Perm.EDIT_ROLE_PERMISSION);
+        canDeleteRole = checkPermission.can(Perm.DELETE_ROLE);
+    }
+%>
 <body>
 <div class="page_wrap">
     <jsp:include page="/com/events/common/top_nav.jsp">
@@ -88,8 +108,9 @@
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
                     var varNumOfRoles = jsonResponseObj.num_of_roles;
+                    var varLoggedInUserRoles = jsonResponseObj.logged_in_user_role
                     if(varNumOfRoles>0){
-                        processRolesList(varNumOfRoles, jsonResponseObj.every_role );
+                        processRolesList(varNumOfRoles, jsonResponseObj.every_role , varLoggedInUserRoles);
                     }
                     initializeTable();
                 }
@@ -101,7 +122,7 @@
         }
     }
 
-    function processRolesList(varNumOfRoles, everyRoleList) {
+    function processRolesList(varNumOfRoles, everyRoleList , varLoggedInUserRoles) {
         for(i=0;i<varNumOfRoles;i++){
             var varEveryRoleBean = everyRoleList[i];
             var varIsSiteAdmin =  varEveryRoleBean.is_site_admin;
@@ -112,7 +133,7 @@
             rowEveryRole.append(
                     '<td>'+varRoleName+'</td>'+
                             '<td>'+varEveryRoleBean.assigned_to_num_of_users +'</td>' +
-                            '<td  class="center" >'+ createButtons(varIsSiteAdmin, varRoleId) +'</td>');
+                            '<td  class="center" >'+ createButtons(varIsSiteAdmin, varRoleId, varLoggedInUserRoles) +'</td>');
             $('#every_role_rows').append(rowEveryRole);
 
             addDeleteClickEvent(varRoleName, varRoleId, i)
@@ -173,22 +194,37 @@
     }
 
 
-    function createButtons( varIsSiteAdmin , varRoleId ){
+    function createButtons( varIsSiteAdmin , varRoleId, varLoggedInUserRoles ){
         var varButtons = '';
         if(varIsSiteAdmin){
             varButtons = varButtons + createViewButtons( varRoleId )
         } else {
-            varButtons = varButtons + createEditButton( varRoleId );
+
+            var isLoggedInUsersRole = false;
+            if(varLoggedInUserRoles != undefined ) {
+                var varTotalRules = varLoggedInUserRoles.total_logged_in_user_roles;
+                for( var i = 0; i<varTotalRules; i++) {
+                    if(varLoggedInUserRoles[i].role_id == varRoleId ) {
+                        isLoggedInUsersRole = true;
+                        break;
+                    }
+                }
+            }
+            if(isLoggedInUsersRole) {
+                varButtons = varButtons + createViewButtons( varRoleId );
+            } else {
+                varButtons = varButtons + createEditButton( varRoleId );
+            }
             varButtons = varButtons + '&nbsp;&nbsp;&nbsp;';
             varButtons = varButtons + createDeleteButton( varRoleId );
         }
         return varButtons;
     }
     function createEditButton(varRoleId){
-        return '<a href="/com/events/dashboard/permissions/edit_roles.jsp?role_id='+varRoleId+'" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>';
+        return '<a href="/com/events/dashboard/permissions/edit_roles.jsp?role_id='+varRoleId+'" class="btn btn-default btn-xs"><%=canEditRolePermission?"<i class=\"fa fa-pencil\"></i> Edit":"View"%></a>';
     }
     function createDeleteButton(varRoleId){
-        return '<a id="del_'+varRoleId+'" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Delete</a>';
+        return '<a id="del_'+varRoleId+'" class="btn btn-default btn-xs <%=!canDeleteRole?"disabled":""%>"><i class="fa fa-trash-o"></i> Delete</a>';
     }
     function createViewButtons( varRoleId){
         return '<a href="/com/events/dashboard/permissions/edit_roles.jsp?role_id='+varRoleId+'" class="btn btn-default btn-xs"></span> View</a>'

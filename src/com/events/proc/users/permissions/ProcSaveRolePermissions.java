@@ -1,10 +1,7 @@
 package com.events.proc.users.permissions;
 
 import com.events.bean.users.UserBean;
-import com.events.bean.users.permissions.PermissionsBean;
-import com.events.bean.users.permissions.RolePermissionsBean;
-import com.events.bean.users.permissions.RolesBean;
-import com.events.bean.users.permissions.UserRolePermissionRequestBean;
+import com.events.bean.users.permissions.*;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Perm;
@@ -12,10 +9,7 @@ import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
-import com.events.users.permissions.AccessPermissions;
-import com.events.users.permissions.AccessRolePermissions;
-import com.events.users.permissions.CheckPermission;
-import com.events.users.permissions.UserRolePermission;
+import com.events.users.permissions.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,59 +44,92 @@ public class ProcSaveRolePermissions extends HttpServlet {
                 if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
                     String sRoleId = ParseUtil.checkNull(request.getParameter("role_id"));
 
+                    if(!Utility.isNullOrEmpty(sRoleId)) {
+                        boolean isRoleEditable = true;
+                        UserRolePermissionRequestBean userRolePermRequest = new UserRolePermissionRequestBean();
+                        userRolePermRequest.setRoleId( sRoleId);
 
+                        AccessRoles accessRoles = new AccessRoles();
+                        RolesBean currentRoleBean  = accessRoles.getRoleById(userRolePermRequest);
 
-                    CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
-                    if( checkPermission.can(Perm.EDIT_ROLE_PERMISSION ) ) {
-                        String sRoleName = ParseUtil.checkNull(request.getParameter("roleName"));
-                        String[] sParamChecked = request.getParameterValues("perm_checkbox");
-                        if( Utility.isNullOrEmpty(sRoleName)) {
-                            Text errorText = new ErrorText("Please select a valid role name.","err_mssg") ;
-                            arrErrorText.add(errorText);
-
-                            responseStatus = RespConstants.Status.ERROR;
-                        } else if (sParamChecked == null || (sParamChecked!=null && sParamChecked.length <= 0) ) {
-                            Text errorText = new ErrorText("Please assign at least one permission to the role.","err_mssg") ;
-                            arrErrorText.add(errorText);
-
-                            responseStatus = RespConstants.Status.ERROR;
-                        }  else  {
-                            Constants.USER_TYPE loggedInUserType = loggedInUserBean.getUserType();
-                            UserRolePermissionRequestBean userRolePermRequest = new UserRolePermissionRequestBean();
-                            userRolePermRequest.setRoleId( sRoleId);
-                            userRolePermRequest.setUserType(loggedInUserType);
-                            userRolePermRequest.setRoleName( sRoleName );
-                            userRolePermRequest.setParentId( ParseUtil.checkNull(loggedInUserBean.getParentId()) );
-
-                            ArrayList<String> arrPermissionId = new ArrayList<String>();
-                            for(String paramCheck : sParamChecked ) {
-                                arrPermissionId.add( paramCheck );
+                        if(currentRoleBean!=null && !currentRoleBean.isSiteAdmin()) {
+                            AccessUserRoles accessUserRoles = new AccessUserRoles();
+                            ArrayList<UserRolesBean> arrUserRolesBean = accessUserRoles.getUserRolesByUserId( loggedInUserBean );
+                            if(arrUserRolesBean!=null && !arrUserRolesBean.isEmpty() ) {
+                                for(UserRolesBean userRolesBean : arrUserRolesBean ) {
+                                    if(sRoleId.equalsIgnoreCase(userRolesBean.getRoleId())) {
+                                        isRoleEditable = false; // Site Admin Role. cannot be edited.
+                                        break;
+                                    }
+                                }
                             }
-                            userRolePermRequest.setArrPermissionId( arrPermissionId );
+                        } else {
+                            isRoleEditable = false; // Site Admin Role. cannot be edited.
+                        }
+
+                        CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
+                        if( isRoleEditable && checkPermission.can(Perm.EDIT_ROLE_PERMISSION ) ) {
 
 
-                            UserRolePermission userRolePermission = new UserRolePermission();
-                            RolesBean roleBean  = userRolePermission.saveRolePersmissions( userRolePermRequest );
 
-                            if( roleBean!=null && !Utility.isNullOrEmpty(roleBean.getRoleId()) ) {
-                                jsonResponseObj.put("role_id",roleBean.getRoleId() );
-                                Text okText = new OkText("Your changes were saved successfully.","status_mssg") ;
-                                arrOkText.add(okText);
-                                responseStatus = RespConstants.Status.OK;
-                            } else {
-                                Text errorText = new ErrorText("Oops!! We were unable to complete your request. Please try again later.(saveRole - 004)","err_mssg") ;
+                            String sRoleName = ParseUtil.checkNull(request.getParameter("roleName"));
+                            String[] sParamChecked = request.getParameterValues("perm_checkbox");
+                            if( Utility.isNullOrEmpty(sRoleName)) {
+                                Text errorText = new ErrorText("Please select a valid role name.","err_mssg") ;
                                 arrErrorText.add(errorText);
 
                                 responseStatus = RespConstants.Status.ERROR;
+                            } else if (sParamChecked == null || (sParamChecked!=null && sParamChecked.length <= 0) ) {
+                                Text errorText = new ErrorText("Please assign at least one permission to the role.","err_mssg") ;
+                                arrErrorText.add(errorText);
+
+                                responseStatus = RespConstants.Status.ERROR;
+                            }  else  {
+                                Constants.USER_TYPE loggedInUserType = loggedInUserBean.getUserType();
+
+                                userRolePermRequest.setUserType(loggedInUserType);
+                                userRolePermRequest.setRoleName( sRoleName );
+                                userRolePermRequest.setParentId( ParseUtil.checkNull(loggedInUserBean.getParentId()) );
+
+                                ArrayList<String> arrPermissionId = new ArrayList<String>();
+                                for(String paramCheck : sParamChecked ) {
+                                    arrPermissionId.add( paramCheck );
+                                }
+                                userRolePermRequest.setArrPermissionId( arrPermissionId );
+
+
+
+
+
+                                UserRolePermission userRolePermission = new UserRolePermission();
+                                RolesBean roleBean  = userRolePermission.saveRolePersmissions( userRolePermRequest );
+
+                                if( roleBean!=null && !Utility.isNullOrEmpty(roleBean.getRoleId()) ) {
+                                    jsonResponseObj.put("role_id",roleBean.getRoleId() );
+                                    Text okText = new OkText("Your changes were saved successfully.","status_mssg") ;
+                                    arrOkText.add(okText);
+                                    responseStatus = RespConstants.Status.OK;
+                                } else {
+                                    Text errorText = new ErrorText("Oops!! We were unable to complete your request. Please try again later.(saveRole - 004)","err_mssg") ;
+                                    arrErrorText.add(errorText);
+
+                                    responseStatus = RespConstants.Status.ERROR;
+                                }
                             }
+                        } else {
+                            appLogging.error("No Permission to View Role Permission : " + sRoleId + " - " + ParseUtil.checkNullObject(loggedInUserBean) );
+                            Text errorText = new ErrorText("Oops!! Please make sure you are authorized to execute this action.(saveRole - 003)","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
                         }
                     } else {
-                        appLogging.error("No Permission to View Role Permission : " + sRoleId + " - " + ParseUtil.checkNullObject(loggedInUserBean) );
-                        Text errorText = new ErrorText("Oops!! Please make sure you are authorized to execute this action.(saveRole - 003)","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request. Please use a valid role id.","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
                     }
+
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
                     Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveRole - 002)","err_mssg") ;
