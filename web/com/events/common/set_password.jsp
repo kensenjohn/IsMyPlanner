@@ -1,4 +1,7 @@
 <%@ page import="com.events.common.ParseUtil" %>
+<%@ page import="com.events.common.Constants" %>
+<%@ page import="com.events.common.Utility" %>
+<%@ page import="com.events.bean.users.UserBean" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>

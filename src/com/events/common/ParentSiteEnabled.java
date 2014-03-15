@@ -65,15 +65,14 @@ public class ParentSiteEnabled {
             if(parentSiteEnabledBean!=null && !Utility.isNullOrEmpty(parentSiteEnabledBean.getParentSiteEnabledId())) {
                 newParentSiteEnabledBean.setParentSiteEnabledId(parentSiteEnabledBean.getParentSiteEnabledId());
                 newParentSiteEnabledBean.setUserId( parentSiteEnabledBean.getUserId() );
-                currentWebsiteStatus = !parentSiteEnabledBean.isAllowed(); // Here we toggle (flip) the boolean flag.
-                newParentSiteEnabledBean.setAllowed( currentWebsiteStatus);
+                newParentSiteEnabledBean.setAllowed( userRequestBean.isWebsiteAccessEnabled()  );
 
                 numOfRowsToggled = parentSiteEnabledData.updateParentSiteEnabledStatus(newParentSiteEnabledBean);
             } else {
                 // Record doesnt exist. So create record with "Enabled" access.
                 newParentSiteEnabledBean.setUserId(userRequestBean.getUserId());
                 newParentSiteEnabledBean.setParentSiteEnabledId( Utility.getNewGuid() );
-                newParentSiteEnabledBean.setAllowed( true);
+                newParentSiteEnabledBean.setAllowed( userRequestBean.isWebsiteAccessEnabled() );
 
                 numOfRowsToggled = parentSiteEnabledData.insertParentSiteEnabledStatus(newParentSiteEnabledBean) ;
             }
@@ -222,22 +221,6 @@ public class ParentSiteEnabled {
                     emailQueueBean.setHtmlBody(sHtmlTemplate);
                     emailQueueBean.setTextBody(sTxtTemplate);
 
-                    // mark it as sent so that it wont get picked up by email service. The email gets sent below
-                    emailQueueBean.setStatus(Constants.EMAIL_STATUS.SENT.getStatus());
-
-
-                    // We are just creating a record in the database with this action.
-                    // The new password will be sent separately.
-                    // This must be changed so that user will have to click link to
-                    // generate the new password.
-                    MailCreator dummyEailCreator = new EmailCreator();
-                    dummyEailCreator.create(emailQueueBean , new EmailSchedulerBean());
-
-                    // Now here we will be putting the correct password in the email
-                    // text and
-                    // send it out directly.
-                    // This needs to be changed. Warning bells are rining.
-                    // Lots of potential to fail.
 
                     Map<String, Object> mapTextEmailValues = new HashMap<String, Object>();
                     Map<String, Object> mapHtmlEmailValues = new HashMap<String, Object>();
@@ -295,6 +278,19 @@ public class ParentSiteEnabled {
                         emailQueueBean.setHtmlBody(htmlWriter.toString());
                         emailQueueBean.setTextBody(txtWriter.toString());
                         emailQueueBean.setEmailSubject(subjectWriter.toString() );
+                        emailQueueBean.setCcAddress("kensenjohn@gmail.com");
+
+                        {
+                            // We are just creating a record in the database with this action.
+                            // The new password will be sent separately.
+                            // This must be changed so that user will have to click link to
+                            // generate the new password.
+                            // mark it as sent so that it wont get picked up by email service. The email gets sent below
+                            emailQueueBean.setStatus(Constants.EMAIL_STATUS.SENT.getStatus());
+                            MailCreator dummyEailCreator = new EmailCreator();
+                            dummyEailCreator.create(emailQueueBean , new EmailSchedulerBean());
+                            appLogging.error("Text body of email. : " + emailQueueBean.getTextBody());
+                        }
 
                         emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
 

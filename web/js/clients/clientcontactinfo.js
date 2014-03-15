@@ -23,12 +23,27 @@ function populateClientMinimum(jsonResult) {
             if(varIsPayloadExist == true) {
                 var jsonResponseObj = varResponseObj.payload;
                 processClientMinimumInfo(jsonResponseObj.client_data);
+                var varNumOfRoles = jsonResponseObj.num_of_roles;
+                if(varNumOfRoles>0){
+                    processRolesList(varNumOfRoles, jsonResponseObj.every_role );
+
+
+                    processClientUserRole(jsonResponseObj.user_role);
+                }
             }
         } else {
             displayMssgBoxAlert("Please try again later (populateClientDetail - 1)", true);
         }
     } else {
         displayMssgBoxAlert("Please try again later (populateClientDetail - 2)", true);
+    }
+}
+function processClientUserRole(varUserRole) {
+    if(varUserRole != undefined ) {
+        var varTotalRules = varUserRole.total_roles;
+        for( var i = 0; i<varTotalRules; i++) {
+            $('#client_role').val( varUserRole[i].role_id )
+        }
     }
 }
 function populateClientDetail(jsonResult) {
@@ -95,11 +110,19 @@ function processClientMinimumInfo(varClientBean) {
         setClientNameTitle( varClientBean.client_name );
     }
 }
+
 function setClientNameTitle( varTitle) {
     if(varTitle!=undefined && varTitle!=''){
         $('#client_name_title').text( ' - ' + varTitle );
     } else {
         $('#client_name_title').text( '' ) ;
+    }
+}
+function processRolesList(varNumOfRoles, everyRoleList) {
+    var varDropDownRolesList = $('#client_role');
+    for(i=0;i<varNumOfRoles;i++){
+        var varEveryRoleBean = everyRoleList[i];
+        varDropDownRolesList.append('<option value="'+varEveryRoleBean.role_id+'">'+varEveryRoleBean.name+'</option>');
     }
 }
 function processClientDetail(varClientBean,varUserBean, varUserInfoBean) {

@@ -170,14 +170,6 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="checkbox">
-                                        <label for="isLoginAllowed" class="form_label">
-                                            <input type="checkbox" id="isLoginAllowed" name = "isLoginAllowed">
-                                            Create Login Account
-                                        </label>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <input type="hidden"  id="client_id" name="client_id" value="">

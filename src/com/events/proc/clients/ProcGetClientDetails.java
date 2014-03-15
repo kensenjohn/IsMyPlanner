@@ -5,6 +5,10 @@ import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.clients.ClientResponseBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserInfoBean;
+import com.events.bean.users.UserRequestBean;
+import com.events.bean.users.permissions.UserRolePermissionRequestBean;
+import com.events.bean.users.permissions.UserRolePermissionResponseBean;
+import com.events.bean.users.permissions.UserRolesBean;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
 import com.events.clients.AccessClients;
@@ -14,6 +18,9 @@ import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
+import com.events.users.AccessUsers;
+import com.events.users.permissions.AccessUserRoles;
+import com.events.users.permissions.UserRolePermission;
 import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -109,13 +116,64 @@ public class ProcGetClientDetails    extends HttpServlet {
                                     responseStatus = RespConstants.Status.ERROR;
                                 }
                             } else if(  "event_info".equalsIgnoreCase(sClientDataType) ) {
+
                                 ClientBean clientBean = accessClients.getClientDataByVendorAndClient(clientRequestBean) ;
                                 if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId()) ) {
                                     jsonResponseObj.put("client_data",clientBean.toJson());
+
+
+                                    // Getting list of all Roles that can be assigned to the Client.
+                                    {
+                                        UserRolePermissionRequestBean userRolePermRequest = new UserRolePermissionRequestBean();
+                                        userRolePermRequest.setUserId( loggedInUserBean.getUserId() );
+                                        userRolePermRequest.setParentId( vendorBean.getVendorId() );
+
+                                        UserRolePermission userRolePermission = new UserRolePermission();
+                                        UserRolePermissionResponseBean userRolePermissionResponseBean = userRolePermission.loadRoleDetails(userRolePermRequest);
+                                        if(userRolePermissionResponseBean!=null) {
+                                            JSONObject jsonEveryRoleDetail = userRolePermission.loadRoleDetailsJson(userRolePermissionResponseBean.getArrEveryRoleDetailBean());
+
+                                            Integer iNumOfRoleObjs =  0;
+                                            if(jsonEveryRoleDetail!=null) {
+                                                iNumOfRoleObjs =  jsonEveryRoleDetail.optInt("num_of_roles");
+                                                jsonResponseObj.put("every_role",jsonEveryRoleDetail);
+                                            }
+                                            jsonResponseObj.put("num_of_roles" , ParseUtil.iToS(iNumOfRoleObjs) );
+                                        }
+                                    }
+
+
+                                    // The Role that was previously assigned to Client. This can be empty for a new client.
+                                    {
+                                        UserRequestBean userRequestBean = new UserRequestBean();
+                                        userRequestBean.setParentId(clientBean.getClientId());
+
+                                        AccessUsers accessUsers = new AccessUsers();
+                                        UserBean clientUserBean =  accessUsers.getUserByParentId(userRequestBean );
+                                        AccessUserRoles accessUserRoles = new AccessUserRoles();
+                                        ArrayList<UserRolesBean> arrUserRolesBean = accessUserRoles.getUserRolesByUserId( clientUserBean );
+                                        if(arrUserRolesBean!=null && !arrUserRolesBean.isEmpty() ) {
+                                            JSONObject jsonUserRole = new JSONObject();
+                                            Integer iNumOfRoles = 0 ;
+                                            for(UserRolesBean userRolesBean : arrUserRolesBean ) {
+                                                jsonUserRole.put(iNumOfRoles.toString() , userRolesBean.toJson());
+                                                iNumOfRoles++;
+                                            }
+                                            jsonUserRole.put("total_roles", iNumOfRoles);
+                                            jsonResponseObj.put("user_role" , jsonUserRole );
+                                        }
+                                    }
+
+                                    Text okText = new OkText("The client contact_info were loaded successfully","status_mssg") ;
+                                    arrOkText.add(okText);
+                                    responseStatus = RespConstants.Status.OK;
+
+                                } else {
+                                    Text errorText = new ErrorText("Oops!! We were unable to process your request. Please try again later.(getclientdetails - 004)","err_mssg") ;
+                                    arrErrorText.add(errorText);
+
+                                    responseStatus = RespConstants.Status.ERROR;
                                 }
-                                Text okText = new OkText("The client contact_info were loaded successfully","status_mssg") ;
-                                arrOkText.add(okText);
-                                responseStatus = RespConstants.Status.OK;
                             } else{
                                 Text errorText = new ErrorText("Oops!! We were unable to process your request. Please try again later.(getclientdetails - 003)","err_mssg") ;
                                 arrErrorText.add(errorText);

@@ -34,6 +34,15 @@ public class UserRequestBean {
     private  Constants.USER_TYPE userType = Constants.USER_TYPE.VENDOR;
     private boolean isPlanner = false;
     private ArrayList<String> arrRoleId = new ArrayList<String>();
+    private boolean isWebsiteAccessEnabled = false;
+
+    public boolean isWebsiteAccessEnabled() {
+        return isWebsiteAccessEnabled;
+    }
+
+    public void setWebsiteAccessEnabled(boolean websiteAccessEnabled) {
+        isWebsiteAccessEnabled = websiteAccessEnabled;
+    }
 
     public ArrayList<String> getArrRoleId() {
         return arrRoleId;

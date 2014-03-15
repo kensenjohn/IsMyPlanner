@@ -3,7 +3,7 @@
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
-
+<link href="/css/bootstrap-switch.min.css" rel="stylesheet">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
@@ -35,27 +35,40 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-8" id="enable_access">
                     &nbsp;
                 </div>
             </div>
-            <div class="row" id="enable_access" style="display:none;">
-                <div class="col-md-12">
-                    <button type="button" class="btn  btn-filled" id="btn_enable_access">Enable Access To Website And Tools</button> &nbsp;&nbsp;
-                    <span>You client will be emailed a link to access the website.</span>
+
+            <form method="post" id="frm_save_website_access">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="client_role" class="form_label">Role (Permissions)</label><span class="required"> *</span>
+                            <select class="form-control" id="client_role" name="client_role">
+                                <option value="">Select A Role</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="access_to_website" class="form_label">Website and Tools Enabled</label><span class="required"> *</span><br>
+                            <input type="checkbox" checked data-size="small" data-on-text="Yes" data-off-text="No" class="hide-page" id="access_to_website" param="access_to_website">
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="client_id" value="<%=sClientId%>"/>
+            </form>
             <div class="row">
                 <div class="col-md-8">
                     &nbsp;
                 </div>
             </div>
-            <div class="row" id="disable_access"  style="display:none;">
-                <div class="col-md-3">
-                    <button type="button" class="btn  btn-filled" id="btn_disable_access"><i class="fa fa-ban red"></i> Disable Access To Website</button>
-                </div>
-                <div class="col-md-3">
-                    <button type="button" class="btn" id="btn_reset_password"><i class="fa fa-refresh"></i> Reset Password</button>
+            <div class="row">
+                <div class="col-md-8">
+                    <button type="button" class="btn  btn-filled" id="btn_save_website_access">Save</button>
                 </div>
             </div>
         </div>
@@ -76,23 +89,30 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 <script src="/js/clients/clientcontactinfo.js"></script>
+<script src="/js/bootstrap-switch.min.js"></script>
 <script   type="text/javascript">
     var varClientId = '<%=sClientId%>';
     $(window).load(function() {
-        if(varClientId !='') {
+        $('.hide-page').bootstrapSwitch('size', 'small');
+        $('.hide-page').bootstrapSwitch('readonly', false);
+
+        if(varClientId !='') {  // client was selected
+
             loadClientDetail(varClientId, 'event_info' , populateClientMinimum);
             loadwebsiteEnableStatus(varClientId, 'event_info' , populateParentSiteEnabled);
-        } else {
 
-            $("#enable_access").empty();
-            $("#disable_access").empty();
-            $("#enable_access").show();
+            $('#btn_save_website_access').click(function(){
+                saveAccess();
+            })
+        } else {
             this.noClientSelectedModel = new NoClientSelectedModel({});
             var noClientSelectedView = new NoClientSelectedView({model:this.noClientSelectedModel});
             noClientSelectedView.render();
             $("#enable_access").append(noClientSelectedView.el);
-            displayMssgBoxAlert("We were unable to process your request. Please try again later (loadClientEvent - 1)", true);
+            $('#btn_save_website_access').hide();
         }
+
+
     });
 
     function loadwebsiteEnableStatus(varClientId, varClientDataType , callbackmethod) {
@@ -156,73 +176,22 @@
             this.varParentSiteEnabledStatus = this.model.get('bb_parent_site_enabled_status');
         },
         render : function() {
-            var client_obj = {
-                'client_id' : varClientId
+
+            var isWebsiteAccessAllowed = false;
+            if( this.varIsStatusExists == true ) {
+                isWebsiteAccessAllowed = this.varParentSiteEnabledStatus.is_allowed_access
             }
-            console.log('Cleint obj : ' + client_obj.client_id);
-            console.log('Is Status Exist : ' + this.varIsStatusExists );
-            if(!this.varIsStatusExists || (this.varIsStatusExists && !this.varParentSiteEnabledStatus.is_allowed_access) ) {
-
-                var confirm_message_obj = {
-                    'message'   : "Are you sure you enable access to the website for this client? ",
-                    'header'    : "Enable Access to Website"
-                }
-
-                $('#enable_access').show();
-                $('#disable_access').hide();
-                this.bindClick('btn_enable_access',client_obj,enableAccess, confirm_message_obj);
-                this.unBindClick('btn_disable_access');
-                this.unBindClick('btn_reset_password');
-            } else {
-                $('#disable_access').show();
-                $('#enable_access').hide();
-
-                var disable_access_message_obj = {
-                    'message'   : "Are you sure you enable access to the website for this client? ",
-                    'header'    : "Enable Access to Website"
-                }
-                var reset_password_message_obj = {
-                    'message'   : "Are you sure you enable access to the website for this client? ",
-                    'header'    : "Enable Access to Website"
-                }
-
-                this.bindClick('btn_disable_access',client_obj,disableAccess, disable_access_message_obj);
-                this.bindClick('btn_password_reset',client_obj,resetPassword, reset_password_message_obj);
-                this.unBindClick('btn_enable_access');
-            }
-        },
-        bindClick : function(varButtonId, varClientObj, varActionMethod, varConfirmMessage) {
-
-            $('#'+varButtonId).click(function(){
-                displayConfirmBox(
-                        varConfirmMessage.message,
-                        varConfirmMessage.header,
-                        "Yes", "No", varActionMethod ,varClientObj);
-            });
-        },
-        unBindClick : function(varButtonId){
-            $('#'+varButtonId).unbind('click');
+            $('#access_to_website').bootstrapSwitch('state', isWebsiteAccessAllowed );
         }
     })
 
-    function enableAccess(varClientObj) {
-        console.log('Simple Enable access to website for client : ' + varClientObj.client_id);
-
+    function saveAccess() {
         var actionUrl = "/proc_save_website_enable_status.aeve";
         var methodType = "POST";
-        var dataString = $('#frm_save_parent_site_enabled_status').serialize();
+        var dataString = $('#frm_save_website_access').serialize();
+        dataString = dataString + '&access_to_website=' + $('#access_to_website').bootstrapSwitch('state');
+        console.log('dataString  : ' + dataString);
         makeAjaxCall(actionUrl,dataString,methodType,getResult);
-    }
-    function disableAccess(varClientObj) {
-        console.log('Simple Enable access to website for client : ' + varClientObj.client_id);
-
-        var actionUrl = "/proc_save_website_enable_status.aeve";
-        var methodType = "POST";
-        var dataString = $('#frm_save_parent_site_enabled_status').serialize();
-        makeAjaxCall(actionUrl,dataString,methodType,getResult);
-    }
-    function resetPassword(varClientObj) {
-        console.log('Simple Enable access to website for client : ' + varClientObj.client_id);
     }
     function getResult(jsonResult){
 
@@ -234,8 +203,7 @@
 
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 if(varIsPayloadExist == true) {
-                    var jsonResponseObj = varResponseObj.payload;
-                    refreshView(jsonResponseObj)
+                    displayMssgBoxAlert("Client Role and their website access has been successfully updated.", false);
                 }
             } else {
                 displayMssgBoxAlert("Please try again later (deleteClient - 1)", true);

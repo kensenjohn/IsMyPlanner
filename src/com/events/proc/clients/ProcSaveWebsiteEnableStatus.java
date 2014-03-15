@@ -6,6 +6,8 @@ import com.events.bean.common.ParentSiteEnabledBean;
 import com.events.bean.users.ForgotPasswordBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserRequestBean;
+import com.events.bean.users.permissions.RolesBean;
+import com.events.bean.users.permissions.UserRolesBean;
 import com.events.clients.AccessClients;
 import com.events.common.Constants;
 import com.events.common.ParentSiteEnabled;
@@ -15,6 +17,7 @@ import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
 import com.events.users.AccessUsers;
+import com.events.users.permissions.BuildUserRoles;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,69 +52,87 @@ public class ProcSaveWebsiteEnableStatus extends HttpServlet {
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
                     String sClientId = ParseUtil.checkNull(request.getParameter("client_id"));
+                    boolean isAccessToWebsiteEnabled = ParseUtil.sTob(request.getParameter("access_to_website"));
+                    String sClientRole = ParseUtil.checkNull(request.getParameter("client_role"));
                     if(!Utility.isNullOrEmpty(sClientId)){
-                        ClientRequestBean clientRequestBean = new ClientRequestBean();
-                        clientRequestBean.setClientId( sClientId );
+                        if(Utility.isNullOrEmpty(sClientRole)){
+                            Text errorText = new ErrorText("Please select a valid role for your client.","err_mssg") ;
+                            arrErrorText.add(errorText);
+                            responseStatus = RespConstants.Status.ERROR;
+                        } else{
+                            ClientRequestBean clientRequestBean = new ClientRequestBean();
+                            clientRequestBean.setClientId( sClientId );
 
-                        AccessClients accessClients = new AccessClients();
-                        ClientBean clientBean = accessClients.getClient(clientRequestBean) ;
+                            AccessClients accessClients = new AccessClients();
+                            ClientBean clientBean = accessClients.getClient(clientRequestBean) ;
 
-                        UserRequestBean userRequestBean = new UserRequestBean();
-                        userRequestBean.setUserType(Constants.USER_TYPE.CLIENT);
-                        userRequestBean.setParentId(clientBean.getClientId());
-                        userRequestBean.setUserId(clientBean.getUserBeanId());
+                            UserRequestBean userRequestBean = new UserRequestBean();
+                            userRequestBean.setUserType(Constants.USER_TYPE.CLIENT);
+                            userRequestBean.setParentId(clientBean.getClientId());
+                            userRequestBean.setUserId(clientBean.getUserBeanId());
 
-                        AccessUsers accessUsers = new AccessUsers();
-                        UserBean userBean = accessUsers.getUserByParentId(userRequestBean);
+                            AccessUsers accessUsers = new AccessUsers();
+                            UserBean userBean = accessUsers.getUserByParentId(userRequestBean);
 
-                        UserRequestBean newUserRequestBean = new UserRequestBean();
-                        newUserRequestBean.setUserId( userBean.getUserId() );
+                            ArrayList<String> arrRoleId = new ArrayList<String>();
+                            arrRoleId.add(sClientRole);
 
+                            UserRequestBean newUserRequestBean = new UserRequestBean();
+                            newUserRequestBean.setUserId( userBean.getUserId() );
+                            newUserRequestBean.setWebsiteAccessEnabled( isAccessToWebsiteEnabled );
+                            newUserRequestBean.setArrRoleId(arrRoleId);
 
-                        ParentSiteEnabled parentSiteEnabled = new ParentSiteEnabled();
-                        ParentSiteEnabledBean parentSiteEnabledBean = parentSiteEnabled.toggleParentSiteEnableStatus( newUserRequestBean ) ;
+                            ArrayList<RolesBean> arrRoleBean = new ArrayList<RolesBean>();
+                            for(String roleId : arrRoleId) {
+                                RolesBean rolesBean = new RolesBean();
+                                rolesBean.setRoleId( roleId );
+                                arrRoleBean.add(rolesBean);
+                            }
 
-                        if(parentSiteEnabledBean!=null && !Utility.isNullOrEmpty(parentSiteEnabledBean.getParentSiteEnabledId())){
-                            boolean isPasswordReset = parentSiteEnabled.resetParentSitePassword(newUserRequestBean);
+                            BuildUserRoles buildUserRoles = new BuildUserRoles();
+                            ArrayList<UserRolesBean> arrUserRolesBean = buildUserRoles.createUserRole( userBean.getUserId() ,arrRoleBean);
 
-                            if(isPasswordReset ){
+                            ParentSiteEnabled parentSiteEnabled = new ParentSiteEnabled();
+                            ParentSiteEnabledBean parentSiteEnabledBean = parentSiteEnabled.toggleParentSiteEnableStatus( newUserRequestBean ) ;
 
-                                if(parentSiteEnabledBean.isAllowed() ) {
-                                    boolean isPasswordResetEmailSent = false;
-                                    ForgotPasswordBean forgotPasswordBean = parentSiteEnabled.createParentSiteNewPasswordUserRequest(clientBean , newUserRequestBean );
-                                    if(forgotPasswordBean!=null && !Utility.isNullOrEmpty(forgotPasswordBean.getForgotPasswordId())){
-                                        isPasswordResetEmailSent = true;
-                                        jsonResponseObj.put("is_email_sent", true);
-                                    } else {
-                                        isPasswordResetEmailSent = false;
+                            if(parentSiteEnabledBean!=null && !Utility.isNullOrEmpty(parentSiteEnabledBean.getParentSiteEnabledId())){
+                                boolean isPasswordReset = parentSiteEnabled.resetParentSitePassword(newUserRequestBean);
+
+                                if(isPasswordReset ){
+
+                                    if(parentSiteEnabledBean.isAllowed() ) {
+                                        boolean isPasswordResetEmailSent = false;
+                                        ForgotPasswordBean forgotPasswordBean = parentSiteEnabled.createParentSiteNewPasswordUserRequest(clientBean , newUserRequestBean );
+                                        if(forgotPasswordBean!=null && !Utility.isNullOrEmpty(forgotPasswordBean.getForgotPasswordId())){
+                                            isPasswordResetEmailSent = true;
+                                            jsonResponseObj.put("is_email_sent", true);
+                                        } else {
+                                            isPasswordResetEmailSent = false;
+                                        }
+                                        jsonResponseObj.put("is_email_sent", isPasswordResetEmailSent);
                                     }
-                                    jsonResponseObj.put("is_email_sent", isPasswordResetEmailSent);
+
+
+
+                                    jsonResponseObj.put("is_status_exists", true);
+                                    jsonResponseObj.put("parent_site_enabled_status" , parentSiteEnabledBean.toJson());
+
+                                    Text okText = new OkText("Loading of Parent Site Enabled Status completed","status_mssg") ;
+                                    arrOkText.add(okText);
+                                    responseStatus = RespConstants.Status.OK;
+                                } else {
+                                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES- 005)","err_mssg") ;
+                                    arrErrorText.add(errorText);
+
+                                    responseStatus = RespConstants.Status.ERROR;
                                 }
-
-
-
-                                jsonResponseObj.put("is_status_exists", true);
-                                jsonResponseObj.put("parent_site_enabled_status" , parentSiteEnabledBean.toJson());
-
-                                Text okText = new OkText("Loading of Parent Site Enabled Status completed","status_mssg") ;
-                                arrOkText.add(okText);
-                                responseStatus = RespConstants.Status.OK;
                             } else {
-                                appLogging.info("Password was not reset ");
-
-                                Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES- 005)","err_mssg") ;
+                                Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES- 004)","err_mssg") ;
                                 arrErrorText.add(errorText);
 
                                 responseStatus = RespConstants.Status.ERROR;
                             }
-
-                        } else {
-                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES- 004)","err_mssg") ;
-                            arrErrorText.add(errorText);
-
-                            responseStatus = RespConstants.Status.ERROR;
                         }
-
                     } else {
                         Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWES- 003)","err_mssg") ;
                         arrErrorText.add(errorText);
