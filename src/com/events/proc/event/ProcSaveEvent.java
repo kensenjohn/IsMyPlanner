@@ -1,11 +1,14 @@
 package com.events.proc.event;
 
+import com.events.bean.clients.ClientBean;
+import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.common.notify.NotifyBean;
 import com.events.bean.event.EventRequestBean;
 import com.events.bean.event.EventResponseBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
+import com.events.clients.AccessClients;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
@@ -48,11 +51,6 @@ public class ProcSaveEvent   extends HttpServlet {
 
                 if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
 
-                    VendorRequestBean vendorRequestBean = new VendorRequestBean();
-                    vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
-                    AccessVendors accessVendor = new AccessVendors();
-                    VendorBean vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
-
                     String sEventId = ParseUtil.checkNull(request.getParameter("eventId"));
                     String sEventName = ParseUtil.checkNull(request.getParameter("eventName"));
                     String sEventDay = ParseUtil.checkNull(request.getParameter("eventDay"));
@@ -62,6 +60,32 @@ public class ProcSaveEvent   extends HttpServlet {
                     String sClientName = ParseUtil.checkNull(request.getParameter("clientName"));
                     String sClientEmail = ParseUtil.checkNull(request.getParameter("clientEmail"));
                     boolean isEventClientCorporate = ParseUtil.sTob(request.getParameter("isClientCorporate"));
+
+
+                    boolean isLoggedInUserAClient = false;
+                    boolean isLoggedInUserAVendor = false;
+                    ClientRequestBean clientRequestBean = new ClientRequestBean();
+                    clientRequestBean.setClientId( loggedInUserBean.getParentId());
+
+                    AccessClients accessClients = new AccessClients();
+                    ClientBean clientBean = accessClients.getClient( clientRequestBean );
+                    if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId())) {
+                        isLoggedInUserAClient = true;
+                    }
+
+                    VendorBean vendorBean = new VendorBean();
+
+                    VendorRequestBean vendorRequestBean = new VendorRequestBean();
+                    AccessVendors accessVendor = new AccessVendors();
+                    if(isLoggedInUserAClient) {
+                        vendorRequestBean.setVendorId(  clientBean.getVendorId() );
+                        vendorBean = accessVendor.getVendor( vendorRequestBean );
+                    } else {
+                        vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
+                        vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
+                    }
+
+
 
                     if( sEventClient!=null && "create_client".equalsIgnoreCase(sEventClient )
                             && ("".equalsIgnoreCase(sClientName) || "".equalsIgnoreCase(sClientEmail))  ) {
@@ -75,7 +99,11 @@ public class ProcSaveEvent   extends HttpServlet {
                         Text errorText = new ErrorText("Please enter a valid Client Name and Client Email","err_mssg") ;
                         arrErrorText.add(errorText);
                         responseStatus = RespConstants.Status.ERROR;
-                    } else if (vendorBean ==null || (vendorBean!=null && "".equalsIgnoreCase(vendorBean.getVendorId()))) {
+                    } else if (!isLoggedInUserAClient && ( vendorBean ==null || (vendorBean!=null && Utility.isNullOrEmpty(vendorBean.getVendorId())) )  ) {
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please login and try again.","err_mssg") ;
+                        arrErrorText.add(errorText);
+                        responseStatus = RespConstants.Status.ERROR;
+                    } else if (isLoggedInUserAClient && ( clientBean ==null || (clientBean!=null && Utility.isNullOrEmpty(clientBean.getClientId())) )  ) {
                         Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please login and try again.","err_mssg") ;
                         arrErrorText.add(errorText);
                         responseStatus = RespConstants.Status.ERROR;

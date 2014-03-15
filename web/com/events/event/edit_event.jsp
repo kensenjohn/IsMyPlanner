@@ -1,5 +1,9 @@
 <%@ page import="com.events.common.ParseUtil" %>
 <%@ page import="com.events.common.Constants" %>
+<%@ page import="com.events.bean.users.UserBean" %>
+<%@ page import="com.events.bean.clients.ClientRequestBean" %>
+<%@ page import="com.events.common.Utility" %>
+<%@ page import="com.events.clients.AccessClients" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -13,6 +17,26 @@
     if(sEventId!=null && !"".equalsIgnoreCase(sEventId)) {
         loadEventInfo = true;
     }
+
+    boolean isLoggedInUserAClient = false;
+    String sClientId = Constants.EMPTY;
+    UserBean loggedInUserBean = new UserBean();
+    if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
+        loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
+
+        if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getParentId())) {
+            ClientRequestBean clientRequestBean = new ClientRequestBean();
+            clientRequestBean.setClientId( loggedInUserBean.getParentId());
+
+            AccessClients accessClients = new AccessClients();
+            isLoggedInUserAClient = accessClients.isClient( clientRequestBean );
+            if(isLoggedInUserAClient){
+                sClientId = loggedInUserBean.getParentId();
+            }
+        }
+    }
+
+
 %>
 <body>
 <div class="page_wrap">
@@ -85,30 +109,42 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <label for="eventClient" class="form_label">Client</label><span class="required"> *</span>
-                                    <select class="form-control" id="eventClient" name="eventClient">
-                                        <option value="">Select A Client</option>
-                                        <option value="create_client">Create A New Client</option>
-                                    </select>
+                        <%
+                            if(isLoggedInUserAClient) {
+                        %>
+                                <input type="hidden" id="client_id" name="eventClient" value="<%=sClientId%>">
+                        <%
+                            } else {
+                        %>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <label for="eventClient" class="form_label">Client</label><span class="required"> *</span>
+                                            <select class="form-control" id="eventClient" name="eventClient">
+                                                <option value="">Select A Client</option>
+                                                <option value="create_client">Create A New Client</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-9">&nbsp;</div>
+                                    </div>
+                                    <div class="row" id="row_create_client" style="display:none;">
+                                        <div class="col-md-offset-1 col-md-4">
+                                            <label for="clientName" class="form_label">Client Name</label><span class="required"> *</span>
+                                            <input type="text" class="form-control" id="clientName" name="clientName" placeholder="Client Name (e.g Ron and Susan) ">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="clientEmail" class="form_label">Client's Email</label><span class="required"> *</span>
+                                            <input type="email" class="form-control" id="clientEmail" name="clientEmail" placeholder="Client's Email">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-9">&nbsp;</div>
-                            </div>
-                            <div class="row" id="row_create_client" style="display:none;">
-                                <div class="col-md-offset-1 col-md-4">
-                                    <label for="clientName" class="form_label">Client Name</label><span class="required"> *</span>
-                                    <input type="text" class="form-control" id="clientName" name="clientName" placeholder="Client Name (e.g Ron and Susan) ">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="clientEmail" class="form_label">Client's Email</label><span class="required"> *</span>
-                                    <input type="email" class="form-control" id="clientEmail" name="clientEmail" placeholder="Client's Email">
-                                </div>
-                            </div>
-                        </div>
+                        <%
+                            }
+                        %>
+
                         <button type="button" class="btn btn-filled" id="btn_new_event">Save</button>
                         <input type="hidden" id="eventId" name="eventId" value="<%=sEventId%>">
                     </form>
@@ -131,6 +167,7 @@
 <script src="/js/event/event_info.js"></script>
 <script type="text/javascript">
     var varLoadEventInfo = <%=loadEventInfo%>
+    var varIsLoggedInUserAClient = <%=isLoggedInUserAClient%>;
     $(window).load(function() {
         $('#eventDay').pickadate()
         $('#eventTime').pickatime({
@@ -150,7 +187,10 @@
         $('#btn_new_event').click(function(){
             saveEvent(getResult);
         });
-        loadClients(populateClientList);
+        if(varIsLoggedInUserAClient == false ) {
+            loadClients(populateClientList);
+        }
+
         if(varLoadEventInfo){
             var varEventId = '<%=sEventId%>';
             loadEventInfo(populateEventInfo,varEventId);

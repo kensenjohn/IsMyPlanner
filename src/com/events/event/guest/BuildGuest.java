@@ -63,6 +63,9 @@ public class BuildGuest {
                 if(guestRequestBean.isNotAttending() ||guestRequestBean.getRsvpSeats()>0){
                     guestRequestBean.setHasResponded(true);
                 }
+                if( guestRequestBean.isNotAttending() == false && guestRequestBean.getRsvpSeats() <=0 ) {
+                    guestRequestBean.setHasResponded(false);
+                }
 
                 Integer iNumOfEventGuests = 0;
                 if(Utility.isNullOrEmpty(guestRequestBean.getEventGuestGroupId())) {

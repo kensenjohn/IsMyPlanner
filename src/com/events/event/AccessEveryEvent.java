@@ -29,7 +29,13 @@ public class AccessEveryEvent {
         EveryEventResponseBean everyEventResponseBean = new EveryEventResponseBean();
         if(everyEventRequestBean!=null){
             AccessEveryEventData accessEveryEventData = new AccessEveryEventData();
-            ArrayList<EveryEventBean> arrEveryEventBean  = accessEveryEventData.getEveryEventByVendor(everyEventRequestBean);
+            ArrayList<EveryEventBean> arrEveryEventBean  = new ArrayList<EveryEventBean>();
+            if(everyEventRequestBean.isLoadEventsByClient()) {
+                arrEveryEventBean  = accessEveryEventData.getEveryEventByClient(everyEventRequestBean);
+            } else {
+                arrEveryEventBean  = accessEveryEventData.getEveryEventByVendor(everyEventRequestBean);
+            }
+
 
             HashMap<String,ClientBean> hmClientBean = getClientDetails(arrEveryEventBean);
             HashMap<String,EventDisplayDateBean> hmEventDisplayDate = getEventDisplayDate(arrEveryEventBean);
@@ -135,9 +141,7 @@ public class AccessEveryEvent {
         if(everyEventRequestBean!=null && !Utility.isNullOrEmpty(everyEventRequestBean.getClientId()) ) {
             AccessEveryEventData accessEveryEventData = new AccessEveryEventData();
             ArrayList<EveryEventBean> arrEveryEventBean  = accessEveryEventData.getEveryEventByClient(everyEventRequestBean);
-            appLogging.info("Every client event : " + arrEveryEventBean);
             HashMap<String,EventDisplayDateBean> hmEventDisplayDate = getEventDisplayDate(arrEveryEventBean);
-            appLogging.info("Every hmEventDisplayDate : " + hmEventDisplayDate);
             everyEventResponseBean.setArrEveryEventBean(arrEveryEventBean);
             everyEventResponseBean.setHmEventDisplayDateBean(hmEventDisplayDate);
         }

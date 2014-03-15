@@ -59,6 +59,17 @@ public class AccessClients {
         return clientBean;
     }
 
+    public boolean isClient(ClientRequestBean clientRequestBean){
+        boolean isClient = false;
+        if(clientRequestBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId()) ) {
+            ClientBean clientBean = getClient(clientRequestBean);
+            if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId()) ) {
+                isClient = true;
+            }
+        }
+        return isClient;
+    }
+
 
     public ClientResponseBean getClientContactInfo(ClientRequestBean clientRequestBean)  {
         ClientResponseBean clientResponseBean =new ClientResponseBean();

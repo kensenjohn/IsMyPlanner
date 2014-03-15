@@ -18,6 +18,16 @@ public class EveryEventRequestBean {
     private String eventType = Constants.EMPTY;
     private boolean isDeletedEvent = false;
 
+    private boolean isLoadEventsByClient = false;
+
+    public boolean isLoadEventsByClient() {
+        return isLoadEventsByClient;
+    }
+
+    public void setLoadEventsByClient(boolean loadEventsByClient) {
+        isLoadEventsByClient = loadEventsByClient;
+    }
+
     public String getSearchText() {
         return searchText;
     }

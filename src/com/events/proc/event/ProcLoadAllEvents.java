@@ -1,10 +1,13 @@
 package com.events.proc.event;
 
+import com.events.bean.clients.ClientBean;
+import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.event.EveryEventRequestBean;
 import com.events.bean.event.EveryEventResponseBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
+import com.events.clients.AccessClients;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
@@ -46,14 +49,33 @@ public class ProcLoadAllEvents  extends HttpServlet {
 
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
 
+                    boolean isLoggedInUserAClient = false;
+                    ClientRequestBean clientRequestBean = new ClientRequestBean();
+                    clientRequestBean.setClientId( loggedInUserBean.getParentId());
+
+                    AccessClients accessClients = new AccessClients();
+                    ClientBean clientBean = accessClients.getClient( clientRequestBean );
+                    if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId())) {
+                        isLoggedInUserAClient = true;
+                    }
+
+                    VendorBean vendorBean = new VendorBean();
+
                     VendorRequestBean vendorRequestBean = new VendorRequestBean();
-                    vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
                     AccessVendors accessVendor = new AccessVendors();
-                    VendorBean vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
+                    if(isLoggedInUserAClient) {
+                        vendorRequestBean.setVendorId(  clientBean.getVendorId() );
+                        vendorBean = accessVendor.getVendor( vendorRequestBean );
+                    } else {
+                        vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
+                        vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
+                    }
 
                     EveryEventRequestBean everyEventRequestBean = new EveryEventRequestBean();
                     everyEventRequestBean.setVendorId(vendorBean.getVendorId());
+                    everyEventRequestBean.setClientId( ParseUtil.checkNull( clientRequestBean.getClientId() ));
                     everyEventRequestBean.setDeletedEvent(false);
+                    everyEventRequestBean.setLoadEventsByClient( isLoggedInUserAClient );
 
                     AccessEveryEvent accessEveryEvent = new AccessEveryEvent();
                     EveryEventResponseBean everyEventResponseBean = accessEveryEvent.getEveryEvent(everyEventRequestBean);

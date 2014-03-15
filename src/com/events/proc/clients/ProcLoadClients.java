@@ -54,38 +54,49 @@ public class ProcLoadClients   extends HttpServlet {
 
                 if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
 
-                    VendorRequestBean vendorRequestBean = new VendorRequestBean();
-                    vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
-                    AccessVendors accessVendor = new AccessVendors();
-                    VendorBean vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
+                    ClientRequestBean clientRequestBean = new ClientRequestBean();
+                    clientRequestBean.setClientId( loggedInUserBean.getParentId());
 
-                    if(vendorBean!=null && !"".equalsIgnoreCase(vendorBean.getVendorId() ))  {
-                        ClientRequestBean clientRequestBean = new ClientRequestBean();
-                        clientRequestBean.setVendorId( vendorBean.getVendorId() );
+                    AccessClients accessClients = new AccessClients();
+                    if(!accessClients.isClient( clientRequestBean ) ){
+                        VendorRequestBean vendorRequestBean = new VendorRequestBean();
+                        vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
+                        AccessVendors accessVendor = new AccessVendors();
+                        VendorBean vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
 
-                        AccessClients accessClients = new AccessClients();
-                        HashMap<Integer,ClientBean> hmClientBean = accessClients.getAllClientsSummary(clientRequestBean);
-                        JSONObject jsonObject = accessClients.convertAllClientsSummaryToJson( hmClientBean );
-                        jsonResponseObj.put("all_client_summary",jsonObject);
-                        jsonResponseObj.put("num_of_clients",hmClientBean.size());
+                        if(vendorBean!=null && !"".equalsIgnoreCase(vendorBean.getVendorId() ))  {
+                            clientRequestBean.setVendorId( vendorBean.getVendorId() );
 
-                        boolean canDeleteClient = false;
-                        CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
-                        if(checkPermission!=null) {
-                            canDeleteClient = checkPermission.can(Perm.DELETE_CLIENT);
+                            HashMap<Integer,ClientBean> hmClientBean = accessClients.getAllClientsSummary(clientRequestBean);
+                            JSONObject jsonObject = accessClients.convertAllClientsSummaryToJson( hmClientBean );
+                            jsonResponseObj.put("all_client_summary",jsonObject);
+                            jsonResponseObj.put("num_of_clients",hmClientBean.size());
+
+                            boolean canDeleteClient = false;
+                            CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
+                            if(checkPermission!=null) {
+                                canDeleteClient = checkPermission.can(Perm.DELETE_CLIENT);
+                            }
+                            jsonResponseObj.put("can_delete_client", canDeleteClient );
+
+                            Text okText = new OkText("Loading of All Client Summary completed","status_mssg") ;
+                            arrOkText.add(okText);
+                            responseStatus = RespConstants.Status.OK;
+                        } else {
+                            appLogging.info("Could not load a valid Vendor for user id that was provided " + ParseUtil.checkNullObject(loggedInUserBean) );
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadclient - 004)","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
                         }
-                        jsonResponseObj.put("can_delete_client", canDeleteClient );
-
-                        Text okText = new OkText("Loading of All Client Summary completed","status_mssg") ;
-                        arrOkText.add(okText);
-                        responseStatus = RespConstants.Status.OK;
                     } else {
-                        appLogging.info("Could not load a valid Vendor for user id that was provided " + ParseUtil.checkNullObject(loggedInUserBean) );
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadclient - 004)","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. You are not authorized to access this feature.","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
                     }
+
+
                 } else {
                     appLogging.info("Invalid request in Proc Page  (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
                     Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadclient - 002)","err_mssg") ;
