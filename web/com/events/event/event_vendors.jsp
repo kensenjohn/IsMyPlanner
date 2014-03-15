@@ -1,4 +1,10 @@
 <%@ page import="com.events.common.ParseUtil" %>
+<%@ page import="com.events.bean.clients.ClientRequestBean" %>
+<%@ page import="com.events.clients.AccessClients" %>
+<%@ page import="com.events.bean.clients.ClientBean" %>
+<%@ page import="com.events.common.Utility" %>
+<%@ page import="com.events.common.Constants" %>
+<%@ page import="com.events.bean.users.UserBean" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -12,6 +18,22 @@
     if(sEventId!=null && !"".equalsIgnoreCase(sEventId)) {
         loadEventInfo = true;
     }
+    boolean isLoggedInUserAClient = false;
+    if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
+        UserBean loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
+        if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
+            ClientRequestBean clientRequestBean = new ClientRequestBean();
+            clientRequestBean.setClientId( loggedInUserBean.getParentId());
+
+            AccessClients accessClients = new AccessClients();
+            ClientBean clientBean = accessClients.getClient( clientRequestBean );
+            if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId())) {
+                isLoggedInUserAClient = true;
+            }
+        }
+    }
+
+
 %>
 
 <body>
@@ -48,7 +70,18 @@
             <div class="row">
                 <div class="col-md-4">
                     <a href="/com/events/event/vendors/edit_event_vendors.jsp?event_id=<%=sEventId%>" class="btn btn-filled">
-                        <span> Assign or Recommend Vendors</span>
+                        <%
+                            if(isLoggedInUserAClient) {
+                        %>
+                                <span>Recommend Vendors</span>
+                        <%
+                            } else {
+                        %>
+                                <span> Assign or Recommend Vendors</span>
+                        <%
+                            }
+                        %>
+
                     </a>
                 </div>
             </div>
@@ -148,7 +181,7 @@
             </div>
 
 
-            <div class="row">
+             <%--<div class="row">
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-12">
@@ -183,7 +216,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>--%>
         </div>
     </div>
 </div>
@@ -217,14 +250,14 @@
             $('#recommended_icon').addClass("fa fa-chevron-circle-down");
         })
 
-        $('#collapse_shortlisted').on('hide.bs.collapse', function () {
+        /*$('#collapse_shortlisted').on('hide.bs.collapse', function () {
             $('#shortlisted_icon').removeClass("fa fa-chevron-circle-down");
             $('#shortlisted_icon').addClass("fa fa-chevron-circle-right");
         })
         $('#collapse_shortlisted').on('show.bs.collapse', function () {
             $('#shortlisted_icon').removeClass("fa fa-chevron-circle-right");
             $('#shortlisted_icon').addClass("fa fa-chevron-circle-down");
-        })
+        })*/
 
         loadEventVendorList(populateEventVendorList)
     });
@@ -250,7 +283,7 @@
                     }
                     initializeTable('every_assigned_event_vendor');
                     initializeTable('every_recommended_event_vendor');
-                    initializeTable('every_shortlisted_event_vendor');
+                    //initializeTable('every_shortlisted_event_vendor');
                 }
             } else {
                 displayMssgBoxAlert("Please try again later (populateEventList - 1)", true);

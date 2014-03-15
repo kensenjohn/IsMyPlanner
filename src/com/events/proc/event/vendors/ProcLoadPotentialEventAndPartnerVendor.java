@@ -5,6 +5,8 @@ import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.event.vendor.EventVendorRequestBean;
 import com.events.bean.event.vendor.EveryEventVendorBean;
 import com.events.bean.users.UserBean;
+import com.events.bean.vendors.VendorBean;
+import com.events.bean.vendors.VendorRequestBean;
 import com.events.clients.AccessClients;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
@@ -13,6 +15,7 @@ import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.event.vendor.AccessEventVendor;
 import com.events.json.*;
+import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,29 +52,47 @@ public class ProcLoadPotentialEventAndPartnerVendor extends HttpServlet {
                     String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
                     String sVendorId = Constants.EMPTY;
 
-                    if(Constants.USER_TYPE.VENDOR.equals( loggedInUserBean.getUserType() )) {
-                        sVendorId = loggedInUserBean.getParentId();
+                    boolean isLoggedInUserAClient = false;
+                    ClientRequestBean clientRequestBean = new ClientRequestBean();
+                    clientRequestBean.setClientId( loggedInUserBean.getParentId());
 
-                    } else if(Constants.USER_TYPE.CLIENT.equals( loggedInUserBean.getUserType())) {
-                        ClientRequestBean clientRequestBean = new ClientRequestBean();
-                        clientRequestBean.setClientId( loggedInUserBean.getParentId() );
-
-                        AccessClients accessClients = new AccessClients();
-                        ClientBean clientBean = accessClients.getClientDataByVendorAndClient(clientRequestBean);
-                        if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getVendorId())) {
-                            sVendorId = ParseUtil.checkNull(clientBean.getVendorId());
-                        }
+                    AccessClients accessClients = new AccessClients();
+                    ClientBean clientBean = accessClients.getClient( clientRequestBean );
+                    if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId())) {
+                        isLoggedInUserAClient = true;
                     }
 
-                    if( !Utility.isNullOrEmpty(sVendorId) && !Utility.isNullOrEmpty(sEventId ) ) {
+                    VendorBean vendorBean = new VendorBean();
+
+                    VendorRequestBean vendorRequestBean = new VendorRequestBean();
+                    AccessVendors accessVendor = new AccessVendors();
+                    if(isLoggedInUserAClient) {
+                        vendorRequestBean.setVendorId(  clientBean.getVendorId() );
+                        vendorBean = accessVendor.getVendor( vendorRequestBean );
+                    } else {
+                        vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
+                        vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
+                    }
+
+                    if( vendorBean!=null && !Utility.isNullOrEmpty(vendorBean.getVendorId())  ) {
                         EventVendorRequestBean eventVendorRequestBean = new EventVendorRequestBean();
-                        eventVendorRequestBean.setVendorId( sVendorId );
+                        eventVendorRequestBean.setVendorId( vendorBean.getVendorId() );
                         eventVendorRequestBean.setEventId( sEventId );
 
                         AccessEventVendor accessEventVendor = new AccessEventVendor();
                         Integer iNumOfPotentialEventVendors = 0;
                         ArrayList<EveryEventVendorBean> arrEveryEventVendorBean = accessEventVendor.getPotentialVendors( eventVendorRequestBean );
                         if(arrEveryEventVendorBean!=null && !arrEveryEventVendorBean.isEmpty()){
+                            ArrayList<EveryEventVendorBean> arrEventVendorsForClients = new ArrayList<EveryEventVendorBean>();
+                            if(isLoggedInUserAClient){
+                                for(EveryEventVendorBean everyEventVendorBean : arrEveryEventVendorBean ){
+                                    if(everyEventVendorBean.isAssignedToEvent() || everyEventVendorBean.isRecommendedForEvent()) {
+                                        arrEventVendorsForClients.add(everyEventVendorBean ) ;
+                                    }
+                                }
+                                arrEveryEventVendorBean = arrEventVendorsForClients;
+                            }
+
                             JSONObject everyPotentialEventVendorJSON = accessEventVendor.getEveryEventVendorJSON(arrEveryEventVendorBean);
                             iNumOfPotentialEventVendors = everyPotentialEventVendorJSON.optInt("num_of_potential_event_vendors");
                             if(iNumOfPotentialEventVendors>0 && everyPotentialEventVendorJSON!=null){
@@ -80,6 +101,7 @@ public class ProcLoadPotentialEventAndPartnerVendor extends HttpServlet {
                         }
 
                         jsonResponseObj.put("num_of_potential_event_vendors",iNumOfPotentialEventVendors);
+                        jsonResponseObj.put("is_loggedin_user_a_client",isLoggedInUserAClient);
 
                         Text okText = new OkText("Partner Vendors are successfully loaded.","status_mssg") ;
                         arrOkText.add(okText);

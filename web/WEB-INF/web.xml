@@ -754,6 +754,15 @@
         <url-pattern>/proc_delete_partnervendor.aeve</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <display-name>=</display-name>
+        <servlet-name>Process Send Note</servlet-name>
+        <servlet-class>com.events.proc.notify.ProcSendNote</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Send Note</servlet-name>
+        <url-pattern>/proc_send_note.aeve</url-pattern>
+    </servlet-mapping>
 
 
     <filter>

@@ -1,5 +1,10 @@
 <%@ page import="com.events.common.ParseUtil" %>
 <%@ page import="com.events.common.Constants" %>
+<%@ page import="com.events.common.Utility" %>
+<%@ page import="com.events.bean.users.UserBean" %>
+<%@ page import="com.events.bean.clients.ClientRequestBean" %>
+<%@ page import="com.events.clients.AccessClients" %>
+<%@ page import="com.events.bean.clients.ClientBean" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -12,6 +17,22 @@
     boolean loadEventInfo = false;
     if(sEventId!=null && !"".equalsIgnoreCase(sEventId)) {
         loadEventInfo = true;
+    }
+
+    boolean isLoggedInUserAClient = false;
+    ClientBean clientBean = new ClientBean();
+    if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
+        UserBean loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
+        if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
+            ClientRequestBean clientRequestBean = new ClientRequestBean();
+            clientRequestBean.setClientId( loggedInUserBean.getParentId());
+
+            AccessClients accessClients = new AccessClients();
+            clientBean = accessClients.getClient( clientRequestBean );
+            if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId())) {
+                isLoggedInUserAClient = true;
+            }
+        }
     }
 %>
 
@@ -76,6 +97,47 @@
                     &nbsp;
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    &nbsp;
+                </div>
+            </div>
+            <%
+                if(isLoggedInUserAClient) {
+            %>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5>Do not see your preferred Vendor in the list above?</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form id="frm_send_note">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <label for="preferred_vendor_note" class="form_label">Send a note to your planner</label><span class="required"> *</span>
+                                            <textarea class="form-control" id="preferred_vendor_note" name="preferred_vendor_note" placeholder="Include vendors you prefer in your note." ></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="note_from" value="<%=ParseUtil.checkNull(clientBean.getClientId())%>"/>
+                                <input type="hidden" name="note_from_type" value="<%=Constants.USER_TYPE.CLIENT.getType()%>"/>
+                                <input type="hidden" name="note_to"  value="<%=Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString()%>"/>
+                            </form>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-filled btn-small" id="btn_send_note">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            <%
+                }
+            %>
+
             <!-- <div class="row">
                 <div class="col-md-8">
                     <div class="boxedcontent">
@@ -161,8 +223,19 @@
     var varEventId = '<%=sEventId%>';
     $(window).load(function() {
         loadEventInfo(populateEventInfo,varEventId);
-        loadEventPartnerVendors(populateEventPartnerVendors)
+        loadEventPartnerVendors(populateEventPartnerVendors);
+
+        $('#btn_send_note').click(function(){
+            //displayMssgBoxAlert("Send Note", true);
+            sendPreferredVendorNote(getResult)
+        })
     });
+    function sendPreferredVendorNote( callbackmethod ) {
+        var actionUrl = "/proc_send_note.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_send_note").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
     function loadEventPartnerVendors(callbackmethod) {
         var actionUrl = "/proc_load_all_event_partner_vendors.aeve";
         var methodType = "POST";
@@ -180,7 +253,7 @@
                     var jsonResponseObj = varResponseObj.payload;
                     var varNumOfPotentialEventVendors = jsonResponseObj.num_of_potential_event_vendors;
                     if(varNumOfPotentialEventVendors!=undefined && varNumOfPotentialEventVendors>0){
-                        processPotentialEventVendorsList(varNumOfPotentialEventVendors, jsonResponseObj.potential_event_vendors );
+                        processPotentialEventVendorsList(varNumOfPotentialEventVendors, jsonResponseObj.potential_event_vendors , jsonResponseObj.is_loggedin_user_a_client );
                     }
                     initializeTable();
                 }
@@ -192,7 +265,7 @@
         }
 
     }
-    function processPotentialEventVendorsList(varNumOfPotentialEventVendors , everyPotEventVendorList  ) {
+    function processPotentialEventVendorsList(varNumOfPotentialEventVendors , everyPotEventVendorList, isLoggedInUserClient  ) {
         for(i=0;i<varNumOfPotentialEventVendors;i++){
             var varPotEventVendorBean = everyPotEventVendorList[i];
             var varEventId =  varPotEventVendorBean.event_id;
@@ -240,7 +313,7 @@
                             '<td>'+varEventVendorType +'</td>' +
                             '<td>'+varEventVendorWebsite +'</td>' +
                             '<td>'+varEventVendorPhone +'</td>' +
-                            '<td  class="center" >'+ createButtons(varPartnerVendorId , varAssigedAction , varRecommendAction) +'</td>');
+                            '<td  class="center" >'+ createButtons(varPartnerVendorId , varAssigedAction , varRecommendAction, isLoggedInUserClient) +'</td>');
             $('#every_potential_partner_vendor_rows').append(rowEveryEventVendor);
 
             addAssignClickEvent(varPartnerVendorId , varEventId , varAssigedAction);
@@ -248,10 +321,12 @@
             addRecommendClickEvent(varPartnerVendorId , varEventId , varRecommendAction)
         }
     }
-    function createButtons( varPartnerVendorId   , varAssigedAction , varRecommendAction ){
+    function createButtons( varPartnerVendorId   , varAssigedAction , varRecommendAction, isLoggedInUserClient ){
         var varButtons = '';
-        varButtons = varButtons + createAssignButton( varPartnerVendorId , varAssigedAction );
-        varButtons = varButtons + '&nbsp;&nbsp;&nbsp;';
+        if(!isLoggedInUserClient) {
+            varButtons = varButtons + createAssignButton( varPartnerVendorId , varAssigedAction );
+            varButtons = varButtons + '&nbsp;&nbsp;&nbsp;';
+        }
         varButtons = varButtons + createRecommendButton( varPartnerVendorId , varRecommendAction );
         return varButtons;
     }
@@ -467,6 +542,25 @@
                 { "bSortable": false }
             ]
         });
+    }
+
+    function getResult(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                }
+                displayAjaxOk(varResponseObj);
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
     }
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>
