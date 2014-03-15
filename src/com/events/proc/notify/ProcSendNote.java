@@ -45,7 +45,7 @@ public class ProcSendNote extends HttpServlet {
                     String sFromId = ParseUtil.checkNull(request.getParameter("note_from"));
                     String sFromType = ParseUtil.checkNull(request.getParameter("note_from_type"));
                     String sTo = ParseUtil.checkNull(request.getParameter("note_to"));
-                    String sMessage = ParseUtil.checkNull(request.getParameter("note_to"));
+                    String sMessage = ParseUtil.checkNull(request.getParameter("note_message"));
                     if(Utility.isNullOrEmpty(sMessage)){
                         Text errorText = new ErrorText("Please enter a valid message.","err_mssg") ;
                         arrErrorText.add(errorText);
@@ -60,7 +60,7 @@ public class ProcSendNote extends HttpServlet {
                         NotifyBean notifyBean = new NotifyBean();
                         notifyBean.setFrom(sFromId);
                         notifyBean.setTo(sTo);
-                        notifyBean.setMessage("Create an event.");
+                        notifyBean.setMessage(sMessage);
 
                         Notification.createNewNotifyRecord(notifyBean);
 

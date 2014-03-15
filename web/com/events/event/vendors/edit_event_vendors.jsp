@@ -21,8 +21,9 @@
 
     boolean isLoggedInUserAClient = false;
     ClientBean clientBean = new ClientBean();
+    UserBean loggedInUserBean = new UserBean();
     if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
-        UserBean loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
+        loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
         if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
             ClientRequestBean clientRequestBean = new ClientRequestBean();
             clientRequestBean.setClientId( loggedInUserBean.getParentId());
@@ -104,7 +105,7 @@
                 </div>
             </div>
             <%
-                if(isLoggedInUserAClient) {
+                if(isLoggedInUserAClient && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
             %>
                     <div class="row">
                         <div class="col-md-12">
@@ -118,11 +119,11 @@
                                     <div class="row">
                                         <div class="col-md-9">
                                             <label for="preferred_vendor_note" class="form_label">Send a note to your planner</label><span class="required"> *</span>
-                                            <textarea class="form-control" id="preferred_vendor_note" name="preferred_vendor_note" placeholder="Include vendors you prefer in your note." ></textarea>
+                                            <textarea class="form-control" id="preferred_vendor_note" name="note_message" placeholder="Include vendors you prefer in your note." ></textarea>
                                         </div>
                                     </div>
                                 </div>
-                                <input type="hidden" name="note_from" value="<%=ParseUtil.checkNull(clientBean.getClientId())%>"/>
+                                <input type="hidden" name="note_from" value="<%=ParseUtil.checkNull(loggedInUserBean.getUserId())%>"/>
                                 <input type="hidden" name="note_from_type" value="<%=Constants.USER_TYPE.CLIENT.getType()%>"/>
                                 <input type="hidden" name="note_to"  value="<%=Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString()%>"/>
                             </form>
