@@ -5,6 +5,8 @@ import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.event.website.AllWebsiteThemeRequestBean;
 import com.events.bean.event.website.WebsiteThemResponseBean;
 import com.events.bean.users.UserBean;
+import com.events.bean.vendors.VendorBean;
+import com.events.bean.vendors.VendorRequestBean;
 import com.events.clients.AccessClients;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
@@ -13,6 +15,7 @@ import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.event.website.AccessWebsiteThemes;
 import com.events.json.*;
+import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,27 +50,35 @@ public class ProcLoadAllWebsiteThemes  extends HttpServlet {
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
                     String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
-                    String sVendorId = Constants.EMPTY;
+                    //String sVendorId = Constants.EMPTY;
 
-                    if(Constants.USER_TYPE.VENDOR.equals( loggedInUserBean.getUserType() )) {
-                        sVendorId = loggedInUserBean.getParentId();
+                    boolean isLoggedInUserAClient = false;
+                    ClientRequestBean clientRequestBean = new ClientRequestBean();
+                    clientRequestBean.setClientId( loggedInUserBean.getParentId());
 
-                    } else if(Constants.USER_TYPE.CLIENT.equals( loggedInUserBean.getUserType())) {
-                        ClientRequestBean clientRequestBean = new ClientRequestBean();
-                        clientRequestBean.setClientId( loggedInUserBean.getParentId() );
-
-                        AccessClients accessClients = new AccessClients();
-                        ClientBean clientBean = accessClients.getClientDataByVendorAndClient(clientRequestBean);
-                        if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getVendorId())) {
-                            sVendorId = ParseUtil.checkNull(clientBean.getVendorId());
-                        }
+                    AccessClients accessClients = new AccessClients();
+                    ClientBean clientBean = accessClients.getClient( clientRequestBean );
+                    if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId())) {
+                        isLoggedInUserAClient = true;
                     }
-                    if(!Utility.isNullOrEmpty(sVendorId) && !Utility.isNullOrEmpty(sEventId)){
+
+                    VendorBean vendorBean = new VendorBean();
+
+                    VendorRequestBean vendorRequestBean = new VendorRequestBean();
+                    AccessVendors accessVendor = new AccessVendors();
+                    if(isLoggedInUserAClient) {
+                        vendorRequestBean.setVendorId(  clientBean.getVendorId() );
+                        vendorBean = accessVendor.getVendor( vendorRequestBean );
+                    } else {
+                        vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
+                        vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
+                    }
+                    if(vendorBean!=null && !Utility.isNullOrEmpty(vendorBean.getVendorId()) && !Utility.isNullOrEmpty(sEventId)){
 
                         AllWebsiteThemeRequestBean allWebsiteThemeRequestBean = new AllWebsiteThemeRequestBean();
 
                         ArrayList<String> arrVendorId = new ArrayList<String>();
-                        arrVendorId.add(sVendorId);
+                        arrVendorId.add(vendorBean.getVendorId());
                         arrVendorId.add("ALL_VENDORS");
                         allWebsiteThemeRequestBean.setArrVendorId( arrVendorId );
 

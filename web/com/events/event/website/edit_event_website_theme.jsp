@@ -80,6 +80,10 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 <script type="text/javascript">
+    $(window).load(function() {
+        loadAllThemes(populateAllThemes);
+        loadEventWebsiteThemes(populateCurrentTheme);
+    });
     var ThemeThumbnailModel = Backbone.Model.extend({});
     var ThemeThumbnailView = Backbone.View.extend({
         initialize: function(){
@@ -162,11 +166,6 @@
         themeThumbnailView.render();
         return themeThumbnailView;
     }
-
-    $(window).load(function() {
-        loadAllThemes(populateAllThemes);
-        loadEventWebsiteThemes(populateCurrentTheme);
-    });
 
     function loadEventWebsiteThemes(callbackmethod) {
         var actionUrl = "/proc_load_event_website_theme.aeve";

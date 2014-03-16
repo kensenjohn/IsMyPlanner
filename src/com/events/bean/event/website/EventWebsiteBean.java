@@ -24,6 +24,7 @@ public class EventWebsiteBean {
     private String websiteFontId = Constants.EMPTY;
     private String websiteColorId = Constants.EMPTY;
     private String userId = Constants.EMPTY;
+    private String urlUniqueName = Constants.EMPTY;
 
     public EventWebsiteBean(){}
     public EventWebsiteBean(HashMap<String,String> hmResult) {
@@ -33,6 +34,15 @@ public class EventWebsiteBean {
         this.websiteFontId = ParseUtil.checkNull(hmResult.get("FK_WEBSITEFONTID"));
         this.websiteColorId = ParseUtil.checkNull(hmResult.get("FK_WEBSITECOLORID"));
         this.userId = ParseUtil.checkNull(hmResult.get("FK_USERID"));
+        this.urlUniqueName = ParseUtil.checkNull(hmResult.get("URL_UNIQUE_NAME"));
+    }
+
+    public String getUrlUniqueName() {
+        return urlUniqueName;
+    }
+
+    public void setUrlUniqueName(String urlUniqueName) {
+        this.urlUniqueName = urlUniqueName;
     }
 
     public String getEventWebsiteId() {
@@ -92,6 +102,7 @@ public class EventWebsiteBean {
         sb.append(", websiteFontId='").append(websiteFontId).append('\'');
         sb.append(", websiteColorId='").append(websiteColorId).append('\'');
         sb.append(", userId='").append(userId).append('\'');
+        sb.append(", urlUniqueName='").append(urlUniqueName).append('\'');
         sb.append('}');
         return sb.toString();
     }
@@ -106,6 +117,7 @@ public class EventWebsiteBean {
             jsonObject.put("website_font_id", this.websiteFontId );
             jsonObject.put("website_color_id", this.websiteColorId );
             jsonObject.put("user_id", this.userId );
+            jsonObject.put("url_unique_name", this.urlUniqueName );
         } catch (JSONException e) {
             e.printStackTrace();
         }

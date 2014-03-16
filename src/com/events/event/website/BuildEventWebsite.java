@@ -50,6 +50,7 @@ public class BuildEventWebsite {
 
             if(Utility.isNullOrEmpty(eventWebsiteRequestBean.getEventWebsiteId())) {
                 eventWebsiteBean.setEventWebsiteId( Utility.getNewGuid() );
+                eventWebsiteBean.setUrlUniqueName( Utility.getNewGuid() );
                 eventWebsiteBean = createEventWebsite(eventWebsiteBean);
                 if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
                     AccessEventWebsitePage accessEventWebsitePage = new AccessEventWebsitePage();

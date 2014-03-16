@@ -137,7 +137,9 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 <script type="text/javascript">
-
+    $(window).load(function() {
+        loadThemeColorsAndFonts(populateThemeColorsAndFonts);
+    });
     var EventWebsiteModel = Backbone.Model.extend({
         defaults: {
             bb_event_website: undefined
@@ -258,10 +260,6 @@
             var blankRow = this.template( );
             $(this.el).append( blankRow );
         }
-    });
-
-    $(window).load(function() {
-        loadThemeColorsAndFonts(populateThemeColorsAndFonts);
     });
     function loadThemeColorsAndFonts(callbackmethod) {
         var actionUrl = "/proc_load_theme_colors_and_fonts.aeve";

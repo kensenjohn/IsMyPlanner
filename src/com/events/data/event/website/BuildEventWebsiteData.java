@@ -27,10 +27,12 @@ public class BuildEventWebsiteData {
     public Integer insertEventWebsite(EventWebsiteBean eventWebsiteBean) {
         Integer numOfRowsInserted = 0;
         if(eventWebsiteBean!=null) {
-            String sQuery = "INSERT into GTEVENTWEBSITE(EVENTWEBSITEID,FK_EVENTID,FK_WEBSITETHEMEID,    FK_WEBSITEFONTID,FK_WEBSITECOLORID,FK_USERID ) VALUES " +
-                    " (?,?,?,    ?,?,? )";
+            String sQuery = "INSERT into GTEVENTWEBSITE(EVENTWEBSITEID,FK_EVENTID,FK_WEBSITETHEMEID,    FK_WEBSITEFONTID,FK_WEBSITECOLORID,FK_USERID,       " +
+                    " URL_UNIQUE_NAME) VALUES " +
+                    " (?,?,?,    ?,?,?,   ? )";
             ArrayList<Object> aParams = DBDAO.createConstraint(eventWebsiteBean.getEventWebsiteId() , eventWebsiteBean.getEventId(), eventWebsiteBean.getWebsiteThemeId(),
-                    eventWebsiteBean.getWebsiteFontId(), eventWebsiteBean.getWebsiteColorId(), eventWebsiteBean.getUserId() );
+                    eventWebsiteBean.getWebsiteFontId(), eventWebsiteBean.getWebsiteColorId(), eventWebsiteBean.getUserId(),
+                    eventWebsiteBean.getUrlUniqueName() );
 
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildEventWebsiteData.java", "insertEventWebsite() ");
         }
@@ -40,9 +42,9 @@ public class BuildEventWebsiteData {
     public Integer updateEventWebsite(EventWebsiteBean eventWebsiteBean) {
         Integer numOfRowsInserted = 0;
         if(eventWebsiteBean!=null) {
-            String sQuery = "UPDATE GTEVENTWEBSITE SET FK_WEBSITETHEMEID = ?, FK_WEBSITEFONTID = ?,FK_WEBSITECOLORID= ?,     FK_USERID = ?   WHERE   EVENTWEBSITEID=? ";
+            String sQuery = "UPDATE GTEVENTWEBSITE SET FK_WEBSITETHEMEID = ?, FK_WEBSITEFONTID = ?,FK_WEBSITECOLORID= ?,     FK_USERID = ?,URL_UNIQUE_NAME=?   WHERE   EVENTWEBSITEID=? ";
             ArrayList<Object> aParams = DBDAO.createConstraint(eventWebsiteBean.getWebsiteThemeId(), eventWebsiteBean.getWebsiteFontId(), eventWebsiteBean.getWebsiteColorId(),
-                    eventWebsiteBean.getUserId() , eventWebsiteBean.getEventWebsiteId() );
+                    eventWebsiteBean.getUserId() ,eventWebsiteBean.getUrlUniqueName(), eventWebsiteBean.getEventWebsiteId() );
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildEventWebsiteData.java", "updateEventWebsite() ");
         }
         return numOfRowsInserted;

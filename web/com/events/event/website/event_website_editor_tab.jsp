@@ -11,5 +11,5 @@
     <li class="<%=sEditThemeActive%>"><a href="/com/events/event/website/edit_event_website_theme.jsp?event_id=<%=sEventId%>">Themes</a></li>
     <li class="<%=sEditColorFontActive%>"><a href="/com/events/event/website/edit_event_website_color_font.jsp?event_id=<%=sEventId%>">Colors and Fonts</a></li>
     <li class="<%=sEditPagesActive%>"><a href="/com/events/event/website/edit_event_website_pages.jsp?event_id=<%=sEventId%>">Pages</a></li>
-    <li class="<%=sEditWebLinks%>"><a href="/com/events/event/website/edit_event_website_link.jsp?event_id=<%=sEventId%>">Web Links</a></li>
+    <li class="<%=sEditWebLinks%>"><a href="/com/events/event/website/edit_event_website_link.jsp?event_id=<%=sEventId%>">Website URL/Link</a></li>
 </ul>
