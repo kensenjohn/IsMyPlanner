@@ -98,7 +98,7 @@
                     <input type="radio" id="{{website_font_id}}" name="fonts" {{#if is_font_selected}} checked {{/if}}>
                 </div>
 
-                <div class="col-md-9"><img class="img-thumbnail" src="/com/events/event/website/static_templates/{{name}}/img/{{font_name}}.png">
+                <div class="col-md-9"><img class="img-thumbnail" src="/cl/{{name}}/img/{{font_name}}.png">
                 </div>
 
                 <div class="col-md-2"><h4>{{font_name}}</h4>
@@ -112,7 +112,7 @@
     <div class="col-md-1">
         <div class="row" style="text-align:center;">
             <div class="col-md-12">
-                <img class="img-thumbnail" src="/com/events/event/website/static_templates/{{name}}/img/{{color_swatch_name}}">
+                <img class="img-thumbnail" src="/cl/{{name}}/img/{{color_swatch_name}}">
             </div>
         </div>
 

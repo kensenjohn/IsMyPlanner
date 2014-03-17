@@ -24,12 +24,21 @@ public class AccessEventWebsite {
         return eventWebsiteBean;
     }
 
-    public ArrayList<EventWebsiteBean> getEventWebsiteByUrlUniqueName(EventWebsiteRequestBean eventWebsiteRequestBean){
+    public ArrayList<EventWebsiteBean> getAllEventWebsiteByUrlUniqueName(EventWebsiteRequestBean eventWebsiteRequestBean){
         ArrayList<EventWebsiteBean> arrEventWebsiteBean = new ArrayList<EventWebsiteBean>();
-        if(eventWebsiteRequestBean!=null && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getEventId())) {
+        if(eventWebsiteRequestBean!=null && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getUrlUniqueName())) {
             AccessEventWebsiteData accessEventWebsiteData = new AccessEventWebsiteData();
-            arrEventWebsiteBean = accessEventWebsiteData.getEventWebsiteByUniqueURL(eventWebsiteRequestBean);
+            arrEventWebsiteBean = accessEventWebsiteData.getAllEventWebsiteByUniqueURL(eventWebsiteRequestBean);
         }
         return arrEventWebsiteBean;
+    }
+
+    public EventWebsiteBean getEventWebsiteBeanFromUrl(EventWebsiteRequestBean eventWebsiteRequestBean){
+        EventWebsiteBean eventWebsiteBean = new EventWebsiteBean();
+        if(eventWebsiteRequestBean!=null && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getUrlUniqueName())) {
+            AccessEventWebsiteData accessEventWebsiteData = new AccessEventWebsiteData();
+            eventWebsiteBean = accessEventWebsiteData.getEventWebsiteByURL(eventWebsiteRequestBean);
+        }
+        return eventWebsiteBean;
     }
 }

@@ -1,8 +1,6 @@
 package com.events.data.event.website;
 
-import com.events.bean.event.website.AllWebsiteThemeRequestBean;
-import com.events.bean.event.website.WebsiteColorBean;
-import com.events.bean.event.website.WebsiteThemeBean;
+import com.events.bean.event.website.*;
 import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.Utility;
@@ -44,6 +42,24 @@ public class AccessWebsiteColorData {
             }
         }
         return arrWebsiteColors;
+    }
+
+    public WebsiteColorBean getWebsiteColor(EventWebsiteRequestBean eventWebsiteRequestBean ) {
+        // GTWEBSITECOLOR ( WEBSITECOLORID , FK_WEBSITETHEMEID , COLOR_NAME , COLOR_CSS_NAME,COLOR_SWATCH_NAME)
+        WebsiteColorBean websiteColorBean = new WebsiteColorBean();
+        if( eventWebsiteRequestBean!=null && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getWebsiteColorId())) {
+
+            String sQuery = "SELECT * FROM GTWEBSITECOLOR WHERE WEBSITECOLORID  = ? ";
+            ArrayList<Object> aParams = DBDAO.createConstraint( eventWebsiteRequestBean.getWebsiteColorId() );
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessWebsiteColorData.java", "getWebsiteColor()");
+            if(arrResult!=null && !arrResult.isEmpty()){
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    websiteColorBean = new WebsiteColorBean(hmResult);
+                }
+            }
+        }
+        return websiteColorBean;
     }
 
     public WebsiteColorBean getDefaultWebsiteColor( WebsiteThemeBean websiteThemeBean ) {

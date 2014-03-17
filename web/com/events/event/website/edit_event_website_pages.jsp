@@ -18,6 +18,7 @@
     if(sEventId!=null && !"".equalsIgnoreCase(sEventId)) {
         loadEventInfo = true;
     }
+    final String welcomePageType = Constants.EVENT_WEBSITE_PAGETYPE.welcome.toString();
 %>
 
 <body>
@@ -53,7 +54,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_welcome">
                                         <i id="welcome_collapse_icon" class="fa fa-chevron-circle-right"></i> Welcome</a>
                                     &nbsp;&nbsp;
-                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide"  class="hide-page" name="welcome_hide" id="welcome_hide" param="welcome">
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide"  class="hide-page" name="welcome_hide" id="welcome_hide" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.welcome.toString()%>">
 
                                 </h4>
                             </div>
@@ -99,7 +100,7 @@
                                                             </div>
                                                         </div>
                                                         <input type="hidden" name="event_id" value="<%=sEventId%>" />
-                                                        <input type="hidden" name="page_type" value="welcome" />
+                                                        <input type="hidden" name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.welcome.toString()%>" />
                                                         <input type="hidden" name="feature_type" value="<%=Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.banner_image_name%>" />
                                                     </form>
                                                 </div>
@@ -124,12 +125,12 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <input type="hidden" name="page_type" value="welcome"/>
+                                                        <input type="hidden" name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.welcome.toString()%>"/>
                                                         <input type="hidden" name="event_id" value="<%=sEventId%>"/>
                                                     </form>
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <button class="btn btn-filled save-website-page" id="save_welcome" param="welcome">Save</button>
+                                                            <button class="btn btn-filled save-website-page" id="save_welcome" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.welcome.toString()%>">Save</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -145,7 +146,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_invitation">
                                         <i id="invitation_collapse_icon" class="fa fa-chevron-circle-right"></i> Invitation</a>
                                         &nbsp;&nbsp;
-                                        <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="invitation_hide" id="invitation_hide" param="invitation">
+                                        <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="invitation_hide" id="invitation_hide" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.invitation.toString()%>">
                                     </a>
                                 </h4>
                             </div>
@@ -192,12 +193,12 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" name="page_type" value="invitation"/>
+                                                <input type="hidden" name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.invitation.toString()%>"/>
                                                 <input type="hidden" name="event_id"  value="<%=sEventId%>"/>
                                             </form>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <button class="btn btn-filled save-website-page" id="save_invitation" param="invitation">Save</button>
+                                                    <button class="btn btn-filled save-website-page" id="save_invitation" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.invitation.toString()%>">Save</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -211,7 +212,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_couples">
                                         <i id="couples_collapse_icon" class="fa fa-chevron-circle-right"></i> Couples</a>
                                     &nbsp;&nbsp;
-                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="couples_hide" id="couples_hide" param="couples">
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="couples_hide" id="couples_hide" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.couples.toString()%>">
                                     </a>
                                 </h4>
                             </div>
@@ -256,7 +257,7 @@
                                                     </div>
                                                 </div>
                                                 <input type="hidden" name="event_id" value="<%=sEventId%>" />
-                                                <input type="hidden" name="page_type" value="couples" />
+                                                <input type="hidden" name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.couples.toString()%>" />
                                                 <input type="hidden" name="party" value="partner1" />
                                             </form>
                                             <form id="frm_save_couples_partner1">
@@ -295,7 +296,7 @@
                                                     <input type="hidden" name="event_website_id"   id="couples_partner1_event_website_id" value="" >
                                                     <input type="hidden" name="event_party_id"   id="couples_partner1_event_party_id" value="" >
                                                     <input type="hidden" name="upload_id"   id="couples_partner1_upload_id" value="" >
-                                                    <input type="hidden" name="page_type" value="couples" />
+                                                    <input type="hidden" name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.couples.toString()%>" />
                                                     <input type="hidden" name="event_party_type" value="<%=Constants.EVENT_PARTY_TYPE.BRIDE.toString()%>" />
 
                                                 </div>
@@ -307,7 +308,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <button class="btn btn-filled save-website-party" id="save_couples_partner1" param="couples_partner1">Save</button>
+                                                    <button class="btn btn-filled save-website-party" id="save_couples_partner1" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.couples.toString()%>_partner1">Save</button>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -352,7 +353,7 @@
                                                     </div>
                                                 </div>
                                                 <input type="hidden" name="event_id" value="<%=sEventId%>" />
-                                                <input type="hidden" name="page_type" value="couples" />
+                                                <input type="hidden" name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.couples.toString()%>" />
                                                 <input type="hidden" name="party" value="partner2" />
                                             </form>
                                             <form id="frm_save_couples_partner2">
@@ -396,14 +397,14 @@
                                                     <input type="hidden" name="event_website_id"   id="couples_partner2_event_website_id" value="" >
                                                     <input type="hidden" name="event_party_id"   id="couples_partner2_event_party_id" value="" >
                                                     <input type="hidden" name="upload_id"   id="couples_partner2_upload_id" value="" >
-                                                    <input type="hidden" name="page_type" value="couples" />
+                                                    <input type="hidden" name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.couples.toString()%>" />
                                                     <input type="hidden" name="event_party_type" value="<%=Constants.EVENT_PARTY_TYPE.GROOM.toString()%>" />
                                                 </div>
                                             </form>
 
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <button class="btn btn-filled save-website-party" id="save_couples_partner2" param="couples_partner2">Save</button>
+                                                    <button class="btn btn-filled save-website-party" id="save_couples_partner2" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.couples.toString()%>_partner2">Save</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -419,7 +420,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_bridesmaids">
                                         <i id="bridesmaids_collapse_icon" class="fa fa-chevron-circle-right"></i> Bridesmaids</a>
                                     &nbsp;&nbsp;
-                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="bridesmaids_hide" id="bridesmaids_hide" param="bridesmaids">
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="bridesmaids_hide" id="bridesmaids_hide" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.bridesmaids.toString()%>">
                                     </a>
                                 </h4>
                             </div>
@@ -461,7 +462,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_groomsmen">
                                         <i id="groomsmen_collapse_icon" class="fa fa-chevron-circle-right"></i> Groomsmen</a>
                                     &nbsp;&nbsp;
-                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="groomsmen_hide" id="groomsmen_hide" param="groomsmen">
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="groomsmen_hide" id="groomsmen_hide" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.groomsmen.toString()%>">
                                     </a>
                                 </h4>
                             </div>
@@ -503,7 +504,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_ceremony">
                                         <i id="ceremony_collapse_icon" class="fa fa-chevron-circle-right"></i> Ceremony</a>
                                     &nbsp;&nbsp;
-                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="ceremony_hide" id="ceremony_hide" param="ceremony">
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="ceremony_hide" id="ceremony_hide" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.ceremony.toString()%>">
                                 </h4>
                             </div>
                             <div id="collapse_ceremony" class="panel-collapse collapse">
@@ -541,7 +542,7 @@
                                                         </div>
                                                         <div class="col-md-2">
                                                             <label for="ceremony_ceremony_showmap" class="form_label">&nbsp;</label> <br>
-                                                            <input type="checkbox" name="ceremony_showmap" id="ceremony_ceremony_showmap" param="ceremony"  >  Show Map
+                                                            <input type="checkbox" name="ceremony_showmap" id="ceremony_ceremony_showmap" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.ceremony.toString()%>"  >  Show Map
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -552,7 +553,7 @@
                                                     </div>
                                                 </div>
                                                 <input type="hidden" name="event_id" value="<%=sEventId%>" />
-                                                <input type="hidden" name="page_type" value="ceremony" />
+                                                <input type="hidden" name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.ceremony.toString()%>" />
                                             </form>
                                         </div>
                                     </div>
@@ -563,7 +564,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <button class="btn btn-filled save-website-page" id="save_ceremony" param="ceremony">Save</button>
+                                            <button class="btn btn-filled save-website-page" id="save_ceremony" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.ceremony.toString()%>">Save</button>
                                         </div>
                                     </div>
                                 </div>
@@ -577,7 +578,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_reception">
                                         <i id="reception_collapse_icon" class="fa fa-chevron-circle-right"></i> Reception</a>
                                     &nbsp;&nbsp;
-                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="reception_hide" id="reception_hide" param="reception">
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="reception_hide" id="reception_hide" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.reception.toString()%>">
                                 </h4>
                             </div>
                             <div id="collapse_reception" class="panel-collapse collapse">
@@ -616,7 +617,7 @@
                                                         </div>
                                                         <div class="col-md-2">
                                                             <label for="reception_reception_showmap" class="form_label">&nbsp;</label> <br>
-                                                            <input type="checkbox" name="reception_showmap" id="reception_reception_showmap" param="reception"  >  Show Map
+                                                            <input type="checkbox" name="reception_showmap" id="reception_reception_showmap" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.reception.toString()%>"  >  Show Map
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -627,7 +628,7 @@
                                                     </div>
                                                 </div>
                                                 <input type="hidden" name="event_id" value="<%=sEventId%>" />
-                                                <input type="hidden" name="page_type" value="reception" />
+                                                <input type="hidden" name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.reception.toString()%>" />
                                             </form>
                                         </div>
                                     </div>
@@ -653,7 +654,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_travel">
                                         <i id="travel_collapse_icon" class="fa fa-chevron-circle-right"></i> Travel</a>
                                     &nbsp;&nbsp;
-                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="ceremony_hide" id="travel_hide" param="travel">
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="ceremony_hide" id="travel_hide" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.travel.toString()%>">
                                 </h4>
                             </div>
                             <div id="collapse_travel" class="panel-collapse collapse">
@@ -695,7 +696,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_hotels">
                                         <i id="hotels_collapse_icon" class="fa fa-chevron-circle-right"></i> Hotels</a>
                                     &nbsp;&nbsp;
-                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="hotels_hide" id="hotels_hide" param="hotels">
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="hotels_hide" id="hotels_hide" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.hotels.toString()%>">
                                 </h4>
                             </div>
                             <div id="collapse_hotels" class="panel-collapse collapse">
@@ -736,7 +737,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_registry">
                                         <i id="registry_collapse_icon" class="fa fa-chevron-circle-right"></i> Registry</a>
                                     &nbsp;&nbsp;
-                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="registry_hide" id="registry_hide" param="registry">
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="registry_hide" id="registry_hide" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.registry.toString()%>">
                                 </h4>
                             </div>
                             <div id="collapse_registry" class="panel-collapse collapse">
@@ -777,7 +778,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_rsvp">
                                         <i id="rsvp_collapse_icon" class="fa fa-chevron-circle-right"></i> RSVP</a>
                                     &nbsp;&nbsp;
-                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="rsvp_hide" id="rsvp_hide" param="rsvp">
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="rsvp_hide" id="rsvp_hide" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.rsvp.toString()%>">
                                 </h4>
                             </div>
                             <div id="collapse_rsvp" class="panel-collapse collapse">
@@ -799,7 +800,7 @@
                                     <a data-toggle="collapse" data-parent="#collapse_website_welcome" href="#collapse_contactus">
                                         <i id="contactus_collapse_icon" class="fa fa-chevron-circle-right"></i> Contact Us</a>
                                     &nbsp;&nbsp;
-                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="contactus_hide" id="contactus_hide" param="contactus">
+                                    <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide" class="hide-page" name="contactus_hide" id="contactus_hide" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.contactus.toString()%>">
                                 </h4>
                             </div>
                             <div id="collapse_contactus" class="panel-collapse collapse">
@@ -854,31 +855,31 @@
 <form id="frm_load_couples_event_party">
     <input type="hidden"  name="event_party_type[]" value="<%=Constants.EVENT_PARTY_TYPE.BRIDE%>"/>
     <input type="hidden"  name="event_party_type[]" value="<%=Constants.EVENT_PARTY_TYPE.GROOM%>"/>
-    <input type="hidden"  name="page_type" value="couples"/>
+    <input type="hidden"  name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.couples.toString()%>"/>
     <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
 </form>
 <form id="frm_load_bridesmaids_event_party">
     <input type="hidden"  name="event_party_type[]" value="<%=Constants.EVENT_PARTY_TYPE.BRIDESMAID%>"/>
     <input type="hidden"  name="event_party_type[]" value="<%=Constants.EVENT_PARTY_TYPE.MAIDOFHONOR%>"/>
-    <input type="hidden"  name="page_type" value="bridesmaids"/>
+    <input type="hidden"  name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.bridesmaids.toString()%>"/>
     <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
 </form>
 <form id="frm_load_groomsmen_event_party">
     <input type="hidden"  name="event_party_type[]" value="<%=Constants.EVENT_PARTY_TYPE.GROOMSMAN%>"/>
     <input type="hidden"  name="event_party_type[]" value="<%=Constants.EVENT_PARTY_TYPE.BESTMAN%>"/>
-    <input type="hidden"  name="page_type" value="groomsmen"/>
+    <input type="hidden"  name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.groomsmen.toString()%>"/>
     <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
 </form>
 <form id="frm_load_hotels_list">
-    <input type="hidden"  name="page_type" value="hotels"/>
+    <input type="hidden"  name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.hotels.toString()%>"/>
     <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
 </form>
 <form id="frm_load_registry_list">
-    <input type="hidden"  name="page_type" value="registry"/>
+    <input type="hidden"  name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.registry.toString()%>"/>
     <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
 </form>
 <form id="frm_load_contactus_list">
-    <input type="hidden"  name="page_type" value="contactus"/>
+    <input type="hidden"  name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.contactus.toString()%>"/>
     <input type="hidden"  name="event_id" value="<%=sEventId%>"/>
 </form>
 <form id="frm_save_web_page">

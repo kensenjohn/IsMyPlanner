@@ -1,6 +1,7 @@
 package com.events.data.event.website;
 
 import com.events.bean.event.website.AllWebsiteThemeRequestBean;
+import com.events.bean.event.website.EventWebsiteRequestBean;
 import com.events.bean.event.website.WebsiteFontBean;
 import com.events.bean.event.website.WebsiteThemeBean;
 import com.events.common.Configuration;
@@ -44,6 +45,24 @@ public class AccessWebsiteFontData {
             }
         }
         return arrWebsiteFonts;
+    }
+
+    public WebsiteFontBean getWebsiteFont(EventWebsiteRequestBean eventWebsiteRequestBean) {
+        // GTWEBSITEFONT ( WEBSITEFONTID , FK_WEBSITETHEMEID , FONT_NAME , FONT_CSS_NAME)
+        WebsiteFontBean websiteFontBean = new WebsiteFontBean();
+        if( eventWebsiteRequestBean!=null && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getWebsiteFontId())) {
+            String sQuery = "SELECT * FROM GTWEBSITEFONT WHERE WEBSITEFONTID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint( eventWebsiteRequestBean.getWebsiteFontId() );
+
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessWebsiteFontData.java", "getWebsiteFont()");
+            if(arrResult!=null && !arrResult.isEmpty()){
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    websiteFontBean = new WebsiteFontBean(hmResult);
+                }
+            }
+        }
+        return websiteFontBean;
     }
 
     public WebsiteFontBean getDefaultWebsiteFont( WebsiteThemeBean websiteThemeBean ) {

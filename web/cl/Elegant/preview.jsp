@@ -15,10 +15,10 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link rel="stylesheet" type="text/css" href="/css/color/modern_blue.css">
     <link rel="stylesheet" type="text/css" href="/css/flexslider.css">
-    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/elegant_style.css">
     <link rel="stylesheet" type="text/css" href="css/elegant_font_Amatic.css">
-    <link rel="stylesheet" type="text/css" href="css/elegant_color_warmred.css">
+    <link rel="stylesheet" type="text/css" href="css/elegant_color_warm_red.css">
 </head>
 <body>
 <div class="page_wrap">

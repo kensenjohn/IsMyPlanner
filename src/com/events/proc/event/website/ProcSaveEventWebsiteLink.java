@@ -58,7 +58,7 @@ public class ProcSaveEventWebsiteLink  extends HttpServlet {
                         eventWebsiteRequestBean.setUrlUniqueName( sWebsiteUniqueId );
 
                         AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
-                        ArrayList<EventWebsiteBean> arrEventWebsiteBeanByUniqueURL = accessEventWebsite.getEventWebsiteByUrlUniqueName( eventWebsiteRequestBean );
+                        ArrayList<EventWebsiteBean> arrEventWebsiteBeanByUniqueURL = accessEventWebsite.getAllEventWebsiteByUrlUniqueName( eventWebsiteRequestBean );
 
                         EventWebsiteBean eventWebsiteBean = accessEventWebsite.getEventWebsite(eventWebsiteRequestBean);
                         if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {

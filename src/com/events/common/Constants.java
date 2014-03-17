@@ -466,4 +466,8 @@ public class Constants {
     public enum NOTIFICATION_RECEPIENTS {
         ALL_PLANNERS, ALL_CLIENTS;
     }
+
+    public enum EVENT_WEBSITE_PAGETYPE{
+        welcome,invitation,couples,bridesmaids,groomsmen,ceremony,reception,travel,hotels,registry,rsvp,contactus;
+    }
 }

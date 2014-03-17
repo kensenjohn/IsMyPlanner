@@ -1,6 +1,7 @@
 package com.events.event.website;
 
 import com.events.bean.event.website.AllWebsiteThemeRequestBean;
+import com.events.bean.event.website.EventWebsiteRequestBean;
 import com.events.bean.event.website.WebsiteFontBean;
 import com.events.bean.event.website.WebsiteThemeBean;
 import com.events.common.Utility;
@@ -42,6 +43,16 @@ public class AccessWebsiteFont {
             arrWebsiteFonts = accessWebsiteFontData.getWebsiteFont(arrWebsiteTheme);
         }
         return arrWebsiteFonts;
+    }
+
+    public WebsiteFontBean getWebsiteFont(EventWebsiteRequestBean eventWebsiteRequestBean) {
+        WebsiteFontBean websiteFont =  new WebsiteFontBean();
+        if(eventWebsiteRequestBean!=null && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getWebsiteFontId())) {
+
+            AccessWebsiteFontData accessWebsiteFontData = new AccessWebsiteFontData();
+            websiteFont = accessWebsiteFontData.getWebsiteFont(eventWebsiteRequestBean);
+        }
+        return websiteFont;
     }
 
     public JSONObject getWebsiteThemeFontsJson(ArrayList<WebsiteFontBean>  arrWebsiteFonts )  {

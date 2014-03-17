@@ -245,7 +245,7 @@
 
     function createThemeImage( websiteTheme ) {
         var varImg = $('<img>').addClass('img-thumbnail');
-        varImg.attr('src', '/com/events/event/website/static_templates/' + websiteTheme.name + '/img/' + websiteTheme.screen  );
+        varImg.attr('src', '/cl/' + websiteTheme.name + '/img/' + websiteTheme.screen  );
         return varImg;
     }
 
@@ -313,7 +313,7 @@
     function createAllThemesButtonEvents( websiteTheme) {
         if(websiteTheme!=undefined) {
             $('#preview_'+websiteTheme.website_theme_id).click({param_web_theme_obj:websiteTheme},function(e) {
-                window.open('static_templates/'+e.data.param_web_theme_obj.name+"/preview.jsp?event_id=<%=sEventId%>","preview_website_theme");
+                window.open('/cl/'+e.data.param_web_theme_obj.name+"/preview.jsp?event_id=<%=sEventId%>","preview_website_theme");
             });
             $('#select_'+websiteTheme.website_theme_id).click({param_web_theme_obj:websiteTheme},function(e) {
                 $('#selected_website_theme_id').val(e.data.param_web_theme_obj.website_theme_id);

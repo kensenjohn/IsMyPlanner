@@ -1,8 +1,6 @@
 package com.events.event.website;
 
-import com.events.bean.event.website.AllWebsiteThemeRequestBean;
-import com.events.bean.event.website.WebsiteColorBean;
-import com.events.bean.event.website.WebsiteThemeBean;
+import com.events.bean.event.website.*;
 import com.events.common.Utility;
 import com.events.data.event.website.AccessWebsiteColorData;
 import org.json.JSONObject;
@@ -25,6 +23,14 @@ public class AccessWebsiteColor {
 
             AccessWebsiteColorData accessWebsiteColorData = new AccessWebsiteColorData();
             websiteColorBean = accessWebsiteColorData.getDefaultWebsiteColor(websiteThemeBean);
+        }
+        return websiteColorBean;
+    }
+    public WebsiteColorBean getWebsiteColor(EventWebsiteRequestBean eventWebsiteRequestBean) {
+        WebsiteColorBean websiteColorBean =  new WebsiteColorBean();
+        if(eventWebsiteRequestBean!=null && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getWebsiteColorId() )) {
+            AccessWebsiteColorData accessWebsiteColorData = new AccessWebsiteColorData();
+            websiteColorBean = accessWebsiteColorData.getWebsiteColor( eventWebsiteRequestBean );
         }
         return websiteColorBean;
     }

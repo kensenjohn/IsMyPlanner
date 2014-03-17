@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,6 +29,16 @@ public class EventWebsitePageFeature {
             eventEventWebsitePageFeatureBeanFromDB = eventWebsitePageFeatureData.getEventWebsitePageFeature(eventEventWebsitePageFeatureBean);
         }
         return eventEventWebsitePageFeatureBeanFromDB;
+    }
+    public HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> getHashMultipleFeatures( String sEventWebsitePageId) {
+        HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmMultipleFeatures = new HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE, EventWebsitePageFeatureBean>();
+        ArrayList<EventWebsitePageFeatureBean> arrMultipleFeatureBean = getMultipleFeatures(sEventWebsitePageId);
+        if(arrMultipleFeatureBean!=null && !arrMultipleFeatureBean.isEmpty()) {
+            for(EventWebsitePageFeatureBean eventWebsitePageFeatureBean : arrMultipleFeatureBean ) {
+                hmMultipleFeatures.put(eventWebsitePageFeatureBean.getFeatureType() , eventWebsitePageFeatureBean );
+            }
+        }
+        return hmMultipleFeatures;
     }
     public ArrayList<EventWebsitePageFeatureBean> getMultipleFeatures( String sEventWebsitePageId) {
         return getMultipleFeatures(new ArrayList<EventWebsitePageFeatureBean>() , sEventWebsitePageId) ;

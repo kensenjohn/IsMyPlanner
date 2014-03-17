@@ -42,6 +42,15 @@ public class AccessWebsiteThemes {
         }
         return websiteThemResponseBean;
     }
+
+    public WebsiteThemeBean getWebsiteTheme(AllWebsiteThemeRequestBean allWebsiteThemeRequestBean) {
+        WebsiteThemeBean websiteThemeBean = new WebsiteThemeBean();
+        if(allWebsiteThemeRequestBean!=null && !Utility.isNullOrEmpty(allWebsiteThemeRequestBean.getWebsiteThemeId())) {
+            AccessWebsiteThemesData accessWebsiteThemesData = new AccessWebsiteThemesData();
+            websiteThemeBean = accessWebsiteThemesData.getWebsiteTheme(allWebsiteThemeRequestBean) ;
+        }
+        return websiteThemeBean;
+    }
     public WebsiteThemResponseBean getEventWebsiteThemeDetail(AllWebsiteThemeRequestBean allWebsiteThemeRequestBean){
         WebsiteThemResponseBean websiteThemResponseBean = new WebsiteThemResponseBean();
         if(allWebsiteThemeRequestBean!=null && !Utility.isNullOrEmpty(allWebsiteThemeRequestBean.getWebsiteThemeId())) {
