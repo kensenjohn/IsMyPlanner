@@ -185,4 +185,44 @@ public class AccessUsers {
         }
         return  vendorBean;
     }
+
+    public ParentTypeBean  getParentTypeBeanFromUser(UserBean userBean){
+        ParentTypeBean parentTypeBean = new ParentTypeBean();
+        if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId()) && !Utility.isNullOrEmpty(userBean.getParentId())) {
+            boolean isUserAClient = false;
+            ClientRequestBean clientRequestBean = new ClientRequestBean();
+            clientRequestBean.setClientId( userBean.getParentId());
+
+            AccessClients accessClients = new AccessClients();
+            ClientBean clientBean = accessClients.getClient( clientRequestBean );
+            if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId())) {
+                isUserAClient = true;
+            }
+
+            VendorBean vendorBean = new VendorBean();
+            boolean isUserAVendor = false;
+            VendorRequestBean vendorRequestBean = new VendorRequestBean();
+            AccessVendors accessVendor = new AccessVendors();
+            if(isUserAClient) {
+                vendorRequestBean.setVendorId(  clientBean.getVendorId() );
+                vendorBean = accessVendor.getVendor( vendorRequestBean );
+            } else {
+                vendorRequestBean.setUserId( userBean.getUserId() );
+                vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
+
+                if(vendorBean!=null && !Utility.isNullOrEmpty(vendorBean.getVendorId())) {
+                    isUserAVendor = true;
+                }
+            }
+
+
+
+
+            parentTypeBean.setClientBean( clientBean );
+            parentTypeBean.setVendorBean( vendorBean );
+            parentTypeBean.setUserAClient( isUserAClient );
+            parentTypeBean.setUserAVendor( isUserAVendor );
+        }
+        return parentTypeBean;
+    }
 }

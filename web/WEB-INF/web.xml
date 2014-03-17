@@ -724,6 +724,14 @@
         <servlet-name>Process Load Event Website Link</servlet-name>
         <url-pattern>/proc_load_event_website_link.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Event Website Link</servlet-name>
+        <servlet-class>com.events.proc.event.website.ProcLoadEventWebsiteLink</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Event Website Link</servlet-name>
+        <url-pattern>/proc_save_event_website_link.aeve</url-pattern>
+    </servlet-mapping>
 
 
 

@@ -1,29 +1,13 @@
 package com.events.proc.event.website;
 
-import com.events.bean.clients.ClientBean;
-import com.events.bean.clients.ClientRequestBean;
-import com.events.bean.common.FeatureBean;
-import com.events.bean.event.website.EventWebsiteBean;
-import com.events.bean.event.website.EventWebsiteRequestBean;
-import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
-import com.events.bean.vendors.VendorBean;
-import com.events.bean.vendors.VendorRequestBean;
-import com.events.bean.vendors.website.VendorWebsiteFeatureBean;
-import com.events.clients.AccessClients;
 import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
-import com.events.common.feature.Feature;
-import com.events.common.feature.FeatureType;
 import com.events.common.security.DataSecurityChecker;
-import com.events.event.website.AccessEventWebsite;
 import com.events.json.*;
-import com.events.users.AccessUsers;
-import com.events.vendors.AccessVendors;
-import com.events.vendors.website.AccessVendorWebsite;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,11 +22,11 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 3/16/14
- * Time: 8:06 AM
+ * Date: 3/17/14
+ * Time: 8:02 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadEventWebsiteLink  extends HttpServlet {
+public class ProcSaveEventWebsiteLink  extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     private Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
@@ -59,46 +43,14 @@ public class ProcLoadEventWebsiteLink  extends HttpServlet {
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
                     String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
+                    String sWebsiteUniqueId =  ParseUtil.checkNull(request.getParameter("website_url_link"));
                     //String sVendorId = Constants.EMPTY;
 
                     if(!Utility.isNullOrEmpty(sEventId)) {
-                        EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
-                        eventWebsiteRequestBean.setEventId(sEventId);
 
-                        AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
-                        EventWebsiteBean eventWebsiteBean = accessEventWebsite.getEventWebsite(eventWebsiteRequestBean);
-
-
-                        if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())){
-
-                            AccessUsers accessUsers = new AccessUsers();
-                            ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser( loggedInUserBean );
-
-                            String sDomain = ParseUtil.checkNull(applicationConfig.get(Constants.DOMAIN));
-                            if(parentTypeBean!=null && parentTypeBean.getVendorBean()!=null ){
-                                AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
-                                VendorWebsiteFeatureBean vendorWebsiteFeatureBean = accessVendorWebsite.getSubDomain( parentTypeBean.getVendorBean() );
-                                if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue())){
-                                    sDomain = vendorWebsiteFeatureBean.getValue() + "." + sDomain;
-                                }
-
-                                String sProtocol = applicationConfig.get(Constants.PROP_LINK_PROTOCOL,"http");
-
-                                String sEventWebsiteLink = ParseUtil.checkNull(sProtocol + "://" + sDomain + "/events/");
-
-                                jsonResponseObj.put("event_website_url_domain_prefix" , sEventWebsiteLink );
-                            }
-
-
-                            jsonResponseObj.put("event_website_bean" , eventWebsiteBean.toJson());
-                            Text okText = new OkText("Event Website Information loaded","status_mssg") ;
-                            arrOkText.add(okText);
-                            responseStatus = RespConstants.Status.OK;
-                        } else {
-                            Text okText = new OkText("Please select a theme for this event's website.","status_mssg") ;
-                            arrOkText.add(okText);
-                            responseStatus = RespConstants.Status.OK;
-                        }
+                        Text okText = new OkText("Event Website Information loaded","status_mssg") ;
+                        arrOkText.add(okText);
+                        responseStatus = RespConstants.Status.OK;
                     } else {
                         Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please select a valid event.(loadWebsiteLink - 003)","err_mssg") ;
                         arrErrorText.add(errorText);
