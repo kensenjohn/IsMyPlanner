@@ -17,6 +17,16 @@ public class EventWebsiteRequestBean {
     private String websiteColorId = Constants.EMPTY;
     private String userId = Constants.EMPTY;
 
+    private String urlUniqueName = Constants.EMPTY;
+
+    public String getUrlUniqueName() {
+        return urlUniqueName;
+    }
+
+    public void setUrlUniqueName(String urlUniqueName) {
+        this.urlUniqueName = urlUniqueName;
+    }
+
     public String getEventWebsiteId() {
         return eventWebsiteId;
     }

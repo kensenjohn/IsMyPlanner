@@ -1,5 +1,7 @@
 package com.events.proc.event.website;
 
+import com.events.bean.event.website.EventWebsiteBean;
+import com.events.bean.event.website.EventWebsiteRequestBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
@@ -7,6 +9,8 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
+import com.events.event.website.AccessEventWebsite;
+import com.events.event.website.BuildEventWebsite;
 import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -44,22 +48,66 @@ public class ProcSaveEventWebsiteLink  extends HttpServlet {
                     String sUserId = ParseUtil.checkNull(loggedInUserBean.getUserId());
                     String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
                     String sWebsiteUniqueId =  ParseUtil.checkNull(request.getParameter("website_url_link"));
+
                     //String sVendorId = Constants.EMPTY;
 
-                    if(!Utility.isNullOrEmpty(sEventId)) {
+                    if(!Utility.isNullOrEmpty(sEventId) && !Utility.isNullOrEmpty(sWebsiteUniqueId)) {
 
-                        Text okText = new OkText("Event Website Information loaded","status_mssg") ;
-                        arrOkText.add(okText);
-                        responseStatus = RespConstants.Status.OK;
+                        EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
+                        eventWebsiteRequestBean.setEventId( sEventId );
+                        eventWebsiteRequestBean.setUrlUniqueName( sWebsiteUniqueId );
+
+                        AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
+                        ArrayList<EventWebsiteBean> arrEventWebsiteBeanByUniqueURL = accessEventWebsite.getEventWebsiteByUrlUniqueName( eventWebsiteRequestBean );
+
+                        EventWebsiteBean eventWebsiteBean = accessEventWebsite.getEventWebsite(eventWebsiteRequestBean);
+                        if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
+                            boolean isAnotherWebsiteWithUrlExists = false;
+                            for(EventWebsiteBean otherEventWebsiteBean : arrEventWebsiteBeanByUniqueURL ) {
+                                if( !Utility.isNullOrEmpty( otherEventWebsiteBean.getEventWebsiteId() ) && !otherEventWebsiteBean.getEventWebsiteId().equalsIgnoreCase(eventWebsiteBean.getEventWebsiteId())) {
+                                    isAnotherWebsiteWithUrlExists = true;
+                                }
+                            }
+
+                            if( isAnotherWebsiteWithUrlExists == false ){
+                                eventWebsiteBean.setUrlUniqueName( sWebsiteUniqueId );
+
+                                BuildEventWebsite buildEventWebsite = new BuildEventWebsite();
+                                EventWebsiteBean respEventWebsiteBean = buildEventWebsite.updateEventWebsite( eventWebsiteBean );
+                                if(respEventWebsiteBean!=null && !Utility.isNullOrEmpty(respEventWebsiteBean.getEventWebsiteId())) {
+                                    Text okText = new OkText("Event Website Information loaded","status_mssg") ;
+                                    arrOkText.add(okText);
+                                    responseStatus = RespConstants.Status.OK;
+                                } else {
+                                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please select a valid event.(saveWebsiteLink - 004)","err_mssg") ;
+                                    arrErrorText.add(errorText);
+
+                                    responseStatus = RespConstants.Status.ERROR;
+                                }
+                            } else {
+                                Text errorText = new ErrorText("Please use a different URL name. The name you used already exists.","err_mssg") ;
+                                arrErrorText.add(errorText);
+
+                                responseStatus = RespConstants.Status.ERROR;
+                            }
+
+                        } else {
+                            Text okText = new OkText("Please select a theme for this event's website.(saveWebsiteLink - 005)","status_mssg") ;
+                            arrOkText.add(okText);
+                            responseStatus = RespConstants.Status.OK;
+                        }
+
+
+
                     } else {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please select a valid event.(loadWebsiteLink - 003)","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please select a valid event.(saveWebsiteLink - 003)","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
                     }
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWebsiteLink - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveWebsiteLink - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -73,7 +121,7 @@ public class ProcSaveEventWebsiteLink  extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadWebsiteLink - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveWebsiteLink - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

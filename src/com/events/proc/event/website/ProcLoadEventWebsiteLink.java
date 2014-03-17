@@ -84,7 +84,7 @@ public class ProcLoadEventWebsiteLink  extends HttpServlet {
 
                                 String sProtocol = applicationConfig.get(Constants.PROP_LINK_PROTOCOL,"http");
 
-                                String sEventWebsiteLink = ParseUtil.checkNull(sProtocol + "://" + sDomain + "/events/");
+                                String sEventWebsiteLink = ParseUtil.checkNull(sProtocol + "://" + sDomain + "/ep/");
 
                                 jsonResponseObj.put("event_website_url_domain_prefix" , sEventWebsiteLink );
                             }

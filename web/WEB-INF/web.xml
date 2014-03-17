@@ -726,7 +726,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Process Save Event Website Link</servlet-name>
-        <servlet-class>com.events.proc.event.website.ProcLoadEventWebsiteLink</servlet-class>
+        <servlet-class>com.events.proc.event.website.ProcSaveEventWebsiteLink</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Process Save Event Website Link</servlet-name>
@@ -833,6 +833,6 @@
     </filter>
     <filter-mapping>
         <filter-name>Routing Filter </filter-name>
-        <url-pattern>/plan/*</url-pattern>
+        <url-pattern>/ep/*</url-pattern>
     </filter-mapping>
 </web-app>

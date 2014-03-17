@@ -45,4 +45,21 @@ public class AccessEventWebsiteData {
         return eventWebsiteBean;
     }
 
+    public ArrayList<EventWebsiteBean>  getEventWebsiteByUniqueURL(EventWebsiteRequestBean eventWebsiteRequestBean) {
+        ArrayList<EventWebsiteBean> arrEventWebsiteBean = new ArrayList<EventWebsiteBean>();
+        if(eventWebsiteRequestBean!=null && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getEventId())) {
+            String sQuery = "SELECT * FROM GTEVENTWEBSITE WHERE URL_UNIQUE_NAME = ? ";
+            ArrayList<Object> aParams = DBDAO.createConstraint( eventWebsiteRequestBean.getEventId() ) ;
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventWebsiteData.java", "getEventWebsiteByUniqueURL()");
+            if(arrResult!=null && !arrResult.isEmpty()){
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    EventWebsiteBean eventWebsiteBean = new EventWebsiteBean(hmResult);
+                    arrEventWebsiteBean.add(eventWebsiteBean);
+                }
+            }
+        }
+        return arrEventWebsiteBean;
+    }
+
 }
