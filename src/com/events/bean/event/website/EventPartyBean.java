@@ -119,6 +119,7 @@ public class EventPartyBean {
             jsonObject.put("event_party_type", this.eventPartyTypeName );
             jsonObject.put("name", this.name );
             jsonObject.put("description", this.description );
+            jsonObject.put("upload_id", this.uploadId );
         } catch (JSONException e) {
             e.printStackTrace();
         }

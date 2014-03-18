@@ -86,7 +86,7 @@ public class ProcLoadEventWebsiteFeatureParty extends HttpServlet {
                                 eventPartyRequest.setArrEventPartyType(arrEventPartType);
 
                                 AccessEventParty accessEventParty = new AccessEventParty();
-                                ArrayList<EventPartyBean> arrEventPartyBean = accessEventParty.getEventPartyByTypeAndWebsite(eventPartyRequest);
+                                ArrayList<EventPartyBean> arrEventPartyBean = accessEventParty.getEventPartyListByTypeAndWebsite(eventPartyRequest);
 
                                 HashMap<String,UploadBean> hmUploadBean = accessEventParty.getEventPartyImage( arrEventPartyBean );
 

@@ -40,13 +40,22 @@ public class AccessEventParty {
         return arrEventPartyBean;
     }
 
-    public ArrayList<EventPartyBean> getEventPartyByTypeAndWebsite(EventPartyRequest eventPartyRequest){
+    public ArrayList<EventPartyBean> getEventPartyListByTypeAndWebsite(EventPartyRequest eventPartyRequest){
         ArrayList<EventPartyBean> arrEventPartyBean =  new ArrayList<EventPartyBean>();
         if(eventPartyRequest!=null){
             AccessEventPartyData accessEventPartyData = new AccessEventPartyData();
-            arrEventPartyBean = accessEventPartyData.getEventPartyByTypeAndWebsite(eventPartyRequest);
+            arrEventPartyBean = accessEventPartyData.getEventPartyListByTypeAndWebsite(eventPartyRequest);
         }
         return arrEventPartyBean;
+    }
+
+    public EventPartyBean getEventPartyByTypeAndWebsite(EventPartyRequest eventPartyRequest){
+        EventPartyBean eventPartyBean =  new EventPartyBean();
+        if(eventPartyRequest!=null){
+            AccessEventPartyData accessEventPartyData = new AccessEventPartyData();
+            eventPartyBean = accessEventPartyData.getEventPartyByTypeAndWebsite(eventPartyRequest);
+        }
+        return eventPartyBean;
     }
 
     public JSONObject getEventPartyJson(ArrayList<EventPartyBean> arrEventPartyBean , ArrayList<SocialMediaBean> arrSocialMediaBean,
@@ -104,5 +113,20 @@ public class AccessEventParty {
             }
         }
         return hmUploadBean;
+    }
+
+    public UploadBean  getEventPartyImage(EventPartyBean eventPartyBean){
+        UploadBean uploadBean = new UploadBean();
+        if(eventPartyBean!=null && !Utility.isNullOrEmpty(eventPartyBean.getUploadId()) ) {
+            UploadRequestBean uploadRequestBean = new UploadRequestBean();
+            uploadRequestBean.setUploadId( eventPartyBean.getUploadId() );
+
+            UploadFile uploadFile = new UploadFile();
+            UploadResponseBean uploadResponseBean = uploadFile.getUploadFileInfo( uploadRequestBean ) ;
+            if(uploadResponseBean!=null && !Utility.isNullOrEmpty(uploadResponseBean.getUploadId()))  {
+                uploadBean = uploadResponseBean.getUploadBean();
+            }
+        }
+        return uploadBean;
     }
 }

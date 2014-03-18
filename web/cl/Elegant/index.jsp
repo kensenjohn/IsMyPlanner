@@ -9,6 +9,7 @@
 <%@ page import="com.events.bean.common.FeatureBean" %>
 <%@ page import="com.events.common.feature.FeatureType" %>
 <%@ page import="com.events.common.feature.Feature" %>
+<%@ page import="com.events.bean.upload.UploadBean" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <%
@@ -329,7 +330,56 @@
 <!-- Invitation Ends here -->
 <%}%>
 <% if(couplesEventWebsitePageBean.isShow() ) {
-    HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmMultipleFeatures = eventWebsitePageFeature.getHashMultipleFeatures( couplesEventWebsitePageBean.getEventWebsitePageId() );
+
+    EventPartyRequest eventPartyPartner1Request = new EventPartyRequest();
+    eventPartyPartner1Request.setEventWebsiteId(couplesEventWebsitePageBean.getEventWebsiteId());
+    eventPartyPartner1Request.setEventPartyType(Constants.EVENT_PARTY_TYPE.BRIDE);
+
+    AccessEventParty accessEventParty = new AccessEventParty();
+    EventPartyBean eventPartyPartner1Bean = accessEventParty.getEventPartyByTypeAndWebsite(eventPartyPartner1Request);
+
+    String sPartner1Name = Constants.EMPTY;
+    String sPartner1Description = Constants.EMPTY;
+    String sPartner1Image = Constants.EMPTY;
+    String sFaceBookPartner1 = Constants.EMPTY;
+    String sTwitterPartner1 = Constants.EMPTY;
+    String sPinterestPartner1 = Constants.EMPTY;
+
+    if(eventPartyPartner1Bean!=null && !Utility.isNullOrEmpty(eventPartyPartner1Bean.getEventPartyId())) {
+        sPartner1Name = ParseUtil.checkNull(eventPartyPartner1Bean.getName());
+        sPartner1Description = ParseUtil.checkNull(eventPartyPartner1Bean.getDescription());
+
+        UploadBean uploadBean = accessEventParty.getEventPartyImage( eventPartyPartner1Bean );
+
+
+        if(uploadBean!=null && !Utility.isNullOrEmpty(uploadBean.getUploadId())){
+            sPartner1Image = sImagePath + "/" + uploadBean.getFilename();
+        }
+
+        AccessSocialMedia accessSocialMedia = new AccessSocialMedia();
+        eventPartyPartner1Request.setEventPartyId( eventPartyPartner1Bean.getEventPartyId());
+        HashMap<Constants.SOCIAL_MEDIA_TYPE, SocialMediaBean> hashPartner1SocialMediaBean =  accessSocialMedia.getHashSocialMedia(eventPartyPartner1Request);
+
+
+        if(hashPartner1SocialMediaBean!=null && !hashPartner1SocialMediaBean.isEmpty()) {
+            SocialMediaBean facebookSocialMedia = hashPartner1SocialMediaBean.get(Constants.SOCIAL_MEDIA_TYPE.FACEBOOK);
+            if(facebookSocialMedia!=null ) {
+                sFaceBookPartner1 = ParseUtil.checkNull(facebookSocialMedia.getUrl());
+            }
+
+            SocialMediaBean twitterSocialMedia = hashPartner1SocialMediaBean.get(Constants.SOCIAL_MEDIA_TYPE.TWITTER);
+            if(twitterSocialMedia!=null ) {
+                sTwitterPartner1 = ParseUtil.checkNull(twitterSocialMedia.getUrl());
+            }
+
+
+            SocialMediaBean pinteresSocialMedia = hashPartner1SocialMediaBean.get(Constants.SOCIAL_MEDIA_TYPE.PINTEREST);
+            if(pinteresSocialMedia!=null ) {
+                sPinterestPartner1 = ParseUtil.checkNull(pinteresSocialMedia.getUrl());
+            }
+        }
+    }
+
 
 
 %>
@@ -347,66 +397,134 @@
         </div>
         <div class="row">
             <div class="col-md-offset-1 col-md-4"  style="text-align: center">
+                <%if(!Utility.isNullOrEmpty(sPartner1Image)) { %>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <img src="<%=sPartner1Image%>" alt="Bride" class="img-circle">
+                            </div>
+                        </div>
+                <%}%>
+                <%if(!Utility.isNullOrEmpty(sPartner1Name)) { %>
                 <div class="row">
                     <div class="col-md-12">
-                        <img src="http://dummyimage.com/300x300/be5e5e/FFFFFF.png&text=Bride" alt="Bride" class="img-circle">
+                        <h4><%=sPartner1Name%></h4>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h4>Julie Miller</h4>
-                    </div>
-                </div>
+                <%}%>
                 <div class="row">
                     <div class="col-md-12">
                         <h5>
-                            <i class="fa fa-facebook"></i>&nbsp;&nbsp;
-                            <i class="fa fa-twitter"></i>&nbsp;&nbsp;
-                            <i class="fa fa-pinterest"></i>&nbsp;&nbsp;
+                            <%if(!Utility.isNullOrEmpty(sFaceBookPartner1)) { %>
+                                <a  href="<%=sFaceBookPartner1%>" target="_blank"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;
+                            <%}%>
+                            <%if(!Utility.isNullOrEmpty(sTwitterPartner1)) { %>
+                                <a  href="<%=sTwitterPartner1%>" target="_blank"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;
+                            <%}%>
+                            <%if(!Utility.isNullOrEmpty(sPinterestPartner1)) { %>
+                                <a  href="<%=sPinterestPartner1%>" target="_blank"><i class="fa fa-pinterest"></i></a>&nbsp;&nbsp;
+                            <%}%>
                         </h5>
                     </div>
                 </div>
+                <%if(!Utility.isNullOrEmpty(sPartner1Description)) { %>
                 <div class="row">
                     <div class="col-md-12">
                         <p style="text-align: justify">
-                            I throw myself down among the tall grass by the trickling stream; and, as I lie close to the earth,
-                            a thousand unknown plants are noticed by me: when I hear the buzz of the little world among the stalks, and grow familiar with
-                            the countless indescribable forms of the insects and flies, then I feel the presence of the Almighty, who formed us in his own image,
-                            and the breath.
+                            <%=sPartner1Description%>
                         </p>
                     </div>
                 </div>
+                <%}%>
             </div>
+<%
+    EventPartyRequest eventPartyPartner2Request = new EventPartyRequest();
+    eventPartyPartner2Request.setEventWebsiteId(couplesEventWebsitePageBean.getEventWebsiteId());
+    eventPartyPartner2Request.setEventPartyType(Constants.EVENT_PARTY_TYPE.GROOM);
+
+    EventPartyBean eventPartyPartner2Bean = accessEventParty.getEventPartyByTypeAndWebsite(eventPartyPartner2Request);
+
+    String sPartner2Name = Constants.EMPTY;
+    String sPartner2Description = Constants.EMPTY;
+    String sPartner2Image = Constants.EMPTY;
+    String sFaceBookPartner2 = Constants.EMPTY;
+    String sTwitterPartner2 = Constants.EMPTY;
+    String sPinterestPartner2 = Constants.EMPTY;
+
+    if(eventPartyPartner2Bean!=null && !Utility.isNullOrEmpty(eventPartyPartner2Bean.getEventPartyId())) {
+        sPartner2Name = ParseUtil.checkNull(eventPartyPartner2Bean.getName());
+        sPartner2Description = ParseUtil.checkNull(eventPartyPartner2Bean.getDescription());
+
+        UploadBean uploadBean = accessEventParty.getEventPartyImage( eventPartyPartner2Bean );
+
+
+        if(uploadBean!=null && !Utility.isNullOrEmpty(uploadBean.getUploadId())){
+            sPartner2Image = sImagePath + "/" + uploadBean.getFilename();
+        }
+
+        AccessSocialMedia accessSocialMedia = new AccessSocialMedia();
+        eventPartyPartner2Request.setEventPartyId( eventPartyPartner2Bean.getEventPartyId());
+        HashMap<Constants.SOCIAL_MEDIA_TYPE, SocialMediaBean> hashPartner2SocialMediaBean =  accessSocialMedia.getHashSocialMedia(eventPartyPartner2Request);
+
+
+        if(hashPartner2SocialMediaBean!=null && !hashPartner2SocialMediaBean.isEmpty()) {
+            SocialMediaBean facebookSocialMedia = hashPartner2SocialMediaBean.get(Constants.SOCIAL_MEDIA_TYPE.FACEBOOK);
+            if(facebookSocialMedia!=null ) {
+                sFaceBookPartner2 = ParseUtil.checkNull(facebookSocialMedia.getUrl());
+            }
+
+            SocialMediaBean twitterSocialMedia = hashPartner2SocialMediaBean.get(Constants.SOCIAL_MEDIA_TYPE.TWITTER);
+            if(twitterSocialMedia!=null ) {
+                sTwitterPartner2 = ParseUtil.checkNull(twitterSocialMedia.getUrl());
+            }
+
+
+            SocialMediaBean pinteresSocialMedia = hashPartner2SocialMediaBean.get(Constants.SOCIAL_MEDIA_TYPE.PINTEREST);
+            if(pinteresSocialMedia!=null ) {
+                sPinterestPartner2 = ParseUtil.checkNull(pinteresSocialMedia.getUrl());
+            }
+        }
+    }
+
+%>
             <div class="col-md-offset-1 col-md-4"   style="text-align: center">
+                <%if(!Utility.isNullOrEmpty(sPartner2Image)) { %>
                 <div class="row">
                     <div class="col-md-12">
-                        <img src="http://dummyimage.com/300x300/be5e5e/FFFFFF.png&text=Groom" alt="Groom" class="img-circle">
+                        <img src="<%=sPartner2Image%>" alt="Bride" class="img-circle">
                     </div>
                 </div>
+                <%}%>
+                <%if(!Utility.isNullOrEmpty(sPartner2Name)) { %>
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Simone DeGaule</h4>
+                        <h4><%=sPartner2Name%></h4>
                     </div>
                 </div>
+                <%}%>
                 <div class="row">
                     <div class="col-md-12">
-                        <h6>
-                            <i class="fa fa-facebook"></i>&nbsp;&nbsp;
-                            <i class="fa fa-twitter"></i>&nbsp;&nbsp;
-                            <i class="fa fa-pinterest"></i>&nbsp;&nbsp;
-                        </h6>
+                        <h5>
+                            <%if(!Utility.isNullOrEmpty(sFaceBookPartner2)) { %>
+                            <a  href="<%=sFaceBookPartner2%>" target="_blank"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;
+                            <%}%>
+                            <%if(!Utility.isNullOrEmpty(sTwitterPartner2)) { %>
+                            <a  href="<%=sTwitterPartner2%>" target="_blank"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;
+                            <%}%>
+                            <%if(!Utility.isNullOrEmpty(sPinterestPartner2)) { %>
+                            <a  href="<%=sPinterestPartner2%>" target="_blank"><i class="fa fa-pinterest"></i></a>&nbsp;&nbsp;
+                            <%}%>
+                        </h5>
                     </div>
                 </div>
+                <%if(!Utility.isNullOrEmpty(sPartner2Description)) { %>
                 <div class="row">
                     <div class="col-md-12">
                         <p style="text-align: justify">
-                            A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.
-                            I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine.
-                            I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents.
-                            I should be incapable of drawing a single stroke at the present moment;
+                            <%=sPartner2Description%>
                         </p>
                     </div>
                 </div>
+                <%}%>
             </div>
         </div>
     </div>
@@ -418,8 +536,17 @@
 </div> <!-- Couples Ends here -->
 <%}%>
 <% if(bridesmaidEventWebsitePageBean.isShow() ) {
-    HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmMultipleFeatures = eventWebsitePageFeature.getHashMultipleFeatures( couplesEventWebsitePageBean.getEventWebsitePageId() );
+    ArrayList<Constants.EVENT_PARTY_TYPE> arrEventPartyType = new ArrayList<Constants.EVENT_PARTY_TYPE>();
+    arrEventPartyType.add(Constants.EVENT_PARTY_TYPE.BRIDESMAID);
+    arrEventPartyType.add(Constants.EVENT_PARTY_TYPE.MAIDOFHONOR);
 
+
+    EventPartyRequest eventPartyBridesMaidRequest = new EventPartyRequest();
+    eventPartyBridesMaidRequest.setEventWebsiteId(couplesEventWebsitePageBean.getEventWebsiteId());
+    eventPartyBridesMaidRequest.setArrEventPartyType( arrEventPartyType );
+
+    AccessEventParty accessEventParty = new AccessEventParty();
+    ArrayList<EventPartyBean> arrEventPartyBean =  accessEventParty.getEventPartyListByTypeAndWebsite(eventPartyBridesMaidRequest);
 
 %>
 <div class="row">
@@ -434,100 +561,128 @@
                 <h1>Bride's Maids</h1>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-offset-1 col-md-3"  style="text-align: center">
+<%
+
+    if(arrEventPartyBean!=null && !arrEventPartyBean.isEmpty() ) {
+
+        HashMap<String,UploadBean> hmUploadBean = accessEventParty.getEventPartyImage( arrEventPartyBean );
+
+        Integer iColumnCount = 0;
+        for(EventPartyBean eventPartyBean : arrEventPartyBean) {
+
+            String sBridesMaidName = ParseUtil.checkNull(eventPartyBean.getName());
+            String sBridesMaidDescription = ParseUtil.checkNull(eventPartyBean.getDescription());
+
+            String sBridesMaidImage = Constants.EMPTY;
+            UploadBean uploadBean = hmUploadBean.get( eventPartyBean.getEventPartyId() );
+            if(uploadBean!=null && !Utility.isNullOrEmpty(uploadBean.getUploadId())){
+                sBridesMaidImage = sImagePath + "/" + uploadBean.getFilename();
+            }
+
+            EventPartyRequest eventPartyRequest = new EventPartyRequest();
+            eventPartyRequest.setEventPartyId(eventPartyBean.getEventPartyId() );
+            eventPartyRequest.setEventWebsiteId( eventPartyBean.getEventWebsiteId() );
+            eventPartyRequest.setEventPartyType( eventPartyBean.getEventPartyType() );
+            AccessSocialMedia accessSocialMedia = new AccessSocialMedia();
+            HashMap<Constants.SOCIAL_MEDIA_TYPE, SocialMediaBean> hashBridesMaidSocialMediaBean =  accessSocialMedia.getHashSocialMedia(eventPartyRequest);
+
+
+            String sFaceBookBridesMaid = Constants.EMPTY;
+            String sTwitterBridesMaid = Constants.EMPTY;
+            String sPinterestBridesMaid = Constants.EMPTY;
+            if(hashBridesMaidSocialMediaBean!=null && !hashBridesMaidSocialMediaBean.isEmpty()) {
+                SocialMediaBean facebookSocialMedia = hashBridesMaidSocialMediaBean.get(Constants.SOCIAL_MEDIA_TYPE.FACEBOOK);
+                if(facebookSocialMedia!=null ) {
+                    sFaceBookBridesMaid = ParseUtil.checkNull(facebookSocialMedia.getUrl());
+                }
+
+                SocialMediaBean twitterSocialMedia = hashBridesMaidSocialMediaBean.get(Constants.SOCIAL_MEDIA_TYPE.TWITTER);
+                if(twitterSocialMedia!=null ) {
+                    sTwitterBridesMaid = ParseUtil.checkNull(twitterSocialMedia.getUrl());
+                }
+
+
+                SocialMediaBean pinteresSocialMedia = hashBridesMaidSocialMediaBean.get(Constants.SOCIAL_MEDIA_TYPE.PINTEREST);
+                if(pinteresSocialMedia!=null ) {
+                    sPinterestBridesMaid = ParseUtil.checkNull(pinteresSocialMedia.getUrl());
+                }
+            }
+
+            if(iColumnCount == 0 ){
+%>
                 <div class="row">
-                    <div class="col-md-12">
-                        <img src="http://dummyimage.com/300x300/ffffff/be5e5e.png&text=Helen+Evans" alt="Bride's Maid" class="img-thumbnail">
+<%
+            }
+
+%>
+                    <div class="col-md-offset-1 col-md-3"  style="text-align: center">
+                        <%if(!Utility.isNullOrEmpty(sBridesMaidImage)) { %>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <img src="<%=sBridesMaidImage%>" alt="Bride's Maid" class="img-thumbnail">
+                            </div>
+                        </div>
+                        <%}%>
+                        <%if(!Utility.isNullOrEmpty(sBridesMaidName)) { %>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4><%=sBridesMaidName%></h4>
+                            </div>
+                        </div>
+                        <%}%>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5>
+                                    <%if(!Utility.isNullOrEmpty(sFaceBookBridesMaid)) { %>
+                                    <a href="<%=sFaceBookBridesMaid%>" target="_blank"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;
+                                    <%}%>
+                                    <%if(!Utility.isNullOrEmpty(sTwitterBridesMaid)) { %>
+                                    <a href="<%=sTwitterBridesMaid%>" target="_blank"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;
+                                    <%}%>
+                                    <%if(!Utility.isNullOrEmpty(sPinterestBridesMaid)) { %>
+                                    <a href="<%=sPinterestBridesMaid%>" target="_blank"><i class="fa fa-pinterest"></i></a>&nbsp;&nbsp;
+                                    <%}%>
+                                </h5>
+                            </div>
+                        </div>
+                        <%if(!Utility.isNullOrEmpty(sBridesMaidDescription)) { %>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p style="text-align: justify">
+                                    <%=sBridesMaidDescription%>
+                                </p>
+                            </div>
+                        </div>
+                        <%}%>
                     </div>
+<%
+            iColumnCount++;
+            if(iColumnCount == 3){
+                iColumnCount = 0;
+%>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Helen Evans</h4>
+                        &nbsp;
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h5>
-                            <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;
-                            <a href="#" target="_blank"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;
-                            <a href="#" target="_blank"><i class="fa fa-pinterest"></i></a>&nbsp;&nbsp;
-                        </h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <p style="text-align: justify">
-                            O my friend -- but it is too much for my strength -- I sink under the weight of the splendour of these visions!
-                            A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-offset-1 col-md-3"  style="text-align: center">
-                <div class="row">
-                    <div class="col-md-12">
-                        <img src="http://dummyimage.com/300x300/ffffff/be5e5e.png&text=Harriet+T.+Wein" alt="Harriet T. Wein" class="img-thumbnail">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h4>Harriet T. Wein</h4>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h5>
-                            <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;
-                            <a href="#" target="_blank"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;
-                            <a href="#" target="_blank"><i class="fa fa-pinterest"></i></a>&nbsp;&nbsp;
-                        </h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <p style="text-align: justify">
-                            I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents.
-                            I should be incapable of drawing a single stroke at the present moment; and yet I feel that I never was a greater artist than now.
-                            When, while the lovely valley teems with vapour around me, and the meridian sun strikes the upper surface of the impenetrable foliage of
-                            my trees, and but a few stray gleams steal into the inner sanctuary,
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-offset-1 col-md-3"  style="text-align: center">
-                <div class="row">
-                    <div class="col-md-12">
-                        <img src="http://dummyimage.com/300x300/ffffff/be5e5e.png&text=Rochel+C.+Devries" alt="BRochel C. Devries" class="img-thumbnail">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h4>Rochel C. Devries</h4>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h5>
-                            <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;
-                            <a href="#" target="_blank"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;
-                            <a href="#" target="_blank"><i class="fa fa-pinterest"></i></a>&nbsp;&nbsp;
-                        </h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <p style="text-align: justify">
-                            When, while the lovely valley teems with vapour around me, and the meridian sun strikes the upper surface of the impenetrable
-                            foliage of my trees, and but a few stray gleams steal into the inner sanctuary, I throw myself down among the tall grass by the
-                            trickling stream; and, as I lie close to the earth, a thousand unknown plants are noticed by me: when I hear the buzz of the
-                            little world among the stalks, and grow familiar with the countless indescribable forms of the insects and flies, then I feel
-                            the presence of the Almighty
-                        </p>
-                    </div>
-                </div>
-            </div>
+<%
+            }
+        }
+    if(iColumnCount <2 ) {
+%>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            &nbsp;
         </div>
+    </div>
+    <%
+            }
+
+    }
+
+%>
     </div>
 </div>
 <div class="row">
@@ -538,8 +693,17 @@
 <!-- BrideMaids Ends here -->
 <%}%>
 <% if(groomsmenEventWebsitePageBean.isShow() ) {
-    HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmMultipleFeatures = eventWebsitePageFeature.getHashMultipleFeatures( couplesEventWebsitePageBean.getEventWebsitePageId() );
+    ArrayList<Constants.EVENT_PARTY_TYPE> arrEventPartyType = new ArrayList<Constants.EVENT_PARTY_TYPE>();
+    arrEventPartyType.add(Constants.EVENT_PARTY_TYPE.GROOMSMAN);
+    arrEventPartyType.add(Constants.EVENT_PARTY_TYPE.BESTMAN);
 
+
+    EventPartyRequest eventPartyGroomsManRequest = new EventPartyRequest();
+    eventPartyGroomsManRequest.setEventWebsiteId(couplesEventWebsitePageBean.getEventWebsiteId());
+    eventPartyGroomsManRequest.setArrEventPartyType( arrEventPartyType );
+
+    AccessEventParty accessEventParty = new AccessEventParty();
+    ArrayList<EventPartyBean> arrEventPartyBean =  accessEventParty.getEventPartyListByTypeAndWebsite(eventPartyGroomsManRequest);
 
 %>
 <div class="row">
@@ -554,102 +718,128 @@
                 <h1>Groom's Men</h1>
             </div>
         </div>
+<%
 
+    if(arrEventPartyBean!=null && !arrEventPartyBean.isEmpty() ) {
+
+        HashMap<String,UploadBean> hmUploadBean = accessEventParty.getEventPartyImage( arrEventPartyBean );
+
+        Integer iColumnCount = 0;
+        for(EventPartyBean eventPartyBean : arrEventPartyBean) {
+
+            String sGroomsManName = ParseUtil.checkNull(eventPartyBean.getName());
+            String sGroomsManDescription = ParseUtil.checkNull(eventPartyBean.getDescription());
+
+            String sGroomsManImage = Constants.EMPTY;
+            UploadBean uploadBean = hmUploadBean.get( eventPartyBean.getEventPartyId() );
+            if(uploadBean!=null && !Utility.isNullOrEmpty(uploadBean.getUploadId())){
+                sGroomsManImage = sImagePath + "/" + uploadBean.getFilename();
+            }
+
+            EventPartyRequest eventPartyRequest = new EventPartyRequest();
+            eventPartyRequest.setEventPartyId(eventPartyBean.getEventPartyId() );
+            eventPartyRequest.setEventWebsiteId( eventPartyBean.getEventWebsiteId() );
+            eventPartyRequest.setEventPartyType( eventPartyBean.getEventPartyType() );
+            AccessSocialMedia accessSocialMedia = new AccessSocialMedia();
+            HashMap<Constants.SOCIAL_MEDIA_TYPE, SocialMediaBean> hashGroomsManSocialMediaBean =  accessSocialMedia.getHashSocialMedia(eventPartyRequest);
+
+
+            String sFaceBookGroomsMan = Constants.EMPTY;
+            String sTwitterGroomsMan = Constants.EMPTY;
+            String sPinterestGroomsMan = Constants.EMPTY;
+            if(hashGroomsManSocialMediaBean!=null && !hashGroomsManSocialMediaBean.isEmpty()) {
+                SocialMediaBean facebookSocialMedia = hashGroomsManSocialMediaBean.get(Constants.SOCIAL_MEDIA_TYPE.FACEBOOK);
+                if(facebookSocialMedia!=null ) {
+                    sFaceBookGroomsMan = ParseUtil.checkNull(facebookSocialMedia.getUrl());
+                }
+
+                SocialMediaBean twitterSocialMedia = hashGroomsManSocialMediaBean.get(Constants.SOCIAL_MEDIA_TYPE.TWITTER);
+                if(twitterSocialMedia!=null ) {
+                    sTwitterGroomsMan = ParseUtil.checkNull(twitterSocialMedia.getUrl());
+                }
+
+
+                SocialMediaBean pinteresSocialMedia = hashGroomsManSocialMediaBean.get(Constants.SOCIAL_MEDIA_TYPE.PINTEREST);
+                if(pinteresSocialMedia!=null ) {
+                    sPinterestGroomsMan = ParseUtil.checkNull(pinteresSocialMedia.getUrl());
+                }
+            }
+
+        if(iColumnCount == 0 ){
+%>
         <div class="row">
+<%
+        }
+
+%>
             <div class="col-md-offset-1 col-md-3"  style="text-align: center">
+                <%if(!Utility.isNullOrEmpty(sGroomsManImage)) { %>
                 <div class="row">
                     <div class="col-md-12">
-                        <img src="http://dummyimage.com/300x300/ffffff/be5e5e.png&text=Erik+Mahler" alt="Erik Mahler" class="img-thumbnail">
+                        <img src="<%=sGroomsManImage%>" alt="Bride's Maid" class="img-thumbnail">
                     </div>
                 </div>
+                <%}%>
+                <%if(!Utility.isNullOrEmpty(sGroomsManName)) { %>
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Erik Mahler</h4>
+                        <h4><%=sGroomsManName%></h4>
                     </div>
                 </div>
+                <%}%>
                 <div class="row">
                     <div class="col-md-12">
                         <h5>
-                            <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;
-                            <a href="#" target="_blank"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;
-                            <a href="#" target="_blank"><i class="fa fa-pinterest"></i></a>&nbsp;&nbsp;
+                            <%if(!Utility.isNullOrEmpty(sFaceBookGroomsMan)) { %>
+                            <a href="<%=sFaceBookGroomsMan%>" target="_blank"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;
+                            <%}%>
+                            <%if(!Utility.isNullOrEmpty(sTwitterGroomsMan)) { %>
+                            <a href="<%=sTwitterGroomsMan%>" target="_blank"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;
+                            <%}%>
+                            <%if(!Utility.isNullOrEmpty(sPinterestGroomsMan)) { %>
+                            <a href="<%=sPinterestGroomsMan%>" target="_blank"><i class="fa fa-pinterest"></i></a>&nbsp;&nbsp;
+                            <%}%>
                         </h5>
                     </div>
                 </div>
+                <%if(!Utility.isNullOrEmpty(sGroomsManDescription)) { %>
                 <div class="row">
                     <div class="col-md-12">
                         <p style="text-align: justify">
-                            But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will
-                            give you a complete account of the system, and expound the actual teachings of the great explorer of the truth,
-                            the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure,
-                            but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.
+                            <%=sGroomsManDescription%>
                         </p>
                     </div>
                 </div>
+                <%}%>
             </div>
-            <div class="col-md-offset-1 col-md-3"  style="text-align: center">
-                <div class="row">
-                    <div class="col-md-12">
-                        <img src="http://dummyimage.com/300x300/ffffff/be5e5e.png&text=Isaias+Bisrat" alt="Isaias Bisrat" class="img-thumbnail">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h4>Isaias Bisrat</h4>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h5>
-                            <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;
-                            <a href="#" target="_blank"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;
-                            <a href="#" target="_blank"><i class="fa fa-pinterest"></i></a>&nbsp;&nbsp;
-                        </h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <p style="text-align: justify">
-                            On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms
-                            of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue;
-                            and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking
-                            from toil and pain. These cases are perfectly simple and easy to distinguish.
-                        </p>
-                    </div>
+<%
+        iColumnCount++;
+        if(iColumnCount == 3){
+            iColumnCount = 0;
+%>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    &nbsp;
                 </div>
             </div>
-            <div class="col-md-offset-1 col-md-3"  style="text-align: center">
-                <div class="row">
-                    <div class="col-md-12">
-                        <img src="http://dummyimage.com/300x300/ffffff/be5e5e.png&text=Adam+Bruun" alt="Adam F. Bruun" class="img-thumbnail">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h4>Adam F. Bruun</h4>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h5>
-                            <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;
-                            <a href="#" target="_blank"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;
-                            <a href="#" target="_blank"><i class="fa fa-pinterest"></i></a>&nbsp;&nbsp;
-                        </h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <p style="text-align: justify">
-                            If several languages coalesce, the grammar of the resulting language is more simple and regular than that of the individual languages.
-                            The new common language will be more simple and regular than the existing European languages. It will be as simple as Occidental;
-                            in fact, it will be Occidental. To an English person, it will seem like simplified English, as a skeptical Cambridge friend of mine
-                            told me what Occidental is. The European languages are members of the same family. Their separate existence is a myth.
-                        </p>
-                    </div>
-                </div>
-            </div>
+<%
+        }
+    }
+        if(iColumnCount <2 ) {
+%>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            &nbsp;
         </div>
+    </div>
+<%
+        }
+
+}
+
+%>
     </div>
 </div>
 <div class="row">
@@ -995,6 +1185,10 @@
             if(arrEventRegistryBean!=null && !arrEventRegistryBean.isEmpty()) {
                 Integer iColumnCount = 0;
                 for(EventRegistryBean eventRegistryBean : arrEventRegistryBean ){
+                    String sRegistryURL = ParseUtil.checkNull(eventRegistryBean.getUrl());
+                    if(!Utility.isNullOrEmpty(sRegistryURL) &&  ( !sRegistryURL.startsWith("http://") || !sRegistryURL.startsWith("https://"))  ){
+                        sRegistryURL = "https://"+sRegistryURL;
+                    }
                     if(iColumnCount == 0) {
                         %><div class="row"><%
                     }
@@ -1003,7 +1197,7 @@
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <a href="<%=eventRegistryBean.getUrl()%>" class="btn btn-default" target="_blank"> <%=eventRegistryBean.getName()%>&nbsp;<i class="fa fa-external-link"></i> </a>
+                                        <a href="<%=sRegistryURL%>" class="btn btn-default" target="_blank"> <%=eventRegistryBean.getName()%>&nbsp;<i class="fa fa-external-link"></i> </a>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -1021,8 +1215,23 @@
                     iColumnCount++;
                     if(iColumnCount == 3) {
                         iColumnCount = 0;
-                        %></div><%
+                        %></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <%
                     }
+                }
+                if(iColumnCount < 3) {
+                    %></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            &nbsp;
+                        </div>
+                    </div>
+                        <%
                 }
             }
         %>
@@ -1101,9 +1310,16 @@
 <!-- RSVP Ends here -->
 <%}%>
 <% if(contactUsEventWebsitePageBean.isShow() ) {
-    HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmMultipleFeatures = eventWebsitePageFeature.getHashMultipleFeatures( couplesEventWebsitePageBean.getEventWebsitePageId() );
 
+    EventContactUsRequest eventContactUsRequest = new EventContactUsRequest();
+    eventContactUsRequest.setEventWebsiteId( contactUsEventWebsitePageBean.getEventWebsiteId() );
 
+    AccessEventContactUs accessEventContactUs = new AccessEventContactUs();
+    ArrayList<EventContactUsBean> arrEventContactUsBean =  accessEventContactUs.getEventContactUsByWebsite(eventContactUsRequest);
+
+    if(arrEventContactUsBean!=null &&  !arrEventContactUsBean.isEmpty()) {
+
+    }
 %>
 <div class="row">
     <div class="col-md-12">
@@ -1119,58 +1335,56 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h6>Feel free to contact us if you have any questions</h6>
+                <h6>Please feel free to contact us if you have any questions</h6>
             </div>
         </div>
         <div class="row">
             <div class="col-md-offset-1 col-md-12">
-                <div class="row">
-                    <div class="col-md-2">
-                        <h6>Julie Miller</h6>
+<%
+                if(arrEventContactUsBean!=null && !arrEventContactUsBean.isEmpty()  ) {
+                    for(EventContactUsBean eventContactUsBean : arrEventContactUsBean ) {
+                        String sName = ParseUtil.checkNull(eventContactUsBean.getName());
+                        String sEmail = ParseUtil.checkNull(eventContactUsBean.getEmail());
+                        String sPhone = ParseUtil.checkNull(eventContactUsBean.getPhone());
+
+%>
+                <%if(!Utility.isNullOrEmpty(sName)) {%>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h6><%=sName%></h6>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1">
-                        <p><i class="fa fa-envelope-o"></i>&nbsp;Email:</p>
+                <%}%>
+                <%if(!Utility.isNullOrEmpty(sEmail)) {%>
+                    <div class="row">
+                        <div class="col-md-1">
+                            <p><i class="fa fa-envelope-o"></i>&nbsp;Email:</p>
+                        </div>
+                        <div class="col-md-11">
+                            <p><a href="mailto:regi@test.com"><%=sEmail%></a></p>
+                        </div>
                     </div>
-                    <div class="col-md-11">
-                        <p><a href="mailto:regi@test.com">julie@test.com</a></p>
+                <%}%>
+                <%if(!Utility.isNullOrEmpty(sPhone)) {%>
+                    <div class="row">
+                        <div class="col-md-1">
+                            <p><i class="fa fa-phone"></i> Phone:</p>
+                        </div>
+                        <div class="col-md-11">
+                            <p><a href="tel:<%=sPhone%>"><%=sPhone%></a></p>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1">
-                        <p><i class="fa fa-phone"></i> Phone:</p>
-                    </div>
-                    <div class="col-md-11">
-                        <p><a href="tel:2144219111">(214)421-9111</a></p>
-                    </div>
-                </div>
+                <%}%>
                 <div class="row">
                     <div class="col-md-2">
                         &nbsp;
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <h6>Simone DeFaulle</h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1">
-                        <p><i class="fa fa-envelope-o"></i>&nbsp;Email:</p>
-                    </div>
-                    <div class="col-md-11">
-                        <p><a href="mailto:regi@test.com">simone@test.com</a></p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1">
-                        <p><i class="fa fa-phone"></i> Phone:</p>
-                    </div>
-                    <div class="col-md-11">
-                        <p><a href="tel:3124219111">(312)421-9111</a></p>
-                    </div>
-                </div>
+<%
+                    }
+                }
+%>
+
             </div>
         </div>
     </div>

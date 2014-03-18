@@ -1287,6 +1287,8 @@
                     $('#couples_partner'+varPartnerPos+'_name').val( varCoupleEventParty.name );
                     $('#couples_partner'+varPartnerPos+'_description').val( varCoupleEventParty.description );
                     $('#couples_partner'+varPartnerPos+'_upload_id').val( varCoupleEventParty.upload_id );
+                    $('#couples_partner'+varPartnerPos+'_event_party_id').val( varCoupleEventParty.event_party_id );
+                    $('#couples_partner'+varPartnerPos+'_event_website_id').val( varCoupleEventParty.event_website_id );
 
                     var numOfSocialMedia = varCoupleEventParty.num_of_social_media;
                     var varSocialMediaList = varCoupleEventParty.social_media_bean;
@@ -2148,7 +2150,11 @@
                 console.log('Saving Couple Party' );
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
-                    console.log(jsonResponseObj.event_party_bean );
+                    var varEventPartyBean = jsonResponseObj.event_party_bean;
+                    var varCouplePartnerNum = jsonResponseObj.couple_partner_num;
+                    var varPageType = jsonResponseObj.page_type;
+
+                    $('#couples_partner'+varCouplePartnerNum+'_event_party_id').val(varEventPartyBean.event_party_id);
                 }
                 displayAjaxOk(varResponseObj);
             } else {

@@ -58,7 +58,7 @@ public class AccessEventPartyData {
         return arrEventPartyBean;
     }
 
-    public ArrayList<EventPartyBean> getEventPartyByTypeAndWebsite(EventPartyRequest eventPartyRequest) {
+    public ArrayList<EventPartyBean> getEventPartyListByTypeAndWebsite(EventPartyRequest eventPartyRequest) {
         ArrayList<EventPartyBean> arrEventPartyBean = new ArrayList<EventPartyBean>();
         if(eventPartyRequest!=null) {
             ArrayList<Constants.EVENT_PARTY_TYPE> arrEventPartyType = eventPartyRequest.getArrEventPartyType();
@@ -69,7 +69,7 @@ public class AccessEventPartyData {
                     aParams.add( eventPartyType.toString() );
                 }
 
-                ArrayList<HashMap<String, String>> arrResult =  DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventPartyData.java", "getEventPartyByTypeAndWebsite()");
+                ArrayList<HashMap<String, String>> arrResult =  DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventPartyData.java", "getEventPartyListByTypeAndWebsite()");
                 if(arrResult!=null && !arrResult.isEmpty()){
                     for(HashMap<String, String> hmResult : arrResult ) {
                         EventPartyBean eventPartyBean = new EventPartyBean(hmResult);
@@ -80,5 +80,22 @@ public class AccessEventPartyData {
 
         }
         return arrEventPartyBean;
+    }
+
+    public EventPartyBean getEventPartyByTypeAndWebsite(EventPartyRequest eventPartyRequest) {
+        EventPartyBean eventPartyBean = new EventPartyBean();
+        if(eventPartyRequest!=null && eventPartyRequest.getEventPartyType()!=null
+                && !Constants.EVENT_PARTY_TYPE.NONE.getText().equalsIgnoreCase(eventPartyRequest.getEventPartyType().getText() )) {
+            String sQuery = "SELECT * FROM  GTEVENTPARTY WHERE FK_EVENTWEBSITEID = ? AND EVENTPARTYTYPE = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(eventPartyRequest.getEventWebsiteId() , eventPartyRequest.getEventPartyType().getText() );
+
+            ArrayList<HashMap<String, String>> arrResult =  DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventPartyData.java", "getEventPartyByTypeAndWebsite()");
+            if(arrResult!=null && !arrResult.isEmpty()){
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    eventPartyBean = new EventPartyBean(hmResult);
+                }
+            }
+        }
+        return eventPartyBean;
     }
 }

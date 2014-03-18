@@ -75,10 +75,10 @@
     ArrayList<Constants.EVENT_PARTY_TYPE> arrEventParty = new ArrayList<Constants.EVENT_PARTY_TYPE>();
     if("bm".equalsIgnoreCase(sPartyType)){
         arrEventParty.add(Constants.EVENT_PARTY_TYPE.BRIDESMAID);
-        arrEventParty.add(Constants.EVENT_PARTY_TYPE.MAIDOFHONOR);
+        //arrEventParty.add(Constants.EVENT_PARTY_TYPE.MAIDOFHONOR);
     } else if("gm".equalsIgnoreCase(sPartyType)){
         arrEventParty.add(Constants.EVENT_PARTY_TYPE.GROOMSMAN);
-        arrEventParty.add(Constants.EVENT_PARTY_TYPE.BESTMAN);
+        //arrEventParty.add(Constants.EVENT_PARTY_TYPE.BESTMAN);
     }
 
 %>
@@ -175,8 +175,8 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" name="event_party_id" name="save_event_party_id"value="<%=sEventPartyId%>"/>
-                        <input type="hidden" name="event_website_id" name="save_event_website_id" value="<%=sEventWebsiteId%>"/>
+                        <input type="hidden" name="event_party_id" id="save_event_party_id"value="<%=sEventPartyId%>"/>
+                        <input type="hidden" name="event_website_id" id="save_event_website_id" value="<%=sEventWebsiteId%>"/>
                         <input type="hidden" name="event_id" value="<%=sEventId%>"/>
                         <input type="hidden" name="upload_id" id="party_image_upload_id" value="<%=sUploadId%>"/>
                     </form>

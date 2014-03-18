@@ -116,6 +116,8 @@ public class ProcSaveEventWebsiteFeatureParty extends HttpServlet {
                         if(eventPartyBean!=null && !Utility.isNullOrEmpty(eventPartyBean.getEventPartyId())) {
                             jsonResponseObj.put("event_party_bean" , eventPartyBean.toJson());
                             jsonResponseObj.put("couple_partner_num" , ParseUtil.checkNull(sPartnerNum));
+                            jsonResponseObj.put("page_type" , ParseUtil.checkNull(sPageType));
+
                             Text okText = new OkText("Your changes were successfully updated.","status_mssg") ;
                             arrOkText.add(okText);
                             responseStatus = RespConstants.Status.OK;
