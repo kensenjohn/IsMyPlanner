@@ -1016,7 +1016,7 @@
             saveWebsitePageFeatureSetting(getResult , $(this).attr('param'));
         });
         $('.save-website-party').click(function(){
-            saveWebsitePageFeaturePartySettings(getResult , $(this).attr('param'));
+            saveWebsitePageFeaturePartySettings(getPartyResult , $(this).attr('param'));
         });
 
         $('.hide-page').on('switchChange', function (e, data) {
@@ -2138,7 +2138,26 @@
         }
 
     }
-
+    function getPartyResult(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                console.log('Saving Couple Party' );
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    console.log(jsonResponseObj.event_party_bean );
+                }
+                displayAjaxOk(varResponseObj);
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
+    }
     function getResult(jsonResult) {
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
