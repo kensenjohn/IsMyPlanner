@@ -875,7 +875,11 @@
 <!-- Travel Ends here -->
 <%}%>
 <% if(hotelsEventWebsitePageBean.isShow() ) {
-    HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmMultipleFeatures = eventWebsitePageFeature.getHashMultipleFeatures( couplesEventWebsitePageBean.getEventWebsitePageId() );
+    EventHotelRequest eventHotelRequest = new EventHotelRequest();
+    eventHotelRequest.setEventWebsiteId( hotelsEventWebsitePageBean.getEventWebsiteId() );
+
+    AccessEventHotels accessEventHotels = new AccessEventHotels();
+    ArrayList<EventHotelsBean> arrEventHotelsBean =  accessEventHotels.getEventHotelByWebsite(eventHotelRequest);
 
 
 %>
@@ -896,94 +900,68 @@
                 <h6>Reserve rooms in these hotels to get discounts.</h6>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="http://www.ihg.com/intercontinental/hotels/gb/en/dallas/dfwha/hoteldetail" target="_blank">  <p>Intercontinental Hotel and Resorts</p> </a>
+        <%
+            if(arrEventHotelsBean!=null && !arrEventHotelsBean.isEmpty() ){
+                Integer iColumnCount = 0;
+                for(EventHotelsBean eventHotelsBean : arrEventHotelsBean )  {
+
+                    if(iColumnCount == 0) {
+                        %> <div class="row"> <%
+                    }
+
+        %>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="<%=eventHotelsBean.getUrl()%>" target="_blank">  <p><%=eventHotelsBean.getName()%></p> </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="tel:<%=eventHotelsBean.getPhone()%>"><i class="fa fa-phone"></i> &nbsp;<%=eventHotelsBean.getPhone()%></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                               <%=eventHotelsBean.getAddress()%>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="http://maps.google.com/?q=<%=eventHotelsBean.getAddress()%>" target="_blank"><i class="fa fa-map-marker"></i> &nbsp;Directions</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <%=eventHotelsBean.getInstructions()%>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="<%=eventHotelsBean.getUrl()%>" class="btn btn-default" target ="_blank"> Website&nbsp;<i class="fa fa-external-link"></i></a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="tel:2172721237"><i class="fa fa-phone"></i> &nbsp;(217)272-1237</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        15201 DALLAS PARKWAYDALLAS,<br>
-                        TX , 75001
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="http://maps.google.com/?q=15201%20DALLAS%20PARKWAYDALLAS%20TX%20,%2075001" target="_blank"><i class="fa fa-map-marker"></i> &nbsp;Directions</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        &nbsp;
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        Use the code Julie_And_Simone for online discount. Mention "Julian And Simone Party" if booking on the phone.
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        &nbsp;
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="http://www.ihg.com/intercontinental/hotels/gb/en/dallas/dfwha/hoteldetail" class="btn btn-default" target ="_blank"> Website&nbsp;<i class="fa fa-external-link"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="http://www.hoteladolphus.com" target="_blank">  <p>The Adolphus<i class="fa fa-external-link"></i></p> </a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="tel:(214) 742-8200"><i class="fa fa-phone"></i> &nbsp;(214) 742-8200</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        1321 Commerce St,<br>
-                        Dallas, TX 75202
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="http://maps.google.com/?q=1321 Commerce St,Dallas, TX 75202" target="_blank"><i class="fa fa-map-marker"></i> &nbsp;Directions</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        &nbsp;
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        Online Code: juliesimone. Mention "Julian And Simone Party" if booking on the phone.
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        &nbsp;
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="http://www.hoteladolphus.com" class="btn btn-default" target ="_blank"> Website&nbsp;<i class="fa fa-external-link"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <%
+                    iColumnCount++;
+                    if(iColumnCount == 3) {
+                        iColumnCount = 0;
+                        %></div> <%
+                    }
+
+                }
+            }
+        %>
     </div>
 </div>
 <div class="row">
@@ -994,9 +972,12 @@
 <!-- Hotels Ends here -->
 <%}%>
 <% if(registryEventWebsitePageBean.isShow() ) {
-    HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmMultipleFeatures = eventWebsitePageFeature.getHashMultipleFeatures( couplesEventWebsitePageBean.getEventWebsitePageId() );
 
+    EventRegistryRequest eventRegistryRequest = new EventRegistryRequest();
+    eventRegistryRequest.setEventWebsiteId( registryEventWebsitePageBean.getEventWebsiteId() );
 
+    AccessEventRegistry accessEventRegistry = new AccessEventRegistry();
+    ArrayList<EventRegistryBean> arrEventRegistryBean =  accessEventRegistry.getEventRegistryByWebsite(eventRegistryRequest);
 %>
 <div class="row">
     <div class="col-md-12">
@@ -1010,22 +991,41 @@
                 <h1>Registry</h1>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="#registry" class="btn btn-default" target="_blank"> Macy's&nbsp;<i class="fa fa-external-link"></i> </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="#registry" class="btn btn-default" target="_blank">  Bed, Bath And Beyond&nbsp;<i class="fa fa-external-link"></i> </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <%
+            if(arrEventRegistryBean!=null && !arrEventRegistryBean.isEmpty()) {
+                Integer iColumnCount = 0;
+                for(EventRegistryBean eventRegistryBean : arrEventRegistryBean ){
+                    if(iColumnCount == 0) {
+                        %><div class="row"><%
+                    }
+        %>
+
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <a href="<%=eventRegistryBean.getUrl()%>" class="btn btn-default" target="_blank"> <%=eventRegistryBean.getName()%>&nbsp;<i class="fa fa-external-link"></i> </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <%=eventRegistryBean.getInstructions()%>
+                                    </div>
+                                </div>
+                            </div>
+        <%
+                    iColumnCount++;
+                    if(iColumnCount == 3) {
+                        iColumnCount = 0;
+                        %></div><%
+                    }
+                }
+            }
+        %>
     </div>
 </div>
 <div class="row">
