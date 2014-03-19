@@ -117,7 +117,13 @@ public class EveryEventEmail {
                                     sSendRule = Constants.SEND_EMAIL_RULES.valueOf(sValue).getDescription();
                                 }
                             }
-                            everyEventEmailBean.setSendDate(sSendDay + " " + sSendTime + " " + sSendTimeZone);
+                            if( !Utility.isNullOrEmpty(sSendDay) &&  !Utility.isNullOrEmpty(sSendTime)){
+                                everyEventEmailBean.setSendDate(sSendDay + " " + sSendTime + " " + sSendTimeZone);
+                             } else {
+                                everyEventEmailBean.setSendDate("Not Scheduled");
+                            }
+
+
                             everyEventEmailBean.setSendRule(  sSendRule);
                         }
                     }

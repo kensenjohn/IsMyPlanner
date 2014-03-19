@@ -4,6 +4,7 @@
 </jsp:include>
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -57,7 +58,7 @@
                         <thead>
                         <tr role="row">
                             <th class="sorting col-md-3" role="columnheader">Name</th>
-                            <th class="sorting  col-md-3" role="columnheader">Time</th>
+                            <th class="sorting  col-md-3" role="columnheader">Scheduled Send Time</th>
                             <th class="sorting" role="columnheader">Status</th>
                             <th class="sorting" role="columnheader">Send Rule</th>
                             <th class="center" role="columnheader"></th>
@@ -116,6 +117,7 @@
                         processEventEmailList(varNumOfEventEmail, jsonResponseObj.every_eventemail );
                     }
                     initializeTable();
+
                 }
             } else {
                 displayMssgBoxAlert("Please try again later (populateEventList - 1)", true);
@@ -135,9 +137,9 @@
                             '<td>'+varEveryEventEmailBean.status+'</td>'+
                             '<td>'+varEveryEventEmailBean.send_rule+'</td>'+
                             '<td  class="center" >'+
-                            '<a href="/com/events/event/email/edit_email.jsp?event_id='+varEveryEventEmailBean.event_id+'&eventemail_id='+varEveryEventEmailBean.eventemail_id+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>'+
+                            '<a href="/com/events/event/email/edit_email.jsp?event_id='+varEveryEventEmailBean.event_id+'&eventemail_id='+varEveryEventEmailBean.eventemail_id+'" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>'+
                             '&nbsp;&nbsp;&nbsp;'+
-                            '<a id="'+varEveryEventEmailBean.eventemail_id+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>'+'</td>');
+                            '<a id="'+varEveryEventEmailBean.eventemail_id+'" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Delete</a>'+'</td>');
             $('#every_eventemail_rows').append(rowEveryEventEmail);
 
 
@@ -162,7 +164,7 @@
     function deleteEventEmail(varEventEmailObj) {
         $('#event_id').val(varEventEmailObj.event_id);
         $('#eventemail_id').val(varEventEmailObj.eventemail_id);
-        deleteEventEmails(processEventDeletion);
+        deleteEventEmails(processEventEmailDeletion);
     }
     function deleteEventEmails(callbackmethod) {
         var actionUrl = "/proc_delete_eventemail.aeve";
@@ -201,6 +203,8 @@
             "bPaginate": false,
             "bInfo": false,
             "aoColumns": [
+                null,
+                null,
                 null,
                 null,
                 { "bSortable": false }

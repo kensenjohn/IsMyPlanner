@@ -75,9 +75,9 @@ public class ProcSaveGuest   extends HttpServlet {
                     boolean guestWillNotAttend = ParseUtil.sTob(request.getParameter("guestWillNotAttend"));
 
                     String sGuestRSVP = ParseUtil.checkNull( request.getParameter("guestRSVP") );
-                    if( "0".equalsIgnoreCase(sGuestRSVP)) {
+                    /*if( "0".equalsIgnoreCase(sGuestRSVP)) {
                         guestWillNotAttend = true; // Guest has entered 0 so this can be identified as "Will not Attend".
-                    }
+                    }*/
                     if(guestWillNotAttend){
                         iGuestRSVPSeats = 0;
                     }
@@ -97,7 +97,7 @@ public class ProcSaveGuest   extends HttpServlet {
                         Text errorText = new ErrorText("Guest must be Invited to at least one seat. Invited Seats must be greater than 0.","status_mssg") ;
                         arrErrorText.add(errorText);
                         responseStatus = RespConstants.Status.ERROR;
-                    } else if(guestWillNotAttend==false && (iGuestInvitedSeats<iGuestRSVPSeats || iGuestRSVPSeats<0) ) {
+                    } else if(guestWillNotAttend==false && (iGuestInvitedSeats<iGuestRSVPSeats || iGuestRSVPSeats<0 || "0".equalsIgnoreCase(sGuestRSVP)) ) {
                         // guest has not indicated that they will not attend. Then RSVP should be set correctly.
                         appLogging.info("Invalid RSVP number used");
                         Text errorText = new ErrorText("Invalid RSVP seats entered. Please user a number from 0 to " +iGuestInvitedSeats+".","status_mssg") ;

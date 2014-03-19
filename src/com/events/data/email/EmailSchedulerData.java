@@ -42,6 +42,17 @@ public class EmailSchedulerData {
         return iNumberOfRows;
     }
 
+    public Integer removeEmailSchedule( EmailSchedulerRequestBean emailRequestSchedulerBean ) {
+        Integer iNumberOfRows = 0;
+        if(emailRequestSchedulerBean!=null && !Utility.isNullOrEmpty(emailRequestSchedulerBean.getEventEmailId()) && !Utility.isNullOrEmpty(emailRequestSchedulerBean.getEventId())) {
+            String sQuery = "DELETE FROM GTEMAILSCHEDULE WHERE FK_EVENTEMAILID = ? AND FK_EVENTID =?";
+            ArrayList<Object> aParams = DBDAO.createConstraint( emailRequestSchedulerBean.getEventEmailId(), emailRequestSchedulerBean.getEventId() );
+            emailLogging.info(" Creating schedule for email : Query : " + sQuery + " Params : " + aParams );
+            iNumberOfRows = DBDAO.putRowsQuery( sQuery,aParams,EVENTADMIN_DB,sourceFile,"createSchedule()" );
+        }
+        return iNumberOfRows;
+    }
+
     public EmailSchedulerBean getEventEmailSchedule (EmailSchedulerBean emailRequestSchedulerBean){
         EmailSchedulerBean emailSchedulerBean = new EmailSchedulerBean();
         if(emailRequestSchedulerBean!=null && !Utility.isNullOrEmpty(emailRequestSchedulerBean.getEventEmailId())  && !Utility.isNullOrEmpty(emailRequestSchedulerBean.getEventId()))  {

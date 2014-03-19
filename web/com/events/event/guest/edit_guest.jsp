@@ -222,6 +222,9 @@
     <input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>">
     <input type="hidden" id="guest_group_Id" name="guestGroupId" value="<%=sGuestGroupId%>">
 </form>
+<form id="frm_guest" method="POST">
+    <input type="hidden" name="event_id" value="<%=sEventId%>">
+</form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/event/event_info.js"></script>
 <script type="text/javascript">
@@ -247,6 +250,10 @@
         $('#btn_upload_guests').click(function(){
             $('#frm_load_guest').attr("action","/com/events/event/guest/upload_guests.jsp");
             $('#frm_load_guest').submit();
+        });
+        $('#btn_add_guest').click(function(){
+            $('#frm_guest').attr("action","/com/events/event/guest/edit_guest.jsp");
+            $('#frm_guest').submit();
         });
     });
     function loadGuestInfo( callbackmethod ) {
@@ -333,6 +340,7 @@
 
             if( !varEventGuestGroup.has_responded ) {
                 $('#rsvp_status').removeClass().text('No Response').addClass("label label-warning"); //No Response
+                $('#guestRSVP').val('');
             } else {
                 $('#rsvp_status').removeClass().text('');
             }

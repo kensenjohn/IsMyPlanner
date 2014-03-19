@@ -24,9 +24,17 @@ public class EventEmailRequestBean {
     private String emailSendDay = Constants.EMPTY;
     private String emailSendTime = Constants.EMPTY;
     private String emailSendTimeZone = Constants.EMPTY;
+    private boolean isEmailScheduleEnabled = false;
 
     private  ACTION userAction = ACTION.ONLY_SAVE_SETTING;
 
+    public boolean isEmailScheduleEnabled() {
+        return isEmailScheduleEnabled;
+    }
+
+    public void setEmailScheduleEnabled(boolean isEmailScheduleEnabled) {
+        this.isEmailScheduleEnabled = isEmailScheduleEnabled;
+    }
 
     public ACTION getUserAction() {
         return userAction;

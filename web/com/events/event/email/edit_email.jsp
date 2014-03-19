@@ -8,6 +8,9 @@
 <link rel="stylesheet" href="/css/datepicker/default.css" id="theme_base">
 <link rel="stylesheet" href="/css/datepicker/default.date.css" id="theme_date">
 <link rel="stylesheet" href="/css/datepicker/default.time.css" id="theme_time">
+<link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
+<link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
     String sEventId = ParseUtil.checkNull(ESAPI.encoder().decodeForHTML(request.getParameter("event_id")));
@@ -76,8 +79,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-9">
-                                    <label for="emailFrom" class="form_label">From Email</label><span class="required"> *</span>
-                                    <input type="text" class="form-control" id="emailFrom" name="email_from" placeholder="From Email ">
+                                    <label for="emailTo" class="form_label">To: (Guests)</label><span class="required"> *</span>
+                                    <select class="form-control" id="emailTo" name="email_send_rules">
+                                        <option value="<%=Constants.SEND_EMAIL_RULES.ALL_INVITED%>">Everyone invited</option>
+                                        <option value="<%=Constants.SEND_EMAIL_RULES.ALL_WHO_RESPONDED%>">Responded to your invitation</option>
+                                        <option value="<%=Constants.SEND_EMAIL_RULES.DID_NOT_RESPOND%>">Did not respond to invitation</option>
+                                        <option value="<%=Constants.SEND_EMAIL_RULES.WILL_ATTEND%>">Will attend</option>
+                                        <option value="<%=Constants.SEND_EMAIL_RULES.WILL_NOT_ATTEND%>">Will NOT attend</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -88,54 +97,46 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 id="email_options" style="cursor:pointer;"><i id="email_options_icon" class="fa fa-chevron-circle-right"></i>Email Options</h5>
+                            </div>
+                        </div>
+                        <div  id="email_template_text"  class="form-group"  style="display:none;">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label class="form_label">Send To All Guests Who</label><span class="required"> *</span>
-                                    <div class="row" id="row_sendToAllEmailRules">
-                                        <div class="col-md-2">
-                                            <label for="emailAllInvited" class="form_label">
-                                                <input type="radio" id="emailAllInvited" name = "email_send_rules" value="<%=Constants.SEND_EMAIL_RULES.ALL_INVITED%>">
-                                                were Invited
-                                            </label>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label for="emailAllWhoResponded" class="form_label">
-                                                <input type="radio" id="emailAllWhoResponded" name = "email_send_rules" value="<%=Constants.SEND_EMAIL_RULES.ALL_WHO_RESPONDED%>">
-                                                responded
-                                            </label>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label for="emailAllDidNotRespond" class="form_label">
-                                                <input type="radio" id="emailAllDidNotRespond" name = "email_send_rules" value="<%=Constants.SEND_EMAIL_RULES.DID_NOT_RESPOND%>">
-                                                did not respond
-                                            </label>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label for="emailAllWhoWillAttend" class="form_label">
-                                                <input type="radio" id="emailAllWhoWillAttend" name = "email_send_rules" value="<%=Constants.SEND_EMAIL_RULES.WILL_ATTEND%>">
-                                                will attend
-                                            </label>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label for="emailAllWhoWillNotAttend" class="form_label">
-                                                <input type="radio" id="emailAllWhoWillNotAttend" name = "email_send_rules" value="<%=Constants.SEND_EMAIL_RULES.WILL_NOT_ATTEND%>">
-                                                will not attend
-                                            </label>
+                                    <div class="row">
+                                        <div class="col-md-offset-1 col-md-11">
+                                            <h6>Use the following templates in your emails. We will replace them with relevant text.</h6>
                                         </div>
                                     </div>
-                                    <div class="row" id="row_sendImmeditelyEmailRules">
-                                        <div class="col-md-5">
-                                            <label for="emailRSVPThankYou" class="form_label">
-                                                <input type="radio" id="emailRSVPThankYou" name = "email_send_rules" value="<%=Constants.SEND_EMAIL_RULES.RSVP_THANKYOU%>">
-                                                Send to Guest immediately after they RSVP
-                                            </label>
+                                    <div class="row">
+                                        <div class="col-md-offset-1 col-md-8">
+                                            <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="email_template_text_table" >
+                                                <thead>
+                                                <tr role="row">
+                                                    <th> Template </th>
+                                                    <th> Description  </th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody role="alert" id="email_template_text_rows">
+                                                    <tr><td> {{GUEST_GIVEN_NAME}} </td><td> Your guest's name. Will include first name and last name if available.  </td></tr>
+                                                    <tr><td> {{RSVP_LINK}} </td><td> RSVP link specific to each guest.   </td></tr>
+                                                    <tr><td> {{FROM_GIVEN_NAME}} </td><td> Your name. Will include first name and last name if available.  </td></tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
-
                         <div  id="emailSchedule"  class="form-group" style="display:none;">
                             <div class="row">
                                 <div class="col-md-12">
@@ -186,13 +187,13 @@
             <div class="row">
                 <div class="col-md-2">
                     <button  type="button" class="btn  btn-filled" id="btn_save_email">
-                        <span><span class="glyphicon glyphicon-floppy-disk"></span> Save Changes</span>
+                        <span><i class="fa fa-floppy-o"></i> Save Changes</span>
                     </button>
                 </div>
                 <div  id="emailSendActionButton" >
                     <div class="col-md-3">
                         <button  type="button" class="btn  btn-default" id="btn_schedule_email">
-                            <span class="glyphicon glyphicon-calendar">&nbsp;</span> <span id="txtEmailScheduleButton">Schedule a Time to Send</span>
+                            <i class="fa fa-calendar"></i> <span id="txtEmailScheduleButton">Schedule a Time to Send</span>
                         </button>
                     </div>
                 </div>
@@ -219,7 +220,7 @@
                 <div class="row">
                     <div class="col-md-3">
                         <button  type="button" class="btn  btn-default" id="btn_send_test_email">
-                            <span><span class="glyphicon glyphicon-cog"></span> Send Test Email Now</span>
+                            <span><i class="fa fa-cog"></i> Send Test Email Now</span>
                         </button>
                     </div>
                 </div>
@@ -241,6 +242,7 @@
 <script src="/js/datepicker/legacy.js"></script>
 <script src="/js/tinymce/tinymce.min.js"></script>
 <script src="/js/event/event_info.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
     var varEventId = '<%=sEventId%>';
     var varEventEmailId = '<%=sEventEmailId%>';
@@ -298,6 +300,12 @@
         $('#btn_send_test_email').click(function(){
             sendTestEmail( getResult);
         });
+        $('#email_options').click(function(){
+            $('#email_template_text').toggle('slow');
+            $('#email_options_icon').toggleClass( "fa-chevron-circle-down" );
+        });
+
+        initializeTable();
     });
 
     function sendTestEmail(callbackmethod, varEventId, varEventEmailId ) {
@@ -409,6 +417,18 @@
         } else {
             displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
         }
+    }
+
+    function initializeTable(){
+        objEmailTemplateTextTable =  $('#email_template_text_table').dataTable({
+            "bPaginate": false,
+            "bInfo": false,
+            "bFilter": false,
+            "aoColumns": [
+                null,
+                { "bSortable": false }
+            ]
+        });
     }
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>

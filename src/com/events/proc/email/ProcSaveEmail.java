@@ -51,7 +51,6 @@ public class ProcSaveEmail extends HttpServlet {
                     String sEventEmailId = ParseUtil.checkNull(request.getParameter("event_email_id"));
                     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
                     String sEmailSubject = ParseUtil.checkNull(request.getParameter("email_subject"));
-                    String sFromEmail = ParseUtil.checkNull(request.getParameter("email_from"));
                     String sEmailBody = ESAPI.encoder().decodeForHTML(ParseUtil.checkNull(request.getParameter("email_body")));
                     String sEmailSendRule = ParseUtil.checkNull(request.getParameter("email_send_rules"));
 
@@ -67,7 +66,7 @@ public class ProcSaveEmail extends HttpServlet {
                                 DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE), Constants.DATE_PATTERN_TZ);
                     }
 
-                    if(Utility.isNullOrEmpty(sEmailSubject) || Utility.isNullOrEmpty(sFromEmail)  || Utility.isNullOrEmpty(sEmailBody)
+                    if(Utility.isNullOrEmpty(sEmailSubject) || Utility.isNullOrEmpty(sEmailBody)
                             || Utility.isNullOrEmpty(sEmailSendRule)  ){
                         Text errorText = new ErrorText("Please fill in all required fields.","err_mssg") ;
                         arrErrorText.add(errorText);
@@ -86,7 +85,6 @@ public class ProcSaveEmail extends HttpServlet {
                         tmpEventEmailBean.setEventEmailId(sEventEmailId);
                         tmpEventEmailBean.setEventId(sEventId);
                         tmpEventEmailBean.setSubject(sEmailSubject);
-                        tmpEventEmailBean.setFromAddressEmail(sFromEmail);
                         tmpEventEmailBean.setHtmlBody( sEmailBody );
                         tmpEventEmailBean.setTextBody( sEmailBody );
                         tmpEventEmailBean.setUserId( loggedInUserBean.getUserId() );
@@ -98,6 +96,7 @@ public class ProcSaveEmail extends HttpServlet {
                         eventEmailRequestBean.setEmailSendDay( sEmailSendDay );
                         eventEmailRequestBean.setEmailSendTime( sEmailSendTime);
                         eventEmailRequestBean.setEmailSendTimeZone( sEmailSendTimeZone );
+                        eventEmailRequestBean.setEmailScheduleEnabled(isEmailSendScheduleEnabled );
                         if(isEmailSendScheduleEnabled) {
                             eventEmailRequestBean.setUserAction( EventEmailRequestBean.ACTION.SCHEDULE_ENABLED);
                         } else {
@@ -109,18 +108,25 @@ public class ProcSaveEmail extends HttpServlet {
 
                         if(eventEmailBean!=null && !Utility.isNullOrEmpty(eventEmailBean.getEventEmailId())) {
 
+                            BuildEmailScheduler buildEmailScheduler = new BuildEmailScheduler();
+
                             EmailSchedulerRequestBean emailSchedulerRequestBean = new EmailSchedulerRequestBean();
                             emailSchedulerRequestBean.setEventEmailBean( eventEmailBean );
                             if( isEmailSendScheduleEnabled) {
                                 emailSchedulerRequestBean.setScheduledSendDate( eventEmailScheduleDate.getMillis() );
                                 emailSchedulerRequestBean.setScheduledSendHumanDate(eventEmailScheduleDate.getFormattedTime());
+                                emailSchedulerRequestBean.setSchedulerStatus(Constants.SCHEDULER_STATUS.NEW_SCHEDULE);
+
+                                buildEmailScheduler.saveSchedule( emailSchedulerRequestBean );
+                            } else {
+                                buildEmailScheduler.removeSchedule( emailSchedulerRequestBean );
                             }
 
-                            emailSchedulerRequestBean.setSchedulerStatus(Constants.SCHEDULER_STATUS.NEW_SCHEDULE);
+
 
                             appLogging.info("Save Email Send Schedule :  " + emailSchedulerRequestBean.getScheduledSendHumanDate() + " by userid : " + loggedInUserBean.getUserId() );
-                            BuildEmailScheduler buildEmailScheduler = new BuildEmailScheduler();
-                            buildEmailScheduler.saveSchedule( emailSchedulerRequestBean );
+
+
 
                             jsonResponseObj.put("event_email_bean",eventEmailBean.toJson());
                             Text okText = new OkText("The email was saved successfully.","status_mssg") ;

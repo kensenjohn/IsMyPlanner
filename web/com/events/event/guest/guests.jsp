@@ -4,6 +4,7 @@
 </jsp:include>
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <link rel="stylesheet" href="/css/upload/jquery.fileupload.css">
 <%
@@ -161,9 +162,9 @@
                     '<td>'+varEveryEventGuestBean.invited_seats+'</td>' +
                     '<td>'+varRsvpStatus+'</td>' +
                     '<td  class="center" >'+
-                            '<a href="/com/events/event/guest/edit_guest.jsp?event_id='+varEventId+'&guestGroupId='+varEveryEventGuestBean.guestgroup_id+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>'+
+                            '<a href="/com/events/event/guest/edit_guest.jsp?event_id='+varEventId+'&guestGroupId='+varEveryEventGuestBean.guestgroup_id+'" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>'+
                             '&nbsp;&nbsp;&nbsp;'+
-                            '<a id="'+varEveryEventGuestBean.guestgroup_id+'" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</a>'+'</td>');
+                            '<a id="'+varEveryEventGuestBean.guestgroup_id+'" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Delete</a>'+'</td>');
             $('#every_guest_rows').append(varEveryEventGuestTableRow);
 
             // Adding Click Event Functionality for event's delete button.

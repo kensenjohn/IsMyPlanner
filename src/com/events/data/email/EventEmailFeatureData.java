@@ -38,6 +38,18 @@ public class EventEmailFeatureData {
         return  numOfRowsInserted;
     }
 
+    public Integer deleteFeature(EventEmailFeatureBean eventEmailFeatureBean) {
+        Integer numOfRowsInserted = 0;
+        // EVENTEMAILFEATUREID  VARCHAR(45) NOT NULL, FEATURENAME  VARCHAR(75) NOT NULL, FK_EVENTEMAILID  VARCHAR(45) NOT NULL, VALUE  VARCHAR(500) NOT NULL
+        if(eventEmailFeatureBean!=null  && !Utility.isNullOrEmpty(eventEmailFeatureBean.getFeatureType().toString()) && !Utility.isNullOrEmpty(eventEmailFeatureBean.getEventEmailId()) ){
+            String sQuery = "DELETE FROM GTEVENTEMAILFEATURES WHERE FEATURENAME = ? AND FK_EVENTEMAILID = ? ";
+            ArrayList<Object> aParams = DBDAO.createConstraint( eventEmailFeatureBean.getFeatureType().toString(),  eventEmailFeatureBean.getEventEmailId() );
+
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "EventEmailFeatureData.java", "deleteFeature() ");
+        }
+        return  numOfRowsInserted;
+    }
+
     public Integer updateFeature(EventEmailFeatureBean eventEmailFeatureBean) {
         Integer numOfRowsInserted = 0;
         if(eventEmailFeatureBean!=null && !Utility.isNullOrEmpty(eventEmailFeatureBean.getEventEmailFeatureId()) ){

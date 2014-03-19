@@ -59,4 +59,21 @@ public class BuildEmailScheduler {
         }
         return emailSchedulerResponseBean;
     }
+
+    public Integer removeSchedule( EmailSchedulerRequestBean emailScheduleRequestBean) {
+        Integer iNumberOfRows = 0;
+        if(emailScheduleRequestBean!=null ) {
+            EventEmailBean eventEmailBean = emailScheduleRequestBean.getEventEmailBean();
+
+            if(eventEmailBean!=null && !Utility.isNullOrEmpty(eventEmailBean.getEventEmailId()) && !Utility.isNullOrEmpty(eventEmailBean.getEventId())){
+
+                emailScheduleRequestBean.setEventEmailId(  eventEmailBean.getEventEmailId() );
+                emailScheduleRequestBean.setEventId( eventEmailBean.getEventId() );
+
+                EmailSchedulerData emailSchedulerData = new EmailSchedulerData();
+                iNumberOfRows = emailSchedulerData.removeEmailSchedule( emailScheduleRequestBean );
+            }
+        }
+        return iNumberOfRows;
+    }
 }

@@ -23,7 +23,7 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class EventEmailData {
-    Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+    private Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     private final String EVENTADMIN_DB = applicationConfig.get(Constants.EVENTADMIN_DB);
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     private static final Logger emailLogging = LoggerFactory.getLogger(Constants.EMAILER_LOGS);

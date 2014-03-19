@@ -58,4 +58,13 @@ public class EventEmailFeature {
         }
         return iNumOfRows;
     }
+
+    public Integer removeFeatureValue(EventEmailFeatureBean eventEmailFeatureBean) {
+        Integer iNumOfRows = 0;
+        if(eventEmailFeatureBean!=null && !Utility.isNullOrEmpty(eventEmailFeatureBean.getFeatureType().toString()) && !Utility.isNullOrEmpty( eventEmailFeatureBean.getEventEmailId()) ) {
+            EventEmailFeatureData eventEmailFeatureData = new EventEmailFeatureData();
+            iNumOfRows = eventEmailFeatureData.deleteFeature( eventEmailFeatureBean );
+        }
+        return iNumOfRows;
+    }
 }
