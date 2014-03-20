@@ -30,6 +30,9 @@ public class EmailCreatorBaseService extends MailCreatorBase {
     private static final Logger emailerLogging = LoggerFactory.getLogger(Constants.EMAILER_LOGS);
     private EmailServiceData emailServiceData = new EmailServiceData();
     private Configuration emailerConfig = Configuration.getInstance(Constants.EMAILER_PROP);
+    private Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+    private String sApplicationDomain = applicationConfig.get(Constants.APPLICATION_DOMAIN);
+    private String sProtocol = applicationConfig.get(Constants.PROP_LINK_PROTOCOL,"http");
 
     public EmailCreatorBaseService() { }
 
@@ -78,7 +81,9 @@ public class EmailCreatorBaseService extends MailCreatorBase {
     public ArrayList<EmailSchedulerBean> getOldEmailSchedules(Long lCurrentTime ) {
         EmailSchedulerData emailSchedulerData = new EmailSchedulerData();
         Long lScheduleTime = DateSupport.subtractTime( lCurrentTime , ParseUtil.sToI(emailerConfig.get(Constants.PROP_EMAIL_SCHEDULE_PICKUPTIME_PADDING)), Constants.TIME_UNIT.MINUTES );
-        ArrayList<EmailSchedulerBean> arrSchedulerBean = emailSchedulerData.getArrEmailSchedule(lScheduleTime, lCurrentTime, Constants.SCHEDULER_STATUS.NEW_SCHEDULE, Constants.SCHEDULE_PICKUP_TYPE.OLD_RECORDS);
+        emailerLogging.debug("getOldEmailSchedules lScheduleTime : " + lScheduleTime + " lCurrentTime : " + lCurrentTime);
+        ArrayList<EmailSchedulerBean> arrSchedulerBean = emailSchedulerData.getArrEmailSchedule(lScheduleTime - (lCurrentTime - lScheduleTime ), lScheduleTime, Constants.SCHEDULER_STATUS.NEW_SCHEDULE, Constants.SCHEDULE_PICKUP_TYPE.OLD_RECORDS);
+        emailerLogging.debug("Old Emails start time  : " + (lScheduleTime - (lCurrentTime - lScheduleTime )) + " endtime : " + lScheduleTime);
 
         return arrSchedulerBean;
     }
@@ -86,7 +91,10 @@ public class EmailCreatorBaseService extends MailCreatorBase {
     public ArrayList<EmailSchedulerBean> getNewEmailSchedules( Long lCurrentTime )  {
         EmailSchedulerData emailSchedulerData = new EmailSchedulerData();
         Long lScheduleTime = DateSupport.subtractTime( lCurrentTime , ParseUtil.sToI( emailerConfig.get(Constants.PROP_EMAIL_SCHEDULE_PICKUPTIME_PADDING) ) , Constants.TIME_UNIT.MINUTES );
-        ArrayList<EmailSchedulerBean> arrSchedulerBean = emailSchedulerData.getArrEmailSchedule(lScheduleTime, lCurrentTime,  Constants.SCHEDULER_STATUS.NEW_SCHEDULE,Constants.SCHEDULE_PICKUP_TYPE.NEW_RECORDS);
+        emailerLogging.debug("New Emails lScheduleTime : " + lScheduleTime + " lCurrentTime : " + lCurrentTime);
+
+        ArrayList<EmailSchedulerBean> arrSchedulerBean = emailSchedulerData.getArrEmailSchedule(lScheduleTime, lCurrentTime+(lCurrentTime-lScheduleTime),  Constants.SCHEDULER_STATUS.NEW_SCHEDULE,Constants.SCHEDULE_PICKUP_TYPE.NEW_RECORDS);
+        emailerLogging.debug("New Emails start time  : " +lScheduleTime + " endtime : " +  (lCurrentTime+(lCurrentTime-lScheduleTime)));
 
         return arrSchedulerBean;
     }
@@ -155,7 +163,6 @@ public class EmailCreatorBaseService extends MailCreatorBase {
 
                 EmailObject emailObject = new EmailQueueBean();
                 emailObject.setEmailSubject(sEmailSubject);
-                emailObject.setHtmlBody(sEmailHtmlBody);
                 emailObject.setTextBody(sEmailTextBody);
 
                 emailObject.setFromAddress( eventEmailBean.getFromAddressEmail() );
@@ -170,10 +177,16 @@ public class EmailCreatorBaseService extends MailCreatorBase {
 
                 ArrayList<GuestGroupEmailBean> arrGuestGroupEmailBean = guestResponseBean.getArrGuestGroupEmailBean();
                 if(arrGuestGroupEmailBean!=null && !arrGuestGroupEmailBean.isEmpty()){
+                    String sGuestId = Constants.EMPTY;
                     for( GuestGroupEmailBean guestGroupEmailBean : arrGuestGroupEmailBean  )  {
                         emailObject.setToAddress(guestGroupEmailBean.getemailId());
                         emailObject.setToAddressName(guestGroupEmailBean.getemailId());
+                        sGuestId = guestGroupEmailBean.getGuestId();
                     }
+                    sEmailHtmlBody = sEmailHtmlBody + "<img src=\""+sProtocol+"://"+sApplicationDomain+"/i.gif?_ek="+eventEmailBean.getEventEmailId()+"&_gk="+sGuestId+"\" width=1 height=1 style=\"display:none;\"/>";
+
+
+                    emailObject.setHtmlBody(sEmailHtmlBody);
                     emailObject.setStatus( Constants.EMAIL_STATUS.NEW.getStatus() );
                     arrEmailObject.add(emailObject);
                 }

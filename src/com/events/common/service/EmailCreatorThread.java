@@ -28,6 +28,7 @@ public class EmailCreatorThread implements Runnable {
             if(isEmailCreatorEnabled) {
                 MailCreator emailCreator = new EmailCreator();
                 EmailCreatorBaseService emailCreatorService = new EmailCreatorBaseService( emailCreator );
+                schedulerLogging.info("Invoked Email creatorthread");
                 emailCreatorService.invokeEmailCreator();
             } else {
                 schedulerLogging.info("Email creator not enabled");

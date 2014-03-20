@@ -717,6 +717,16 @@
 
 
     <servlet>
+        <servlet-name>Process Track Email </servlet-name>
+        <servlet-class>com.events.proc.ProcTrackerImage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Track Email</servlet-name>
+        <url-pattern>/i.gif</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
         <servlet-name>Process Load Event Website Link</servlet-name>
         <servlet-class>com.events.proc.event.website.ProcLoadEventWebsiteLink</servlet-class>
     </servlet>
