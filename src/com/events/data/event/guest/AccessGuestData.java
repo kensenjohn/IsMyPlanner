@@ -183,4 +183,20 @@ public class AccessGuestData {
         }
         return arrGuestGroupAddressBean;
     }
+
+    public GuestGroupEmailBean getGuestEmail(GuestRequestBean guestRequestBean) {
+        GuestGroupEmailBean guestGroupEmailBean = new GuestGroupEmailBean();
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestId())){
+            String sQuery = "SELECT * FROM GTGUESTGROUPEMAIL WHERE FK_GUESTID =?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getGuestId());
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessGuestData.java", "getGuestEmail()");
+            if(arrResult!=null && !arrResult.isEmpty()) {
+                for( HashMap<String, String> hmResult : arrResult ) {
+                    guestGroupEmailBean = new GuestGroupEmailBean(hmResult);
+                }
+            }
+        }
+        return guestGroupEmailBean;
+    }
 }

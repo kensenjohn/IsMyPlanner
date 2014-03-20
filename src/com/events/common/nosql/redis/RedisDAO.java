@@ -48,6 +48,17 @@ public class RedisDAO {
         return sValue;
     }
 
+    public static String set(String sResource, String key , String value){
+        String status = Constants.EMPTY;
+        if(!Utility.isNullOrEmpty(key)) {
+            Jedis jedis = getJedis(sResource);
+            if(jedis!=null){
+                status = jedis.set(key, value);
+            }
+        }
+        return status;
+    }
+
     public static int putInHash(String sResource, String key, HashMap<String,String> hmRecords) {
         int iRowsAffected = 0;
         if(hmRecords!=null && !hmRecords.isEmpty() ) {
@@ -61,7 +72,7 @@ public class RedisDAO {
         }
         return iRowsAffected;
     }
-    public static HashMap<String,String> getFromHash(String sResource, String key ) {
+    public static HashMap<String,String> getAllFromHash(String sResource, String key) {
         HashMap<String,String> hmResult = new HashMap<String, String>();
         if(!Utility.isNullOrEmpty(key) ) {
             Jedis jedis = getJedis(sResource);
@@ -70,6 +81,19 @@ public class RedisDAO {
             }
         }
         return hmResult;
+    }
+    public static String getValueFromHash(String sResource, String key , String field) {
+        String hashValue = Constants.EMPTY;
+        if(!Utility.isNullOrEmpty(key) && !Utility.isNullOrEmpty(field)) {
+            Jedis jedis = getJedis(sResource);
+            if(jedis!=null){
+                Object objValue = jedis.hget(key, field);
+                if(objValue!=null){
+                    hashValue = (String)objValue;
+                }
+            }
+        }
+        return hashValue;
     }
 
     public static Long getId( String sResource, String key ) {
@@ -83,7 +107,7 @@ public class RedisDAO {
         return lId;
     }
 
-    public static Long incrementCounter( String sResource, String key, int incrementBy ) {
+    public static Long incrementCounter( String sResource, String key, Long incrementBy ) {
         Long counter = 0L;
         if(!Utility.isNullOrEmpty(key) ) {
             Jedis jedis = getJedis(sResource);
@@ -94,7 +118,7 @@ public class RedisDAO {
         return counter;
     }
 
-    public static Long decrementCounter( String sResource, String key, int decrementBy ) {
+    public static Long decrementCounter( String sResource, String key, Long decrementBy ) {
         Long counter = 0L;
         if(!Utility.isNullOrEmpty(key) ) {
             Jedis jedis = getJedis(sResource);

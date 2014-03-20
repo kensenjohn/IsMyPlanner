@@ -471,4 +471,8 @@ public class Constants {
     public enum EVENT_WEBSITE_PAGETYPE{
         welcome,invitation,couples,bridesmaids,groomsmen,ceremony,reception,travel,hotels,registry,rsvp,contactus;
     }
+
+    public enum EMAIL_METRIC_TYPE{
+        EMAIL_OPENED,LINKS_CLICKED,NONE;
+    }
 }

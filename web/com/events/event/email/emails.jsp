@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
 <link rel="stylesheet" href="/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/colorbox.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -88,6 +89,7 @@
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/event/event_info.js"></script>
 <script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/jquery.colorbox-min.js"></script>
 <script type="text/javascript">
     var varEventId = '<%=sEventId%>';
     $(window).load(function() {
@@ -139,7 +141,10 @@
                             '<td  class="center" >'+
                             '<a href="/com/events/event/email/edit_email.jsp?event_id='+varEveryEventEmailBean.event_id+'&eventemail_id='+varEveryEventEmailBean.eventemail_id+'" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>'+
                             '&nbsp;&nbsp;&nbsp;'+
-                            '<a id="'+varEveryEventEmailBean.eventemail_id+'" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Delete</a>'+'</td>');
+                            '<a id="'+varEveryEventEmailBean.eventemail_id+'" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Delete</a>'+
+                            '&nbsp;&nbsp;&nbsp;'+
+                            '<a id="metrics_'+varEveryEventEmailBean.eventemail_id+'" class="btn btn-default btn-xs"><i class="fa fa-bar-chart-o"></i> Metrics</a>'+
+                            '</td>');
             $('#every_eventemail_rows').append(rowEveryEventEmail);
 
 
@@ -158,6 +163,10 @@
                         "Are you sure you want to delete - " + e.data.param_eventemail_obj.eventemail_name ,
                         "Delete Email",
                         "Yes", "No", deleteEventEmail,e.data.param_eventemail_obj)
+            });
+
+            $('#metrics_'+varEveryEventEmailBean.eventemail_id).click({param_eventemail_obj:eventemail_obj},function(e){
+                $.colorbox({ width:"80%", height:"80%", iframe:true,href:"metrics.jsp?eventemail_id="+e.data.param_eventemail_obj.eventemail_id+"&event_id="+e.data.param_eventemail_obj.event_id});
             });
         }
     }

@@ -335,6 +335,14 @@
         <url-pattern>/proc_load_eventemail.aeve</url-pattern>
     </servlet-mapping>
     <servlet>
+        <servlet-name>Process Load Email Metrics</servlet-name>
+        <servlet-class>com.events.proc.email.ProcLoadEmailMetrics</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Email Metrics</servlet-name>
+        <url-pattern>/proc_load_eventemail_metrics.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>Process Send Test Email</servlet-name>
         <servlet-class>com.events.proc.email.ProcSendTestEmail</servlet-class>
     </servlet>
@@ -718,11 +726,19 @@
 
     <servlet>
         <servlet-name>Process Track Email </servlet-name>
-        <servlet-class>com.events.proc.ProcTrackerImage</servlet-class>
+        <servlet-class>com.events.proc.tracker.ProcTrackerEmailOpened</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Process Track Email</servlet-name>
         <url-pattern>/i.gif</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Track Email Link </servlet-name>
+        <servlet-class>com.events.proc.tracker.ProcTrackerEmailLinks</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Track Email Link</servlet-name>
+        <url-pattern>/linker</url-pattern>
     </servlet-mapping>
 
 

@@ -196,6 +196,21 @@ public class EmailCreatorBaseService extends MailCreatorBase {
         return arrEmailObject;
     }
 
+    private String createLinkTrackers(String emailBody, String eventEmailId, String sGuestId){
+        String finalEmailBody = Constants.EMPTY;
+        if(!Utility.isNullOrEmpty(emailBody)&& !Utility.isNullOrEmpty(eventEmailId) && !Utility.isNullOrEmpty(sGuestId)) {
+            boolean isParseComplete = false;
+            while(!isParseComplete) {
+                int hrefPosition = emailBody.indexOf("href");
+                if(hrefPosition<0 ){
+                    isParseComplete = true;
+                }
+
+            }
+        }
+        return finalEmailBody;
+    }
+
     private ArrayList<EveryEventGuestGroupBean> getGuests(EventEmailBean eventEmailBean, EventEmailFeatureBean sendEmailRuleFeatureBean){
 
         ArrayList<EveryEventGuestGroupBean> arrEveryEventGuestGroup = new ArrayList<EveryEventGuestGroupBean>();

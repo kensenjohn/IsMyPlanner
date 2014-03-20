@@ -50,7 +50,7 @@ public class Notification {
                 if(iRowsAffected>0) {
                     Long iIndex = RedisDAO.pushId(EVENTADMIN_DB, unReadNotifyUserKey , ParseUtil.LToS(lId));
                     if(iIndex>0){
-                        RedisDAO.incrementCounter(EVENTADMIN_DB , unReadNotifyUserKey + ".counter", 1 );
+                        RedisDAO.incrementCounter(EVENTADMIN_DB , unReadNotifyUserKey + ".counter", 1L );
                     }
                 }
             }
@@ -70,7 +70,7 @@ public class Notification {
                 if(arrId!=null && !arrId.isEmpty()) {
                     for(String id : arrId ) {
                         StringBuilder strHashKey = new StringBuilder(unReadNotifyUserKey).append(".").append(id);
-                        HashMap<String,String> hmResult = RedisDAO.getFromHash(EVENTADMIN_DB , strHashKey.toString() ) ;
+                        HashMap<String,String> hmResult = RedisDAO.getAllFromHash(EVENTADMIN_DB, strHashKey.toString()) ;
 
                         NotifyBean newNotifyBean = new NotifyBean(hmResult);
 
@@ -78,7 +78,7 @@ public class Notification {
 
                         hmUnReadRecords.put(id , newNotifyBean);
 
-                        RedisDAO.decrementCounter(EVENTADMIN_DB , unReadNotifyUserKey + ".counter", 1 );
+                        RedisDAO.decrementCounter(EVENTADMIN_DB , unReadNotifyUserKey + ".counter", 1L );
                     }
                 }
 /*
@@ -145,7 +145,7 @@ public class Notification {
                 for(String id : arrId ){
 
                     StringBuilder strHashKey = new StringBuilder(QUE_NEW_NOTIFY).append(".").append(id);
-                    HashMap<String,String> hmResult = RedisDAO.getFromHash(EVENTADMIN_DB , strHashKey.toString() ) ;
+                    HashMap<String,String> hmResult = RedisDAO.getAllFromHash(EVENTADMIN_DB, strHashKey.toString()) ;
 
                     NotifyBean notifyBean = new NotifyBean(hmResult);
                     hmNotifyBean.put(id, notifyBean);
