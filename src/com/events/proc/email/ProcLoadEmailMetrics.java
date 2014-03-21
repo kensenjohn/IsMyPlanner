@@ -59,16 +59,16 @@ public class ProcLoadEmailMetrics extends HttpServlet {
                             Long lNumOfTimesViewed = accessTrackerEmailOpened.getTotalNumOfTimesEmailViewed( trackerEmailBean );
                             jsonResponseObj.put("total_num_of_times_viewed" , ParseUtil.LToS(lNumOfTimesViewed) );
 
-                            ArrayList<TrackerEmailBean> arrAllUsersWhoOpenedEmail = accessTrackerEmailOpened.getUsersWhoViewedEmail(trackerEmailBean);
-                            Long lTotalNumOfUsers = 0L;
-                            JSONObject jsonAllUsersWhoViewedEvent = accessTrackerEmailOpened.getJsonUsersWhoViewedEmail(arrAllUsersWhoOpenedEmail);
-                            if(jsonAllUsersWhoViewedEvent!=null){
-                                lTotalNumOfUsers = jsonAllUsersWhoViewedEvent.optLong("total_num_of_users");
-                                if(lTotalNumOfUsers>0){
-                                    jsonResponseObj.put("users_who_viewed_email", jsonAllUsersWhoViewedEvent );
+                            ArrayList<TrackerEmailBean> arrAllGuestsWhoOpenedEmail = accessTrackerEmailOpened.getGuestsWhoViewedEmail(trackerEmailBean);
+                            Long lTotalNumOfGuests = 0L;
+                            JSONObject jsonAllGuestsWhoViewedEvent = accessTrackerEmailOpened.getJsonGuestsWhoViewedEmail(arrAllGuestsWhoOpenedEmail);
+                            if(jsonAllGuestsWhoViewedEvent!=null){
+                                lTotalNumOfGuests = jsonAllGuestsWhoViewedEvent.optLong("total_num_of_guests");
+                                if(lTotalNumOfGuests>0){
+                                    jsonResponseObj.put("guests_who_viewed_email", jsonAllGuestsWhoViewedEvent );
                                 }
                             }
-                            jsonResponseObj.put("total_num_of_users_who_viewed_email" , lTotalNumOfUsers);
+                            jsonResponseObj.put("total_num_of_guests_who_viewed_email" , lTotalNumOfGuests);
 
                             Text okText = new OkText("Email Opened Metric was successfully loaded.","status_mssg") ;
                             arrOkText.add(okText);

@@ -43,25 +43,25 @@ public class AccessTrackerEmailOpened {
         return sGuestId;
     }
 
-    public ArrayList<TrackerEmailBean> getUsersWhoViewedEmail(TrackerEmailBean trackerEmailBean){
-        ArrayList<TrackerEmailBean> arrAllUsersWhoViewedEmail = new ArrayList<TrackerEmailBean>();
+    public ArrayList<TrackerEmailBean> getGuestsWhoViewedEmail(TrackerEmailBean trackerEmailBean){
+        ArrayList<TrackerEmailBean> arrAllGuestsWhoViewedEmail = new ArrayList<TrackerEmailBean>();
         if(trackerEmailBean!=null && !Utility.isNullOrEmpty(trackerEmailBean.getEventEmailId())) {
             AccessTrackerEmailOpenedData accessTrackerEmailOpenedData = new AccessTrackerEmailOpenedData();
-            arrAllUsersWhoViewedEmail = accessTrackerEmailOpenedData.getAllUsersWhoViewedEmail( trackerEmailBean );
+            arrAllGuestsWhoViewedEmail = accessTrackerEmailOpenedData.getAllGuestsWhoViewedEmail( trackerEmailBean );
         }
-        return arrAllUsersWhoViewedEmail;
+        return arrAllGuestsWhoViewedEmail;
     }
 
-    public JSONObject getJsonUsersWhoViewedEmail(ArrayList<TrackerEmailBean> arrAllUsersWhoViewedEmail) {
-        JSONObject jsonAllUsersWhoViewedEmail = new JSONObject();
-        if(arrAllUsersWhoViewedEmail!=null && !arrAllUsersWhoViewedEmail.isEmpty()){
-            Long lNumOfUsers = 0L;
-            for( TrackerEmailBean userWhoViewedEmail : arrAllUsersWhoViewedEmail ) {
-                jsonAllUsersWhoViewedEmail.put(ParseUtil.LToS(lNumOfUsers) , userWhoViewedEmail.toJson() );
-                lNumOfUsers++;
+    public JSONObject getJsonGuestsWhoViewedEmail(ArrayList<TrackerEmailBean> arrAllGuestsWhoViewedEmail) {
+        JSONObject jsonAllGuestsWhoViewedEmail = new JSONObject();
+        if(arrAllGuestsWhoViewedEmail!=null && !arrAllGuestsWhoViewedEmail.isEmpty()){
+            Long lNumOfGuests = 0L;
+            for( TrackerEmailBean userWhoViewedEmail : arrAllGuestsWhoViewedEmail ) {
+                jsonAllGuestsWhoViewedEmail.put(ParseUtil.LToS(lNumOfGuests) , userWhoViewedEmail.toJson() );
+                lNumOfGuests++;
             }
-            jsonAllUsersWhoViewedEmail.put("total_num_of_users" , ParseUtil.LToS(lNumOfUsers) );
+            jsonAllGuestsWhoViewedEmail.put("total_num_of_guests" , ParseUtil.LToS(lNumOfGuests) );
         }
-        return jsonAllUsersWhoViewedEmail;
+        return jsonAllGuestsWhoViewedEmail;
     }
 }

@@ -39,18 +39,18 @@ public class AccessTrackerEmailOpenedData {
         }
         return sGuestId;
     }
-    public ArrayList<TrackerEmailBean> getAllUsersWhoViewedEmail(TrackerEmailBean trackerEmailBean){
+    public ArrayList<TrackerEmailBean> getAllGuestsWhoViewedEmail(TrackerEmailBean trackerEmailBean){
         ArrayList<TrackerEmailBean> arrTrackerEmailBean = new ArrayList<TrackerEmailBean>();
         if(trackerEmailBean!=null  && !Utility.isNullOrEmpty(trackerEmailBean.getEventEmailId())){
             HashMap<String,String> hmResult = RedisDAO.getAllFromHash( EVENTADMIN_DB , "hash." + trackerEmailBean.getEventEmailId() + ".emails" );
             if(hmResult!=null && !hmResult.isEmpty()) {
-                for(Map.Entry<String,String> mapUsers : hmResult.entrySet() ) {
+                for(Map.Entry<String,String> mapGuests : hmResult.entrySet() ) {
 
                     TrackerEmailBean guestTrackerEmailBean = new TrackerEmailBean();
-                    Long iNumOfViews = ParseUtil.sToL(RedisDAO.get(EVENTADMIN_DB, "views." + trackerEmailBean.getEventEmailId() + "." + mapUsers.getValue()));
+                    Long iNumOfViews = ParseUtil.sToL(RedisDAO.get(EVENTADMIN_DB, "views." + trackerEmailBean.getEventEmailId() + "." + mapGuests.getValue()));
                     guestTrackerEmailBean.setNumberOfViews( iNumOfViews );
-                    guestTrackerEmailBean.setGuestEmailAddress( mapUsers.getKey() );
-                    guestTrackerEmailBean.setGuestId( mapUsers.getValue() );
+                    guestTrackerEmailBean.setGuestEmailAddress( mapGuests.getKey() );
+                    guestTrackerEmailBean.setGuestId( mapGuests.getValue() );
                     guestTrackerEmailBean.setEventEmailId( trackerEmailBean.getEventEmailId() );
 
                     arrTrackerEmailBean.add( guestTrackerEmailBean );
