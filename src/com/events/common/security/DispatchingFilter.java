@@ -53,9 +53,13 @@ public class DispatchingFilter implements Filter {
         boolean isInsecureParamUsed = ParseUtil.sTob((ParseUtil.checkNullObject(servletRequest.getAttribute(Constants.INSECURE_PARAMS_ERROR))));
         if( isInsecureParamUsed ) {
             servletRequest.getRequestDispatcher("/com/events/common/error/security_warning.jsp").forward(servletRequest, servletResponse);
-        } else if( !isUserLoggedIn && !path.endsWith("/credentials.jsp") && !path.endsWith("/forgot.jsp")&& !path.endsWith("/reset_password.jsp")&& !path.endsWith("/set_password.jsp")) {
+        } else if( !isUserLoggedIn && !path.endsWith("/credentials.jsp") && !path.endsWith("/forgot.jsp")&& !path.endsWith("/reset_password.jsp")
+                && !path.endsWith("/set_password.jsp")
+                && !path.endsWith("/privacy.jsp") && !path.endsWith("/contact.jsp") && !path.endsWith("/about_us.jsp")) {
             servletRequest.getRequestDispatcher("/index.jsp").forward(servletRequest, servletResponse);
-        }  else  if( (isUserLoggedIn && !isInsecureParamUsed) || path.endsWith("/credentials.jsp")  || path.endsWith("/forgot.jsp")  || path.endsWith("/reset_password.jsp") || path.endsWith("/set_password.jsp") ) {
+        }  else  if( (isUserLoggedIn && !isInsecureParamUsed) || path.endsWith("/credentials.jsp")  || path.endsWith("/forgot.jsp")
+                || path.endsWith("/reset_password.jsp") || path.endsWith("/set_password.jsp")
+                || path.endsWith("/privacy.jsp") || path.endsWith("/contact.jsp") || path.endsWith("/about_us.jsp")) {
             filterChain.doFilter(servletRequest, servletResponse);
         }
     }

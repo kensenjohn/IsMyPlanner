@@ -87,26 +87,6 @@
                     &nbsp;
                 </div>
             </div>
-            <div class = row>
-                <div class="col-md-6">
-                    <div class="boxedcontent">
-                        <div class="widget">
-                            <div class="content">
-                                <h4>Notifications</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="boxedcontent">
-                        <div class="widget">
-                            <div class="content">
-                                <h4>TODO</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -121,7 +101,6 @@
         loadDashboardSummary(populateDashboardSummary);
 
         $( '#notifications_tile').click( function(){
-            //$.colorbox({href:varImagePath});
             $.colorbox({
                 href:'view_notifications.jsp',
                 iframe:true,

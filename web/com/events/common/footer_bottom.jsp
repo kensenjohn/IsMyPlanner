@@ -7,7 +7,9 @@
 <%@ page import="com.events.vendors.website.AccessVendorWebsite" %>
 <%@ page import="com.events.common.ParseUtil" %>
 <%@ page import="com.events.users.AccessUsers" %>
-<%@ page import="com.events.bean.users.ParentTypeBean" %><%
+<%@ page import="com.events.bean.users.ParentTypeBean" %>
+<%
+    boolean isVendorSubDomainUsed = false;
     String sCopyrightCompany = Constants.EMPTY;
     HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmVendorWebsiteFeatureBean = new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE, VendorWebsiteFeatureBean>();
     if( session.getAttribute("SUBDOMAIN_VENDOR") != null && session.getAttribute("SUBDOMAIN_VENDOR_WEBSITE") !=null ) {
@@ -15,12 +17,13 @@
         sCopyrightCompany = ParseUtil.checkNull( vendorBean.getVendorName());
         VendorWebsiteBean vendorWebsiteBean = (VendorWebsiteBean) session.getAttribute("SUBDOMAIN_VENDOR_WEBSITE");
         if(vendorWebsiteBean!=null && !Utility.isNullOrEmpty(vendorWebsiteBean.getVendorWebsiteId())){
-
+            isVendorSubDomainUsed = true;
             AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
             hmVendorWebsiteFeatureBean =  accessVendorWebsite.getPublishedFeaturesForLandingPage(vendorWebsiteBean);
         }
 
     }
+    com.events.common.Configuration applicationConfig = com.events.common.Configuration.getInstance(com.events.common.Constants.APPLICATION_PROP);
 
     boolean isAboutUsShown = false;
     boolean isContactShown = false;
@@ -31,7 +34,7 @@
     String sFacebookUrl = Constants.EMPTY;
     String sTwitterUrl = Constants.EMPTY;
     String sPinterestUrl = Constants.EMPTY;
-    if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
+    if(isVendorSubDomainUsed && hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
         VendorWebsiteFeatureBean vendorWebsiteFeaturAboutUsBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.show_footer_about_us);
         if(vendorWebsiteFeaturAboutUsBean!=null) {
             isAboutUsShown = ParseUtil.sTob(vendorWebsiteFeaturAboutUsBean.getValue() );
@@ -59,17 +62,24 @@
             }
 
             VendorWebsiteFeatureBean vendorWebsiteFeatueTwitterUrlBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_footer_twitter);
-            if(vendorWebsiteFeatueFacebookUrlBean!=null) {
-                sTwitterUrl = ParseUtil.checkNull(vendorWebsiteFeatueFacebookUrlBean.getValue() );
+            if(vendorWebsiteFeatueTwitterUrlBean!=null) {
+                sTwitterUrl = ParseUtil.checkNull(vendorWebsiteFeatueTwitterUrlBean.getValue() );
             }
 
             VendorWebsiteFeatureBean vendorWebsiteFeatuePinterestUrlBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_footer_pinterest);
-            if(vendorWebsiteFeatueFacebookUrlBean!=null) {
-                sPinterestUrl = ParseUtil.checkNull(vendorWebsiteFeatueFacebookUrlBean.getValue() );
+            if(vendorWebsiteFeatuePinterestUrlBean!=null) {
+                sPinterestUrl = ParseUtil.checkNull(vendorWebsiteFeatuePinterestUrlBean.getValue() );
             }
         }
+    } else {
+        isAboutUsShown = true;
+        isContactShown = true;
+        isPrivacyShown = true;
+        isFollowusShown = true;
+        sFacebookUrl =  ParseUtil.checkNull(applicationConfig.get("facebook_url"));
+        sTwitterUrl =  ParseUtil.checkNull(applicationConfig.get("twitter_url"));
     }
-    com.events.common.Configuration applicationConfig = com.events.common.Configuration.getInstance(com.events.common.Constants.APPLICATION_PROP);
+
 
     String sCopyrightYear = applicationConfig.get("copyright_year");
     if(Utility.isNullOrEmpty(sCopyrightCompany)){
@@ -84,9 +94,9 @@
                     <div class="col-md-8 col-sm-8">
                         <div id="footer-tabs">
                             <ul class="footer-tabs">
-                                <%if(isAboutUsShown){%><li><a href="#">About Us</a></li><%}%>
-                                <%if(isContactShown){%><li><a href="#">Contact</a></li><%}%>
-                                <%if(isPrivacyShown){%><li><a href="#">Privacy</a></li><%}%>
+                                <%if(isAboutUsShown){%><li><a href="/com/events/common/about_us.jsp">About</a></li><%}%>
+                                <%if(isContactShown){%><li><a href="/com/events/common/contact.jsp">Contact</a></li><%}%>
+                                <%if(isPrivacyShown){%><li><a href="/com/events/common/privacy.jsp">Privacy</a></li><%}%>
                             </ul>
                         </div>
                     </div>

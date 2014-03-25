@@ -17,3 +17,7 @@ application_domain=localhost
 
 enable_notification_sender_thread=true
 link_protocol=http
+
+facebook_url=https://www.facebook.com
+twitter_url=https://www.twitter.com
+
