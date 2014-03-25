@@ -74,11 +74,11 @@ public class Notification {
 
                         NotifyBean newNotifyBean = new NotifyBean(hmResult);
 
-                        String topIdFromQueue = removeUnReadNotificationId(newNotifyBean.getTo());
+                        //String topIdFromQueue = removeUnReadNotificationId(newNotifyBean.getTo());
 
                         hmUnReadRecords.put(id , newNotifyBean);
 
-                        RedisDAO.decrementCounter(EVENTADMIN_DB , unReadNotifyUserKey + ".counter", 1L );
+                        //RedisDAO.decrementCounter(EVENTADMIN_DB , unReadNotifyUserKey + ".counter", 1L );
                     }
                 }
 /*

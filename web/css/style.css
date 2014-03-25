@@ -580,5 +580,10 @@ ul.footer-tabs li.active, html ul.footer-tabs li.active a,  html ul.footer-tabs 
     height: 44px;
     border-bottom: 1px solid  !important;
 }
+.container-fixed {
+    margin: 0 auto;
+    max-width: 1200px;
+    min-width: 800px;
+}
 
 

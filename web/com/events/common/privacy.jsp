@@ -1,8 +1,43 @@
+<%@ page import="com.events.common.ParseUtil" %>
+<%@ page import="com.events.vendors.website.AccessVendorWebsite" %>
+<%@ page import="com.events.common.Utility" %>
+<%@ page import="com.events.bean.vendors.website.VendorWebsiteBean" %>
+<%@ page import="com.events.bean.vendors.VendorBean" %>
+<%@ page import="com.events.bean.vendors.website.VendorWebsiteFeatureBean" %>
+<%@ page import="com.events.common.Constants" %>
+<%@ page import="java.util.HashMap" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <body>
+<%
+    boolean isVendorSite = false;
+    HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmVendorWebsiteFeatureBean = new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE, VendorWebsiteFeatureBean>();
+    if( session.getAttribute("SUBDOMAIN_VENDOR") != null && session.getAttribute("SUBDOMAIN_VENDOR_WEBSITE") !=null ) {
+        isVendorSite = true;
+        VendorBean vendorBean = (VendorBean)  session.getAttribute("SUBDOMAIN_VENDOR");
+        VendorWebsiteBean vendorWebsiteBean = (VendorWebsiteBean) session.getAttribute("SUBDOMAIN_VENDOR_WEBSITE");
+        if(vendorWebsiteBean!=null && !Utility.isNullOrEmpty(vendorWebsiteBean.getVendorWebsiteId())){
+
+            AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
+            hmVendorWebsiteFeatureBean =  accessVendorWebsite.getPublishedFeaturesForLandingPage(vendorWebsiteBean);
+        }
+    }
+
+    String sPrivacy = Constants.EMPTY;
+    boolean isShowPrivacy = false;
+    if(isVendorSite && hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
+        VendorWebsiteFeatureBean vendorWebsiteShowAboutUsFeatureBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.show_footer_privacy);
+        if(vendorWebsiteShowAboutUsFeatureBean!=null && ParseUtil.sTob(vendorWebsiteShowAboutUsFeatureBean.getValue()))  {
+            VendorWebsiteFeatureBean vendorWebsiteAboutUsFeatureBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_footer_privacy);
+            if(vendorWebsiteAboutUsFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteAboutUsFeatureBean.getValue())){
+                sPrivacy =   ParseUtil.checkNull(vendorWebsiteAboutUsFeatureBean.getValue());
+                isShowPrivacy = true;
+            }
+        }
+    }
+%>
 <div class="page_wrap">
     <jsp:include page="/com/events/common/top_nav.jsp">
         <jsp:param name="AFTER_LOGIN_REDIRECT" value="index.jsp"/>
@@ -19,6 +54,19 @@
         <div class="content_format">
             <div class="row">
                 <div class="col-md-12" >
+<%
+                    if(isVendorSite) {
+                        if(isShowPrivacy) {
+%>
+                            <div class="row">
+                                <div class="col-md-8" >
+                                    <%=sPrivacy%>
+                                </div>
+                             </div>
+<%
+                        }
+                    } else if(!isVendorSite) {
+%>
                     <div class="row">
                         <div class="col-md-8" >
                             <span>We at Smarasoft Inc. will be collecting phone numbers and emails from you through IsMyPlanner.com.
@@ -152,6 +200,10 @@
                             <span>(267) 250-2719</span> <br>
                         </div>
                     </div>
+
+<%
+                    }
+%>
                 </div>
             </div>
         </div>

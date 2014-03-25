@@ -10,6 +10,7 @@
     String sDashBoardOurTeamActive = ParseUtil.checkNull(request.getParameter("our_team_active"));
     String sDashBoardRolesAndPermissionsActive = ParseUtil.checkNull(request.getParameter("roles_and_permissions_active"));
     String sDashBoardVendorsActive = ParseUtil.checkNull(request.getParameter("vendors_active"));
+    String sDashBoardInvoicesActive = ParseUtil.checkNull(request.getParameter("invoices_active"));
 
     UserBean loggedInUserBean = new UserBean();
     if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
@@ -53,6 +54,14 @@
             <li class="<%=sDashBoardVendorsActive%>"><a href="/com/events/dashboard/partner_vendors.jsp">Vendors</a></li>
     <%
         }
+    %>
+
+    <%
+       // if(checkPermission!=null && checkPermission.can(Perm.ACCESS_CLIENTS_TAB)) {
+    %>
+    <li class="<%=sDashBoardInvoicesActive%>"><a href="/com/events/dashboard/invoices.jsp">Invoices</a></li>
+    <%
+       // }
     %>
 
 
