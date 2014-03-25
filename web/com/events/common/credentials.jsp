@@ -76,18 +76,26 @@
 
                                             <form method="post"  id="frm_register" action="/proc_register.aeve">
                                                 <div class="form-group">
-                                                    <label for="registerEmail" class="form_label">Email address</label> <span class="required"> *</span>
-                                                    <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder="Enter email">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="registerEmail" class="form_label">Email address</label> <span class="required"> *</span>
+                                                            <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder="Enter email">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="row">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-12">
                                                             <label for="registerPassword"  class="form_label">Password</label><span class="required"> *</span>
                                                             <input type="password" class="form-control" id="registerPassword" name="registerPassword" placeholder="Password">
                                                         </div>
-                                                        <div class="col-md-6">
-                                                            <label for="registerVerifyPassword"  class="form_label">Verify Password</label><span class="required"> *</span>
-                                                            <input type="password" class="form-control" id="registerVerifyPassword" name="registerVerifyPassword" placeholder="Verify Password">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" id="div_business_name">
+                                                    <div class="row" >
+                                                        <div class="col-md-12">
+                                                            <label for="registerBusinessName"  class="form_label">Business Name</label><span class="required"> *</span>
+                                                            <input type="password" class="form-control" id="registerBusinessName" name="registerBusinessName" placeholder="Business Name">
                                                         </div>
                                                     </div>
                                                 </div>

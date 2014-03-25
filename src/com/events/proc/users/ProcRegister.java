@@ -54,19 +54,21 @@ public class ProcRegister  extends HttpServlet {
                 String sLastName = "Planner";
                 String sEmail = ParseUtil.checkNull(request.getParameter("registerEmail"));
                 String sPassword = ParseUtil.checkNull(request.getParameter("registerPassword"));
-                String sVerifyPassword = ParseUtil.checkNull(request.getParameter("registerVerifyPassword"));
                 boolean isPlanner = ParseUtil.sTob( request.getParameter("registerIsPlanner") );
+                String sBusinessName = ParseUtil.checkNull( request.getParameter("registerBusinessName") );
                 isPlanner = true; // default set it to true.
 
-                if(Utility.isNullOrEmpty( sEmail ) || Utility.isNullOrEmpty( sPassword ) || Utility.isNullOrEmpty( sVerifyPassword ) ) {
-                    appLogging.info("Please fill in all required fields");
+                if(Utility.isNullOrEmpty( sEmail ) || Utility.isNullOrEmpty( sPassword ) ) {
                     Text errorText = new ErrorText("Please fill in all required fields","account_num") ;
                     arrErrorText.add(errorText);
                     responseStatus = RespConstants.Status.ERROR;
 
-                } else if ( !sPassword.equalsIgnoreCase(sVerifyPassword)) {
-                    appLogging.info("Password does not match.");
+                } else if ( Utility.isNullOrEmpty(sPassword) ) {
                     Text errorText = new ErrorText("Please make sure the Password and Confirm Password matches","account_num") ;
+                    arrErrorText.add(errorText);
+                    responseStatus = RespConstants.Status.ERROR;
+                } else if(isPlanner && Utility.isNullOrEmpty(sBusinessName)){
+                    Text errorText = new ErrorText("Please enter a Business Name","account_num") ;
                     arrErrorText.add(errorText);
                     responseStatus = RespConstants.Status.ERROR;
                 } else {
@@ -82,6 +84,7 @@ public class ProcRegister  extends HttpServlet {
 
                         userRequestBean.setFirstName(sFirstName);
                         userRequestBean.setLastName(sLastName);
+                        userRequestBean.setCompanyName( sBusinessName );
 
                         PasswordRequestBean passwordRequestBean = new PasswordRequestBean();
                         passwordRequestBean.setPassword(sPassword);

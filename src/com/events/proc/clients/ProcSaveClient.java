@@ -64,7 +64,7 @@ public class ProcSaveClient  extends HttpServlet {
                 String sUserId = ParseUtil.checkNull(request.getParameter("userId"));
                 String sUserInfoId = ParseUtil.checkNull(request.getParameter("userInfoId"));
 
-                if("".equalsIgnoreCase(sClienttName)  || "".equalsIgnoreCase(sClientEmail) ) {
+                if(  Utility.isNullOrEmpty(sClienttName) || Utility.isNullOrEmpty(sClientEmail) || Utility.isNullOrEmpty(sClientFirstName)) {
                     appLogging.info("Please fill in all required fields");
                     Text errorText = new ErrorText("Please fill in all required fields","account_num") ;
                     arrErrorText.add(errorText);

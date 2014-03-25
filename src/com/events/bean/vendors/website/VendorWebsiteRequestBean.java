@@ -42,6 +42,81 @@ public class VendorWebsiteRequestBean {
     private String action = Constants.EMPTY;
 
     private String vendorWebsiteId = Constants.EMPTY;
+    private String vendorWebsiteTypeName = Constants.EMPTY;
+
+
+    private String aboutUs = Constants.EMPTY;
+    private String contact = Constants.EMPTY;
+    private String privacy = Constants.EMPTY;
+
+    private String facebookFollowUs = Constants.EMPTY;
+    private String twitterFollowUs = Constants.EMPTY;
+    private String pinterestFollowUs = Constants.EMPTY;
+    private String contents = Constants.EMPTY;
+
+    public String getContents() {
+        return contents;
+    }
+
+    public void setContents(String contents) {
+        this.contents = contents;
+    }
+
+    public String getAboutUs() {
+        return aboutUs;
+    }
+
+    public void setAboutUs(String aboutUs) {
+        this.aboutUs = aboutUs;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(String privacy) {
+        this.privacy = privacy;
+    }
+
+    public String getFacebookFollowUs() {
+        return facebookFollowUs;
+    }
+
+    public void setFacebookFollowUs(String facebookFollowUs) {
+        this.facebookFollowUs = facebookFollowUs;
+    }
+
+    public String getTwitterFollowUs() {
+        return twitterFollowUs;
+    }
+
+    public void setTwitterFollowUs(String twitterFollowUs) {
+        this.twitterFollowUs = twitterFollowUs;
+    }
+
+    public String getPinterestFollowUs() {
+        return pinterestFollowUs;
+    }
+
+    public void setPinterestFollowUs(String pinterestFollowUs) {
+        this.pinterestFollowUs = pinterestFollowUs;
+    }
+
+    public String getVendorWebsiteTypeName() {
+        return vendorWebsiteTypeName;
+    }
+
+    public void setVendorWebsiteTypeName(String vendorWebsiteTypeName) {
+        this.vendorWebsiteTypeName = vendorWebsiteTypeName;
+    }
 
     public String getGreetingHeader() {
         return greetingHeader;

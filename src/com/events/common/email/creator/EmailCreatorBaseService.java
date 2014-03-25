@@ -49,7 +49,6 @@ public class EmailCreatorBaseService extends MailCreatorBase {
             // These emails should be sent again.
             ArrayList<EmailSchedulerBean> arrOldSchedulerBean = getOldEmailSchedules(lCurrentTime);
             if(arrOldSchedulerBean!=null && !arrOldSchedulerBean.isEmpty()) {
-                emailerLogging.debug( " Old Email Scheudler Beans " + arrOldSchedulerBean);
                 for(EmailSchedulerBean emailOldScheduleBean : arrOldSchedulerBean )
                 {
                     emailOldScheduleBean.setScheduleStatus( Constants.SCHEDULER_STATUS.ERROR.getStatus()  );
@@ -59,11 +58,8 @@ public class EmailCreatorBaseService extends MailCreatorBase {
 
             // Get all new emails that are scheduled to be sent.
             ArrayList<EmailSchedulerBean> arrNewSchedulerBean = getNewEmailSchedules(lCurrentTime);
-            if(arrNewSchedulerBean!=null && !arrNewSchedulerBean.isEmpty())
-            {
-                emailerLogging.debug( " New Email Scheduler Beans " + arrNewSchedulerBean);
-                for(EmailSchedulerBean emailNewScheduleBean : arrNewSchedulerBean )
-                {
+            if(arrNewSchedulerBean!=null && !arrNewSchedulerBean.isEmpty())  {
+                for(EmailSchedulerBean emailNewScheduleBean : arrNewSchedulerBean ) {
                     ArrayList<EmailObject> arrEmailObject = createEmailObject(emailNewScheduleBean);
                     if(arrEmailObject!=null && !arrEmailObject.isEmpty() ) {
                         for( EmailObject emailObject : arrEmailObject  ) {
@@ -81,9 +77,7 @@ public class EmailCreatorBaseService extends MailCreatorBase {
     public ArrayList<EmailSchedulerBean> getOldEmailSchedules(Long lCurrentTime ) {
         EmailSchedulerData emailSchedulerData = new EmailSchedulerData();
         Long lScheduleTime = DateSupport.subtractTime( lCurrentTime , ParseUtil.sToI(emailerConfig.get(Constants.PROP_EMAIL_SCHEDULE_PICKUPTIME_PADDING)), Constants.TIME_UNIT.MINUTES );
-        emailerLogging.debug("getOldEmailSchedules lScheduleTime : " + lScheduleTime + " lCurrentTime : " + lCurrentTime);
         ArrayList<EmailSchedulerBean> arrSchedulerBean = emailSchedulerData.getArrEmailSchedule(lScheduleTime - (lCurrentTime - lScheduleTime ), lScheduleTime, Constants.SCHEDULER_STATUS.NEW_SCHEDULE, Constants.SCHEDULE_PICKUP_TYPE.OLD_RECORDS);
-        emailerLogging.debug("Old Emails start time  : " + (lScheduleTime - (lCurrentTime - lScheduleTime )) + " endtime : " + lScheduleTime);
 
         return arrSchedulerBean;
     }
@@ -91,10 +85,8 @@ public class EmailCreatorBaseService extends MailCreatorBase {
     public ArrayList<EmailSchedulerBean> getNewEmailSchedules( Long lCurrentTime )  {
         EmailSchedulerData emailSchedulerData = new EmailSchedulerData();
         Long lScheduleTime = DateSupport.subtractTime( lCurrentTime , ParseUtil.sToI( emailerConfig.get(Constants.PROP_EMAIL_SCHEDULE_PICKUPTIME_PADDING) ) , Constants.TIME_UNIT.MINUTES );
-        emailerLogging.debug("New Emails lScheduleTime : " + lScheduleTime + " lCurrentTime : " + lCurrentTime);
 
         ArrayList<EmailSchedulerBean> arrSchedulerBean = emailSchedulerData.getArrEmailSchedule(lScheduleTime, lCurrentTime+(lCurrentTime-lScheduleTime),  Constants.SCHEDULER_STATUS.NEW_SCHEDULE,Constants.SCHEDULE_PICKUP_TYPE.NEW_RECORDS);
-        emailerLogging.debug("New Emails start time  : " +lScheduleTime + " endtime : " +  (lCurrentTime+(lCurrentTime-lScheduleTime)));
 
         return arrSchedulerBean;
     }

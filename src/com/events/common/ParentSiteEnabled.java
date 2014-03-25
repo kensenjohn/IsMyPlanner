@@ -131,7 +131,6 @@ public class ParentSiteEnabled {
     public ForgotPasswordBean createParentSiteNewPasswordUserRequest(ClientBean clientBean , UserRequestBean userRequestBean) {
 
         ForgotPasswordBean forgotPasswordBean = new ForgotPasswordBean();
-        appLogging.info("Password Reset request for "+ ParseUtil.checkNull(userRequestBean.getEmail()) + " recieved.");
         if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getUserId())) {
 
             //

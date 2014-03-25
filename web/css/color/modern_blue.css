@@ -271,5 +271,36 @@ bootstrap-switch.bootstrap-switch-focused {
     border-color: #3F9CFF;
 }
 
+/** footer stuff **/
+footer {
+    background-color: #ecf0f1;
+    border-top: 1px solid #dbf1ff;
+}
+ul.footer-tabs {
+    background: #ecf0f1;
+}
+ul.footer-tabs li a {
+    background-color: #ecf0f1;
+    color: #666666;
+    border-color: #ecf0f1 !important;
+}
+ul.footer-tabs li a:hover {
+    color: #3F9CFF;
+    background-color: #ecf0f1 !important;
+    border-bottom: 1px solid #3F9CFF;
+}
+
+ul.footer-tabs li.active, html ul.footer-tabs li.active a  {
+    color: #3F9CFF;
+    background-color: #ecf0f1;
+    border-color: #3F9CFF !important;
+}
+html ul.footer-tabs li.active a:hover {
+    color: #FFFFFF;
+    background-color: #ecf0f1;
+    border-color: #3F9CFF !important;
+}
+
+
 
 

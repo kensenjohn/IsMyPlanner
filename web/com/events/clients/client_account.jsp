@@ -80,7 +80,7 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label for="clientFirstName" class="form_label">First Name</label>
+                                    <label for="clientFirstName" class="form_label">First Name</label><span class="required"> *</span>
                                     <input type="text" class="form-control" id="clientFirstName" name="clientFirstName" placeholder="First Name">
                                 </div>
                                 <div class="col-md-6">

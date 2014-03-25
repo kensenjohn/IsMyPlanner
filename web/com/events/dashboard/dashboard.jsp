@@ -38,7 +38,7 @@
                         <div class="widget">
                             <div class="content">
                                 <div class="icon_display">
-                                    <span class="glyphicon glyphicon-bell"></span>
+                                    <i class="fa fa-bell-o"></i>
                                 </div>
                                 <div>
                                     <h3 id="num_of_notification">0</h3>
@@ -54,28 +54,28 @@
                         <div class="widget">
                             <div class="content">
                                 <div class="icon_display">
-                                    <span class="glyphicon glyphicon-signal"></span>
+                                    <i class="fa fa-group"></i>
                                 </div>
                                 <div>
-                                    <h3>35</h3>
-                                    <h5>Events This Week</h5>
-                                    <h7>&nbsp;</h7>
+                                    <h3 id="num_of_clients">0</h3>
+                                    <h5>Clients</h5>
+                                    <h7 >&nbsp;</h7>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="info_tile green">
+                    <div class="info_tile green"  id="team_members_tile" >
                         <div class="widget">
                             <div class="content">
                                 <div class="icon_display">
-                                    <span class="glyphicon glyphicon-envelope"></span>
+                                    <i class="fa fa-rocket"></i>
                                 </div>
                                 <div>
-                                    <h3>34</h3>
-                                    <h5>Emails Scheduled For Today</h5>
-                                    <h7>&nbsp;</h7>
+                                    <h3 id="num_of_team_members">0</h3>
+                                    <h5>Team Members</h5>
+                                    <h7 >&nbsp;</h7>
                                 </div>
                             </div>
                         </div>
@@ -152,6 +152,8 @@
 
                     if(varDashboardSummary!=undefined) {
                         $('#num_of_notification').text(varDashboardSummary.num_of_unread_notifications);
+                        $('#num_of_clients').text(varDashboardSummary.num_of_clients);
+                        $('#num_of_team_members').text(varDashboardSummary.num_of_team_members);
                     }
                 }
             } else {

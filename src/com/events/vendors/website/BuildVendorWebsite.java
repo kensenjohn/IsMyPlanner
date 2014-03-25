@@ -57,6 +57,50 @@ public class BuildVendorWebsite extends VendorWebsite {
         return vendorWebsiteResponseBean;
 
     }
+    public VendorWebsiteResponseBean showHideVendorFeature(VendorWebsiteRequestBean vendorWebsiteRequestBean) {
+        VendorWebsiteResponseBean vendorWebsiteResponseBean = saveWebsite( vendorWebsiteRequestBean );
+        boolean isError = false;
+        if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId()) && !Utility.isNullOrEmpty(vendorWebsiteRequestBean.getVendorWebsiteTypeName())) {
+            String sVendorWebsiteId = vendorWebsiteResponseBean.getVendorWebsiteId();
+            VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();
+
+            VendorWebsiteFeatureBean vendorWebsiteFeatureShowHideBean = generateVendorWebsiteFeatureBean(sVendorWebsiteId,
+                    Constants.VENDOR_WEBSITE_FEATURETYPE.valueOf(vendorWebsiteRequestBean.getVendorWebsiteTypeName()),
+                    "show".equalsIgnoreCase(vendorWebsiteRequestBean.getAction())?"true":"false", vendorWebsiteRequestBean.getModifiedByUserId()  );
+            Integer iNumOfRows =  vendorWebsiteFeature.setFeatureValue( vendorWebsiteFeatureShowHideBean );
+            if(iNumOfRows<=0){
+                isError = true;
+            }
+        }  else {
+            isError = true;
+        }
+        if(isError) {
+            vendorWebsiteResponseBean = new VendorWebsiteResponseBean();
+        }
+        return vendorWebsiteResponseBean;
+    }
+    public VendorWebsiteResponseBean savePublishFooterLayoutContent(VendorWebsiteRequestBean vendorWebsiteRequestBean) {
+        VendorWebsiteResponseBean vendorWebsiteResponseBean = saveWebsite( vendorWebsiteRequestBean );
+        boolean isError = false;
+        if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId()) && vendorWebsiteRequestBean!=null
+                && !Utility.isNullOrEmpty(vendorWebsiteRequestBean.getContents() ) && !Utility.isNullOrEmpty(vendorWebsiteRequestBean.getVendorWebsiteTypeName() )) {
+            String sVendorWebsiteId = vendorWebsiteResponseBean.getVendorWebsiteId();
+            VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();
+
+                VendorWebsiteFeatureBean landingPagePicSavedFeatureBean = generateVendorWebsiteFeatureBean(sVendorWebsiteId, Constants.VENDOR_WEBSITE_FEATURETYPE.valueOf( vendorWebsiteRequestBean.getVendorWebsiteTypeName() ),
+                        vendorWebsiteRequestBean.getContents(), vendorWebsiteRequestBean.getModifiedByUserId() );
+                Integer iNumOfRows =  vendorWebsiteFeature.setFeatureValue( landingPagePicSavedFeatureBean );
+                if(iNumOfRows<=0){
+                    isError = true;
+                }
+        }  else {
+            isError = true;
+        }
+        if(isError) {
+            vendorWebsiteResponseBean = new VendorWebsiteResponseBean();
+        }
+        return vendorWebsiteResponseBean;
+    }
     public VendorWebsiteResponseBean saveLandingPageLayoutContent(VendorWebsiteRequestBean vendorWebsiteRequestBean) {
         VendorWebsiteResponseBean vendorWebsiteResponseBean = saveWebsite( vendorWebsiteRequestBean );
         boolean isError = false;

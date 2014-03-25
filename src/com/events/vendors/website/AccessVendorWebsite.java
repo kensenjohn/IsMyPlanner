@@ -111,6 +111,17 @@ public class AccessVendorWebsite extends VendorWebsite{
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_greeting_header) );
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_greeting_text) );
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.subdomain_name) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.show_footer_about_us) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.show_footer_contact) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.show_footer_privacy) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.show_footer_followus) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_footer_about_us) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_footer_contact) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_footer_privacy) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_footer_facebook) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_footer_twitter) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_footer_pinterest) );
+
 
             String sVendorWebsiteId = ParseUtil.checkNull(vendorWebsiteBean.getVendorWebsiteId());
             VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();

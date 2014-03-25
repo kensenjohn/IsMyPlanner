@@ -333,6 +333,11 @@ public class Constants {
         published_bkg_color,published_highlighted_color,published_text_color,published_navbar_breadcrumb_tab_color,published_border_color,
         published_filled_button_color,published_filled_button_text_color,published_plain_button_color,published_plain_button_text_color,
 
+        saved_footer_about_us,saved_footer_contact,saved_footer_privacy,saved_footer_facebook,saved_footer_pinterest,saved_footer_twitter,
+        published_footer_about_us,published_footer_contact,published_footer_privacy,published_footer_facebook,published_footer_pinterest,published_footer_twitter,
+
+        show_footer_about_us,show_footer_contact,show_footer_privacy,show_footer_followus,
+
         subdomain_name,custom_domain_name,is_custom_domain_name_used,
 
         none;

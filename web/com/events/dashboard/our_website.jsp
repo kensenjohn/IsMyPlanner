@@ -69,6 +69,16 @@
                     <jsp:include page="/com/events/dashboard/panel/panel_landingpage_layout.jsp"/>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <jsp:include page="/com/events/dashboard/panel/panel_footer.jsp"/>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-md-12">
@@ -93,6 +103,7 @@
 <script src="/js/collapse.js"></script>
 <script src="/js/spectrum.js"></script>
 <script src="/js/bootstrap-switch.min.js"></script>
+<script src="/js/tinymce/tinymce.min.js"></script>
 <script type="text/javascript">
     var vendorWebsiteId='';
     var vendorId='';
@@ -117,6 +128,7 @@
         $('#btn_preview_landingpage').click(function(){
             $.colorbox({width:"100%", height:"100%",iframe:true,href:"preview_vendor_landingpage.jsp?featuretype=facebook_url&vendor_landingpage_id="+$('#vendor_landingpage_id').val()});
         });
+
     });
     function displayLandingPage() {
         /*if($('#landingPageTheme').val() == 'simple_landingpage') {
@@ -264,6 +276,66 @@
                         $('#landingpage_greeting_text').val( varGreetingText );
                     }
                     /*=====Landing Page Layour and Content Panel======= {End}*/
+
+
+                    /*=====Footer Panel======= {Start}*/
+                    var varShowFooterAboutUs = jsonResponseObj.show_footer_about_us;
+                    if(varShowFooterAboutUs!=undefined) {
+                        $('#about_us_hide').bootstrapSwitch('state', eval(varShowFooterAboutUs) ); // true || false
+                    }
+                    var varShowFooterContact = jsonResponseObj.show_footer_contact;
+                    if(varShowFooterContact!=undefined) {
+                        $('#contact_hide').bootstrapSwitch('state', eval(varShowFooterContact) ); // true || false
+                    }
+                    var varShowFooterPrivacy = jsonResponseObj.show_footer_privacy;
+                    if(varShowFooterPrivacy!=undefined) {
+                        $('#privacy_hide').bootstrapSwitch('state', eval(varShowFooterPrivacy) ); // true || false
+                    }
+                    var varShowFooterFollowUs = jsonResponseObj.show_footer_followus;
+                    if(varShowFooterFollowUs!=undefined) {
+                        $('#followus_hide').bootstrapSwitch('state', eval(varShowFooterFollowUs) ); // true || false
+                    }
+
+                    var varContentFooterAboutUs = jsonResponseObj.saved_footer_about_us;
+                    if(varContentFooterAboutUs!=undefined) {
+                        $('#about_us_content').val(varContentFooterAboutUs);
+
+                    }
+
+                    var varContentFooterContact = jsonResponseObj.saved_footer_contact;
+                    if(varContentFooterContact!=undefined) {
+                        $('#contact_content').val(varContentFooterContact);
+
+                    }
+
+                    var varContentFooterPrivacy = jsonResponseObj.saved_footer_privacy;
+                    if(varContentFooterPrivacy!=undefined) {
+                        $('#privacy_content').val(varContentFooterPrivacy);
+
+                    }
+
+
+                    var varContentFooterFacebook = jsonResponseObj.saved_footer_facebook;
+                    if(varContentFooterFacebook!=undefined) {
+                        $('#facebook_content').val(varContentFooterFacebook);
+
+                    }
+                    var varContentFooterTwitter = jsonResponseObj.saved_footer_twitter;
+                    if(varContentFooterTwitter!=undefined) {
+                        $('#twitter_content').val(varContentFooterTwitter);
+
+                    }
+                    var varContentFooterPinterest = jsonResponseObj.saved_footer_pinterest;
+                    if(varContentFooterPinterest!=undefined) {
+                        $('#pinterest_content').val(varContentFooterPinterest);
+
+                    }
+
+                    cachedScript( "/js/dashboard/set_footer.js" ).done(function( script, textStatus ) {
+                        setupFooterPanel();
+                    })
+
+                    /*=====Footer Panel======= {End}*/
 
                 }
             }

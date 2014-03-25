@@ -93,6 +93,7 @@
         var parentFrame = parentWin.my_namespace_activeFrame;
 
         $('#btn_insert_image').click(function(){
+            console.log('inserted image : ' + $('#imageSource').val() );
             insertImage( $('#imageSource').val() );
         });
     });

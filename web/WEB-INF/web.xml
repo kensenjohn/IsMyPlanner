@@ -430,6 +430,24 @@
         <url-pattern>/proc_save_publish_vendor_landingpage.aeve</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Process Show Hide Vendor Features</servlet-name>
+        <servlet-class>com.events.proc.vendors.ProcShowHideVendorFeatures</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Show Hide Vendor Features</servlet-name>
+        <url-pattern>/proc_show_hide_vendor_feature.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process  Save Publish  Vendor Footer</servlet-name>
+        <servlet-class>com.events.proc.vendors.ProcSavePublishFooterPanel</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process  Save Publish  Vendor Footer</servlet-name>
+        <url-pattern>/proc_save_publish_vendor_footer.aeve</url-pattern>
+    </servlet-mapping>
+
+
 
     <servlet>
         <servlet-name>Process Guest Web Response RSVP</servlet-name>
@@ -828,6 +846,18 @@
         <init-param>
             <param-name>landingpage_pinterest</param-name>
             <param-value>landingpage_pinterest</param-value>
+        </init-param>
+        <init-param>
+            <param-name>about_us_content</param-name>
+            <param-value>about_us_content</param-value>
+        </init-param>
+        <init-param>
+            <param-name>contact_content</param-name>
+            <param-value>contact_content</param-value>
+        </init-param>
+        <init-param>
+            <param-name>privacy_content</param-name>
+            <param-value>privacy_content</param-value>
         </init-param>
     </filter>
     <filter-mapping>

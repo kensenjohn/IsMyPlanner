@@ -38,7 +38,6 @@ function setupLandingPagePanel() {
         save_publish_LandingPage_SocialMedia( getLandingPageLayoutResult, 'save_social_media' );
     });
 
-
     $('.layout-hide-feature').bootstrapSwitch('size', 'mini');
     $('.layout-hide-feature').bootstrapSwitch('readonly', false);
 }
@@ -77,9 +76,7 @@ function save_publish_LandingPage_Image( callbackmethod, varAction ) {
 }
 
 function save_publish_LandingPage( callbackmethod, varAction ) {
-    $('#landingpage_vendorwebsite_id').val( vendorWebsiteId );
-    $('#landingpage_vendor_id').val( vendorId );
-    $('#website_landingpage_panel_action').val(varAction);
+    setGeneralLandingPageParams(varAction);
     var actionUrl = "/proc_save_publish_vendor_landingpage.aeve";
     var methodType = "POST";
     var dataString = $('#frm_landingpage_layout').serialize();

@@ -394,7 +394,7 @@ public class BuildUsers {
             if( userRequestBean.isPlanner() ) {
                 BuildVendors buildVendors = new BuildVendors();
                 try{
-                    VendorBean vendorBean = buildVendors.registerVendor();
+                    VendorBean vendorBean = buildVendors.registerVendor( userRequestBean.getCompanyName() );
                     userRequestBean.setParentId( vendorBean.getVendorId() );
                     userRequestBean.setUserType(Constants.USER_TYPE.VENDOR);
                 } catch(EditVendorException e) {

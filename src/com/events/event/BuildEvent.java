@@ -58,7 +58,7 @@ public class BuildEvent {
                     NotifyBean notifyBean = new NotifyBean();
                     notifyBean.setFrom(eventRequestBean.getUserId());
                     notifyBean.setTo(Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString());
-                    notifyBean.setMessage("Create an event.");
+                    notifyBean.setMessage("Created an event.");
 
                     Notification.createNewNotifyRecord( notifyBean );
                 }

@@ -22,11 +22,8 @@
 </body>
 <script id="template_unread_notifications" type="text/x-handlebars-template">
             <div class="row">
-                <div class="col-md-2">
-                    <h5>{{notification_from}}</h5>
-                </div>
-                <div class="col-md-10">
-                    {{notification_message}}
+                <div class="col-md-12">
+                    <span style="text-decoration: underline;font-weight: bold;">{{notification_from}}</span>&nbsp;&nbsp;{{notification_message}}
                 </div>
             </div>
 </script>
