@@ -100,4 +100,16 @@ public class Utility {
         return new BigInteger(130, random).toString(32);
     }
 
+    public static String getGivenName(String firstName, String lastName) {
+        String sGivenName = Constants.EMPTY;
+        if(!Utility.isNullOrEmpty(firstName)){
+            sGivenName = sGivenName + firstName;
+        }
+
+        if(!Utility.isNullOrEmpty(lastName)){
+            sGivenName = sGivenName + " " + lastName;
+        }
+        return  ParseUtil.checkNull(sGivenName);
+    }
+
 }

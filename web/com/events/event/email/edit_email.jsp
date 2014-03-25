@@ -127,8 +127,9 @@
 
                                                 <tbody role="alert" id="email_template_text_rows">
                                                     <tr><td> {{GUEST_GIVEN_NAME}} </td><td> Your guest's name. Will include first name and last name if available.  </td></tr>
-                                                    <tr><td> {{RSVP_LINK}} </td><td> RSVP link specific to each guest.   </td></tr>
-                                                    <tr><td> {{FROM_GIVEN_NAME}} </td><td> Your name. Will include first name and last name if available.  </td></tr>
+                                                    <tr><td> {{GUEST_FIRST_NAME}} </td><td> Your guest's first name.</td></tr>
+                                                    <tr><td> {{GUEST_LAST_NAME}} </td><td> Your guest's last name.</td></tr>
+                                                    <tr><td> {{GUEST_RSVP_LINK}} </td><td> RSVP link specific to each guest.   </td></tr>
                                                 </tbody>
                                             </table>
                                         </div>

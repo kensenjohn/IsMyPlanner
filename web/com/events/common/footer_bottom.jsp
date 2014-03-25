@@ -5,16 +5,21 @@
 <%@ page import="com.events.bean.vendors.website.VendorWebsiteBean" %>
 <%@ page import="com.events.bean.vendors.VendorBean" %>
 <%@ page import="com.events.vendors.website.AccessVendorWebsite" %>
-<%@ page import="com.events.common.ParseUtil" %><%
+<%@ page import="com.events.common.ParseUtil" %>
+<%@ page import="com.events.users.AccessUsers" %>
+<%@ page import="com.events.bean.users.ParentTypeBean" %><%
+    String sCopyrightCompany = Constants.EMPTY;
     HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmVendorWebsiteFeatureBean = new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE, VendorWebsiteFeatureBean>();
     if( session.getAttribute("SUBDOMAIN_VENDOR") != null && session.getAttribute("SUBDOMAIN_VENDOR_WEBSITE") !=null ) {
         VendorBean vendorBean = (VendorBean)  session.getAttribute("SUBDOMAIN_VENDOR");
+        sCopyrightCompany = ParseUtil.checkNull( vendorBean.getVendorName());
         VendorWebsiteBean vendorWebsiteBean = (VendorWebsiteBean) session.getAttribute("SUBDOMAIN_VENDOR_WEBSITE");
         if(vendorWebsiteBean!=null && !Utility.isNullOrEmpty(vendorWebsiteBean.getVendorWebsiteId())){
 
             AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
             hmVendorWebsiteFeatureBean =  accessVendorWebsite.getPublishedFeaturesForLandingPage(vendorWebsiteBean);
         }
+
     }
 
     boolean isAboutUsShown = false;
@@ -67,7 +72,9 @@
     com.events.common.Configuration applicationConfig = com.events.common.Configuration.getInstance(com.events.common.Constants.APPLICATION_PROP);
 
     String sCopyrightYear = applicationConfig.get("copyright_year");
-    String sCopyrightCompany = applicationConfig.get("copyright_company");
+    if(Utility.isNullOrEmpty(sCopyrightCompany)){
+        sCopyrightCompany = ParseUtil.checkNull(applicationConfig.get("copyright_company"));
+    }
 %>
 <footer>
     <div class="container">
@@ -108,7 +115,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-offset-10 col-md-2 col-sm-offset-10 col-sm-2" style="text-align:right;">
-                        <%=sCopyrightYear %> <%=sCopyrightCompany %>
+                        &copy; <%=sCopyrightYear %> <%=sCopyrightCompany %>
                     </div>
                 </div>
                 <div class="row">

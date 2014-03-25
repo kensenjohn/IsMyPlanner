@@ -344,12 +344,12 @@ public class Constants {
     }
 
     public enum EMAIL_TEMPLATE_TEXT {
-        GUEST_GROUP_NAME("Guest's Group Name","{__GUEST_GROUP_NAME__}","Show the guest's group name eg. The Rainer Family."),
-        GUEST_GIVEN_NAME("Guest's Given Name","{__GUEST_GIVEN_NAME__}","Show the first name or last name. Gives first preference to first name."),
-        GUEST_FIRST_NAME("Guest's First Name","{__GUEST_FIRST_NAME__}","Show only first name. Will be blank if name is not present."),
-        GUEST_LAST_NAME("Guest's Last Name","{__GUEST_LAST_NAME__}","Show only last name. Will be blank if name is not present."),
+        GUEST_GROUP_NAME("Guest's Group Name","{{GUEST_GROUP_NAME}}","Show the guest's group name eg. The Rainer Family."),
+        GUEST_GIVEN_NAME("Guest's Given Name","{{GUEST_GIVEN_NAME}}","Show the first name or last name. Gives first preference to first name."),
+        GUEST_FIRST_NAME("Guest's First Name","{{GUEST_FIRST_NAME}}","Show only first name. Will be blank if name is not present."),
+        GUEST_LAST_NAME("Guest's Last Name","{{GUEST_LAST_NAME}}","Show only last name. Will be blank if name is not present."),
 
-        GUEST_RSVP_LINK("Guest's RSVP Link","{__GUEST_RSVP_LINK__}","Link for guest to RSVP.");
+        GUEST_RSVP_LINK("Guest's RSVP Link","{{GUEST_RSVP_LINK}}","Link for guest to RSVP.");
 
         private String name = Constants.EMPTY;
         private String template = Constants.EMPTY;
