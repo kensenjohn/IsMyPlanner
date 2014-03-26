@@ -156,7 +156,7 @@
                             <h5>Sub Total</h5>
                         </div>
                         <div class="col-md-5"  style="text-align:right;">
-                            <h5>$123.45</h5>
+                            <h6><span id="sub_total">$0.00</span></h6>
                         </div>
                     </div>
                     <div class="row">
@@ -164,7 +164,7 @@
                             <h5>Discount</h5>
                         </div>
                         <div class="col-md-5"  style="text-align:right;">
-                            <h6>$234.00</h6>
+                            <h6><span id="discount_amount">$0.00</span></h6>
                         </div>
                     </div>
                     <div class="row">
@@ -172,7 +172,7 @@
                             <h5>Tax</h5>
                         </div>
                         <div class="col-md-5"  style="text-align:right;">
-                            <h6>$67.00</h6>
+                            <h6><span id="tax_amount">$0.00</span></h6>
                         </div>
                     </div>
                     <div class="row">
@@ -180,7 +180,7 @@
                             <h5>Balance Due</h5>
                         </div>
                         <div class="col-md-5"  style="text-align:right;">
-                            <h4>$1567.34</h4>
+                            <h4><span id="balance_due">$0.00</span></h4>
                         </div>
                     </div>
                 </div>
@@ -195,6 +195,7 @@
 </body>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/bignumber.min.js"></script>
 <script type="text/javascript">
     $(window).load(function() {
         var varLoadInvoice = <%=loadInvoice%>
@@ -210,6 +211,15 @@
             var itemId = getTimeStamp();
             fnClickAddRow(itemId);
         })
+
+        $('#invoiceTax').bind("keyup paste input", function() {
+            updateTax();
+            updateDiscount();
+        });
+        $('#invoiceDiscount').bind("keyup paste input", function() {
+            updateDiscount();
+            updateTax();
+        });
 
     });
     function initializeTable(){
@@ -234,18 +244,107 @@
             '<input type="text" class="form-control" id="item_description_'+varItemId+'" name="item_description_'+varItemId+'"/>',
             '<div class="input-group"> <span class="input-group-addon">$</span><input type="text" class="form-control" id="unit_cost_'+varItemId+'" name="unit_cost_'+varItemId+'"/></div>',
             '<input type="text" class="form-control" id="quantity_'+varItemId+'" name="quantity_'+varItemId+'"/>',
-            '<span id="total_'+varItemId+'"></span>',
+            '<h6><span id="total_'+varItemId+'" style="text-align:right"></span></h6>',
             '<button class="btn btn-xs btn-default" id="delete_'+varItemId+'" name="delete_'+varItemId+'"><i class="fa fa-trash-o"></i>&nbsp; Delete</button>'] );
 
 
 
             $('#unit_cost_'+varItemId).bind("keyup paste input", function() {
-                console.log( $('#unit_cost_'+varItemId).val() );
+                updateTotal(varItemId);
             });
 
             $('#quantity_'+varItemId).bind("keyup paste input", function() {
-                console.log( $('#quantity_'+varItemId).val() );
+                updateTotal(varItemId);
             });
+
+        arrayItemId.push( varItemId );
+
+    }
+
+    var arrayItemId =  [];
+
+    function updateTax() {
+        var varTaxPercentage = $('#invoiceTax').val();
+        if( isNaN( varTaxPercentage  ) ==false  && varTaxPercentage.trim()!=''  ) {
+            varTaxPercentage = new BigNumber( varTaxPercentage.trim() );
+
+            var varSubTotal = updateSubTotal();
+            varTaxPercentage = (varTaxPercentage.dividedBy(100.00).times(varSubTotal) )
+
+
+            $('#tax_amount').text('$'+varTaxPercentage);
+        } else {
+            $('#tax_amount').text('$0.00');
+        }
+    }
+
+    function updateTotal(varItemId){
+        var varUnitCost = $('#unit_cost_'+varItemId).val();
+        var varQuantity = $('#quantity_'+varItemId).val();
+
+        var varTotal = '';
+        if(isNaN( varUnitCost  ) ==false && isNaN( varQuantity )  ==false && varUnitCost.trim()!='' && varQuantity.trim()!=''  ) {
+            varUnitCost = new BigNumber( varUnitCost.trim() );
+            varQuantity = new BigNumber( varQuantity.trim() );
+
+            varTotal = '$'+varUnitCost.times(varQuantity).toFixed(2) ;
+        }
+        $('#total_'+varItemId).text(varTotal);
+
+        updateSubTotal()
+        updateDiscount()
+        updateTax()
+    }
+
+    function updateSubTotal(){
+        var varSubTotal = new BigNumber(0.00);
+        for ( var i = 0; i < arrayItemId.length; i = i + 1 ) {
+
+            //console.log( arrayItemId[ i ] );
+
+            var varUnitCost = $('#unit_cost_'+arrayItemId[i]).val();
+            var varQuantity = $('#quantity_'+arrayItemId[i]).val();
+
+
+            if(isNaN( varUnitCost ) ==false && isNaN( varQuantity )  ==false  && varUnitCost.trim()!='' && varQuantity.trim()!='' ) {
+                varUnitCost = new BigNumber( varUnitCost.trim() );
+                varQuantity = new BigNumber( varQuantity.trim() );
+
+                varSubTotal = new BigNumber(varSubTotal.plus(varUnitCost.times(varQuantity)).toFixed(2)) ;
+            }
+        }
+        varSubTotal = new BigNumber( varSubTotal );
+        varSubTotal = varSubTotal.dividedBy(1.00).toFixed(2) ;
+        $('#sub_total').text('$'+varSubTotal);
+        return varSubTotal;
+    }
+
+    function updateDiscount(){
+        var varDiscountTotal = $('#invoiceDiscount').val();
+        if( isNaN( varDiscountTotal  ) ==false  && varDiscountTotal.trim()!=''  ) {
+            varDiscountTotal = new BigNumber( varDiscountTotal.trim() );
+
+            var varSubTotal = updateSubTotal();
+            varDiscountTotal = (varDiscountTotal.dividedBy(100.00).times(varSubTotal) )
+
+
+            $('#discount_amount').text('- $'+varDiscountTotal);
+
+
+        } else {
+            $('#discount_amount').text('$0.00');
+        }
+        updateTax();
+        return varDiscountTotal;
+    }
+
+    function updateBalanceDue(){
+       /* var varSubTotal = new BigNumber(updateSubTotal());
+        var varDiscount = new BigNumber(updateDiscount());
+        var varTax = new BigNumber(updateTax());
+
+        var varBalanceDue = varSubTotal.minus(varDiscount).plus(varTax);
+        $('#balance_due').text('$'+varBalanceDue);*/
 
     }
 
