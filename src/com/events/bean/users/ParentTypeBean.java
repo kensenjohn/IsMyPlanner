@@ -2,6 +2,7 @@ package com.events.bean.users;
 
 import com.events.bean.clients.ClientBean;
 import com.events.bean.vendors.VendorBean;
+import com.events.common.Constants;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +16,24 @@ public class ParentTypeBean {
     private VendorBean vendorBean = new VendorBean();
     private boolean isUserAClient = false;
     private boolean isUserAVendor = false;
+    private String clientdId = Constants.EMPTY;
+    private String vendorId = Constants.EMPTY;
+
+    public String getClientdId() {
+        return clientdId;
+    }
+
+    public void setClientdId(String clientdId) {
+        this.clientdId = clientdId;
+    }
+
+    public String getVendorId() {
+        return vendorId;
+    }
+
+    public void setVendorId(String vendorId) {
+        this.vendorId = vendorId;
+    }
 
     public ClientBean getClientBean() {
         return clientBean;

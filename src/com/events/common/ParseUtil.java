@@ -43,10 +43,21 @@ public class ParseUtil {
         }
         return iOutput;
     }
-
+    public static boolean isValidLong(String sInput) {
+        boolean isValidLong = false;
+        if (!Utility.isNullOrEmpty(sInput)  ) {
+            try {
+                Long lOutput = new Long(sInput);
+                isValidLong = true;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        return isValidLong;
+    }
     public static Long sToL(String sInput) {
         Long lOutput = 0L;
-        if (sInput != null && !"".equalsIgnoreCase(sInput)) {
+        if (!Utility.isNullOrEmpty(sInput)  ) {
             try {
                 lOutput = new Long(sInput);
             } catch (NumberFormatException e) {
@@ -55,10 +66,21 @@ public class ParseUtil {
         }
         return lOutput;
     }
-
+    public static boolean isValidDouble(String sInput) {
+        boolean isValidDouble = false;
+        if (!Utility.isNullOrEmpty(sInput)  ) {
+            try {
+                Double dOutput = new Double(sInput);
+                isValidDouble = true;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        return isValidDouble;
+    }
     public static Double sToD(String sInput) {
         Double dOutput = 0.0;
-        if (sInput != null && !"".equalsIgnoreCase(sInput)) {
+        if (!Utility.isNullOrEmpty(sInput)  ) {
             try {
                 dOutput = new Double(sInput);
             } catch (NumberFormatException e) {

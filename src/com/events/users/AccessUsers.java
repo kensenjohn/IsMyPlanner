@@ -215,8 +215,12 @@ public class AccessUsers {
                 }
             }
 
-
-
+            if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId())){
+                parentTypeBean.setClientdId( clientBean.getClientId() );
+            }
+            if(clientBean!=null && !Utility.isNullOrEmpty(vendorBean.getVendorId())){
+                parentTypeBean.setVendorId( vendorBean.getVendorId() );
+            }
 
             parentTypeBean.setClientBean( clientBean );
             parentTypeBean.setVendorBean( vendorBean );

@@ -5,6 +5,8 @@
 </jsp:include>
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables.css" id="theme_date">
 <link rel="stylesheet" href="/css/dataTables/jquery.dataTables_styled.css" id="theme_time">
+<link rel="stylesheet" href="/css/datepicker/default.css" id="theme_base">
+<link rel="stylesheet" href="/css/datepicker/default.date.css" id="theme_date">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
     String sInvoiceId = ParseUtil.checkNull(request.getParameter("invoice_id"));
@@ -28,7 +30,7 @@
             <div class="page-title"><%=breadCrumbPageTitle%></div>
         </div>
     </div>
-    <form class="form-horizontal">
+    <form class="form-horizontal" id="frm_save_invoice">
     <div class="container">
         <div class="content_format">
             <div class="row">
@@ -49,8 +51,8 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="invoiceClient" class="form_label">Client</label><span class="required"> *</span>
-                            <select class="form-control" id="invoiceClient" name="invoiceClient">
+                            <label for="client_selector" class="form_label">Client</label><span class="required"> *</span>
+                            <select class="form-control" id="client_selector" name="invoiceClient">
                                 <option value="">Select A Client</option>
                             </select>
                         </div>
@@ -93,9 +95,9 @@
             </div>
         </div>
     </div>
-    <div class="container container-fixed">
+    <div class="container  container-fixed">
         <div class="content_format">
-            <div class="row">
+            <div class="row ">
                 <div class="col-md-12">
                     <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="invoice_item" >
                         <thead>
@@ -109,22 +111,6 @@
                         </tr>
                         </thead>
                         <tbody role="alert" id="invoice_item_row">
-                        <!--<tr>
-                            <td><input type="text" class="form-control" id="item_1" name="item_1"/></td>
-                            <td><input type="text" class="form-control" id="item_description_1" name="item_description_1"/></td>
-                            <td>
-                                <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="text" class="form-control" id="unit_cost_1" name="unit_cost_1"/>
-                                </div>
-                            </td>
-                            <td><input type="text" class="form-control" id="quantity_1" name="quantity_1"/></td>
-                            <td style="text-align: right;">
-
-                                <span> 56.00</span>
-                            </td>
-                            <td><button type="button" class="btn btn-xs btn-default" id="delete_1" name="delete_1"><i class="fa fa-trash-o"></i>&nbsp; Delete</button></td>
-                        </tr> -->
                         </tbody>
                     </table>
                 </div>
@@ -148,15 +134,21 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="row"  >
-                        <label for="invoiceTerms" class="form_label">Invoice Terms And Conditions</label>
-                        <input type="text" class="form-control" id="invoiceTerms" name="invoiceTerms"/>
+                        <div class="col-md-12">
+                            <label for="invoiceTerms" class="form_label">Invoice Terms And Conditions</label>
+                            <input type="text" class="form-control" id="invoiceTerms" name="invoiceTerms"/>
+                        </div>
                     </div>
                     <div class="row"  >
-                        &nbsp;
+                        <div class="col-md-12">
+                            &nbsp;
+                        </div>
                     </div>
                     <div class="row"  >
-                        <label for="invoiceNote" class="form_label">Note:</label>
-                        <input type="text" class="form-control" id="invoiceNote" name="invoiceNote"/>
+                        <div class="col-md-12">
+                            <label for="invoiceNote" class="form_label">Note:</label>
+                            <input type="text" class="form-control" id="invoiceNote" name="invoiceNote"/>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -196,7 +188,28 @@
             </div>
         </div>
     </div>
-     </form>
+        <input type="hidden" id="invoice_id" name ="invoice_id" value="<%=sInvoiceId%>"/>
+        <div id="hidden_item_ids">
+
+        </div>
+    </form>
+    <div class="container">
+        <div class="content_format">
+            <div class="row">
+                <div class="col-md-4" >
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1">
+                    <button class="btn btn-filled" id="btn_save_invoice">Save</button>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-filled" id="btn_email_invoice">Email Invoice</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <form id="frm_load_invoice">
     <input type="hidden"  id="load_invoice_id"  name="invoice_id" value="<%=sInvoiceId%>">
@@ -205,6 +218,10 @@
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/jquery.dataTables.min.js"></script>
 <script src="/js/bignumber.min.js"></script>
+<script src="/js/clients/clientlist_dropdown.js"></script>
+<script src="/js/datepicker/picker.js"></script>
+<script src="/js/datepicker/picker.date.js"></script>
+<script src="/js/datepicker/legacy.js"></script>
 <script type="text/javascript">
     var mainSubTotal = new BigNumber(0.00);
     var mainDiscount = new BigNumber(0.00);
@@ -231,7 +248,45 @@
             updateDiscount(true);
         });
 
+        $('#btn_save_invoice').click(function(){
+            generateItemList();
+            saveEvent(getResult);
+        })
+
+        loadClients(populateClientList);
+        $('#invoiceDate').pickadate()
+        $('#invoiceDueDate').pickadate()
     });
+
+    function saveEvent( callbackmethod ) {
+        var actionUrl = "/proc_save_invoice.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_save_invoice").serialize();
+        console.log('saveEvent : ' + dataString);
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+
+    function getResult(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    if(jsonResponseObj!=undefined) {
+                        $('#invoice_id').val(jsonResponseObj.invoice_id);
+                    }
+                }
+                displayAjaxOk(varResponseObj);
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
+    }
     function initializeTable(){
 
         objInvoiceItemsTable =  $('#invoice_item').dataTable({
@@ -395,6 +450,22 @@
 
     function getTimeStamp() {
         return Math.round(new Date().getTime() / 1000) ;
+    }
+
+    function generateItemList(){
+        $('#hidden_item_ids').empty();
+        if(arrayItemId!=undefined){
+            for ( var i = 0; i < arrayItemId.length; i = i + 1 ) {
+                var varItemId = arrayItemId[i];
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'item_id_list',
+                    name: 'item_id[]',
+                    value:varItemId
+                }).appendTo('#hidden_item_ids');
+            }
+        }
+
     }
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>

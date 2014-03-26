@@ -72,7 +72,7 @@
 <script src="/js/jquery.dataTables.min.js"></script>
 <script   type="text/javascript">
     $(window).load(function() {
-        loadPartnerVendors(populatePartnerVendorsList);
+        //loadInvoices(populateInvoiceList);
     });
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>

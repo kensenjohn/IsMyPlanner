@@ -39,7 +39,15 @@ function processEventInfo(varEventBean) {
         $('#eventDay').val(varEventBean.event_display_date.selected_day);
         $('#eventTime').val(varEventBean.event_display_date.selected_time);
         $('#eventTimeZone').val(varEventBean.event_display_date.selected_timezone);
-        $('#eventClient').val(varEventBean.client_id);
+        $('#client_selector').val(varEventBean.client_id);
         $('#event_title').text(varEventBean.event_name);
+
+        //var $inputDay = $('#eventDay').pickadate();
+        var pickerDay = $('#eventDay').pickadate('picker')
+        pickerDay.set('select', varEventBean.event_display_date.selected_day, { format: 'dd mmmm, yyyy' });
+
+        //var $inputTime = $('#eventTime').pickadate();
+        var pickerTime = $('#eventTime').pickatime('picker')
+        pickerTime.set('select', varEventBean.event_display_date.selected_time, { format: 'h:i A' });
     }
 }

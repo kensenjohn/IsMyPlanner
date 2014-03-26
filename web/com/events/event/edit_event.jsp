@@ -120,8 +120,8 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-9">
-                                            <label for="eventClient" class="form_label">Client</label><span class="required"> *</span>
-                                            <select class="form-control" id="eventClient" name="eventClient">
+                                            <label for="client_selector" class="form_label">Client</label><span class="required"> *</span>
+                                            <select class="form-control" id="client_selector" name="eventClient">
                                                 <option value="">Select A Client</option>
                                                 <option value="create_client">Create A New Client</option>
                                             </select>
@@ -165,6 +165,7 @@
 <script src="/js/datepicker/picker.time.js"></script>
 <script src="/js/datepicker/legacy.js"></script>
 <script src="/js/event/event_info.js"></script>
+<script src="/js/clients/clientlist_dropdown.js"></script>
 <script type="text/javascript">
     var varLoadEventInfo = <%=loadEventInfo%>
     var varIsLoggedInUserAClient = <%=isLoggedInUserAClient%>;
@@ -177,8 +178,8 @@
             min: [6,00],
             max: [23,59]
         });
-        $('#eventClient').change(function(){
-            if( $('#eventClient').val() == 'create_client' ){
+        $('#client_selector').change(function(){
+            if( $('#client_selector').val() == 'create_client' ){
                 $('#row_create_client').show("slow");
             } else {
                 $('#row_create_client').hide("slow");
@@ -196,71 +197,21 @@
             loadEventInfo(populateEventInfo,varEventId);
         }
     });
-    function loadClients(callbackmethod) {
-        var actionUrl = "/proc_load_clients.aeve";
-        var methodType = "POST";
-        var dataString = $("#frm_load_client").serialize();
-        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
-    }
+
     function saveEvent( callbackmethod ) {
         var actionUrl = "/proc_save_event.aeve";
         var methodType = "POST";
         var dataString = $("#frm_new_event").serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
-    function populateClientList(jsonResult) {
+
+    function getResult(jsonResult) {
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
-                var varIsMessageExist = varResponseObj.is_message_exist;
-                if(varIsMessageExist == true) {
-                    var jsonResponseMessage = varResponseObj.messages;
-                    var varArrErrorMssg = jsonResponseMessage.error_mssg;
-                    displayMssgBoxMessages(varArrErrorMssg, true);
-                }
-
+                displayAjaxError(varResponseObj);
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
-                if(varIsPayloadExist == true) {
-                    var jsonResponseObj = varResponseObj.payload;
-                    var varNumOfClients = jsonResponseObj.num_of_clients;
-                    if(varNumOfClients>0){
-                        processClientListSummary(varNumOfClients,jsonResponseObj.all_client_summary);
-                    }
-                    else {
-                        //displayMssgBoxAlert("Create a new client here.", true);
-                    }
-
-                }
-            } else {
-                displayMssgBoxAlert("Please try again later (populateClientList - 1)", true);
-            }
-        } else {
-            displayMssgBoxAlert("Please try again later (populateClientList - 2)", true);
-        }
-    }
-    function processClientListSummary(varNumOfClients,clientSummaryList) {
-        var varDropDownClientList = $('#eventClient');
-        for(i=0;i<varNumOfClients;i++){
-            var varClientBean = clientSummaryList[i];
-            varDropDownClientList.append('<option value="'+varClientBean.client_id+'">'+varClientBean.client_name+'</option>');
-        }
-    }
-    function getResult(jsonResult)
-    {
-        if(jsonResult!=undefined) {
-            var varResponseObj = jsonResult.response;
-            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
-                var varIsMessageExist = varResponseObj.is_message_exist;
-                if(varIsMessageExist == true) {
-                    var jsonResponseMessage = varResponseObj.messages;
-                    var varArrErrorMssg = jsonResponseMessage.error_mssg;
-                    displayMssgBoxMessages(varArrErrorMssg, true);
-                }
-
-            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
-                var varIsPayloadExist = varResponseObj.is_payload_exist;
-                //displayMssgBoxAlert('User was logged in successfully', false);
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
                     if(jsonResponseObj!=undefined) {
@@ -269,11 +220,12 @@
 
                     }
                 }
+                displayAjaxOk(varResponseObj);
             } else {
-                alert("Please try again later 1.");
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
             }
         } else {
-            alert("Response is null 3.");
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
         }
     }
 </script>
