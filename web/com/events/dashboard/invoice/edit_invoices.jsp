@@ -46,21 +46,19 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-10">
+                <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-4">
                             <label for="invoiceClient" class="form_label">Client</label><span class="required"> *</span>
                             <select class="form-control" id="invoiceClient" name="invoiceClient">
                                 <option value="">Select A Client</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="invoiceNumber" class="form_label">Invoice Number</label><span class="required"> *</span>
                             <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber"/>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="invoicePONumber" class="form_label">Contract Number/Purchase Order Number</label>
                             <input type="text" class="form-control" id="invoicePONumber" name="invoicePONumber"/>
                         </div>
@@ -149,6 +147,17 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
+                    <div class="row"  >
+                        <label for="invoiceTerms" class="form_label">Invoice Terms And Conditions</label>
+                        <input type="text" class="form-control" id="invoiceTerms" name="invoiceTerms"/>
+                    </div>
+                    <div class="row"  >
+                        &nbsp;
+                    </div>
+                    <div class="row"  >
+                        <label for="invoiceNote" class="form_label">Note:</label>
+                        <input type="text" class="form-control" id="invoiceNote" name="invoiceNote"/>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="row"  >
@@ -197,6 +206,9 @@
 <script src="/js/jquery.dataTables.min.js"></script>
 <script src="/js/bignumber.min.js"></script>
 <script type="text/javascript">
+    var mainSubTotal = new BigNumber(0.00);
+    var mainDiscount = new BigNumber(0.00);
+    var mainTax = new BigNumber(0.00);
     $(window).load(function() {
         var varLoadInvoice = <%=loadInvoice%>
         if(varLoadInvoice){
@@ -213,12 +225,10 @@
         })
 
         $('#invoiceTax').bind("keyup paste input", function() {
-            updateTax();
-            updateDiscount();
+            updateTax(true);
         });
         $('#invoiceDiscount').bind("keyup paste input", function() {
-            updateDiscount();
-            updateTax();
+            updateDiscount(true);
         });
 
     });
@@ -227,6 +237,7 @@
         objInvoiceItemsTable =  $('#invoice_item').dataTable({
             "bPaginate": false,
             "bInfo": false,
+            "bFilter": false,
 
             "aoColumns": [
                 { "bSortable": false },
@@ -239,7 +250,8 @@
         });
     }
     function fnClickAddRow(varItemId) {
-        objInvoiceItemsTable.fnAddData( [
+        var oTable = objInvoiceItemsTable;
+        var ai = oTable.fnAddData( [
             '<input type="text" class="form-control" id="item_'+varItemId+'" name="item_'+varItemId+'"/>',
             '<input type="text" class="form-control" id="item_description_'+varItemId+'" name="item_description_'+varItemId+'"/>',
             '<div class="input-group"> <span class="input-group-addon">$</span><input type="text" class="form-control" id="unit_cost_'+varItemId+'" name="unit_cost_'+varItemId+'"/></div>',
@@ -247,14 +259,22 @@
             '<h6><span id="total_'+varItemId+'" style="text-align:right"></span></h6>',
             '<button class="btn btn-xs btn-default" id="delete_'+varItemId+'" name="delete_'+varItemId+'"><i class="fa fa-trash-o"></i>&nbsp; Delete</button>'] );
 
+        var oSettings = oTable.fnSettings();
+        var rows=$('#invoice_item tr').length-2;
+        var position=oSettings.aoData[rows].nTr.rowIndex+1;
+        console.log('position : '+position + '- ' + $('#invoice_item tr')[0] + '- ' + $('#invoice_item tr')[1] );
+        $($('#invoice_item tr')[position-1]).attr('id', 'row_'+varItemId);
 
-
-            $('#unit_cost_'+varItemId).bind("keyup paste input", function() {
-                updateTotal(varItemId);
+        $('#unit_cost_'+varItemId).bind("keyup paste input", function() {
+                updateTotal(varItemId,true);
             });
 
             $('#quantity_'+varItemId).bind("keyup paste input", function() {
-                updateTotal(varItemId);
+                updateTotal(varItemId,true);
+            });
+
+            $('#delete_'+varItemId).bind("click", function() {
+                deleteItemRow(varItemId,true);
             });
 
         arrayItemId.push( varItemId );
@@ -263,22 +283,37 @@
 
     var arrayItemId =  [];
 
-    function updateTax() {
+    function updateTax(varISCalledByEvent) {
         var varTaxPercentage = $('#invoiceTax').val();
         if( isNaN( varTaxPercentage  ) ==false  && varTaxPercentage.trim()!=''  ) {
             varTaxPercentage = new BigNumber( varTaxPercentage.trim() );
 
             var varSubTotal = updateSubTotal();
-            varTaxPercentage = (varTaxPercentage.dividedBy(100.00).times(varSubTotal) )
+            varSubTotal =  new BigNumber( varSubTotal )
+            varTaxPercentage = (varTaxPercentage.dividedBy(100.00).times(varSubTotal.minus(mainDiscount)) ).toFixed(2)
 
 
             $('#tax_amount').text('$'+varTaxPercentage);
         } else {
+            varTaxPercentage  = new BigNumber( 0.00 ).toFixed(2) ;
             $('#tax_amount').text('$0.00');
         }
+        mainTax = new BigNumber( varTaxPercentage );
+        if(varISCalledByEvent){
+            updateBalanceDue(false);
+        }
+        return varTaxPercentage;
     }
-
-    function updateTotal(varItemId){
+    function deleteItemRow(varItemId, varISCalledByEvent){
+        objInvoiceItemsTable.fnDeleteRow((objInvoiceItemsTable.$('#row_'+varItemId))[0] );
+        if(varISCalledByEvent){
+            updateSubTotal(false)
+            updateDiscount(false)
+            updateTax(false);
+            updateBalanceDue(false);
+        }
+    }
+    function updateTotal(varItemId, varISCalledByEvent){
         var varUnitCost = $('#unit_cost_'+varItemId).val();
         var varQuantity = $('#quantity_'+varItemId).val();
 
@@ -291,12 +326,15 @@
         }
         $('#total_'+varItemId).text(varTotal);
 
-        updateSubTotal()
-        updateDiscount()
-        updateTax()
+        if(varISCalledByEvent){
+            updateSubTotal(false)
+            updateDiscount(false)
+            updateTax(false);
+            updateBalanceDue(false);
+        }
     }
 
-    function updateSubTotal(){
+    function updateSubTotal(varISCalledByEvent){
         var varSubTotal = new BigNumber(0.00);
         for ( var i = 0; i < arrayItemId.length; i = i + 1 ) {
 
@@ -315,36 +353,43 @@
         }
         varSubTotal = new BigNumber( varSubTotal );
         varSubTotal = varSubTotal.dividedBy(1.00).toFixed(2) ;
+        mainSubTotal  = new BigNumber( varSubTotal );
         $('#sub_total').text('$'+varSubTotal);
         return varSubTotal;
     }
 
-    function updateDiscount(){
+    function updateDiscount(varISCalledByEvent){
         var varDiscountTotal = $('#invoiceDiscount').val();
         if( isNaN( varDiscountTotal  ) ==false  && varDiscountTotal.trim()!=''  ) {
             varDiscountTotal = new BigNumber( varDiscountTotal.trim() );
 
             var varSubTotal = updateSubTotal();
-            varDiscountTotal = (varDiscountTotal.dividedBy(100.00).times(varSubTotal) )
+            varDiscountTotal = (varDiscountTotal.dividedBy(100.00).times(varSubTotal) ).toFixed(2) ;
 
 
             $('#discount_amount').text('- $'+varDiscountTotal);
 
 
         } else {
-            $('#discount_amount').text('$0.00');
+            varDiscountTotal  = new BigNumber( 0.00 ).toFixed(2) ;
+            $('#discount_amount').text('$'+varDiscountTotal);
         }
-        updateTax();
+
+        mainDiscount = new BigNumber( varDiscountTotal );
+        if(varISCalledByEvent == true){
+            updateTax(false);
+            updateBalanceDue(false);
+        }
         return varDiscountTotal;
     }
 
-    function updateBalanceDue(){
-       /* var varSubTotal = new BigNumber(updateSubTotal());
-        var varDiscount = new BigNumber(updateDiscount());
-        var varTax = new BigNumber(updateTax());
+    function updateBalanceDue(varISCalledByEvent){
+        var varSubTotal = new BigNumber(mainSubTotal);
+        var varDiscount = new BigNumber(mainDiscount);
+        var varTax = new BigNumber(mainTax);
 
-        var varBalanceDue = varSubTotal.minus(varDiscount).plus(varTax);
-        $('#balance_due').text('$'+varBalanceDue);*/
+        var varBalanceDue = varSubTotal.minus(varDiscount).plus(varTax).toFixed(2);
+        $('#balance_due').text('$'+varBalanceDue);
 
     }
 
