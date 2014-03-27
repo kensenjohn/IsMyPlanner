@@ -52,7 +52,7 @@ public class ProcLoadAllInvoices   extends HttpServlet {
                     ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser(loggedInUserBean);
                     if(parentTypeBean!=null  ){
                         invoiceRequestBean.setVendorId( ParseUtil.checkNull(parentTypeBean.getVendorId() ) );
-                        invoiceRequestBean.setClientId( ParseUtil.checkNull(parentTypeBean.getVendorId() ) );
+                        invoiceRequestBean.setClientId( ParseUtil.checkNull(parentTypeBean.getClientdId() ) );
 
                         InvoiceResponseBean invoiceResponseBean = new InvoiceResponseBean();
                                 AccessInvoice accessInvoice = new AccessInvoice();

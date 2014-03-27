@@ -42,6 +42,18 @@ public class AccessInvoice {
         return invoiceResponseBean;
     }
 
+    public InvoiceResponseBean getInvoice(InvoiceRequestBean invoiceRequestBean) {
+        InvoiceResponseBean invoiceResponseBean = new InvoiceResponseBean();
+        if(invoiceRequestBean!=null && !Utility.isNullOrEmpty(invoiceRequestBean.getInvoiceId()) ) {
+            AccessInvoiceData accessInvoiceData = new AccessInvoiceData();
+            InvoiceBean invoiceBean = accessInvoiceData.getInvoice(invoiceRequestBean);
+            if(invoiceBean!=null) {
+                invoiceResponseBean.setInvoiceBean( invoiceBean );
+            }
+        }
+        return invoiceResponseBean;
+    }
+
     public JSONObject getInvoicesBeanJson(ArrayList<InvoiceBean> arrInvoiceBean) {
         JSONObject jsonInvoices = new JSONObject();
         if(arrInvoiceBean!=null && !arrInvoiceBean.isEmpty()) {

@@ -1,10 +1,12 @@
 package com.events.proc.invoice;
 
+import com.events.bean.invoice.InvoiceBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
+import com.events.common.invoice.BuildInvoice;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
 import org.json.JSONObject;
@@ -40,12 +42,36 @@ public class ProcDeleteInvoice   extends HttpServlet {
                 UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
                 if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
-                    Text okText = new OkText("The invoice was saved successfully","status_mssg") ;
-                    arrOkText.add(okText);
-                    responseStatus = RespConstants.Status.OK;
+                    String sInvoiceId = ParseUtil.checkNull(request.getParameter("invoice_id"));
+                    if(Utility.isNullOrEmpty(sInvoiceId)) {
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(deleteInvoice - 004)","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
+                    } else {
+                        InvoiceBean invoiceBean = new InvoiceBean();
+                        invoiceBean.setUserId( loggedInUserBean.getUserId() );
+                        invoiceBean.setInvoiceId( sInvoiceId );
+                        BuildInvoice buildInvoice = new BuildInvoice();
+                        boolean isSuccess = buildInvoice.deleteInvoice(invoiceBean);
+                        if(isSuccess) {
+                            jsonResponseObj.put("is_deleted",true);
+                            jsonResponseObj.put("deleted_invoice_id",sInvoiceId);
+
+                            Text okText = new OkText("The invoice was saved successfully","status_mssg") ;
+                            arrOkText.add(okText);
+                            responseStatus = RespConstants.Status.OK;
+                        } else {
+                            Text errorText = new ErrorText("We were unable to delete the invoice. Please try again later.(deleteInvoice - 003)","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
+                        }
+
+                    }
                 }   else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveInvoice - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(deleteInvoice - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -60,7 +86,7 @@ public class ProcDeleteInvoice   extends HttpServlet {
 
         }  catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveInvoice - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(deleteInvoice - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

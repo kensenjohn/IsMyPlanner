@@ -90,4 +90,19 @@ public class BuildInvoice {
         }
         return invoiceBean;
     }
+
+    public boolean deleteInvoice(InvoiceBean invoiceBean){
+        boolean isSuccess = false;
+        if(invoiceBean!=null && !Utility.isNullOrEmpty(invoiceBean.getInvoiceId())) {
+            BuildInvoiceData buildInvoiceData = new BuildInvoiceData();
+            Integer numOfRowsDeleted = buildInvoiceData.deleteInvoice(invoiceBean);
+            if(numOfRowsDeleted>0){
+                appLogging.error("Invoice was deleted : " + invoiceBean );
+                isSuccess = true;
+            }
+        } else {
+            appLogging.error("Invalid Invoice Request Used for update : " + ParseUtil.checkNullObject(invoiceBean));
+        }
+        return isSuccess;
+    }
 }

@@ -1,12 +1,20 @@
 package com.events.proc.invoice;
 
+import com.events.bean.invoice.InvoiceBean;
+import com.events.bean.invoice.InvoiceItemBean;
+import com.events.bean.invoice.InvoiceRequestBean;
+import com.events.bean.invoice.InvoiceResponseBean;
+import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
+import com.events.common.invoice.AccessInvoice;
+import com.events.common.invoice.AccessInvoiceItems;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
+import com.events.users.AccessUsers;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +48,78 @@ public class ProcLoadInvoice   extends HttpServlet {
                 UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
                 if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
-                    Text okText = new OkText("The invoice was saved successfully","status_mssg") ;
-                    arrOkText.add(okText);
-                    responseStatus = RespConstants.Status.OK;
-                }   else {
+                    String sInvoiceId = ParseUtil.checkNull(request.getParameter("invoice_id"));
+                    if(Utility.isNullOrEmpty(sInvoiceId)){
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadInvoice - 004)","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
+                    } else {
+                        InvoiceRequestBean invoiceRequestBean = new InvoiceRequestBean();
+                        invoiceRequestBean.setInvoiceId(sInvoiceId);
+
+                        AccessInvoice accessInvoice = new AccessInvoice();
+                        InvoiceResponseBean invoiceResponseBean = accessInvoice.getInvoice(invoiceRequestBean);
+                        if(invoiceResponseBean!=null){
+                            InvoiceBean invoiceBean = invoiceResponseBean.getInvoiceBean();
+                            if(invoiceBean!=null){
+                                AccessInvoiceItems accessInvoiceItems = new AccessInvoiceItems();
+                                invoiceResponseBean = accessInvoiceItems.getInvoiceItems(invoiceRequestBean  ) ;
+
+                                if(invoiceResponseBean!=null){
+                                    ArrayList<InvoiceItemBean> arrInvoiceItemsBean = invoiceResponseBean.getArrInvoiceItemsBean();
+
+                                    if(arrInvoiceItemsBean!=null && !arrInvoiceItemsBean.isEmpty()) {
+                                        JSONObject jsonInvoiceItems = accessInvoiceItems.getInvoiceItemsJson( arrInvoiceItemsBean );
+                                        Long lNumOfInvoiceItems = 0L;
+                                        if(jsonInvoiceItems!=null){
+                                            lNumOfInvoiceItems = jsonInvoiceItems.optLong( "num_of_invoice_items" );
+                                            if(lNumOfInvoiceItems>0){
+                                                jsonResponseObj.put("invoice_items",jsonInvoiceItems );
+                                            }
+                                        }
+                                        jsonResponseObj.put("num_of_invoice_items",lNumOfInvoiceItems );
+
+                                        jsonResponseObj.put("invoice_bean", invoiceBean.toJson() );
+
+                                        Text okText = new OkText("The invoice was saved successfully","status_mssg") ;
+                                        arrOkText.add(okText);
+                                        responseStatus = RespConstants.Status.OK;
+                                    } else {
+                                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadInvoice - 005)","err_mssg") ;
+                                        arrErrorText.add(errorText);
+
+                                        responseStatus = RespConstants.Status.ERROR;
+                                    }
+
+                                } else {
+                                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadInvoice - 006)","err_mssg") ;
+                                    arrErrorText.add(errorText);
+
+                                    responseStatus = RespConstants.Status.ERROR;
+                                }
+
+                            }  else {
+                                Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadInvoice - 007)","err_mssg") ;
+                                arrErrorText.add(errorText);
+
+                                responseStatus = RespConstants.Status.ERROR;
+                            }
+
+
+
+
+                        } else {
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadInvoice - 003)","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
+                        }
+
+                    }
+                } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveInvoice - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadInvoice - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -60,7 +134,7 @@ public class ProcLoadInvoice   extends HttpServlet {
 
         }  catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveInvoice - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadInvoice - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

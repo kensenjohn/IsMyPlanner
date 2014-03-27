@@ -36,7 +36,7 @@ public class BuildInvoiceData {
                 && !Utility.isNullOrEmpty(invoiceBean.getUserId() )){
             String sQuery = "INSERT INTO GTINVOICES (INVOICEID,FK_USERID,FK_CLIENTID,     INVOICE_NUMBER,CONTRACT_PO_NUMBER,INVOICEDATE, " +
                     "   HUMANINVOICEDATE,DUEDATE,HUMANDUEDATE,     MODIFIEDDATE,HUMANMODIFIEDDATE,DISCOUNT_PERCENTAGE,    " +
-                    "   TAX_PERCENTAGE,TERMS_CONDITIONS,NOTE,      STATUS, DEL_ROW,FK_VENDORID ) VALUES (?,?,?,   ?,?,?,   ?,?,?,   ?,?,?,  ?,?,?,  ?,?)";
+                    "   TAX_PERCENTAGE,TERMS_CONDITIONS,NOTE,      STATUS, DEL_ROW,FK_VENDORID ) VALUES (?,?,?,   ?,?,?,   ?,?,?,   ?,?,?,  ?,?,?,  ?,?,?)";
             ArrayList<Object> aParams = DBDAO.createConstraint(invoiceBean.getInvoiceId(),invoiceBean.getUserId(),invoiceBean.getClientId(),
                     invoiceBean.getInvoiceNumber(),invoiceBean.getContractPONumber(),invoiceBean.getInvoiceDate(),
                     invoiceBean.getHumanInvoiceDate(),invoiceBean.getDueDate(),invoiceBean.getHumanDueDate(),
@@ -69,5 +69,17 @@ public class BuildInvoiceData {
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildInvoiceData.java", "updateInvoice() ");
         }
         return  numOfRowsInserted;
+    }
+
+    public Integer deleteInvoice(InvoiceBean invoiceBean) {
+        Integer numOfRowsDeleted = 0;
+
+        if(invoiceBean!=null && !Utility.isNullOrEmpty(invoiceBean.getInvoiceId() )){
+            String sQuery = "DELETE FROM GTINVOICES  WHERE INVOICEID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint( invoiceBean.getInvoiceId() );
+
+            numOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildInvoiceData.java", "deleteInvoice() ");
+        }
+        return  numOfRowsDeleted;
     }
 }

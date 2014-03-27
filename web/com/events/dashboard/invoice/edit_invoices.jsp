@@ -227,14 +227,7 @@
     var mainDiscount = new BigNumber(0.00);
     var mainTax = new BigNumber(0.00);
     $(window).load(function() {
-        var varLoadInvoice = <%=loadInvoice%>
-        if(varLoadInvoice){
-            var varInvoiceId = '<%=sInvoiceId%>';
-            //loadPartnerVendor(populatePartnerVendor,varPartnerVendorId);
-        }
-        $('#btn_save_invoice').click(function(){
-            //savePartnerVendor(getResult);
-        })
+
         initializeTable();
         $('#add_item').click(function(){
             var itemId = getTimeStamp();
@@ -257,13 +250,62 @@
         $('#invoiceDate').pickadate()
         $('#invoiceDueDate').pickadate()
     });
-
+    function loadInvoice(callbackmethod) {
+        var actionUrl = "/proc_load_invoice.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_load_invoice").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
     function saveEvent( callbackmethod ) {
         var actionUrl = "/proc_save_invoice.aeve";
         var methodType = "POST";
         var dataString = $("#frm_save_invoice").serialize();
-        console.log('saveEvent : ' + dataString);
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+
+    function populateInvoice(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    var varInvoiceBean = jsonResponseObj.invoice_bean;
+                    var varNumOfInvoiceItems = jsonResponseObj.num_of_invoice_items;
+                    var varAllInvoiceItemsList = jsonResponseObj.invoice_items;
+
+                    $('#client_selector').val(varInvoiceBean.client_id);
+                    $('#invoiceNumber').val(varInvoiceBean.invoice_number);
+                    $('#invoicePONumber').val(varInvoiceBean.contract_po_number);
+                    $('#invoiceDate').val(varInvoiceBean.human_invoice_date);
+                    $('#invoiceDueDate').val(varInvoiceBean.human_due_date);
+                    $('#invoiceDiscount').val(varInvoiceBean.discount_percentage);
+                    $('#invoiceTax').val(varInvoiceBean.tax_percentage);
+                    $('#invoiceTerms').val(varInvoiceBean.terms_and_conditions);
+                    $('#invoiceNote').val(varInvoiceBean.note);
+
+                    if(varNumOfInvoiceItems>0){
+                        for(i = 0; i<varNumOfInvoiceItems;i++ ){
+                            var varInvoiceItem = varAllInvoiceItemsList[i];
+
+                            var varInvoiceItemId = varInvoiceItem.invoice_item_id;
+                            fnClickAddRow(varInvoiceItemId);
+                            $('#item_'+varInvoiceItemId).val(varInvoiceItem.item_name);
+                            $('#item_description_'+varInvoiceItemId).val(varInvoiceItem.item_description);
+                            $('#unit_cost_'+varInvoiceItemId).val(varInvoiceItem.unit_cost);
+                            $('#quantity_'+varInvoiceItemId).val(varInvoiceItem.quantity);
+                            updateTotal(varInvoiceItemId,true);
+                        }
+                    }
+                }
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
     }
 
     function getResult(jsonResult) {
@@ -312,12 +354,11 @@
             '<div class="input-group"> <span class="input-group-addon">$</span><input type="text" class="form-control" id="unit_cost_'+varItemId+'" name="unit_cost_'+varItemId+'"/></div>',
             '<input type="text" class="form-control" id="quantity_'+varItemId+'" name="quantity_'+varItemId+'"/>',
             '<h6><span id="total_'+varItemId+'" style="text-align:right"></span></h6>',
-            '<button class="btn btn-xs btn-default" id="delete_'+varItemId+'" name="delete_'+varItemId+'"><i class="fa fa-trash-o"></i>&nbsp; Delete</button>'] );
+            '<button class="btn btn-xs btn-default" id="delete_'+varItemId+'" name="delete_'+varItemId+'"><i class="fa fa-trash-o"></i>&nbsp; Remove</button>'] );
 
         var oSettings = oTable.fnSettings();
         var rows=$('#invoice_item tr').length-2;
         var position=oSettings.aoData[rows].nTr.rowIndex+1;
-        console.log('position : '+position + '- ' + $('#invoice_item tr')[0] + '- ' + $('#invoice_item tr')[1] );
         $($('#invoice_item tr')[position-1]).attr('id', 'row_'+varItemId);
 
         $('#unit_cost_'+varItemId).bind("keyup paste input", function() {
@@ -362,6 +403,10 @@
     function deleteItemRow(varItemId, varISCalledByEvent){
         objInvoiceItemsTable.fnDeleteRow((objInvoiceItemsTable.$('#row_'+varItemId))[0] );
         if(varISCalledByEvent){
+            var index = arrayItemId.indexOf(varItemId);
+            if (index > -1) {
+                arrayItemId.splice(index, 1);
+            }
             updateSubTotal(false)
             updateDiscount(false)
             updateTax(false);
@@ -392,8 +437,6 @@
     function updateSubTotal(varISCalledByEvent){
         var varSubTotal = new BigNumber(0.00);
         for ( var i = 0; i < arrayItemId.length; i = i + 1 ) {
-
-            //console.log( arrayItemId[ i ] );
 
             var varUnitCost = $('#unit_cost_'+arrayItemId[i]).val();
             var varQuantity = $('#quantity_'+arrayItemId[i]).val();
@@ -466,6 +509,50 @@
             }
         }
 
+    }
+
+    function loadClients(callbackmethod) {
+        var actionUrl = "/proc_load_clients.aeve";
+        var methodType = "POST";
+        var dataString = '';
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function populateClientList(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    var varNumOfClients = jsonResponseObj.num_of_clients;
+                    if(varNumOfClients>0){
+                        processClientListSummary(varNumOfClients,jsonResponseObj.all_client_summary);
+                    }
+                    else {
+                        //displayMssgBoxAlert("Create a new client here.", true);
+                    }
+
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (populateClientList - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (populateClientList - 2)", true);
+        }
+    }
+    function processClientListSummary(varNumOfClients,clientSummaryList) {
+        var varDropDownClientList = $('#client_selector');
+        for(i=0;i<varNumOfClients;i++){
+            var varClientBean = clientSummaryList[i];
+            varDropDownClientList.append('<option value="'+varClientBean.client_id+'">'+varClientBean.client_name+'</option>');
+        }
+
+        var varLoadInvoice = <%=loadInvoice%>
+        if(varLoadInvoice){
+            loadInvoice(populateInvoice);
+        }
     }
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>

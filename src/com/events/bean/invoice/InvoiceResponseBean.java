@@ -15,6 +15,15 @@ public class InvoiceResponseBean {
     private String invoiceId = Constants.EMPTY;
     private ArrayList<InvoiceBean> arrInvoiceBean = new ArrayList<InvoiceBean>();
     private InvoiceBean invoiceBean = new InvoiceBean();
+    private ArrayList<InvoiceItemBean> arrInvoiceItemsBean = new ArrayList<InvoiceItemBean>();
+
+    public ArrayList<InvoiceItemBean> getArrInvoiceItemsBean() {
+        return arrInvoiceItemsBean;
+    }
+
+    public void setArrInvoiceItemsBean(ArrayList<InvoiceItemBean> arrInvoiceItemsBean) {
+        this.arrInvoiceItemsBean = arrInvoiceItemsBean;
+    }
 
     public ArrayList<InvoiceBean> getArrInvoiceBean() {
         return arrInvoiceBean;
