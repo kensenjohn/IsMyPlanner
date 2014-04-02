@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 /**
@@ -44,14 +45,24 @@ public class UserIdentifier implements Filter {
 
         StringBuffer requestURL = request.getRequestURL();
         String sLocalName = ParseUtil.checkNull(request.getLocalName());
-        if(!Utility.isNullOrEmpty(sLocalName) && sLocalName.endsWith("." + APPLICATION_DOMAIN) && !sLocalName.startsWith("www")  && !sLocalName.startsWith(APPLICATION_DOMAIN)) {
+        String sQueryString = request.getQueryString();
+        String sSubDomain = ParseUtil.checkNull(request.getParameter("subdomain"));
+
+        Enumeration headerNames = request.getParameterNames();
+        while (headerNames.hasMoreElements()) {
+            String key = (String) headerNames.nextElement();
+            String value = request.getHeader(key);
+            appLogging.info("key->: " + key + " - value-> " + value );
+        }
+        appLogging.info("requestURL: " + requestURL + " - sLocalName: " + sLocalName + " -  APPLICATION_DOMAIN : " + APPLICATION_DOMAIN + " sSubDomain : " + sSubDomain);
+        if(!Utility.isNullOrEmpty(sSubDomain) && !sSubDomain.startsWith("www") ) {
 
 
 
-            String[] arraySubDomain = sLocalName.split("." + APPLICATION_DOMAIN);
+            //String[] arraySubDomain = sLocalName.split("." + APPLICATION_DOMAIN);
             AccessVendorWebsite  accessVendorWebsite = new AccessVendorWebsite();
             boolean isShowRegistrationForm=true;
-            for(String subDomain : arraySubDomain ) {
+            //for(String subDomain : arraySubDomain ) {
                 isShowRegistrationForm = false;
                 boolean loadFromDB = false;
                 HttpSession httpSession = request.getSession(true);
@@ -79,7 +90,7 @@ public class UserIdentifier implements Filter {
 
                 if(loadFromDB) {
                     VendorWebsiteRequestBean vendorWebsiteRequestBean = new VendorWebsiteRequestBean();
-                    vendorWebsiteRequestBean.setSubDomain(subDomain);
+                    vendorWebsiteRequestBean.setSubDomain(sSubDomain);
                     VendorResponseBean vendorResponseBean = accessVendorWebsite.getVendorBySubDomain( vendorWebsiteRequestBean );
                     //appLogging.info(vendorBean.toString());
                     if(vendorResponseBean!=null &&  vendorResponseBean.getVendorBean()!=null ) {
@@ -94,7 +105,7 @@ public class UserIdentifier implements Filter {
                             HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmVendorWebsiteFeatureBean = accessVendorWebsite.getPublishedFeaturesForWebPages( vendorResponseBean.getVendorWebsiteBean() );
                             HttpSession httpNewSession = request.getSession(true);
 
-                            httpNewSession.setAttribute("SUBDOMAIN", subDomain );
+                            httpNewSession.setAttribute("SUBDOMAIN", sSubDomain );
                             httpNewSession.setAttribute("SUBDOMAIN_VENDOR", vendorBean );
                             httpNewSession.setAttribute("SUBDOMAIN_TIME", DateSupport.getEpochMillis());
                             httpNewSession.setAttribute("SUBDOMAIN_VENDOR_WEBSITE", vendorResponseBean.getVendorWebsiteBean() );
@@ -125,12 +136,12 @@ public class UserIdentifier implements Filter {
 
                             HttpServletResponse response = (HttpServletResponse) servletResponse;
                             response.sendRedirect( "http://" + APPLICATION_DOMAIN );
-                            appLogging.info("User's sub domain has changed : " + subDomain);
+                            appLogging.info("User's sub domain has changed : " + sSubDomain);
                             return;
                         }
                     }
                 }
-            }
+            //}
 
             HttpSession hideRegSession = request.getSession(true);
 
@@ -139,18 +150,19 @@ public class UserIdentifier implements Filter {
             }
 
             if(hideRegSession!=null && hideRegSession.getAttribute("SUBDOMAIN_SHOW_REGISTRATION") !=null){
-                appLogging.info("Is Show Registration : " + (Boolean) hideRegSession.getAttribute("SUBDOMAIN_SHOW_REGISTRATION"));
+                //appLogging.info("Is Show Registration : " + (Boolean) hideRegSession.getAttribute("SUBDOMAIN_SHOW_REGISTRATION"));
             } else {
 
                 appLogging.info("Show Registration Session Is Null : " );
             }
 
         }
+        appLogging.info("Going to invoke do filter" );
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
     public void destroy() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        appLogging.info("Destroy UserIdentifier: " );
     }
 }

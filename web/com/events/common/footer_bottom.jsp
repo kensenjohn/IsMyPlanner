@@ -19,7 +19,7 @@
         if(vendorWebsiteBean!=null && !Utility.isNullOrEmpty(vendorWebsiteBean.getVendorWebsiteId())){
             isVendorSubDomainUsed = true;
             AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
-            hmVendorWebsiteFeatureBean =  accessVendorWebsite.getPublishedFeaturesForLandingPage(vendorWebsiteBean);
+            hmVendorWebsiteFeatureBean =  accessVendorWebsite.getPublishedFeaturesForWebPages(vendorWebsiteBean);
         }
 
     }
@@ -60,15 +60,24 @@
             if(vendorWebsiteFeatueFacebookUrlBean!=null) {
                 sFacebookUrl = ParseUtil.checkNull(vendorWebsiteFeatueFacebookUrlBean.getValue() );
             }
+            if(!Utility.isNullOrEmpty(sFacebookUrl) &&  ( !sFacebookUrl.startsWith("http://") || !sFacebookUrl.startsWith("https://"))  ){
+                sFacebookUrl = "https://"+sFacebookUrl;
+            }
 
             VendorWebsiteFeatureBean vendorWebsiteFeatueTwitterUrlBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_footer_twitter);
             if(vendorWebsiteFeatueTwitterUrlBean!=null) {
                 sTwitterUrl = ParseUtil.checkNull(vendorWebsiteFeatueTwitterUrlBean.getValue() );
             }
+            if(!Utility.isNullOrEmpty(sTwitterUrl) &&  ( !sTwitterUrl.startsWith("http://") || !sTwitterUrl.startsWith("https://"))  ){
+                sTwitterUrl = "https://"+sTwitterUrl;
+            }
 
             VendorWebsiteFeatureBean vendorWebsiteFeatuePinterestUrlBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_footer_pinterest);
             if(vendorWebsiteFeatuePinterestUrlBean!=null) {
                 sPinterestUrl = ParseUtil.checkNull(vendorWebsiteFeatuePinterestUrlBean.getValue() );
+            }
+            if(!Utility.isNullOrEmpty(sPinterestUrl) &&  ( !sPinterestUrl.startsWith("http://") || !sPinterestUrl.startsWith("https://"))  ){
+                sPinterestUrl = "https://"+sPinterestUrl;
             }
         }
     } else {
@@ -81,7 +90,7 @@
     }
 
 
-    String sCopyrightYear = applicationConfig.get("copyright_year");
+     String sCopyrightYear = applicationConfig.get("copyright_year");
     if(Utility.isNullOrEmpty(sCopyrightCompany)){
         sCopyrightCompany = ParseUtil.checkNull(applicationConfig.get("copyright_company"));
     }

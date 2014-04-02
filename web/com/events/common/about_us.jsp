@@ -20,7 +20,7 @@
         if(vendorWebsiteBean!=null && !Utility.isNullOrEmpty(vendorWebsiteBean.getVendorWebsiteId())){
 
             AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
-            hmVendorWebsiteFeatureBean =  accessVendorWebsite.getPublishedFeaturesForLandingPage(vendorWebsiteBean);
+            hmVendorWebsiteFeatureBean =  accessVendorWebsite.getPublishedFeaturesForWebPages(vendorWebsiteBean);
         }
     }
 
@@ -43,7 +43,7 @@
         <jsp:param name="AFTER_LOGIN_REDIRECT" value="index.jsp"/>
     </jsp:include>
     <jsp:include page="/com/events/common/menu_bar.jsp">
-        <jsp:param name="event_active" value="currently_active"/>
+        <jsp:param name="none" value="currently_active"/>
     </jsp:include>
     <div class="breadcrumb_format">
         <div class="container">

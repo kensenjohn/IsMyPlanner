@@ -17,6 +17,7 @@
     String imageHost = Utility.getImageUploadHost();
     String sFolderName = Constants.EMPTY;
     HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmVendorWebsiteFeatureBean = new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE, VendorWebsiteFeatureBean>();
+    boolean isVendorSite =false;
     if( session.getAttribute("SUBDOMAIN_VENDOR") != null && session.getAttribute("SUBDOMAIN_VENDOR_WEBSITE") !=null ) {
         VendorBean vendorBean = (VendorBean)  session.getAttribute("SUBDOMAIN_VENDOR");
         VendorWebsiteBean vendorWebsiteBean = (VendorWebsiteBean) session.getAttribute("SUBDOMAIN_VENDOR_WEBSITE");
@@ -26,7 +27,7 @@
             hmVendorWebsiteFeatureBean =  accessVendorWebsite.getPublishedFeaturesForLandingPage(vendorWebsiteBean);
 
             sFolderName = ParseUtil.checkNull(vendorBean.getFolder());
-
+            isVendorSite = true;
         }
     }
 
@@ -42,7 +43,7 @@
         }
     }
     if(Utility.isNullOrEmpty(sLandingPagePhoto)){
-        sLandingPagePhoto = "http://d33np9n32j53g7.cloudfront.net/assets/new/home-hero-a4778806742a55871d57663035e77b64.jpg";
+        sLandingPagePhoto = "/img/landingpage_wedding.jpg";
     }
 
     if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
@@ -52,7 +53,7 @@
         }
     }
     if(Utility.isNullOrEmpty(sGreetingHeader)){
-        sGreetingHeader = "Welcome";
+        sGreetingHeader = "";
     }
 
     if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
@@ -62,7 +63,7 @@
         }
     }
     if(Utility.isNullOrEmpty(sGreetingText)){
-        sGreetingText = "Manage Your Client Events, Vendors and Team Members";
+        sGreetingText = "A Platform to Manage Your Clients, Events, Vendors and Team";
     }
 
     if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
@@ -88,42 +89,23 @@
       <jsp:include page="/com/events/common/menu_bar.jsp">
           <jsp:param name="home_active" value="currently_active"/>
       </jsp:include>
-      <div>
       <div class="container-fluid">
-          <div style="background-image: url('<%=sLandingPagePhoto%>');height: 447px;margin-left: 0;margin-right: 0;background-position: 50% 0;">
-
-          </div>
-          <!--<div class="flexslider">
+          <!--<div style="background-image: url('<%=sLandingPagePhoto%>'); margin-left: 0;margin-right: 0;background-position: 50% 0;">
+            &nbsp;
+          </div> -->
+          <div class="flexslider">
               <ul class="slides">
                   <li>
-                      <img src="http://www.smarasoft.com/img/slider/slider1.jpg" />
-                      <div class="container hidden-sm ">
+                      <img src="<%=sLandingPagePhoto%>" />
+                      <!--<div class="container hidden-sm ">
                           <div class="slide-caption bottom-left">
                               <h1 style="color: #ffffff;">An Event Planner's Management Portal</h1>
                               <p>Manage your team, clients and vendors from one place.</p>
                           </div>
-                      </div>
-                  </li>
-                  <li>
-                      <img src="http://www.smarasoft.com/img/slider/slider2.jpg" />
-                      <div class="container hidden-sm">
-                          <div class="slide-caption hidden-sm bottom-left">
-                              <h1 style="color: #ffffff;">Communcate Effeciently and Quickly</h1>
-                              <p>Notifications, Reminders, Emails for you and your clients to be in touch.</p>
-                          </div>
-                      </div>
-                  </li>
-                  <li>
-                      <img src="http://www.smarasoft.com/img/slider/slider3.jpg" />
-                      <div class="container  hidden-sm ">
-                          <div class="slide-caption hidden-sm bottom-left">
-                              <h1 style="color: #ffffff;">Tools For You And Your Clients</h1>
-                              <p>Customizable event planning tools</p>
-                          </div>
-                      </div>
+                      </div>  -->
                   </li>
               </ul>
-          </div> -->
+          </div>
       </div>
       <div class="container">
           <div class="row">
@@ -143,10 +125,94 @@
               </div>
           </div>
           <div class="row">
-              <div class="col-md-12"  style="text-align:center;">
-                  <h1><%=sGreetingText%></h1>
+              <div class="col-md-12 col-sm-12 col-xs-12"  style="text-align:center;">
+                  <h2><%=sGreetingText%></h2>
               </div>
           </div>
+          <div class="row">
+              <div class="col-md-12">
+                  &nbsp;
+              </div>
+          </div>
+          <%
+              if(!isVendorSite) {
+          %>
+          <div class="row " style="text-align: center;">
+              <div class="col-sm-12">
+                  <div class="row ">
+                      <div class="col-sm-4">
+                          <h2><i class="fa fa-cloud"></i></h2>
+                          <h5>Management</h5>
+                          <p>Manage your clients, events, and vendors online. Track their progress and status from anywhere. </p>
+                      </div>
+                      <div class="col-sm-4">
+                          <h2><i class="fa fa-facebook"></i><i class="fa fa-twitter"></i><i class="fa fa-pinterest"></i></h2>
+                          <h5>Social Media Marketing</h5>
+                          <p>Create your custom landing pages with a targeted marketing message. Flaunt your social media feeds to attract for potential leads and clients. </p>
+                      </div>
+                      <div class="col-sm-4 ">
+                          <h2><i class="fa fa-wrench"></i></h2>
+                          <h5>Client Tools</h5>
+                          <p>Give access to clients to track and manage their event, vendors, guests, website.</p>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-12">
+                          &nbsp;
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-12">
+                          &nbsp;
+                      </div>
+                  </div>
+
+                  <div class="row ">
+                      <div class="col-sm-4">
+                          <h2><i class="fa fa-comments"></i></h2>
+                          <h5>Collaboration</h5>
+                          <p>Collaborate with your clients during the event planning phase. Send and receive notifications to be immediately updated of any change. </p>
+                      </div>
+                      <div class="col-sm-4">
+                          <h2><i class="fa fa-users"></i></h2>
+                          <h5>Team Members</h5>
+                          <p>Give access to your team members to login and work with clients. Quickly assign roles and permissions for individuals to specific areas of your business.  </p>
+                      </div>
+                      <div class="col-sm-4 ">
+                          <h2><i class="fa fa-dollar"></i>&nbsp;<i class="fa fa-shopping-cart"></i></h2>
+                          <h5>Invoices and Payment</h5>
+                          <p>Create branded invoices online with links to download and email to clients.  </p>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-12">
+                          &nbsp;
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-12">
+                          &nbsp;
+                      </div>
+                  </div>
+                  <div class="row ">
+                      <div class="col-sm-3">
+                          &nbsp;
+                      </div>
+                      <div class="col-sm-6">
+                          <h1><i class="fa fa-gears"></i> New Features Coming Soon</h1>
+                          <p>Online Payments <br>Evernote Integration<br>RSVP by phone<br>Guest reminders by sms and emails.<br>And lots more..</p>
+                      </div>
+                      <div class="col-sm-3 ">
+                          &nbsp;
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <%
+              }
+          %>
       </div>
           <%
               if(!Utility.isNullOrEmpty(sFacebookFeed) && !Utility.isNullOrEmpty(sPinterestFeed) ){
@@ -237,7 +303,8 @@
     $(window).load(function() {
         $('.flexslider').flexslider({
             animation: "slide",
-            smoothHeight: true
+            smoothHeight: true,
+            useCSS: false
         });
 
 

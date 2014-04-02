@@ -1,7 +1,6 @@
 <%@ page import="com.events.common.ParseUtil" %>
-<!--[if lte IE 9]>
-    <script type="text/javascript" src="/s/html5shiv.js"></script>
-    <![endif]-->
+
+
 
     <!-- analytics stuff over here -->
     <jsp:include page="analytics.jsp"/>
@@ -19,4 +18,7 @@
             %><style type="text/css"><%=ParseUtil.checkNull(vendorOverRideColorCss)%></style><!--Overriding Vendor CSS --><%
        }
     %>
+    <script type="text/javascript" src="/js/modernizr.custom.js"></script>
+
+    <link rel="icon"  type="image/png" href="/img/favicon.png">
 </head>

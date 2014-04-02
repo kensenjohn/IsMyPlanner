@@ -95,7 +95,7 @@
                                                     <div class="row" >
                                                         <div class="col-md-12">
                                                             <label for="registerBusinessName"  class="form_label">Business Name</label><span class="required"> *</span>
-                                                            <input type="password" class="form-control" id="registerBusinessName" name="registerBusinessName" placeholder="Business Name">
+                                                            <input type="text" class="form-control" id="registerBusinessName" name="registerBusinessName" placeholder="Business Name">
                                                         </div>
                                                     </div>
                                                 </div>

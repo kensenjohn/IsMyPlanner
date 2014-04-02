@@ -197,8 +197,6 @@ public class BuildVendorWebsite extends VendorWebsite {
                     if(iNumOfRows<=0){
                         isError = true;
                     }
-                } else {
-                    isError = true;
                 }
             }
 
@@ -213,8 +211,6 @@ public class BuildVendorWebsite extends VendorWebsite {
                     if(iNumOfRows<=0){
                         isError = true;
                     }
-                } else {
-                    isError = true;
                 }
             }
 
@@ -229,8 +225,6 @@ public class BuildVendorWebsite extends VendorWebsite {
                     if(iNumOfRows<=0){
                         isError = true;
                     }
-                } else {
-                    isError = true;
                 }
             }
 
@@ -245,8 +239,6 @@ public class BuildVendorWebsite extends VendorWebsite {
                     if(iNumOfRows<=0){
                         isError = true;
                     }
-                } else {
-                    isError = true;
                 }
             }
 
