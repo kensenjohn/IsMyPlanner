@@ -7,12 +7,11 @@ import com.events.bean.invoice.InvoiceResponseBean;
 import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.vendors.VendorBean;
-import com.events.common.Constants;
-import com.events.common.DateSupport;
-import com.events.common.ParseUtil;
-import com.events.common.Utility;
+import com.events.common.*;
 import com.events.common.exception.ExceptionHandler;
+import com.events.common.invoice.AccessInvoicePdf;
 import com.events.common.invoice.BuildInvoice;
+import com.events.common.invoice.BuildInvoicePdf;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
 import com.events.users.AccessUsers;
@@ -36,6 +35,7 @@ import java.util.ArrayList;
  */
 public class ProcSaveInvoice   extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
+    Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     public void doPost(HttpServletRequest request,  HttpServletResponse response)  throws ServletException, IOException {
         RespObjectProc responseObject = new RespObjectProc();
         JSONObject jsonResponseObj = new JSONObject();
@@ -155,6 +155,19 @@ public class ProcSaveInvoice   extends HttpServlet {
                             InvoiceResponseBean invoiceResponseBean = buildInvoice.saveInvoice( invoiceRequestBean );
                             if(invoiceResponseBean!=null && !Utility.isNullOrEmpty(invoiceResponseBean.getInvoiceId())) {
                                 jsonResponseObj.put("invoice_id",invoiceResponseBean.getInvoiceId());
+
+                                invoiceRequestBean.setInvoiceId( sInvoiceId );
+
+                                BuildInvoicePdf buildInvoicePdf = new BuildInvoicePdf();
+                                buildInvoicePdf.buildInvoicePdf(invoiceRequestBean,loggedInUserBean );
+
+                                AccessInvoicePdf accessInvoicePdf = new AccessInvoicePdf();
+                                String fileUploadLocation = applicationConfig.get(Constants.FILE_UPLOAD_LOCATION);
+                                String sUserFolderName = accessInvoicePdf.getUserFolderName(loggedInUserBean, fileUploadLocation) ;
+                                String fileUploadHost = Utility.getFileUploadHost();
+                                jsonResponseObj.put("invoice_id", sInvoiceId);
+                                jsonResponseObj.put("file_host", fileUploadHost);
+                                jsonResponseObj.put("folder_path_name", sUserFolderName);
 
 
                                 Text okText = new OkText("The invoice was saved successfully","status_mssg") ;

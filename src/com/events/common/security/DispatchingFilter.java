@@ -55,11 +55,11 @@ public class DispatchingFilter implements Filter {
             servletRequest.getRequestDispatcher("/com/events/common/error/security_warning.jsp").forward(servletRequest, servletResponse);
         } else if( !isUserLoggedIn && !path.endsWith("/credentials.jsp") && !path.endsWith("/forgot.jsp")&& !path.endsWith("/reset_password.jsp")
                 && !path.endsWith("/set_password.jsp")
-                && !path.endsWith("/privacy.jsp") && !path.endsWith("/contact.jsp") && !path.endsWith("/about_us.jsp")) {
+                && !path.endsWith("/privacy.jsp") && !path.endsWith("/contact.jsp") && !path.endsWith("/about_us.jsp")  && !path.endsWith("/rsvp.jsp")) {
             servletRequest.getRequestDispatcher("/index.jsp").forward(servletRequest, servletResponse);
         }  else  if( (isUserLoggedIn && !isInsecureParamUsed) || path.endsWith("/credentials.jsp")  || path.endsWith("/forgot.jsp")
                 || path.endsWith("/reset_password.jsp") || path.endsWith("/set_password.jsp")
-                || path.endsWith("/privacy.jsp") || path.endsWith("/contact.jsp") || path.endsWith("/about_us.jsp")) {
+                || path.endsWith("/privacy.jsp") || path.endsWith("/contact.jsp") || path.endsWith("/about_us.jsp") || path.endsWith("/rsvp.jsp")) {
             filterChain.doFilter(servletRequest, servletResponse);
         }
     }

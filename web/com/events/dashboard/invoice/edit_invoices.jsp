@@ -201,11 +201,14 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-1">
+                <div class="col-md-1 col-sm-1">
                     <button class="btn btn-filled" id="btn_save_invoice">Save</button>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-2 col-sm-2">
                     <button class="btn btn-filled" id="btn_email_invoice">Email Invoice</button>
+                </div>
+                <div class="col-md-2 col-sm-2">
+                    <a class="btn btn-filled" id="download_invoice" target="_blank">Download Invoice</a>
                 </div>
             </div>
         </div>
@@ -218,7 +221,6 @@
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/jquery.dataTables.min.js"></script>
 <script src="/js/bignumber.min.js"></script>
-<script src="/js/clients/clientlist_dropdown.js"></script>
 <script src="/js/datepicker/picker.js"></script>
 <script src="/js/datepicker/picker.date.js"></script>
 <script src="/js/datepicker/legacy.js"></script>
@@ -243,8 +245,13 @@
 
         $('#btn_save_invoice').click(function(){
             generateItemList();
-            saveEvent(getResult);
+            saveInvoice(getResult);
         })
+
+        $('#btn_download_invoice').click(function(){
+            generateDownloadableInvoice(getDownloadableInvoice);
+        })
+
 
         loadClients(populateClientList);
         $('#invoiceDate').pickadate()
@@ -256,11 +263,37 @@
         var dataString = $("#frm_load_invoice").serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
-    function saveEvent( callbackmethod ) {
+    function saveInvoice( callbackmethod ) {
         var actionUrl = "/proc_save_invoice.aeve";
         var methodType = "POST";
         var dataString = $("#frm_save_invoice").serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function generateDownloadableInvoice(callbackmethod){
+        var actionUrl = "/proc_generate_downloadable_invoice.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_save_invoice").serialize();
+        console.log('generateDownloadableInvoice  : '+dataString);
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+
+    function getDownloadableInvoice(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                }
+            }
+        }
+    }
+
+    function download() {
+
+        iframe.src = "file.doc";
     }
 
     function populateInvoice(jsonResult) {
@@ -299,6 +332,11 @@
                             updateTotal(varInvoiceItemId,true);
                         }
                     }
+
+                    var varInvoiceId = jsonResponseObj.invoice_id;
+                    var varFileHost = jsonResponseObj.file_host;
+                    var varPathName = jsonResponseObj.folder_path_name;
+                    $('#download_invoice').attr("href",varFileHost+'/'+varPathName+'/'+varInvoiceId+'.pdf');
                 }
             } else {
                 displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
@@ -319,6 +357,12 @@
                     var jsonResponseObj = varResponseObj.payload;
                     if(jsonResponseObj!=undefined) {
                         $('#invoice_id').val(jsonResponseObj.invoice_id);
+
+
+                        var varInvoiceId = jsonResponseObj.invoice_id;
+                        var varFileHost = jsonResponseObj.file_host;
+                        var varPathName = jsonResponseObj.folder_path_name;
+                        $('#download_invoice').attr("href",varFileHost+'/'+varPathName+'/'+varInvoiceId+'.pdf');
                     }
                 }
                 displayAjaxOk(varResponseObj);

@@ -169,7 +169,7 @@
     var varLoadEventInfo = <%=loadEventInfo%>
     var varIsLoggedInUserAClient = <%=isLoggedInUserAClient%>;
     $(window).load(function() {
-        $('#eventDay').pickadate()
+        var eventPickerDay = $('#eventDay').pickadate()
         $('#eventTime').pickatime({
             // Time intervals
             interval: 15,
@@ -185,18 +185,25 @@
             }
         });
         $('#btn_new_event').click(function(){
-            saveEvent(getResult);
+            saveEvent(getResult, $('#eventDay').pickadate('picker') );
         });
         if(varIsLoggedInUserAClient == false ) {
             loadClients(populateClientList);
         }
     });
 
-    function saveEvent( callbackmethod ) {
+    function saveEvent( callbackmethod, methdEventPickerDay) {
         var actionUrl = "/proc_save_event.aeve";
         var methodType = "POST";
         var dataString = $("#frm_new_event").serialize();
+
+        dataString = dataString + '&formatted_eventDay=' +getFormattedEventDay(methdEventPickerDay);
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+
+    function getFormattedEventDay(methdEventPickerDay){
+       var varMethodPickerDay = methdEventPickerDay.get('select', 'yyyy/mmmm/dd');
+       return varMethodPickerDay;
     }
 
     function getResult(jsonResult) {

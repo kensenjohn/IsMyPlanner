@@ -261,7 +261,7 @@
     });
 
     $(window).load(function() {
-        $('#emailDay').pickadate()
+        var emailDayPicker = $('#emailDay').pickadate();
         $('#emailTime').pickatime({
             // Time intervals
             interval: 5,
@@ -361,6 +361,7 @@
 
                         tinyMCE.activeEditor.setContent(varEventEmailBean.html_body )
                         $('#emailDay').val(jsonResponseObj.email_send_day);
+                        picker.set('select', jsonResponseObj.email_send_day, { format: 'yyyy-mm-dd' })
                         $('#emailTime').val(jsonResponseObj.email_send_time);
                         $('#eventTimeZone').val(jsonResponseObj.email_send_timezone);
                         $('input[value='+jsonResponseObj.send_email_rule+']').prop("checked",true);

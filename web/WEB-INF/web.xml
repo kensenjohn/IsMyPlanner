@@ -855,6 +855,22 @@
         <servlet-name>Process Delete Invoice</servlet-name>
         <url-pattern>/proc_delete_invoice.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Generate Downloadable Invoice</servlet-name>
+        <servlet-class>com.events.proc.invoice.ProcGenerateDownloadableInvoice</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Generate Downloadable Invoice</servlet-name>
+        <url-pattern>/proc_generate_downloadable_invoice.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Downloadable Invoice</servlet-name>
+        <servlet-class>com.events.proc.invoice.ProcDownloadInvoice</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Downloadable Invoice</servlet-name>
+        <url-pattern>/proc_downloadable_invoice.aeve</url-pattern>
+    </servlet-mapping>
 
 
 

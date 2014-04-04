@@ -33,6 +33,7 @@
             %><style type="text/css"><%=ParseUtil.checkNull(vendorOverRideColorCss)%></style><!--Overriding Vendor CSS --><%
         }
     %>
+    <link rel="stylesheet" type="text/css" href="/css/flexslider.css">
 </head>
 <%
 
@@ -44,7 +45,7 @@
     String sLandingPagePic = Constants.EMPTY;
     String sUserFolderName = Constants.EMPTY;
     String sFacebookFeed = Constants.EMPTY;
-    String sPinterstFeed = Constants.EMPTY;
+    String sPinterestFeed = Constants.EMPTY;
 
 
     String imageHost = Utility.getImageUploadHost();
@@ -61,7 +62,6 @@
 
         Folder folder = new Folder();
         sUserFolderName = folder.getFolderName( Constants.USER_TYPE.VENDOR, vendorWebsiteBean.getVendorId() );
-        appLogging.info("sUserFolderName : " + sUserFolderName);
 
         String sImageLocation =  imageHost + "/"+sUserFolderName+"/";
 
@@ -80,12 +80,17 @@
             String sFeatureName = vendorWebsiteFeatureBean.getFeatureName();
             String sValue = vendorWebsiteFeatureBean.getValue();
             if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_WEBSITE_FEATURETYPE.saved_logo.toString())) {
-                sLogo = sImageLocation + sValue;
+                if(!Utility.isNullOrEmpty(sValue)) {
+                    sLogo = sImageLocation + sValue;
+                }
+
             }
 
 
             if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_WEBSITE_FEATURETYPE.saved_landingpagephoto.toString())) {
-                sLandingPagePic = sImageLocation + sValue;
+                if(!Utility.isNullOrEmpty(sValue)) {
+                    sLandingPagePic = sImageLocation + sValue;
+                }
             }
 
             if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_WEBSITE_FEATURETYPE.saved_facebook_feed_script.toString())) {
@@ -93,9 +98,15 @@
             }
 
             if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_WEBSITE_FEATURETYPE.saved_pinterest_feed_script.toString())) {
-                sPinterstFeed =   sValue;
+                sPinterestFeed =   sValue;
             }
         }
+    }
+    if(Utility.isNullOrEmpty(sLogo)) {
+        sLogo = "/img/logo.png";
+    }
+    if(Utility.isNullOrEmpty(sLandingPagePic)) {
+        sLandingPagePic = "/img/landingpage_wedding.jpg";
     }
 %>
 <body>
@@ -104,7 +115,7 @@
             <div class="container">
                 <div class="top_navbar_links">
                     <ul class="nav navbar-nav navbar-right menu">
-                        <li><a href="#">Login</a></li>
+                        <li><a href="#"><i class="fa fa-sign-in"></i> Sign In</a></li>
                         <li><a href="#">Register</a></li>
                     </ul>
                 </div>
@@ -122,11 +133,18 @@
                 </div>
             </div>
         </div>
-        <div class="container">
-            <div style="background-image: url('<%=sLandingPagePic%>');height: 447px;margin-left: 0;margin-right: 0;background-position: 50% 0;">
-
+        <div class="container-fluid">
+            <div class="flexslider">
+                <ul class="slides">
+                    <li>
+                        <img src="<%=sLandingPagePic%>" />
+                    </li>
+                </ul>
             </div>
         </div>
+        <%
+            if(!Utility.isNullOrEmpty(sFacebookFeed) && !Utility.isNullOrEmpty(sPinterestFeed) ){
+        %>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -185,7 +203,7 @@
                                 </div>
                                 <div class="row" style="text-align:center;">
                                     <div class="col-md-12">
-                                        <%=sPinterstFeed%>
+                                        <%=sPinterestFeed%>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -200,11 +218,21 @@
                 </div>
             </div>
         </div>
+
+        <%
+            }
+        %>
     </div>
 </body>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
+<script src="/js/jquery.flexslider-min.js"></script>
 <script   type="text/javascript">
     $(window).load(function() {
+        $('.flexslider').flexslider({
+            animation: "slide",
+            smoothHeight: true,
+            useCSS: false
+        });
         (function(d){
             var f = d.getElementsByTagName('SCRIPT')[0], p = d.createElement('SCRIPT');
             p.type = 'text/javascript';

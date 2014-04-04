@@ -13,12 +13,21 @@
 <%@ page import="com.events.bean.event.EventDisplayDateBean" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="org.slf4j.Logger" %>
+<%@ page import="com.events.bean.event.EventRequestBean" %>
+<%@ page import="com.events.bean.vendors.website.VendorWebsiteFeatureBean" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.events.vendors.website.AccessVendorWebsite" %>
+<%@ page import="com.events.vendors.website.VendorWebsiteFeature" %>
+<%@ page import="com.events.bean.vendors.website.VendorWebsiteBean" %>
+<%@ page import="com.events.data.vendors.website.AccessVendorWebsiteData" %>
+<%@ page import="com.events.common.Folder" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value="Guest RSVP"/>
 </jsp:include>
 
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
+    String sLogo = Constants.EMPTY;
     Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     String sLinkId = ParseUtil.checkNull(request.getParameter("id"));
 
@@ -50,6 +59,40 @@
         }
     }
 
+    AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
+
+    VendorWebsiteBean vendorWebsiteBean = new VendorWebsiteBean();
+    vendorWebsiteBean.setVendorId( eventBean.getVendorId() );
+
+    Folder folder = new Folder();
+    String sUserFolderName = folder.getFolderName( Constants.USER_TYPE.VENDOR, vendorWebsiteBean.getVendorId() );
+
+    String imageHost = Utility.getImageUploadHost();
+    String sImageLocation =  imageHost + "/"+sUserFolderName+"/";
+
+    AccessVendorWebsiteData accessVendorWebsiteData = new AccessVendorWebsiteData();
+    vendorWebsiteBean = accessVendorWebsiteData.getVendorWebsiteByVendorId(vendorWebsiteBean);
+
+    ArrayList<VendorWebsiteFeatureBean> arrVendorWebsiteFeatureBean = new ArrayList<VendorWebsiteFeatureBean>();
+    arrVendorWebsiteFeatureBean.add(accessVendorWebsite.generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_logo));
+
+    VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();
+    ArrayList<VendorWebsiteFeatureBean> arrMultipleFeatureBean = vendorWebsiteFeature.getMultipleFeatures( arrVendorWebsiteFeatureBean, vendorWebsiteBean.getVendorWebsiteId() );
+    if(arrMultipleFeatureBean!=null && !arrMultipleFeatureBean.isEmpty()) {
+        for(VendorWebsiteFeatureBean vendorWebsiteFeatureBean : arrMultipleFeatureBean ){
+            String sFeatureName = vendorWebsiteFeatureBean.getFeatureName();
+            String sValue = vendorWebsiteFeatureBean.getValue();
+            if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_WEBSITE_FEATURETYPE.saved_logo.toString())) {
+                if(!Utility.isNullOrEmpty(sValue)) {
+                    sLogo = sImageLocation + sValue;
+                }
+
+            }
+        }
+    }
+    if(Utility.isNullOrEmpty(sLogo)) {
+        sLogo = "/img/logo.png";
+    }
 
     appLogging.info("guestBean" + guestBean);
 
@@ -60,7 +103,7 @@
     <div class="menu_bar">
         <div class="container">
             <div class="menu_logo">
-                <a href="#"><img src="/img/logo.png" alt=""></a>
+                <a href="#"><img src="<%=sLogo%>" alt=""></a>
             </div>
             <div class="menu_links">
             </div>

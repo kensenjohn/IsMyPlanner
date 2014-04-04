@@ -7,11 +7,25 @@
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="com.events.bean.users.CookieUserBean" %>
+<%@ page import="com.events.bean.vendors.VendorBean" %>
+<%@ page import="com.events.bean.vendors.website.VendorWebsiteBean" %>
+<%@ page import="com.events.common.ParseUtil" %>
+<%@ page import="com.events.common.Configuration" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
+    Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+    String APPLICATION_DOMAIN = applicationConfig.get(Constants.APPLICATION_DOMAIN);
+
+    String sSubDomain = ParseUtil.checkNull(request.getParameter("subdomain"));
+
+    String sHomeUrl = APPLICATION_DOMAIN;
+    if(Utility.isNullOrEmpty(sSubDomain)){
+        sSubDomain = "www";
+    }
+    sHomeUrl = sSubDomain+"."+APPLICATION_DOMAIN;
     Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     Cookie[] cookies = request.getCookies();
     if(cookies!=null) {
@@ -44,7 +58,7 @@
     }
     session.removeAttribute( Constants.USER_LOGGED_IN_BEAN);
 
-    response.sendRedirect("/");
+    response.sendRedirect("https://"+sHomeUrl);
 
 %>
 <body>

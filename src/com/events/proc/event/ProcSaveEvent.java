@@ -53,7 +53,7 @@ public class ProcSaveEvent   extends HttpServlet {
 
                     String sEventId = ParseUtil.checkNull(request.getParameter("eventId"));
                     String sEventName = ParseUtil.checkNull(request.getParameter("eventName"));
-                    String sEventDay = ParseUtil.checkNull(request.getParameter("eventDay"));
+                    String sEventDay = ParseUtil.checkNull(request.getParameter("formatted_eventDay"));
                     String sEventTime = ParseUtil.checkNull(request.getParameter("eventTime"));
                     String sEventTimeZone = ParseUtil.checkNull(request.getParameter("eventTimeZone"));
                     String sEventClient = ParseUtil.checkNull(request.getParameter("eventClient"));

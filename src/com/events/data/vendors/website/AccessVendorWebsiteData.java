@@ -5,6 +5,7 @@ import com.events.bean.vendors.VendorResponseBean;
 import com.events.bean.vendors.website.VendorWebsiteBean;
 import com.events.bean.vendors.website.VendorWebsiteFeatureBean;
 import com.events.bean.vendors.website.VendorWebsiteRequestBean;
+import com.events.bean.vendors.website.VendorWebsiteResponseBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
@@ -43,6 +44,26 @@ public class AccessVendorWebsiteData {
             }
         }
         return vendorLandingPageBean;
+    }
+
+    public VendorWebsiteResponseBean getVendorWebsiteFeaturesByVendorId(VendorWebsiteBean tmpVendorWebsiteBean) {
+        VendorWebsiteResponseBean vendorWebsiteResponseBean = new VendorWebsiteResponseBean();
+        if(tmpVendorWebsiteBean!=null && !Utility.isNullOrEmpty(tmpVendorWebsiteBean.getVendorId())) {
+            String sQuery = "SELECT VF.*, V.* , VW.* FROM GTVENDORWEBSITEFEATURES VF, GTVENDORWEBSITE VW, GTVENDOR V WHERE V.VENDORID = ? AND" +
+                    " V.VENDORID = VW.FK_VENDORID AND VW.VENDORWEBSITEID=VF.FK_VENDORWEBSITEID";
+            ArrayList<Object> aParams = DBDAO.createConstraint(tmpVendorWebsiteBean.getVendorId());
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessVendorWebsiteData.java", "getVendorWebsiteByVendorId()");
+            if(arrResult!=null) {
+                ArrayList<VendorWebsiteFeatureBean> arrVendorWebsiteFeatureBean = new ArrayList<VendorWebsiteFeatureBean>();
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    VendorWebsiteFeatureBean vendorWebsiteFeatureBean = new VendorWebsiteFeatureBean(hmResult);
+                    arrVendorWebsiteFeatureBean.add( vendorWebsiteFeatureBean );
+                }
+                vendorWebsiteResponseBean.setArrVendorWebsiteFeatureBean( arrVendorWebsiteFeatureBean );
+            }
+        }
+        return vendorWebsiteResponseBean;
     }
 
     public VendorWebsiteBean getVendorWebsiteByWebsiteId(VendorWebsiteBean tmpVendorWebsiteBean) {
