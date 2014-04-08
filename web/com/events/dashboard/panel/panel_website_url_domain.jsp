@@ -2,6 +2,7 @@
 <%@ page import="com.events.common.Constants" %><%
     Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     String sApplicationDomain = applicationConfig.get(Constants.APPLICATION_DOMAIN);
+    String APPLICATION_PROTOCOL = applicationConfig.get(Constants.PROP_LINK_PROTOCOL,"https");
 %>
 <div class="row">
     <div class="col-md-12">
@@ -23,7 +24,7 @@
                                     <div class="col-md-6">
                                         <label for="website_subdomain" class="form_label">Your Business Name</label><br>
                                         <input type="text" name="website_subdomain"  id="website_subdomain" class="form-control" placeholder="YourBusinessName (no spaces,no punctuations,no special characters)">
-                                        http://<span id="preview_website_subdomain">yourbusinessname</span>.<%=sApplicationDomain%>
+                                        <%=APPLICATION_PROTOCOL%>://<span id="preview_website_subdomain">yourbusinessname</span>.<%=sApplicationDomain%>
                                     </div>
                                 </div>
                             </div>

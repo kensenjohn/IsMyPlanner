@@ -65,15 +65,16 @@
                                     }
                                 } else if(!isVendorSite) {
                             %>
-                                    <p>IsMyPlanner.com is an essential hub and portal for Event Planners and Wedding Planners.
-                                        Planners can quickly create branded sites targeted for their clients.
-                                        Manage clients, team members and partner vendors from here.
-                                        Keep track of all progress while planning.
-                                        Clients can collaborate and communicate quickly with the planner.
-                                    </p>
-
-                                    <p>The Event Planner can give access to their clients to specialized planning tools (website creation, rsvp management, guest list tracker etc.)
-                                        Clients can build website with modern themes with high resolution for every device.
+                                    <p><h5>IsMyPlanner.com is an essential hub and portal for Event Planners and Wedding Planners.</h5></p>
+                                    <p>
+                                        <ul  style="list-style: none;" >
+                                            <li  style="list-style: none;" ><h6><i class="fa fa-check-square-o"></i> &nbsp;&nbsp;Create branded sites targeted for their clients</h6></li>
+                                            <li  style="list-style: none;" ><h6><i class="fa fa-check-square-o"></i> &nbsp;&nbsp;Manage clients, vendors and events all in one place</h6></li>
+                                            <li  style="list-style: none;" ><h6><i class="fa fa-check-square-o"></i> &nbsp;&nbsp;Track progress and plans</h6></li>
+                                            <li  style="list-style: none;" ><h6><i class="fa fa-check-square-o"></i> &nbsp;&nbsp;Collaborate and communicate with clients</h6></li>
+                                            <li  style="list-style: none;" ><h6><i class="fa fa-check-square-o"></i> &nbsp;&nbsp;Give clients access to planning tools(website creation, rsvp management, guest list tracker etc.)</h6></li>
+                                            <li  style="list-style: none;" ><h6><i class="fa fa-check-square-o"></i> &nbsp;&nbsp;Your clients can build website with modern themes and high resolution images for every device</h6></li>
+                                        </ul>
                                     </p>
 
                             <%

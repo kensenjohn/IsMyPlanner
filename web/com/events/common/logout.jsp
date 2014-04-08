@@ -18,15 +18,12 @@
 <%
     Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     String APPLICATION_DOMAIN = applicationConfig.get(Constants.APPLICATION_DOMAIN);
+    Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
 
     String sSubDomain = ParseUtil.checkNull(request.getParameter("subdomain"));
+    String sHomeUrl = Utility.createSiteDomainUrl(  sSubDomain );
 
-    String sHomeUrl = APPLICATION_DOMAIN;
-    if(Utility.isNullOrEmpty(sSubDomain)){
-        sSubDomain = "www";
-    }
-    sHomeUrl = sSubDomain+"."+APPLICATION_DOMAIN;
-    Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
+
     Cookie[] cookies = request.getCookies();
     if(cookies!=null) {
         for(int cookieCount = 0; cookieCount < cookies.length; cookieCount++) {
@@ -58,7 +55,7 @@
     }
     session.removeAttribute( Constants.USER_LOGGED_IN_BEAN);
 
-    response.sendRedirect("https://"+sHomeUrl);
+    response.sendRedirect(sHomeUrl);
 
 %>
 <body>

@@ -9,6 +9,7 @@
 <%@ page import="com.events.users.AccessUsers" %>
 <%@ page import="com.events.bean.users.ParentTypeBean" %>
 <%
+    String sHomeUrl = Utility.createSiteDomainUrl(  ParseUtil.checkNull(request.getParameter("subdomain")) );
     boolean isVendorSubDomainUsed = false;
     String sCopyrightCompany = Constants.EMPTY;
     HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmVendorWebsiteFeatureBean = new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE, VendorWebsiteFeatureBean>();
@@ -134,7 +135,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-offset-10 col-md-2 col-sm-offset-10 col-sm-2" style="text-align:right;">
-                        &copy; <%=sCopyrightYear %> <%=sCopyrightCompany %>
+                        <a href="<%=sHomeUrl%>">&copy; <%=sCopyrightYear %> <%=sCopyrightCompany %></a>
                     </div>
                 </div>
                 <div class="row">

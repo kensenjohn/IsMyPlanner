@@ -112,4 +112,20 @@ public class Utility {
         return  ParseUtil.checkNull(sGivenName);
     }
 
+    public static String createSiteDomainUrl(String sSubDomain){
+        Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+        String APPLICATION_DOMAIN = applicationConfig.get(Constants.APPLICATION_DOMAIN);
+        String APPLICATION_PROTOCOL = applicationConfig.get(Constants.PROP_LINK_PROTOCOL,"https");
+
+        String sHomeUrl = APPLICATION_DOMAIN;
+        if(Utility.isNullOrEmpty(sSubDomain) && !"localhost".equalsIgnoreCase(APPLICATION_DOMAIN) ){
+            sSubDomain = "www";
+        }
+        if(!Utility.isNullOrEmpty(sSubDomain)){
+            sHomeUrl = sSubDomain+"."+APPLICATION_DOMAIN;
+        }
+        sHomeUrl = APPLICATION_PROTOCOL+"://"+sHomeUrl;
+        return sHomeUrl;
+    }
+
 }

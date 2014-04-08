@@ -1,10 +1,10 @@
-<%@ page import="com.events.common.Constants" %>
 <%@ page import="com.events.bean.users.UserBean" %>
-<%@ page import="com.events.common.ParseUtil" %>
-<%@ page import="com.events.common.Utility" %>
 <%@ page import="com.events.users.permissions.CheckPermission" %>
-<%@ page import="com.events.common.Perm" %>
+<%@ page import="com.events.common.*" %>
 <%
+
+    String sHomeUrl = Utility.createSiteDomainUrl(  ParseUtil.checkNull(request.getParameter("subdomain")) );
+
     String sLogo = Constants.EMPTY;
     if( session.getAttribute("SUBDOMAIN_LOGO") != null ) {
         sLogo = ParseUtil.checkNull( (String) session.getAttribute("SUBDOMAIN_LOGO"));
@@ -12,6 +12,8 @@
     if(Utility.isNullOrEmpty(sLogo)) {
         sLogo = "/img/logo.png";
     }
+
+
 
     UserBean loggedInUserBean = new UserBean();
     if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
@@ -25,7 +27,7 @@
 <div class="menu_bar">
     <div class="container">
         <div class="menu_logo">
-            <a href="#"><img src="<%=sLogo%>" alt=""></a>
+            <a href="<%=sHomeUrl%>"><img src="<%=sLogo%>" alt=""></a>
         </div>
         <div class="menu_links">
             <%

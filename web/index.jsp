@@ -181,7 +181,7 @@
                       </div>
                       <div class="col-sm-4 ">
                           <h2><i class="fa fa-dollar"></i>&nbsp;<i class="fa fa-shopping-cart"></i></h2>
-                          <h5>Invoices and Payment</h5>
+                          <h5>Invoices</h5>
                           <p>Create branded invoices online with links to download and email to clients.  </p>
                       </div>
                   </div>
@@ -201,7 +201,7 @@
                           &nbsp;
                       </div>
                       <div class="col-sm-6">
-                          <h1><i class="fa fa-gears"></i> New Features Coming Soon</h1>
+                          <h2><i class="fa fa-gears"></i> New Features Coming Soon</h2>
                           <p>Online Payments <br>Evernote Integration<br>RSVP by phone<br>Guest reminders by sms and emails.<br>And lots more..</p>
                       </div>
                       <div class="col-sm-3 ">
