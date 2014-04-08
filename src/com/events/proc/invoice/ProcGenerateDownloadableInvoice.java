@@ -1,5 +1,6 @@
 package com.events.proc.invoice;
 
+import com.events.bean.invoice.InvoicePdfRequestBean;
 import com.events.bean.invoice.InvoiceRequestBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Configuration;
@@ -56,8 +57,12 @@ public class ProcGenerateDownloadableInvoice   extends HttpServlet {
                         InvoiceRequestBean invoiceRequestBean = new InvoiceRequestBean();
                         invoiceRequestBean.setInvoiceId( sInvoiceId );
 
+                        InvoicePdfRequestBean invoicePdfRequestBean = new InvoicePdfRequestBean();
+                        invoicePdfRequestBean.setInvoiceId( sInvoiceId );
+                        invoicePdfRequestBean.setUserBean( loggedInUserBean );
+
                         BuildInvoicePdf buildInvoicePdf = new BuildInvoicePdf();
-                        buildInvoicePdf.buildInvoicePdf(invoiceRequestBean,loggedInUserBean );
+                        buildInvoicePdf.generateInvoicePdf( invoicePdfRequestBean );
 
                         AccessInvoicePdf accessInvoicePdf = new AccessInvoicePdf();
                         String fileUploadLocation = applicationConfig.get(Constants.FILE_UPLOAD_LOCATION);

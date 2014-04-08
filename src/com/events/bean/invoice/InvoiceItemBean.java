@@ -5,6 +5,7 @@ import com.events.common.ParseUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.xml.bind.annotation.XmlElement;
 import java.util.HashMap;
 
 /**
@@ -43,7 +44,69 @@ public class InvoiceItemBean {
     private Long quantity = 0L;
     private Double discountPercentage = 0.00;
     private Double taxPercentage = 0.00;
+    private Double total = 0.00;
 
+    private String quantityDisplay = Constants.EMPTY;
+    private String unitCostDisplay = Constants.EMPTY;
+    private String discountPercentageDisplay = Constants.EMPTY;
+    private String taxPercentageDisplay = Constants.EMPTY;
+    private String totalDisplay = Constants.EMPTY;
+
+    @XmlElement
+    public Double getTotal() {
+        return total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
+    }
+
+    @XmlElement
+    public String getQuantityDisplay() {
+        return quantityDisplay;
+    }
+
+    public void setQuantityDisplay(String quantityDisplay) {
+        this.quantityDisplay = quantityDisplay;
+    }
+
+    @XmlElement
+    public String getUnitCostDisplay() {
+        return unitCostDisplay;
+    }
+
+    public void setUnitCostDisplay(String unitCostDisplay) {
+        this.unitCostDisplay = unitCostDisplay;
+    }
+
+    @XmlElement
+    public String getDiscountPercentageDisplay() {
+        return discountPercentageDisplay;
+    }
+
+    public void setDiscountPercentageDisplay(String discountPercentageDisplay) {
+        this.discountPercentageDisplay = discountPercentageDisplay;
+    }
+
+    @XmlElement
+    public String getTaxPercentageDisplay() {
+        return taxPercentageDisplay;
+    }
+
+    public void setTaxPercentageDisplay(String taxPercentageDisplay) {
+        this.taxPercentageDisplay = taxPercentageDisplay;
+    }
+
+    @XmlElement
+    public String getTotalDisplay() {
+        return totalDisplay;
+    }
+
+    public void setTotalDisplay(String totalDisplay) {
+        this.totalDisplay = totalDisplay;
+    }
+
+    @XmlElement
     public String getInvoiceItemId() {
         return invoiceItemId;
     }
@@ -52,6 +115,7 @@ public class InvoiceItemBean {
         this.invoiceItemId = invoiceItemId;
     }
 
+    @XmlElement
     public String getInvoiceId() {
         return invoiceId;
     }
@@ -60,6 +124,7 @@ public class InvoiceItemBean {
         this.invoiceId = invoiceId;
     }
 
+    @XmlElement
     public String getItemName() {
         return itemName;
     }
@@ -68,6 +133,7 @@ public class InvoiceItemBean {
         this.itemName = itemName;
     }
 
+    @XmlElement
     public String getItemDescription() {
         return itemDescription;
     }
@@ -76,6 +142,7 @@ public class InvoiceItemBean {
         this.itemDescription = itemDescription;
     }
 
+    @XmlElement
     public Double getUnitCost() {
         return unitCost;
     }
@@ -84,6 +151,7 @@ public class InvoiceItemBean {
         this.unitCost = unitCost;
     }
 
+    @XmlElement
     public Long getQuantity() {
         return quantity;
     }
@@ -92,6 +160,7 @@ public class InvoiceItemBean {
         this.quantity = quantity;
     }
 
+    @XmlElement
     public Double getDiscountPercentage() {
         return discountPercentage;
     }
@@ -100,6 +169,7 @@ public class InvoiceItemBean {
         this.discountPercentage = discountPercentage;
     }
 
+    @XmlElement
     public Double getTaxPercentage() {
         return taxPercentage;
     }

@@ -1,5 +1,7 @@
 package com.events.bean.vendors;
 
+import com.events.bean.users.UserBean;
+import com.events.bean.users.UserInfoBean;
 import com.events.bean.vendors.website.VendorWebsiteBean;
 import com.events.common.Constants;
 
@@ -11,9 +13,54 @@ import com.events.common.Constants;
  * To change this template use File | Settings | File Templates.
  */
 public class VendorResponseBean {
+    private String vendorId = Constants.EMPTY;
+    private String userId = Constants.EMPTY;
+    private UserBean userBean = new UserBean();
+    private String userInfoId = Constants.EMPTY;
+    private UserInfoBean userInfoBean = new UserInfoBean();
     private String subDomain = Constants.EMPTY;
     private String vendorWebsiteId = Constants.EMPTY;
     private VendorWebsiteBean vendorWebsiteBean = new VendorWebsiteBean();
+
+    public String getVendorId() {
+        return vendorId;
+    }
+
+    public void setVendorId(String vendorId) {
+        this.vendorId = vendorId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public UserBean getUserBean() {
+        return userBean;
+    }
+
+    public void setUserBean(UserBean userBean) {
+        this.userBean = userBean;
+    }
+
+    public String getUserInfoId() {
+        return userInfoId;
+    }
+
+    public void setUserInfoId(String userInfoId) {
+        this.userInfoId = userInfoId;
+    }
+
+    public UserInfoBean getUserInfoBean() {
+        return userInfoBean;
+    }
+
+    public void setUserInfoBean(UserInfoBean userInfoBean) {
+        this.userInfoBean = userInfoBean;
+    }
 
     public VendorWebsiteBean getVendorWebsiteBean() {
         return vendorWebsiteBean;

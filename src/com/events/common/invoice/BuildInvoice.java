@@ -32,16 +32,22 @@ public class BuildInvoice {
             InvoiceBean invoiceBean = invoiceRequestBean.getInvoiceBean();
             if(invoiceBean!=null){
                 String sInvoiceDate = invoiceBean.getHumanInvoiceDate();
-                DateObject invoiceDate = DateSupport.convertTime( sInvoiceDate + " 00:00 AM",
-                        DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE), "dd MMMMM, yyyy hh:mm aaa",
-                        DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE), Constants.DATE_PATTERN_TZ);
-                invoiceBean.setInvoiceDate(invoiceDate.getMillis() );
+                if(!Utility.isNullOrEmpty(sInvoiceDate)){
+                    DateObject invoiceDate = DateSupport.convertTime( sInvoiceDate + " 00:00 AM",
+                            DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE), "dd MMMMM, yyyy hh:mm aaa",
+                            DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE), Constants.DATE_PATTERN_TZ);
+                    invoiceBean.setInvoiceDate(invoiceDate.getMillis() );
+                }
+
 
                 String sInvoiceDueDate = invoiceBean.getHumanDueDate();
-                DateObject dueDate = DateSupport.convertTime( sInvoiceDueDate + " 00:00 AM",
-                        DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE), "dd MMMMM, yyyy hh:mm aaa",
-                        DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE), Constants.DATE_PATTERN_TZ);
-                invoiceBean.setDueDate(dueDate.getMillis() );
+                if(!Utility.isNullOrEmpty(sInvoiceDueDate)){
+                    DateObject dueDate = DateSupport.convertTime( sInvoiceDueDate + " 00:00 AM",
+                            DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE), "dd MMMMM, yyyy hh:mm aaa",
+                            DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE), Constants.DATE_PATTERN_TZ);
+                    invoiceBean.setDueDate(dueDate.getMillis() );
+                }
+
 
 
                 if(Utility.isNullOrEmpty(invoiceBean.getInvoiceId())) {

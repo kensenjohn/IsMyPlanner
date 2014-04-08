@@ -46,7 +46,7 @@ public class ProcDownloadInvoice   extends HttpServlet {
                     } else {
                         InvoiceRequestBean invoiceRequestBean = new InvoiceRequestBean();
                         invoiceRequestBean.setInvoiceId( sInvoiceId );
-
+/*
                         AccessInvoicePdf accessInvoicePdf = new AccessInvoicePdf();
                         String sInvoicePath = ParseUtil.checkNull( accessInvoicePdf.getInvoicePdfLocation(loggedInUserBean, sInvoiceId )  );
 
@@ -67,7 +67,7 @@ public class ProcDownloadInvoice   extends HttpServlet {
                             out.flush();
                         } else {
 
-                        }
+                        }*/
 
                     }
 

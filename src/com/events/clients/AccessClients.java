@@ -76,36 +76,48 @@ public class AccessClients {
         if(clientRequestBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId()) && !Utility.isNullOrEmpty(clientRequestBean.getVendorId())  ) {
 
             ClientBean clientBean = getClientDataByVendorAndClient(clientRequestBean);
+
             if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId()) ) {
-
-                UserRequestBean userRequestBean = new UserRequestBean();
-                userRequestBean.setParentId(clientBean.getClientId());
-
-                AccessUsers accessUsers = new AccessUsers();
-                UserBean userBean = accessUsers.getUserByParentId(userRequestBean);
-
-                if(userBean!=null &&  !Utility.isNullOrEmpty(userBean.getUserInfoId()))  {
-                    userRequestBean.setUserInfoId( userBean.getUserInfoId() );
-                    UserInfoBean userInfoBean = accessUsers.getUserInfoFromInfoId(userRequestBean);
-
-                    clientResponseBean.setClientId(clientBean.getClientId());
-                    clientResponseBean.setClientBean(clientBean);
-
-                    clientResponseBean.setUserId( userBean.getUserId() );
-                    clientResponseBean.setUserBean(userBean);
-
-                    clientResponseBean.setUserInfoId( userInfoBean.getUserInfoId() );
-                    clientResponseBean.setUserInfoBean(userInfoBean);
-                } else {
-                    appLogging.info("Could not find a valid User Bean data for client - "  + clientRequestBean  + clientBean );
-                }
-            } else {
-                appLogging.info("Could not find a valid Client data for client request : " + clientRequestBean );
+                clientResponseBean = getClientContactInfo(clientBean);
+            }  else {
+                appLogging.info("Could not find a valid Client data for client request : " + clientBean );
             }
+
         } else {
             appLogging.error("Invalid request  : " + ParseUtil.checkNullObject(clientRequestBean));
         }
         return  clientResponseBean;
+    }
+    public ClientResponseBean getClientContactInfo(ClientBean clientBean)  {
+        ClientResponseBean clientResponseBean =new ClientResponseBean();
+        if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId()) ) {
+
+
+            UserRequestBean userRequestBean = new UserRequestBean();
+            userRequestBean.setParentId(clientBean.getClientId());
+
+            AccessUsers accessUsers = new AccessUsers();
+            UserBean userBean = accessUsers.getUserByParentId(userRequestBean);
+
+            if(userBean!=null &&  !Utility.isNullOrEmpty(userBean.getUserInfoId()))  {
+                userRequestBean.setUserInfoId( userBean.getUserInfoId() );
+                UserInfoBean userInfoBean = accessUsers.getUserInfoFromInfoId(userRequestBean);
+
+                clientResponseBean.setClientId(clientBean.getClientId());
+                clientResponseBean.setClientBean(clientBean);
+
+                clientResponseBean.setUserId( userBean.getUserId() );
+                clientResponseBean.setUserBean(userBean);
+
+                clientResponseBean.setUserInfoId( userInfoBean.getUserInfoId() );
+                clientResponseBean.setUserInfoBean(userInfoBean);
+            } else {
+                appLogging.info("Could not find a valid User Bean data for client - "  + clientBean );
+            }
+        } else {
+            appLogging.info("Could not find a valid Client data for client request : " + clientBean );
+        }
+        return clientResponseBean;
     }
 
     public JSONObject convertAllClientsSummaryToJson(HashMap<Integer,ClientBean> hmClientBean) {

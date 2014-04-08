@@ -1,5 +1,6 @@
 package com.events.common.invoice;
 
+import com.events.bean.invoice.InvoicePdfRequestBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
@@ -16,16 +17,18 @@ import com.events.common.Utility;
 public class AccessInvoicePdf {
     Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
-    public String getInvoicePdfLocation(UserBean userBean, String invoiceId){
+    public String getInvoicePdfLocation(InvoicePdfRequestBean invoicePdfRequestBean ){
         String invoiceFilePath = Constants.EMPTY;
-        if(!Utility.isNullOrEmpty(invoiceId)) {
+        if(invoicePdfRequestBean!=null ) {
+            UserBean userBean = invoicePdfRequestBean.getUserBean();
+            String invoiceId = invoicePdfRequestBean.getInvoiceId() ;
+            if(userBean!=null && !Utility.isNullOrEmpty(invoiceId)) {
+                String fileUploadLocation = applicationConfig.get(Constants.FILE_UPLOAD_LOCATION);
 
+                String sFolderPath = fileUploadLocation + "/" + getUserFolderName(userBean,fileUploadLocation) ;
 
-            String fileUploadLocation = applicationConfig.get(Constants.FILE_UPLOAD_LOCATION);
-
-            String sFolderPath = fileUploadLocation + "/" + getUserFolderName(userBean,fileUploadLocation) ;
-
-            invoiceFilePath = sFolderPath + "/" + invoiceId+ ".pdf";
+                invoiceFilePath = sFolderPath + "/" + invoiceId+ ".pdf";
+            }
         }
         return invoiceFilePath;
     }

@@ -6,7 +6,7 @@
 <%@ page import="com.events.common.Perm" %>
 <%
     String sLogo = Constants.EMPTY;
-    if( session.getAttribute("SUBDOMAIN_COLORS") != null ) {
+    if( session.getAttribute("SUBDOMAIN_LOGO") != null ) {
         sLogo = ParseUtil.checkNull( (String) session.getAttribute("SUBDOMAIN_LOGO"));
     }
     if(Utility.isNullOrEmpty(sLogo)) {

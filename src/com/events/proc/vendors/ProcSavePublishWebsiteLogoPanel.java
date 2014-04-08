@@ -70,6 +70,9 @@ public class ProcSavePublishWebsiteLogoPanel extends HttpServlet {
 
                         if(saveVendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(saveVendorWebsiteResponseBean.getVendorWebsiteId())
                                 && publishedvendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(publishedvendorWebsiteResponseBean.getVendorWebsiteId())) {
+
+                            request.getSession().removeAttribute("SUBDOMAIN_TIME");
+
                             jsonResponseObj.put("vendorwebsite_id",saveVendorWebsiteResponseBean.getVendorWebsiteId());
                             Text okText = new OkText("The logo for the website was saved successfully.","status_mssg") ;
                             arrOkText.add(okText);

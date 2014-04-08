@@ -1,9 +1,6 @@
 package com.events.proc.invoice;
 
-import com.events.bean.invoice.InvoiceBean;
-import com.events.bean.invoice.InvoiceItemBean;
-import com.events.bean.invoice.InvoiceRequestBean;
-import com.events.bean.invoice.InvoiceResponseBean;
+import com.events.bean.invoice.*;
 import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Configuration;
@@ -88,8 +85,22 @@ public class ProcLoadInvoice   extends HttpServlet {
 
                                         invoiceRequestBean.setInvoiceId( sInvoiceId );
 
+                                        String sLogo = Constants.EMPTY;
+                                        if( request.getSession().getAttribute("SUBDOMAIN_LOGO") != null ) {
+                                            sLogo = ParseUtil.checkNull( (String) request.getSession().getAttribute("SUBDOMAIN_LOGO"));
+                                        }
+                                        if(Utility.isNullOrEmpty(sLogo)) {
+                                            sLogo = "/img/logo.png";
+                                        }
+
+
+                                        InvoicePdfRequestBean invoicePdfRequestBean = new InvoicePdfRequestBean();
+                                        invoicePdfRequestBean.setInvoiceId( sInvoiceId );
+                                        invoicePdfRequestBean.setUserBean( loggedInUserBean );
+                                        invoicePdfRequestBean.setLogo( sLogo );
+
                                         BuildInvoicePdf buildInvoicePdf = new BuildInvoicePdf();
-                                        buildInvoicePdf.buildInvoicePdf(invoiceRequestBean,loggedInUserBean );
+                                        buildInvoicePdf.generateInvoicePdf( invoicePdfRequestBean );
 
                                         AccessInvoicePdf accessInvoicePdf = new AccessInvoicePdf();
                                         String fileUploadLocation = applicationConfig.get(Constants.FILE_UPLOAD_LOCATION);

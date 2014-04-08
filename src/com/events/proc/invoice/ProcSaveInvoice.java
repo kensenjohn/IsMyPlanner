@@ -1,9 +1,6 @@
 package com.events.proc.invoice;
 
-import com.events.bean.invoice.InvoiceBean;
-import com.events.bean.invoice.InvoiceItemBean;
-import com.events.bean.invoice.InvoiceRequestBean;
-import com.events.bean.invoice.InvoiceResponseBean;
+import com.events.bean.invoice.*;
 import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.vendors.VendorBean;
@@ -73,6 +70,14 @@ public class ProcSaveInvoice   extends HttpServlet {
                         responseStatus = RespConstants.Status.ERROR;
                     } else if(strItemIdArray ==null || (strItemIdArray!=null && strItemIdArray.length<=0 )) {
                         Text errorText = new ErrorText("Please add at least one item to the invoice .","err_mssg") ;
+                        arrErrorText.add(errorText);
+                        responseStatus = RespConstants.Status.ERROR;
+                    } else if(!Utility.isNullOrEmpty(sTermsAndConditions) && sTermsAndConditions.length()>100) {
+                        Text errorText = new ErrorText("Please reduce the number of characters in the Terms and Conditions","err_mssg") ;
+                        arrErrorText.add(errorText);
+                        responseStatus = RespConstants.Status.ERROR;
+                    } else if(!Utility.isNullOrEmpty(sNote) && sNote.length()>100) {
+                        Text errorText = new ErrorText("Please reduce the number of characters in the Note.","err_mssg") ;
                         arrErrorText.add(errorText);
                         responseStatus = RespConstants.Status.ERROR;
                     }else {
@@ -158,8 +163,18 @@ public class ProcSaveInvoice   extends HttpServlet {
 
                                 invoiceRequestBean.setInvoiceId( sInvoiceId );
 
+                                String sLogo = Constants.EMPTY;
+                                if( request.getSession().getAttribute("SUBDOMAIN_LOGO") != null ) {
+                                    sLogo = ParseUtil.checkNull( (String) request.getSession().getAttribute("SUBDOMAIN_LOGO"));
+                                }
+
+                                InvoicePdfRequestBean invoicePdfRequestBean = new InvoicePdfRequestBean();
+                                invoicePdfRequestBean.setInvoiceId( sInvoiceId );
+                                invoicePdfRequestBean.setUserBean( loggedInUserBean );
+                                invoicePdfRequestBean.setLogo( sLogo );
+
                                 BuildInvoicePdf buildInvoicePdf = new BuildInvoicePdf();
-                                buildInvoicePdf.buildInvoicePdf(invoiceRequestBean,loggedInUserBean );
+                                buildInvoicePdf.generateInvoicePdf( invoicePdfRequestBean );
 
                                 AccessInvoicePdf accessInvoicePdf = new AccessInvoicePdf();
                                 String fileUploadLocation = applicationConfig.get(Constants.FILE_UPLOAD_LOCATION);

@@ -44,16 +44,14 @@ public class UserIdentifier implements Filter {
         String contextPath = request.getContextPath();
 
         StringBuffer requestURL = request.getRequestURL();
-        String sLocalName = ParseUtil.checkNull(request.getLocalName());
         String sQueryString = request.getQueryString();
         String sSubDomain = ParseUtil.checkNull(request.getParameter("subdomain"));
 
-        appLogging.info("requestURL: " + requestURL + " - sLocalName: " + sLocalName + " -  APPLICATION_DOMAIN : " + APPLICATION_DOMAIN + " sSubDomain : " + sSubDomain);
+        appLogging.info("requestURL: " + requestURL  + " -  APPLICATION_DOMAIN : " + APPLICATION_DOMAIN + " sSubDomain : " + sSubDomain);
         if(!Utility.isNullOrEmpty(sSubDomain) && !sSubDomain.startsWith("www") ) {
 
 
 
-            //String[] arraySubDomain = sLocalName.split("." + APPLICATION_DOMAIN);
             AccessVendorWebsite  accessVendorWebsite = new AccessVendorWebsite();
             boolean isShowRegistrationForm=true;
             //for(String subDomain : arraySubDomain ) {
