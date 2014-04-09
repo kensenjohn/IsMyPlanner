@@ -90,7 +90,7 @@ $(function () {
                     $('#logo_imagehost').val( varDataResult.imagehost);
                     $('#logo_foldername').val(varDataResult.foldername);
 
-                    var imagePath = varDataResult.imagehost+'/'+varDataResult.foldername+'/'+varDataResult.name;
+                    var imagePath = varDataResult.imagehost+'/'+varDataResult.bucket+'/'+varDataResult.foldername+'/'+varDataResult.name;
                     createLogoImage(imagePath, 'logo_image_name');
                     enablePreviewOfLogo();
                 } else {

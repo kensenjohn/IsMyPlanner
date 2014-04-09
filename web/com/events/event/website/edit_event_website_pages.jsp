@@ -1230,6 +1230,7 @@
             this.varPageType = this.model.get('bb_page_type');
             this.varFeatures = this.model.get('bb_event_website_page_features');
             this.varImageHost = this.model.get('bb_image_host');
+            this.varBucket = this.model.get('bb_bucket');
             this.varImageFolderLocation = this.model.get('bb_image_folder_location');
 
         },
@@ -1251,7 +1252,7 @@
                 } else {
                     //welcome_banner_image_name
                     if( this.varFeatures[key]!=undefined &&  this.varFeatures[key]!='') {
-                        var imagePath = this.varImageHost + '/' + this.varImageFolderLocation + '/' +  this.varFeatures[key];
+                        var imagePath = this.varImageHost  +  '/' + this.varBucket +  '/' + this.varImageFolderLocation + '/' +  this.varFeatures[key];
                         createImage(imagePath, this.varPageType+'_'+key);
                         enableImagePreview(imagePath,this.varPageType+'_'+key);
 
@@ -1269,6 +1270,7 @@
             this.varEventParty = this.model.get('bb_event_party');
             this.varEventPartyPage = this.model.get('bb_event_party_page');
             this.varImageHost = this.model.get('bb_image_host');
+            this.varBucket = this.model.get('bb_bucket');
             this.varImageFolderLocation = this.model.get('bb_image_folder_location');
 
 
@@ -1302,7 +1304,7 @@
                     var varUploadedImage = varCoupleEventParty.image_uploaded;
 
 
-                    var imagePath = this.varImageHost+'/'+this.varImageFolderLocation+'/'+varUploadedImage.filename;
+                    var imagePath = this.varImageHost  +'/'+ this.varBucket +'/'+this.varImageFolderLocation+'/'+varUploadedImage.filename;
                     createImage(imagePath, 'partner'+varPartnerPos+'_image_name');
 
                     enableImagePreview(imagePath,'partner'+varPartnerPos+'_image_name');
@@ -1410,6 +1412,7 @@
             this.varEventParty = this.model.get('bb_event_party');
             this.varEventPartyPage = this.model.get('bb_event_party_page');
             this.varImageHost = this.model.get('bb_image_host');
+            this.varBucket = this.model.get('bb_bucket');
             this.varImageFolderLocation = this.model.get('bb_image_folder_location');
             this.varPageType = this.model.get('bb_page_type');
 
@@ -1794,6 +1797,7 @@
             'bb_page_type' : varJsonResponse.page_type,
             'bb_event_website_page_features' : varJsonResponse.event_website_page_feature ,
             'bb_image_host' : varJsonResponse.image_host,
+            'bb_bucket' : varJsonResponse.bucket,
             'bb_image_folder_location' : varJsonResponse.image_folder_location ,
             'bb_event_party' : varJsonResponse.event_party
         });
@@ -1807,6 +1811,7 @@
             'bb_event_party' : varJsonResponse.event_party,
             'bb_event_party_page' : varJsonResponse.event_website_page,
             'bb_image_host' : varJsonResponse.image_host ,
+            'bb_bucket' : varJsonResponse.bucket,
             'bb_image_folder_location' : varJsonResponse.image_folder_location
         });
         var websitePageCouplesView = new WebsitePageCouplesView({model:this.websitePageCouplesModel});
@@ -1819,6 +1824,7 @@
             'bb_event_party' : varJsonResponse.event_party,
             'bb_event_party_page' : varJsonResponse.event_website_page,
             'bb_image_host' : varJsonResponse.image_host ,
+            'bb_bucket' : varJsonResponse.bucket,
             'bb_image_folder_location' : varJsonResponse.image_folder_location ,
             'bb_page_type' : varJsonResponse.page_type
         });
@@ -2059,7 +2065,7 @@
 
                     if(varDataResult.success) {
                         displayMssgBoxAlert("The image was successfully uploaded", false);
-                        var imagePath = varDataResult.imagehost+'/'+varDataResult.foldername+'/'+varDataResult.name;
+                        var imagePath = varDataResult.imagehost+'/'+varDataResult.bucket +'/'+varDataResult.foldername+'/'+varDataResult.name;
                         $('#couples_partner1_upload_id').val(varDataResult.upload_image.upload_id);
                         createImage(imagePath, 'partner1_image_name');
 
@@ -2097,7 +2103,7 @@
                         //$('#banner_imagehost').val( varDataResult.imagehost);
                         //$('#banner_foldername').val(varDataResult.foldername);
                         //couples_partner1_upload_id
-                        var imagePath = varDataResult.imagehost+'/'+varDataResult.foldername+'/'+varDataResult.name;
+                        var imagePath = varDataResult.imagehost+'/'+varDataResult.bucket+'/'+varDataResult.foldername+'/'+varDataResult.name;
                         //console.log(varDataResult.upload_image.upload_id);
                         $('#couples_partner2_upload_id').val(varDataResult.upload_image.upload_id);
                         createImage(imagePath, 'partner2_image_name');

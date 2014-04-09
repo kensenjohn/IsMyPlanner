@@ -73,7 +73,10 @@ public class ProcUploadImage extends HttpServlet {
                         } else if (!item.isFormField()) {
                             Folder folder = new Folder();
                             String sUserFolderName = folder.getFolderForUser( loggedInUserBean, imageUploadLocation );
-                            String sFolderPath = imageUploadLocation + "/" + sUserFolderName ;
+                            if(!Utility.isNullOrEmpty(imageUploadLocation) && imageUploadLocation.endsWith("/")) {
+                                imageUploadLocation = imageUploadLocation + "/";
+                            }
+                            String sFolderPath = imageUploadLocation + sUserFolderName ;
 
                             String sRandomFilename = Utility.getNewGuid() + "_" + item.getName();
                             File  file = new  File(sFolderPath,sRandomFilename );
@@ -81,8 +84,11 @@ public class ProcUploadImage extends HttpServlet {
 
                             UploadRequestBean uploadRequestBean = new UploadRequestBean();
                             uploadRequestBean.setFilename( sRandomFilename );
-                            uploadRequestBean.setPath( sFolderPath );
+                            uploadRequestBean.setPath( sUserFolderName );
 
+                            folder.createS3FolderForUser( sFolderPath, sRandomFilename, sUserFolderName );
+
+                            item.delete();
                             UploadFile uploadFile = new UploadFile();
                             UploadResponseBean uploadResponseBean = uploadFile.saveUploadFileInfo(uploadRequestBean);
                             if(uploadResponseBean!=null && !Utility.isNullOrEmpty(uploadResponseBean.getUploadId())){
@@ -96,6 +102,7 @@ public class ProcUploadImage extends HttpServlet {
                                 uploadRequestBean.setFolderName(sUserFolderName);
                                 uploadRequestBean.setImageHost( imageHost );
                                 uploadRequestBean.setImageSize( item.getSize() );
+                                uploadRequestBean.setS3Bucket( applicationConfig.get(Constants.AMAZON.S3_BUCKET.getPropName())  );
                                 uploadRequestBean.setJsonResponseObj(jsonResponseObj );
                                 JSONObject jsono = UploadFile.generateSuccessUploadJson(uploadRequestBean);
                                 json.put(jsono);

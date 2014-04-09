@@ -113,6 +113,7 @@ public class ProcLoadEventWebsiteFeatureParty extends HttpServlet {
                                 jsonResponseObj.put("event_website_page" , eventWebsitePageBean.toJson());
                                 jsonResponseObj.put("page_type" , sPageType );
                                 jsonResponseObj.put("image_host", Utility.getImageUploadHost() );
+                                jsonResponseObj.put("bucket", Utility.getS3Bucket() );
                                 jsonResponseObj.put("image_folder_location", featureBean.getValue() );
 
                                 Text okText = new OkText("Website Themes loaded","status_mssg") ;

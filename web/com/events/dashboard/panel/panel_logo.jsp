@@ -65,6 +65,7 @@
                         </div>
                         <form id="frm_website_logo">
                             <input type="hidden" name="logo_imagehost" id="logo_imagehost" value=""/>
+                            <input type="hidden" name="logo_bucket" id="logo_bucket" value=""/>
                             <input type="hidden" name="logo_foldername" id="logo_foldername" value=""/>
                             <input type="hidden" name="logo_imagename" id="logo_imagename" value=""/>
                             <input type="hidden" name="vendorwebsite_id" id="logo_vendorwebsite_id" value=""/>

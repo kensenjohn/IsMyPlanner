@@ -73,6 +73,7 @@ public class ProcLoadVendorWebsiteInfo extends HttpServlet {
                         }
                         String imageHost = ParseUtil.checkNull(applicationConfig.get(Constants.IMAGE_HOST));
                         jsonResponseObj.put("imagehost", imageHost );
+                        jsonResponseObj.put("bucket", ParseUtil.checkNull(applicationConfig.get(Constants.AMAZON.S3_BUCKET.getPropName())) );
 
                         Folder folder = new Folder();
                         String sUserFolderName = folder.getFolderName( Constants.USER_TYPE.VENDOR, vendorBean.getVendorId() );

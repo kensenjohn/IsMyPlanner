@@ -15,6 +15,7 @@
 
 
     String imageHost = Utility.getImageUploadHost();
+    String sBucket = Utility.getS3Bucket();
     String sFolderName = Constants.EMPTY;
     HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmVendorWebsiteFeatureBean = new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE, VendorWebsiteFeatureBean>();
     boolean isVendorSite =false;
@@ -39,7 +40,7 @@
     if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
         VendorWebsiteFeatureBean vendorWebsiteFeatureBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_landingpagephoto);
         if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue()) && !Utility.isNullOrEmpty(sFolderName) && !Utility.isNullOrEmpty(imageHost)){
-            sLandingPagePhoto =   imageHost + "/" +  sFolderName + "/" +vendorWebsiteFeatureBean.getValue();
+            sLandingPagePhoto =   imageHost + "/" + sBucket + "/" +  sFolderName + "/" +vendorWebsiteFeatureBean.getValue();
         }
     }
     if(Utility.isNullOrEmpty(sLandingPagePhoto)){

@@ -150,8 +150,9 @@ $(function () {
                     $("#landingpage_picture").val( varDataResult.name );
                     $('#landingpage_imagehost').val( varDataResult.imagehost);
                     $('#llandingpage_foldername').val(varDataResult.foldername);
+                    $('#llandingpage_bucket').val(varDataResult.bucket);
                     displayMssgBoxAlert("The picture was successfully uploaded", false);
-                    var imagePath = varDataResult.imagehost+'/'+varDataResult.foldername+'/'+varDataResult.name;
+                    var imagePath = varDataResult.imagehost+'/'+varDataResult.bucket+'/'+varDataResult.foldername+'/'+varDataResult.name;
                     createLandingPageImage(imagePath, 'landingpage_image_name');
                     enablePreviewOfLandingPage();
                 } else {

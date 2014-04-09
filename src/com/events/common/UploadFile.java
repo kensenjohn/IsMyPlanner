@@ -48,6 +48,7 @@ public class UploadFile {
             jsono.put("name", ParseUtil.checkNull( uploadRequestBean.getFilename() ) );
             jsono.put("foldername", ParseUtil.checkNull( uploadRequestBean.getFolderName()) );
             jsono.put("imagehost", ParseUtil.checkNull( uploadRequestBean.getImageHost()) );
+            jsono.put("bucket", ParseUtil.checkNull( uploadRequestBean.getS3Bucket()) );
             jsono.put("size", ParseUtil.LToS( uploadRequestBean.getImageSize()) );
             jsono.put("success", true );
             jsono.put("upload_image", uploadRequestBean.getJsonResponseObj() );

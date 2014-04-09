@@ -117,10 +117,11 @@ public class UserIdentifier implements Filter {
                                 VendorWebsiteFeatureBean vendorWebsiteFeatureBean = hmVendorWebsiteFeatureBean.get( Constants.VENDOR_WEBSITE_FEATURETYPE.published_logo );
                                 if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue()))  {
                                     String imageHost = Utility.getImageUploadHost();
+                                    String sBucket = Utility.getS3Bucket();
                                     String sFolderName = ParseUtil.checkNull(vendorBean.getFolder());
 
 
-                                    httpNewSession.setAttribute("SUBDOMAIN_LOGO", imageHost + "/" +  sFolderName + "/" + vendorWebsiteFeatureBean.getValue() );
+                                    httpNewSession.setAttribute("SUBDOMAIN_LOGO", imageHost + "/" + sBucket + "/" +  sFolderName + "/" + vendorWebsiteFeatureBean.getValue() );
                                 }
                             }
 

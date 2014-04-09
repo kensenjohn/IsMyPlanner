@@ -88,6 +88,12 @@ public class Utility {
         return imageHost;
     }
 
+    public static String getS3Bucket() {
+        Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+        String s3Bucket = ParseUtil.checkNull(applicationConfig.get(Constants.AMAZON.S3_BUCKET.getPropName()));
+        return s3Bucket;
+    }
+
     public static String getFileUploadHost() {
         Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
         String fileHost = ParseUtil.checkNull(applicationConfig.get(Constants.FILE_HOST));

@@ -18,6 +18,7 @@ public class UploadRequestBean {
 
     private String folderName = Constants.EMPTY;
     private String imageHost = Constants.EMPTY;
+    private String s3Bucket = Constants.EMPTY;
     private Long imageSize = 0L;
 
     private JSONObject jsonResponseObj = new JSONObject();
@@ -28,6 +29,14 @@ public class UploadRequestBean {
 
     public void setJsonResponseObj(JSONObject jsonResponseObj) {
         this.jsonResponseObj = jsonResponseObj;
+    }
+
+    public String getS3Bucket() {
+        return s3Bucket;
+    }
+
+    public void setS3Bucket(String s3Bucket) {
+        this.s3Bucket = s3Bucket;
     }
 
     public String getUploadId() {

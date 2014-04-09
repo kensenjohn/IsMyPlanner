@@ -65,6 +65,7 @@ public class ProcUploadEventPartyImage extends HttpServlet {
         }
 
         String imageHost = Utility.getImageUploadHost();
+        String s3Bucket = Utility.getS3Bucket();
 
         ServletFileUpload uploadHandler = new ServletFileUpload(new DiskFileItemFactory());
         PrintWriter writer = response.getWriter();
@@ -134,6 +135,11 @@ public class ProcUploadEventPartyImage extends HttpServlet {
                             uploadRequestBean.setFilename( sRandomFilename );
                             uploadRequestBean.setPath( sFolderPath );
 
+                            Folder folder = new Folder();
+                            folder.createS3FolderForUser( sFolderPath, sRandomFilename, sEventImageUploadFolder );
+
+                            fileToUpload.delete();
+
                             UploadFile uploadFile = new UploadFile();
                             UploadResponseBean uploadResponseBean = uploadFile.saveUploadFileInfo(uploadRequestBean);
 
@@ -149,6 +155,7 @@ public class ProcUploadEventPartyImage extends HttpServlet {
 
                                 uploadRequestBean.setFolderName( sEventImageUploadFolder );
                                 uploadRequestBean.setImageHost( imageHost );
+                                uploadRequestBean.setS3Bucket( s3Bucket );
                                 uploadRequestBean.setImageSize( fileToUpload.getSize() );
                                 uploadRequestBean.setJsonResponseObj(jsonResponseObj );
                                 JSONObject jsono = UploadFile.generateSuccessUploadJson(uploadRequestBean);

@@ -183,6 +183,7 @@
 
                     var varImageHost = jsonResponseObj.imagehost;
                     var varFolderName = jsonResponseObj.foldername;
+                    var varBucket = jsonResponseObj.bucket;
 
                     /*=====Website URL Domain Panel======= {Start}*/
                     var varSubdomainName = jsonResponseObj.subdomain_name;
@@ -224,12 +225,13 @@
                         $('#logo_imagename').val(varLogo);
                     }
                     $('#logo_imagehost').val(varImageHost);
+                    $('#logo_bucket').val(varBucket);
                     $('#logo_foldername').val(varFolderName);
                     cachedScript( "/js/dashboard/set_logo.js" ).done(function( script, textStatus ) {
                         setupLogoPanel();
                     });
-                    if(varImageHost!='' && varFolderName!='' && varLogo!='' && varLogo!=undefined){
-                        var imagePath = varImageHost+'/'+varFolderName+'/'+varLogo;
+                    if(varImageHost!='' && varFolderName!=''&& varBucket!='' && varLogo!='' && varLogo!=undefined){
+                        var imagePath = varImageHost+'/'+varBucket+'/'+varFolderName+'/'+varLogo;
                         createOurWebsiteImage(imagePath, 'logo_image_name');
                     }
 
@@ -242,6 +244,7 @@
                         $('#landingpage_picture').val( varLandingPagePhoto );
                     }
                     $('#landingpage_imagehost').val(varImageHost);
+                    $('#landingpage_bucket').val(varBucket);
                     $('#landingpage_foldername').val(varFolderName);
 
 
@@ -261,8 +264,8 @@
                     });
 
 
-                    if(varImageHost!='' && varFolderName!='' && varLandingPagePhoto!='' && varLandingPagePhoto!=undefined){
-                        var imagePath = varImageHost+'/'+varFolderName+'/'+varLandingPagePhoto;
+                    if(varImageHost!='' && varFolderName!=''&& varBucket!=''  && varLandingPagePhoto!='' && varLandingPagePhoto!=undefined){
+                        var imagePath = varImageHost+'/'+varBucket+'/'+varFolderName+'/'+varLandingPagePhoto;
                         createOurWebsiteImage(imagePath, 'landingpage_image_name');
                     }
 

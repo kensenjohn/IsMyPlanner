@@ -82,6 +82,7 @@ public class ProcLoadEventWebsitePageFeatures extends HttpServlet {
                                 jsonResponseObj.put("event_website_page" , eventWebsitePageBean.toJson());
                                 jsonResponseObj.put("page_type" , sPageType );
                                 jsonResponseObj.put("image_host", Utility.getImageUploadHost() );
+                                jsonResponseObj.put("bucket", Utility.getS3Bucket() );
 
                                 EventRequestBean eventRequestBean = new EventRequestBean();
                                 eventRequestBean.setEventId(sEventId);

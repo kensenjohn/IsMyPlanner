@@ -1,5 +1,9 @@
 package com.events.common;
 
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
 import com.events.bean.users.UserBean;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
@@ -7,7 +11,8 @@ import com.events.vendors.AccessVendors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.io.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +23,10 @@ import java.io.File;
  */
 public class Folder {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
+    Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+    private final String AMAZON_ACCESS_KEY = applicationConfig.get(Constants.AMAZON.ACCESS_KEY.getPropName());
+    private final String AMAZON_ACCESS_SECRET = applicationConfig.get(Constants.AMAZON.SECRET_KEY.getPropName());
+    private final String AMAZON_S3_BUCKET = applicationConfig.get(Constants.AMAZON.S3_BUCKET.getPropName());
 
     public boolean createFolderForUser(String sFolderPath) {
         boolean isFolderCreated = false;
@@ -27,6 +36,25 @@ public class Folder {
                 isFolderCreated = folderLocation.mkdir();
             } catch (Exception e) {
                 appLogging.error("Was not able to create folder : sFolderPath : " + ParseUtil.checkNull(sFolderPath) );
+            }
+        }
+        return isFolderCreated;
+    }
+    public boolean createS3FolderForUser(String sFolderPath, String sRandomFilename, String sUserFolderName ) throws FileNotFoundException {
+        boolean isFolderCreated = false;
+        appLogging.info( "S3 sFolderPath : " + sFolderPath );
+        if( !Utility.isNullOrEmpty(sFolderPath) ) {
+            // Set AWS access credentials
+            AmazonS3Client client = new AmazonS3Client(new BasicAWSCredentials(AMAZON_ACCESS_KEY,AMAZON_ACCESS_SECRET));
+
+            FileInputStream stream = new FileInputStream(sFolderPath+"/"+sRandomFilename);
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            PutObjectRequest putObjectRequest = new PutObjectRequest(AMAZON_S3_BUCKET, sUserFolderName+"/"+sRandomFilename, stream, objectMetadata);
+            PutObjectResult putObjectResult = client.putObject(putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead));
+
+            appLogging.info( "putObjectResult : " + putObjectResult.getETag() );
+            if(putObjectResult!=null){
+                isFolderCreated = true;
             }
         }
         return isFolderCreated;

@@ -258,7 +258,7 @@
 
                     if(varDataResult.success) {
                         displayMssgBoxAlert("The image was successfully uploaded", false);
-                        var imagePath = varDataResult.imagehost+'/'+varDataResult.foldername+'/'+varDataResult.name;
+                        var imagePath = varDataResult.imagehost+'/'+varDataResult.bucket+'/'+varDataResult.foldername+'/'+varDataResult.name;
                         $('#party_image_upload_id').val(varDataResult.upload_image.upload_id);
                         createImage(imagePath, 'party_image_name');
 

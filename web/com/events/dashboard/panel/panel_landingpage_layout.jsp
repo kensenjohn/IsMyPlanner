@@ -79,6 +79,7 @@
                                                         </div>
                                                         <form id="frm_landingpage_image">
                                                             <input type="hidden" name="landingpage_imagehost" id="landingpage_imagehost" value=""/>
+                                                            <input type="hidden" name="landingpage_bucket" id="landingpage_bucket" value=""/>
                                                             <input type="hidden" name="landingpage_foldername" id="landingpage_foldername" value=""/>
                                                             <input type="hidden" name="landingpage_picture" id="landingpage_picture" value=""/>
                                                         </form>

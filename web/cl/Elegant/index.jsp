@@ -123,8 +123,9 @@
     featureBean = feature.getFeature(featureBean);
     final String imageFolder = featureBean.getValue();
     final String imageHost =  Utility.getImageUploadHost();
+    final String bucket =  Utility.getS3Bucket();
 
-    final String sImagePath = imageHost + "/" + imageFolder + "/";
+    final String sImagePath = imageHost + "/" + bucket + "/" + imageFolder;
 
     EventWebsitePageFeature eventWebsitePageFeature = new EventWebsitePageFeature();
     String sCeremonyAddress = Constants.EMPTY;

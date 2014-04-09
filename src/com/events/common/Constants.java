@@ -177,7 +177,7 @@ public class Constants {
     }
 
     public enum AMAZON {
-        ACCESS_KEY("amazon.access_key"), SECRET_KEY("amazon.secret_key");
+        ACCESS_KEY("amazon.access_key"), SECRET_KEY("amazon.secret_key"), S3_BUCKET("amazon.s3_bucket");
 
         private String propName = Constants.EMPTY;
 
