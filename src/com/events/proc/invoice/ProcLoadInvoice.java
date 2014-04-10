@@ -90,7 +90,9 @@ public class ProcLoadInvoice   extends HttpServlet {
                                             sLogo = ParseUtil.checkNull( (String) request.getSession().getAttribute("SUBDOMAIN_LOGO"));
                                         }
                                         if(Utility.isNullOrEmpty(sLogo)) {
-                                            sLogo = "/img/logo.png";
+                                            String protocol = ParseUtil.checkNull(applicationConfig.get( Constants.PROP_LINK_PROTOCOL,"https"));
+                                            String domain = ParseUtil.checkNull(applicationConfig.get( Constants.APPLICATION_DOMAIN,"https"));
+                                            sLogo = protocol+"://"+domain+"/img/logo.png";
                                         }
 
 
@@ -106,8 +108,10 @@ public class ProcLoadInvoice   extends HttpServlet {
                                         String fileUploadLocation = applicationConfig.get(Constants.FILE_UPLOAD_LOCATION);
                                         String sUserFolderName = accessInvoicePdf.getUserFolderName(loggedInUserBean, fileUploadLocation) ;
                                         String fileUploadHost = Utility.getFileUploadHost();
+                                        String bucket = Utility.getS3Bucket();
                                         jsonResponseObj.put("invoice_id", sInvoiceId);
                                         jsonResponseObj.put("file_host", fileUploadHost);
+                                        jsonResponseObj.put("bucket", bucket);
                                         jsonResponseObj.put("folder_path_name", sUserFolderName);
 
                                         Text okText = new OkText("The invoice was saved successfully","status_mssg") ;

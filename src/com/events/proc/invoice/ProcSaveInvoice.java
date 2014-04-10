@@ -159,13 +159,17 @@ public class ProcSaveInvoice   extends HttpServlet {
                             BuildInvoice buildInvoice = new BuildInvoice();
                             InvoiceResponseBean invoiceResponseBean = buildInvoice.saveInvoice( invoiceRequestBean );
                             if(invoiceResponseBean!=null && !Utility.isNullOrEmpty(invoiceResponseBean.getInvoiceId())) {
-                                jsonResponseObj.put("invoice_id",invoiceResponseBean.getInvoiceId());
-
+                                sInvoiceId =  invoiceResponseBean.getInvoiceId();
                                 invoiceRequestBean.setInvoiceId( sInvoiceId );
 
                                 String sLogo = Constants.EMPTY;
                                 if( request.getSession().getAttribute("SUBDOMAIN_LOGO") != null ) {
                                     sLogo = ParseUtil.checkNull( (String) request.getSession().getAttribute("SUBDOMAIN_LOGO"));
+                                }
+                                if(Utility.isNullOrEmpty(sLogo)) {
+                                    String protocol = ParseUtil.checkNull(applicationConfig.get( Constants.PROP_LINK_PROTOCOL,"https"));
+                                    String domain = ParseUtil.checkNull(applicationConfig.get( Constants.APPLICATION_DOMAIN,"https"));
+                                    sLogo = protocol+"://"+domain+"/img/logo.png";
                                 }
 
                                 InvoicePdfRequestBean invoicePdfRequestBean = new InvoicePdfRequestBean();
@@ -180,8 +184,10 @@ public class ProcSaveInvoice   extends HttpServlet {
                                 String fileUploadLocation = applicationConfig.get(Constants.FILE_UPLOAD_LOCATION);
                                 String sUserFolderName = accessInvoicePdf.getUserFolderName(loggedInUserBean, fileUploadLocation) ;
                                 String fileUploadHost = Utility.getFileUploadHost();
-                                jsonResponseObj.put("invoice_id", sInvoiceId);
+                                String bucket = Utility.getS3Bucket();
+                                jsonResponseObj.put("invoice_id",sInvoiceId );
                                 jsonResponseObj.put("file_host", fileUploadHost);
+                                jsonResponseObj.put("bucket", bucket);
                                 jsonResponseObj.put("folder_path_name", sUserFolderName);
 
 

@@ -72,7 +72,7 @@ public class ProcSaveEventWebsitePageFeatures extends HttpServlet {
                         for(Map.Entry<String,String[]> requestParameters : mapParameters.entrySet()) {
                             String sKey =  requestParameters.getKey();
                             String[] strArrValue =  requestParameters.getValue();
-                            if(!"event_id".equalsIgnoreCase(sKey) &&  !"page_type".equalsIgnoreCase(sKey) ) {
+                            if(!"event_id".equalsIgnoreCase(sKey) &&  !"page_type".equalsIgnoreCase(sKey)  &&  !"subdomain".equalsIgnoreCase(sKey)) {
 
                                 for(String sValue : strArrValue )  {
                                     EventWebsitePageFeatureBean requestEWPFBean = new EventWebsitePageFeatureBean();

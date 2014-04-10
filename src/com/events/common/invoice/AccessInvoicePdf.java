@@ -25,9 +25,7 @@ public class AccessInvoicePdf {
             if(userBean!=null && !Utility.isNullOrEmpty(invoiceId)) {
                 String fileUploadLocation = applicationConfig.get(Constants.FILE_UPLOAD_LOCATION);
 
-                String sFolderPath = fileUploadLocation + "/" + getUserFolderName(userBean,fileUploadLocation) ;
-
-                invoiceFilePath = sFolderPath + "/" + invoiceId+ ".pdf";
+                invoiceFilePath = fileUploadLocation + "/" + getUserFolderName(userBean,fileUploadLocation) ;
             }
         }
         return invoiceFilePath;

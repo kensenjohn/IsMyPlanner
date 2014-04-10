@@ -53,6 +53,7 @@ import java.util.Locale;
 public class BuildInvoicePdf {
     Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
+    private static final BigDecimal ONEHUNDERT = new BigDecimal(100);
 
     public void generateInvoicePdf(InvoicePdfRequestBean invoicePdfRequestBean) throws Exception{
         if(invoicePdfRequestBean!=null && !Utility.isNullOrEmpty(invoicePdfRequestBean.getInvoiceId())) {
@@ -109,7 +110,6 @@ public class BuildInvoicePdf {
 
                     StreamSource invoiceXmlSource = new StreamSource();
                     if(stringInvoicePdfWriter!=null){
-                        appLogging.info(  " Xml String - " + stringInvoicePdfWriter.toString());
                         InputStream inpStreamInvoicePdf = new ByteArrayInputStream(stringInvoicePdfWriter.toString().getBytes("UTF-8"));
                         invoiceXmlSource.setInputStream( inpStreamInvoicePdf );
                     }
@@ -168,24 +168,27 @@ public class BuildInvoicePdf {
                                 // if you want to get the PDF bytes, use the following code
                                 //return outStream.toByteArray();
                                 // if you want to save PDF file use the following code
-                                AccessInvoicePdf accessInvoicePdf = new AccessInvoicePdf();
-			File pdffile = new File(accessInvoicePdf.getInvoicePdfLocation( invoicePdfRequestBean ));
-			OutputStream out = new java.io.FileOutputStream(pdffile);
-                        out = new java.io.BufferedOutputStream(out);
-                        FileOutputStream str = new FileOutputStream(pdffile);
-                        str.write(outStream.toByteArray());
-                        str.close();
-                        out.close();
 
-                                appLogging.info("location : " + accessInvoicePdf.getInvoicePdfLocation( invoicePdfRequestBean ) );
-                                // to write the content to out put stream
-                                //byte[] pdfBytes = outStream.toByteArray();
-                                /*response.setContentLength(pdfBytes.length);
-                                response.setContentType("application/pdf");
-                                response.addHeader("Content-Disposition",
-                                        "attachment;filename=pdffile.pdf");
-                                response.getOutputStream().write(pdfBytes);
-                                response.getOutputStream().flush();*/
+                                String invoiceId = invoicePdfRequestBean.getInvoiceId() ;
+
+                                AccessInvoicePdf accessInvoicePdf = new AccessInvoicePdf();
+                                String invoiceFilePath = accessInvoicePdf.getInvoicePdfLocation( invoicePdfRequestBean );
+                                File pdffile = new File(invoiceFilePath +"/"+ invoiceId + ".pdf");
+                                OutputStream out = new java.io.FileOutputStream(pdffile);
+                                out = new java.io.BufferedOutputStream(out);
+                                FileOutputStream str = new FileOutputStream(pdffile);
+                                str.write(outStream.toByteArray());
+                                str.close();
+                                out.close();
+
+                                Folder folder = new Folder();
+                                String parentId = userBean.getParentId();
+                                Constants.USER_TYPE userType = userBean.getUserType();
+                                String sFolderName = folder.getFolderName(userType , parentId );
+
+                                folder.createS3FolderForUser( invoiceFilePath,invoiceId+ ".pdf",sFolderName);
+
+                                pdffile.delete();
                             }
                             catch (TransformerException e) {
                                 throw e;
@@ -220,60 +223,6 @@ public class BuildInvoicePdf {
         }
         return transformer;
     }
-
-    public void buildInvoicePdf(InvoicePdfRequestBean invoicePdfRequestBean){
-        if(invoicePdfRequestBean!=null && !Utility.isNullOrEmpty(invoicePdfRequestBean.getInvoiceId())) {
-
-            InvoiceRequestBean invoiceRequestBean = new InvoiceRequestBean();
-            invoiceRequestBean.setInvoiceId(invoicePdfRequestBean.getInvoiceId());
-
-
-            AccessInvoice accessInvoice = new AccessInvoice();
-            InvoiceResponseBean invoiceResponseBean = accessInvoice.getInvoice(invoiceRequestBean);
-            if(invoiceResponseBean!=null){
-                InvoiceBean invoiceBean = invoiceResponseBean.getInvoiceBean();
-                if(invoiceBean!=null){
-
-                    UserBean userBean = invoicePdfRequestBean.getUserBean();
-
-                    AccessUsers accessUsers = new AccessUsers();
-                    ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser( userBean );
-
-                    if(parentTypeBean!=null && parentTypeBean.getClientBean()!=null && Utility.isNullOrEmpty(parentTypeBean.getClientdId() )) {
-
-                        ClientRequestBean clientRequestBean = new ClientRequestBean();
-                        clientRequestBean.setClientId( invoiceBean.getClientId() );
-                        clientRequestBean.setVendorId( invoiceBean.getVendorId() );
-
-                        AccessClients accessClients = new AccessClients();
-                        ClientResponseBean clientResponseBean = accessClients.getClientContactInfo( clientRequestBean );
-                        if(clientResponseBean!=null && clientResponseBean.getClientBean()!=null ) {
-                            parentTypeBean.setClientBean( clientResponseBean.getClientBean() );
-                        }
-                    }
-                    invoicePdfRequestBean.setParentTypeBean( parentTypeBean );
-
-
-
-                    invoicePdfRequestBean.setInvoiceBean( invoiceBean );
-                    AccessInvoiceItems accessInvoiceItems = new AccessInvoiceItems();
-                    invoiceResponseBean = accessInvoiceItems.getInvoiceItems(invoiceRequestBean  ) ;
-                    if(invoiceResponseBean!=null){
-                        ArrayList<InvoiceItemBean> arrInvoiceItemsBean = invoiceResponseBean.getArrInvoiceItemsBean();
-
-                        if(arrInvoiceItemsBean!=null && !arrInvoiceItemsBean.isEmpty()) {
-
-                            invoicePdfRequestBean.setArrInvoiceItemsBean(  arrInvoiceItemsBean );
-                            appLogging.info("Going to invoke create PDF ");
-                            createPdf(invoicePdfRequestBean);
-
-                        }
-                    }
-                }
-            }
-        }
-    }
-    private static final BigDecimal ONEHUNDERT = new BigDecimal(100);
 
     private void generateInvoiceItems(InvoicePdfBean invoicePdfBean , InvoicePdfRequestBean invoicePdfRequestBean){
 
@@ -407,107 +356,5 @@ public class BuildInvoicePdf {
             }
         }
         appLogging.info("After setting vendor contacts" + invoicePdfBean );
-    }
-
-    private void createPdf(InvoicePdfRequestBean invoicePdfRequestBean){
-        if(invoicePdfRequestBean!=null && invoicePdfRequestBean.getInvoiceBean() !=null && invoicePdfRequestBean.getArrInvoiceItemsBean()!=null && !invoicePdfRequestBean.getArrInvoiceItemsBean().isEmpty()) {
-            AccessInvoicePdf accessInvoicePdf = new AccessInvoicePdf();
-            try{
-                PDDocument pdfDocument = new PDDocument();
-                PDPage pdgPage = new PDPage();
-                pdfDocument.addPage(pdgPage);
-                generateInvoiceContent(invoicePdfRequestBean, pdfDocument, pdgPage);
-                generateClientAddress(invoicePdfRequestBean, pdfDocument, pdgPage);
-                pdfDocument.save( accessInvoicePdf.getInvoicePdfLocation(invoicePdfRequestBean) ) ;
-                pdfDocument.close();
-            } catch (IOException ie){
-                appLogging.info("IOException : " + ExceptionHandler.getStackTrace(ie));
-            } catch (Exception io){
-                appLogging.info("Exception : " + ExceptionHandler.getStackTrace(io));
-            }
-        }
-    }
-
-    private void generateInvoiceContent(InvoicePdfRequestBean invoicePdfRequestBean ,  PDDocument pdfDocument,PDPage pdgPage) throws IOException {
-        if(invoicePdfRequestBean!=null) {
-            InvoiceBean invoiceBean = invoicePdfRequestBean.getInvoiceBean();
-            ArrayList<InvoiceItemBean> arrInvoiceItemsBean =  invoicePdfRequestBean.getArrInvoiceItemsBean();
-            if(invoiceBean!=null && arrInvoiceItemsBean!=null && !arrInvoiceItemsBean.isEmpty()){
-                PDFont font = PDType1Font.HELVETICA_BOLD;
-
-                PDPageContentStream content = new PDPageContentStream(pdfDocument, pdgPage);
-                content.beginText();
-                content.setFont( font, 12 );
-                content.moveTextPositionByAmount( 100, 700 );
-                content.drawString(DateSupport.getUTCDateTime() + " Invoice Number : " + invoiceBean.getInvoiceNumber());
-                appLogging.info("invoiceBean.getInvoiceNumber() : " + invoiceBean.getInvoiceNumber());
-                content.endText();
-                content.close();
-            }
-
-        }
-        appLogging.info("generateInvoiceContent invoked ");
-
-    }
-
-    private void generateLogo(InvoicePdfRequestBean invoicePdfRequestBean,  PDDocument pdfDocument,PDPage pdgPage) throws IOException{
-        if(invoicePdfRequestBean!=null) {
-            String sLogo = ParseUtil.checkNull( invoicePdfRequestBean.getLogo());
-            if(!Utility.isNullOrEmpty(sLogo))  {
-                PDXObjectImage image =  new PDJpeg(pdfDocument, new FileInputStream(sLogo));
-
-                PDPageContentStream content = new PDPageContentStream(pdfDocument, pdgPage);
-
-                content.drawImage(image,250,50);
-                content.close();
-            }
-        }
-    }
-
-    private void generateClientAddress(InvoicePdfRequestBean invoicePdfRequestBean ,  PDDocument pdfDocument,PDPage pdgPage)throws IOException {
-        appLogging.info("Startihg generateClientAddress ");
-        if(invoicePdfRequestBean!=null) {
-            ParentTypeBean parentTypeBean = invoicePdfRequestBean.getParentTypeBean();
-            if(parentTypeBean!=null && parentTypeBean.getClientBean()!=null){
-                ClientBean clientBean = parentTypeBean.getClientBean();
-
-                ClientRequestBean clientRequestBean = new  ClientRequestBean();
-                clientRequestBean.setClientId( clientBean.getClientId() );
-                clientRequestBean.setVendorId( clientBean.getVendorId() );
-
-                AccessClients accessClients = new AccessClients();
-                ClientResponseBean clientResponseBean = accessClients.getClientContactInfo(clientRequestBean);
-
-                if(clientResponseBean!=null){
-                    UserInfoBean userInfoBean = clientResponseBean.getUserInfoBean();
-                    appLogging.info("SClient userInfoBean : " + userInfoBean );
-                    if(userInfoBean!=null && !Utility.isNullOrEmpty(userInfoBean.getUserInfoId())){
-
-                        PDFont helveticaFont = PDType1Font.HELVETICA;
-
-                        PDPageContentStream nameContent = new PDPageContentStream(pdfDocument, pdgPage);
-                        nameContent.beginText();
-                        nameContent.setFont( helveticaFont, 11 );
-                        nameContent.moveTextPositionByAmount( 100, 720 );
-                        nameContent.drawString(userInfoBean.getFirstName() + " " + userInfoBean.getLastName()  + "\n" +
-                                ParseUtil.checkNull(userInfoBean.getAddress1()) + "\n" + ParseUtil.checkNull(userInfoBean.getAddress2()) + "\n" +
-                                ParseUtil.checkNull(userInfoBean.getCity()) + "\n" + ParseUtil.checkNull(userInfoBean.getState())  +
-                                ParseUtil.checkNull(userInfoBean.getZipcode()));
-                        appLogging.info("Drawing the Client String ");
-                        nameContent.endText();
-                        nameContent.close();
-
-                    }
-                }
-            }
-
-        }
-        appLogging.info("generateClientAddress invoked ");
-    }
-
-    private void generateVendorAddress(InvoicePdfRequestBean invoicePdfRequestBean ,  PDDocument pdfDocument,PDPage pdgPage){
-        if(invoicePdfRequestBean!=null) {
-
-        }
     }
 }

@@ -335,8 +335,9 @@
 
                     var varInvoiceId = jsonResponseObj.invoice_id;
                     var varFileHost = jsonResponseObj.file_host;
+                    var varBucket = jsonResponseObj.bucket;
                     var varPathName = jsonResponseObj.folder_path_name;
-                    $('#download_invoice').attr("href",varFileHost+'/'+varPathName+'/'+varInvoiceId+'.pdf');
+                    $('#download_invoice').attr("href",varFileHost+'/'+varBucket+'/'+varPathName+'/'+varInvoiceId+'.pdf');
                 }
             } else {
                 displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
@@ -361,8 +362,9 @@
 
                         var varInvoiceId = jsonResponseObj.invoice_id;
                         var varFileHost = jsonResponseObj.file_host;
+                        var varBucket = jsonResponseObj.bucket;
                         var varPathName = jsonResponseObj.folder_path_name;
-                        $('#download_invoice').attr("href",varFileHost+'/'+varPathName+'/'+varInvoiceId+'.pdf');
+                        $('#download_invoice').attr("href",varFileHost+'/'+varBucket+'/'+varPathName+'/'+varInvoiceId+'.pdf');
                     }
                 }
                 displayAjaxOk(varResponseObj);

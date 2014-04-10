@@ -2031,7 +2031,7 @@
                         $('#banner_imagename').val( varDataResult.name );
                         $('#banner_imagehost').val( varDataResult.imagehost);
                         $('#banner_foldername').val(varDataResult.foldername);
-                        var imagePath = varDataResult.imagehost+'/'+varDataResult.foldername+'/'+varDataResult.name;
+                        var imagePath = varDataResult.imagehost+'/'+ varDataResult.bucket +'/'+varDataResult.foldername+'/'+varDataResult.name;
 
                         createImage(imagePath, 'welcome_banner_image_name');
 

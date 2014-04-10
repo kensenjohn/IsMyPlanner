@@ -60,6 +60,7 @@ public class ProcUploadCSV extends HttpServlet {
         JSONArray json = new JSONArray();
 
         String fileUploadHost = Utility.getFileUploadHost();
+        String s3Bucket = Utility.getS3Bucket();
         UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
         String fileUploadLocation = applicationConfig.get(Constants.FILE_UPLOAD_LOCATION);
 
@@ -81,6 +82,8 @@ public class ProcUploadCSV extends HttpServlet {
                         uploadRequestBean.setFilename( sRandomFilename );
                         uploadRequestBean.setPath( sUserFolderName );
 
+                        folder.createS3FolderForUser( sFolderPath, sRandomFilename, sUserFolderName );
+
                         UploadFile uploadFile = new UploadFile();
                         UploadResponseBean uploadResponseBean = uploadFile.saveUploadFileInfo(uploadRequestBean);
                         if(uploadResponseBean!=null && !Utility.isNullOrEmpty(uploadResponseBean.getUploadId())){
@@ -97,6 +100,7 @@ public class ProcUploadCSV extends HttpServlet {
                             jsono.put("name", sRandomFilename );
                             jsono.put("foldername", sUserFolderName );
                             jsono.put("fileuploadhost", fileUploadHost );
+                            jsono.put("bucket", s3Bucket );
                             jsono.put("upload_id", uploadResponseBean.getUploadId() );
                             jsono.put("success", true );
                             jsono.put("url", "UploadServlet?getfile=" + item.getName());

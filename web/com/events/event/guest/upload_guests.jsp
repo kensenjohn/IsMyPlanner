@@ -17,6 +17,7 @@
     }
 
     String fileUploadHost = ParseUtil.checkNull(Utility.getFileUploadHost());
+    String bucket = ParseUtil.checkNull(Utility.getS3Bucket());
 %>
 
 <body>
@@ -58,7 +59,7 @@
                     if(!Utility.isNullOrEmpty(fileUploadHost)){
                 %>
                         <div class="col-md-3" style="padding-top:10px;">
-                            <a href="<%=fileUploadHost+"/csv_guestlist.csv"%>"  target="_blank" >Download a Sample CSV</a>
+                            <a href="<%=fileUploadHost+"/"+bucket+"/sample_csv_guestlist.csv"%>"  target="_blank" >Download a Sample CSV</a>
                         </div>
                 <%
                     }
@@ -157,7 +158,7 @@
                     $('#job_status').val('<%=Constants.JOB_STATUS.PRELIM_STATE.getStatus()%>');
 
                     if( varDataResult.success ) {
-                        var linkToDownloadFile = varDataResult.fileuploadhost+"/"+  varDataResult.foldername+"/"+varDataResult.name;
+                        var linkToDownloadFile = varDataResult.fileuploadhost+"/"+ varDataResult.bucket+"/"+  varDataResult.foldername+"/"+varDataResult.name;
                         $('#link_download_guestlist_csv').attr("href", linkToDownloadFile );
                         $('#div_download_guestlist_csv').show();
 

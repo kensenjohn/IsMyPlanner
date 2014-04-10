@@ -1,15 +1,18 @@
 environment=vm
 event_admin_db=eventadmin
 event_host_db=eventhost
-copyright_year=2013
+copyright_year=2014
 copyright_company=Smarasoft Inc
-file_host=http://localhost:9001
+
+file_host=https://s3.amazonaws.com
 file_upload_location=/usr/uploadloc
+
 image_upload_location=/usr/uploadloc/images/
-image_host=http://localhost:9000
+image_host=https://s3.amazonaws.com
 
 amazon.access_key=
 amazon.secret_key=
+amazon.s3_bucket=cdn.localhost
 
 product_name=Ever Plan
 domain=eventlocalhost.com
