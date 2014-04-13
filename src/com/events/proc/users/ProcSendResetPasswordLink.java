@@ -9,6 +9,8 @@ import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
 import com.events.users.ForgotPassword;
 import org.json.JSONObject;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +41,8 @@ public class ProcSendResetPasswordLink   extends HttpServlet {
             if( !DataSecurityChecker.isInsecureInputResponse(request) ) {
 
                 String sEmailAddress = ParseUtil.checkNull(request.getParameter("resetEmail"));
-                if(Utility.isNullOrEmpty(sEmailAddress)) {
+                Validator instance = ESAPI.validator();
+                if( !instance.isValidInput( "resetEmail",sEmailAddress,"Email",250,false ) ) {
                     appLogging.debug("Invalid email used " + ParseUtil.checkNull(sEmailAddress) );
                     Text errorText = new ErrorText("Please use a valid email address to reset your password.","err_mssg") ;
                     arrErrorText.add(errorText);

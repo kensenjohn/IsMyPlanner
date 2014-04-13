@@ -18,6 +18,8 @@ import com.events.users.AccessUsers;
 import com.events.users.BuildUsers;
 import com.events.vendors.BuildVendors;
 import org.json.JSONObject;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.misc.IOUtils;
@@ -50,15 +52,14 @@ public class ProcRegister  extends HttpServlet {
         try{
             if( !DataSecurityChecker.isInsecureInputResponse(request) ) {
 
-                String sFirstName = "Welcome";
-                String sLastName = "Planner";
                 String sEmail = ParseUtil.checkNull(request.getParameter("registerEmail"));
+
                 String sPassword = ParseUtil.checkNull(request.getParameter("registerPassword"));
                 boolean isPlanner = ParseUtil.sTob( request.getParameter("registerIsPlanner") );
                 String sBusinessName = ParseUtil.checkNull( request.getParameter("registerBusinessName") );
                 isPlanner = true; // default set it to true.
-
-                if(Utility.isNullOrEmpty( sEmail ) || Utility.isNullOrEmpty( sPassword ) ) {
+                Validator instance = ESAPI.validator();
+                if(!instance.isValidInput( "registerEmail",sEmail,"Email",250,false ) || Utility.isNullOrEmpty( sEmail ) || Utility.isNullOrEmpty( sPassword ) ) {
                     Text errorText = new ErrorText("Please fill in all required fields","account_num") ;
                     arrErrorText.add(errorText);
                     responseStatus = RespConstants.Status.ERROR;
@@ -82,8 +83,6 @@ public class ProcRegister  extends HttpServlet {
 
                     if( tmpExistingUserBean == null || (tmpExistingUserBean!=null && Utility.isNullOrEmpty(tmpExistingUserBean.getUserId())) ) {
 
-                        userRequestBean.setFirstName(sFirstName);
-                        userRequestBean.setLastName(sLastName);
                         userRequestBean.setCompanyName( sBusinessName );
 
                         PasswordRequestBean passwordRequestBean = new PasswordRequestBean();

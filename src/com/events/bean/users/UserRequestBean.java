@@ -31,10 +31,19 @@ public class UserRequestBean {
     private String postalCode = Constants.EMPTY;
     private String parentId = Constants.EMPTY;
     private String userTypeId = Constants.EMPTY;
+    private String website = Constants.EMPTY;
     private  Constants.USER_TYPE userType = Constants.USER_TYPE.VENDOR;
     private boolean isPlanner = false;
     private ArrayList<String> arrRoleId = new ArrayList<String>();
     private boolean isWebsiteAccessEnabled = false;
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
 
     public boolean isWebsiteAccessEnabled() {
         return isWebsiteAccessEnabled;

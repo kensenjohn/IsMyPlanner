@@ -11,6 +11,8 @@ import com.events.users.AccessUsers;
 import com.events.users.BuildUsers;
 import com.events.users.CookieUser;
 import org.json.JSONObject;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +49,8 @@ public class ProcLogin  extends HttpServlet {
                 boolean isRememberMe = ParseUtil.sTob(request.getParameter("loginRememberMe"));
 
                 //appLogging.info("Username : " + sUsername + " Password : " + sPassword );
-                if("".equalsIgnoreCase(sEmail) || "".equalsIgnoreCase(sPassword)) {
+                Validator instance = ESAPI.validator();
+                if(!instance.isValidInput("loginEmail", sEmail, "Email", 250, false)   || "".equalsIgnoreCase(sPassword)) {
                     Text errorText = new ErrorText("Please use a valid username or password","account_num") ;
                     arrErrorText.add(errorText);
                     responseStatus = RespConstants.Status.ERROR;

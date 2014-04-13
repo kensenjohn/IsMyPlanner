@@ -16,6 +16,8 @@ import com.events.users.AccessUsers;
 import com.events.users.ForgotPassword;
 import com.events.users.ManageUserPassword;
 import org.json.JSONObject;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,14 +50,14 @@ public class ProcResetPassword   extends HttpServlet {
                 String sPassword = ParseUtil.checkNull(request.getParameter("resetPassword"));
                 String sConfirmPassword = ParseUtil.checkNull(request.getParameter("resetConfirmPassword"));
                 String sSecureTokenId = ParseUtil.checkNull(request.getParameter("lotophagi"));
-
+                Validator instance = ESAPI.validator();
                 if( Utility.isNullOrEmpty(sSecureTokenId)) {
                     appLogging.info("Invalid Link Used " + ParseUtil.checkNull(sSecureTokenId) );
                     Text errorText = new ErrorText("An invalid link was used. The link was sent to your email.","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
-                } else if( Utility.isNullOrEmpty(sEmailAddress) ||  Utility.isNullOrEmpty(sPassword) || Utility.isNullOrEmpty(sConfirmPassword) ) {
+                } else if(!instance.isValidInput( "resetEmail",sEmailAddress,"Email",250,false )||  Utility.isNullOrEmpty(sPassword) || Utility.isNullOrEmpty(sConfirmPassword) ) {
                     appLogging.info("Invalid Email Address or password used " + ParseUtil.checkNull(sEmailAddress) + " " + ParseUtil.checkNull(sPassword) + " " + ParseUtil.checkNull(sConfirmPassword));
                     Text errorText = new ErrorText("Please fill in all required fields ","err_mssg") ;
                     arrErrorText.add(errorText);

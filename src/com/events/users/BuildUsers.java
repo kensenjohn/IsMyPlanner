@@ -10,6 +10,7 @@ import com.events.bean.users.permissions.UserRolesBean;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
 import com.events.bean.vendors.website.VendorWebsiteFeatureBean;
+import com.events.bean.vendors.website.VendorWebsiteURLBean;
 import com.events.common.*;
 import com.events.common.email.creator.EmailCreator;
 import com.events.common.email.creator.MailCreator;
@@ -299,20 +300,12 @@ public class BuildUsers {
                     mapTextEmailValues.put("GIVEN_NAME",sGivenName);
                     mapHtmlEmailValues.put("GIVEN_NAME", sGivenName);
 
+                    AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
+                    VendorWebsiteURLBean vendorWebsiteURLBean = accessVendorWebsite.getVendorWebsiteUrlBean(vendorBean);
 
-                    String sResetDomain = ParseUtil.checkNull(applicationConfig.get(Constants.APPLICATION_DOMAIN));
-                    if(sResetDomain!=null && !"".equalsIgnoreCase(sResetDomain)) {
+                    if(vendorWebsiteURLBean!=null && !Utility.isNullOrEmpty(vendorWebsiteURLBean.getDomain())) {
 
-
-                        AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
-                        VendorWebsiteFeatureBean vendorWebsiteFeatureBean = accessVendorWebsite.getSubDomain( vendorBean );
-                        if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue())){
-                            sResetDomain = vendorWebsiteFeatureBean.getValue() + "." + sResetDomain;
-                        }
-
-                        String sProtocol = applicationConfig.get(Constants.PROP_LINK_PROTOCOL,"http");
-
-                        String sPortalLink = ParseUtil.checkNull(sProtocol + "://" + sResetDomain + "/com/events/common/set_password.jsp?lotophagi="+forgotPasswordBean.getSecureTokenId());
+                        String sPortalLink = ParseUtil.checkNull(vendorWebsiteURLBean.getUrl() + "/com/events/common/set_password.jsp?lotophagi="+forgotPasswordBean.getSecureTokenId());
 
                         mapTextEmailValues.put("PORTAL_LINK",sPortalLink);
                         mapHtmlEmailValues.put("PORTAL_LINK","<a href=\""+sPortalLink+"\" target=\"_blank\">Set New Password And Login</a>");
@@ -344,8 +337,7 @@ public class BuildUsers {
 
                         emailQueueBean.setHtmlBody(htmlWriter.toString());
                         emailQueueBean.setTextBody(txtWriter.toString());
-                        emailQueueBean.setEmailSubject(subjectWriter.toString() );
-                        emailQueueBean.setCcAddress("kensenjohn@gmail.com");
+                        emailQueueBean.setEmailSubject(subjectWriter.toString());
 
                         {
                             // We are just creating a record in the database with this action.
@@ -391,10 +383,11 @@ public class BuildUsers {
                 && !"".equalsIgnoreCase(ParseUtil.checkNullObject(userRequestBean.getPasswordRequestBean()))  ) {
 
             // Depending on Type of User
+            VendorBean vendorBean = new VendorBean();
             if( userRequestBean.isPlanner() ) {
                 BuildVendors buildVendors = new BuildVendors();
                 try{
-                    VendorBean vendorBean = buildVendors.registerVendor( userRequestBean.getCompanyName() );
+                    vendorBean = buildVendors.registerVendor( userRequestBean.getCompanyName() );
                     userRequestBean.setParentId( vendorBean.getVendorId() );
                     userRequestBean.setUserType(Constants.USER_TYPE.VENDOR);
                 } catch(EditVendorException e) {
@@ -430,6 +423,13 @@ public class BuildUsers {
                             if(!userRolePermission.initiatePermissionBootup( userRolePermRequest ) ) {
                                 isError = true;
                                 appLogging.info("Unable to set the permission." + isError );
+                            } else {
+                                if(userRequestBean.isPlanner()){
+                                    userBean.setUserInfoBean( userInfoBean  );
+                                    sendNewVendorWelcomeEmail(userBean,vendorBean) ;
+                                }
+
+
                             }
                         }
 
@@ -493,6 +493,7 @@ public class BuildUsers {
             userInfoBean.setState( ParseUtil.checkNull(userRequestBean.getState()));
             userInfoBean.setCountry( ParseUtil.checkNull(userRequestBean.getCountry()));
             userInfoBean.setZipcode( ParseUtil.checkNull(userRequestBean.getPostalCode()));
+            userInfoBean.setWebsite( ParseUtil.checkNull(userRequestBean.getWebsite()) );
         }
         return userInfoBean;
     }
@@ -540,4 +541,111 @@ public class BuildUsers {
         }
         return sLink;
     }
+
+    private boolean sendNewVendorWelcomeEmail(UserBean userBean,VendorBean vendorBean){
+        boolean isEmailSendtSuccessfully = false;
+        if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId())) {
+            EmailServiceData emailServiceData = new EmailServiceData();
+            EmailTemplateBean emailTemplateBean = emailServiceData.getEmailTemplate(Constants.EMAIL_TEMPLATE.NEW_VENDOR_ACCESS);
+
+            if(emailTemplateBean!=null){
+                String sHtmlTemplate = emailTemplateBean.getHtmlBody();
+                String sTxtTemplate = emailTemplateBean.getTextBody();
+                String sSubject = emailTemplateBean.getEmailSubject();
+
+                EmailQueueBean emailQueueBean = new EmailQueueBean();
+                emailQueueBean.setEmailSubject(emailTemplateBean.getEmailSubject());
+                emailQueueBean.setFromAddress(emailTemplateBean.getFromAddress());
+                emailQueueBean.setFromAddressName(emailTemplateBean.getFromAddressName());
+
+                UserInfoBean userInfoBean = userBean.getUserInfoBean();
+                emailQueueBean.setToAddress( userInfoBean.getEmail() );
+                emailQueueBean.setToAddressName(userInfoBean.getEmail() );
+                emailQueueBean.setHtmlBody(sHtmlTemplate);
+                emailQueueBean.setTextBody(sTxtTemplate);
+
+                // mark it as sent so that it wont get picked up by email service. The email gets sent below
+                emailQueueBean.setStatus(Constants.EMAIL_STATUS.SENT.getStatus());
+
+
+                // We are just creating a record in the database with this action.
+                // The new password will be sent separately.
+                // This must be changed so that user will have to click link to
+                // generate the new password.
+                MailCreator dummyEailCreator = new EmailCreator();
+                dummyEailCreator.create(emailQueueBean , new EmailSchedulerBean());
+
+                // Now here we will be putting the correct password in the email
+                // text and
+                // send it out directly.
+                // This needs to be changed. Warning bells are rining.
+                // Lots of potential to fail.
+
+                Map<String, Object> mapTextEmailValues = new HashMap<String, Object>();
+                Map<String, Object> mapHtmlEmailValues = new HashMap<String, Object>();
+                Map<String, Object> mapSubjectEmailValues = new HashMap<String, Object>();
+
+                AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
+                VendorWebsiteURLBean vendorWebsiteURLBean = accessVendorWebsite.getVendorWebsiteUrlBean(vendorBean);
+
+
+                if(vendorWebsiteURLBean!=null && !Utility.isNullOrEmpty(vendorWebsiteURLBean.getDomain())) {
+
+
+                    String sDomain = ParseUtil.checkNull(applicationConfig.get(Constants.APPLICATION_DOMAIN));
+                    mapTextEmailValues.put("APPLICATION_NAME",sDomain);
+                    mapHtmlEmailValues.put("APPLICATION_NAME", sDomain);
+                    mapSubjectEmailValues.put("APPLICATION_NAME", sDomain);
+
+                    String sPortalLink = "<a href=\""+vendorWebsiteURLBean.getUrl()+"\" target=\'_blank\">"+sDomain+"</a>";
+                    mapTextEmailValues.put("PORTAL_LINK",sPortalLink);
+                    mapHtmlEmailValues.put("PORTAL_LINK", sPortalLink);
+                    mapSubjectEmailValues.put("PORTAL_LINK", sPortalLink);
+
+                    String sContactUsUrl = "<a href=\""+vendorWebsiteURLBean.getUrl()+"/com/events/common/contact.jsp\" target=\'_blank\">Contact Us Page</a>";
+                    mapTextEmailValues.put("CONTACT_US_PAGE",sContactUsUrl);
+                    mapHtmlEmailValues.put("CONTACT_US_PAGE", sContactUsUrl);
+                    mapSubjectEmailValues.put("CONTACT_US_PAGE", sContactUsUrl);
+
+                    MustacheFactory mf = new DefaultMustacheFactory();
+                    Mustache mustacheText =  mf.compile(new StringReader(sTxtTemplate), Constants.EMAIL_TEMPLATE.NEW_VENDOR_ACCESS.toString()+"_text");
+                    Mustache mustacheHtml = mf.compile(new StringReader(sHtmlTemplate), Constants.EMAIL_TEMPLATE.NEW_VENDOR_ACCESS.toString()+"_html");
+                    Mustache mustacheSubject = mf.compile(new StringReader(sSubject), Constants.EMAIL_TEMPLATE.NEW_VENDOR_ACCESS.toString()+"_subject");
+
+                    StringWriter txtWriter = new StringWriter();
+                    StringWriter htmlWriter = new StringWriter();
+                    StringWriter subjectWriter = new StringWriter();
+                    try {
+                        mustacheText.execute(txtWriter, mapTextEmailValues).flush();
+                        mustacheHtml.execute(htmlWriter, mapHtmlEmailValues).flush();
+                        mustacheSubject.execute(subjectWriter, mapSubjectEmailValues).flush();
+                    } catch (IOException e) {
+                        txtWriter = new StringWriter();
+                        htmlWriter = new StringWriter();
+                        subjectWriter = new StringWriter();
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
+
+                    appLogging.error("Html Email Writers: " + htmlWriter.toString());
+
+                    emailQueueBean.setHtmlBody(htmlWriter.toString());
+                    emailQueueBean.setTextBody(txtWriter.toString());
+                    emailQueueBean.setEmailSubject( subjectWriter.toString() );
+
+                    emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
+
+                    appLogging.error("Using the Mustache API to generate Email Querue Bean : " + emailQueueBean);
+                    // This will actually send the email. Spawning a thread and continue
+                    // execution.
+                    Thread quickEmail = new Thread(new QuickMailSendThread( emailQueueBean), "New Vendor Registered Access Email");
+                    quickEmail.start();
+                    isEmailSendtSuccessfully = true;
+                }
+
+            }
+
+        }
+        return isEmailSendtSuccessfully;
+    }
+
 }

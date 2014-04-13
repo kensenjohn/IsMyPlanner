@@ -12,6 +12,8 @@ import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
 import org.json.JSONObject;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,8 +49,8 @@ public class ProcSendTestEmail extends HttpServlet {
                     String sEventEmailId = ParseUtil.checkNull(request.getParameter("event_email_id"));
                     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
                     String sEmail = ParseUtil.checkNull(request.getParameter("emailTest"));
-
-                    if(Utility.isNullOrEmpty(sEmail)) {
+                    Validator instance = ESAPI.validator();
+                    if( !instance.isValidInput( "emailTest",sEmail,"Email",250,false ) ) {
                         Text errorText = new ErrorText("Please use a valid email address to send the test email.","err_mssg") ;
                         arrErrorText.add(errorText);
                         responseStatus = RespConstants.Status.ERROR;

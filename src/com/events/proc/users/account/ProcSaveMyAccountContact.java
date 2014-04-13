@@ -48,6 +48,7 @@ public class ProcSaveMyAccountContact   extends HttpServlet {
                     String lastName = ParseUtil.checkNull(request.getParameter("last_name"));
                     String company = ParseUtil.checkNull(request.getParameter("company"));
                     String cellPhone = ParseUtil.checkNull(request.getParameter("cell_phone"));
+                    String website = ParseUtil.checkNull(request.getParameter("website"));
                     String phoneNum = ParseUtil.checkNull(request.getParameter("phone_num"));
                     String address1 = ParseUtil.checkNull(request.getParameter("address1"));
                     String address2 = ParseUtil.checkNull(request.getParameter("address2"));
@@ -75,6 +76,7 @@ public class ProcSaveMyAccountContact   extends HttpServlet {
                         userRequestBean.setState( state );
                         userRequestBean.setPostalCode( zipcode );
                         userRequestBean.setCountry( country );
+                        userRequestBean.setWebsite( website );
 
 
                         BuildUsers buildUsers = new BuildUsers();

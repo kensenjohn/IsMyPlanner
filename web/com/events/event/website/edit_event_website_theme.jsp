@@ -78,7 +78,7 @@
 </form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 <script type="text/javascript">
     $(window).load(function() {
         loadAllThemes(populateAllThemes);

@@ -51,13 +51,14 @@ public class BuildUserData {
     }
     public Integer insertUserInfo(UserInfoBean userInfoBean) {
         String sQuery = "INSERT INTO GTUSERINFO (USERINFOID,FIRST_NAME,LAST_NAME,   ADDRESS_1,ADDRESS_2,CITY,  STATE,COUNTRY,IP_ADDRESS,  " +
-                "CELL_PHONE,PHONE_NUM,EMAIL,    DEL_ROW,CREATEDATE,HUMANCREATEDATE,   COMPANY,ZIPCODE )"
-                + " VALUES ( ?,?,?,  ?,?,?,  ?,?,?,  ?,?,?,  ?,?,?,   ?,?)";
+                "CELL_PHONE,PHONE_NUM,EMAIL,    DEL_ROW,CREATEDATE,HUMANCREATEDATE,   COMPANY,ZIPCODE,WEBSITE)"
+                + " VALUES ( ?,?,?,  ?,?,?,  ?,?,?,  ?,?,?,  ?,?,?,   ?,?,?)";
 
         ArrayList<Object> aParams = DBDAO.createConstraint( userInfoBean.getUserInfoId(), userInfoBean.getFirstName(), userInfoBean.getLastName(),
                 userInfoBean.getAddress1(), userInfoBean.getAddress2(), userInfoBean.getCity(), userInfoBean.getState(), userInfoBean.getCountry(),
                 userInfoBean.getIpAddress(), userInfoBean.getCellPhone(), userInfoBean.getPhoneNum(), userInfoBean.getEmail(),
-                userInfoBean.getDeleteRow(), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(), userInfoBean.getCompany(),userInfoBean.getZipcode());
+                userInfoBean.getDeleteRow(), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(),
+                userInfoBean.getCompany(),userInfoBean.getZipcode(),userInfoBean.getWebsite());
         int numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildUserData.java", "insertUserInfo() ");
 
         return numOfRowsInserted;
@@ -79,14 +80,14 @@ public class BuildUserData {
     public Integer updateUserInfo(UserInfoBean userInfoBean) {
         String sQuery = "UPDATE GTUSERINFO SET USERINFOID = ?,FIRST_NAME = ?,LAST_NAME = ?,   ADDRESS_1 = ?,ADDRESS_2 = ?,CITY = ?,  " +
                 "STATE = ? ,COUNTRY = ?,IP_ADDRESS = ?,  " +
-                "CELL_PHONE = ?,PHONE_NUM=?,EMAIL = ?,   DEL_ROW = ?,MODIFIEDDATE = ?,    HUMANMODIFIEDDATE = ?,COMPANY = ?,ZIPCODE = ? "
-                + "  WHERE USERINFOID = ?";
+                "CELL_PHONE = ?,PHONE_NUM=?,EMAIL = ?,   DEL_ROW = ?,MODIFIEDDATE = ?,    HUMANMODIFIEDDATE = ?,COMPANY = ?,ZIPCODE = ?,"
+                + "  WEBSITE=? WHERE USERINFOID = ?";
 
         ArrayList<Object> aParams = DBDAO.createConstraint( userInfoBean.getUserInfoId(), userInfoBean.getFirstName(), userInfoBean.getLastName(),
                 userInfoBean.getAddress1(), userInfoBean.getAddress2(), userInfoBean.getCity(), userInfoBean.getState(), userInfoBean.getCountry(),
                 userInfoBean.getIpAddress(), userInfoBean.getCellPhone(), userInfoBean.getPhoneNum(), userInfoBean.getEmail(),
                 userInfoBean.getDeleteRow(), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(), userInfoBean.getCompany(),userInfoBean.getZipcode(),
-                userInfoBean.getUserInfoId());
+                userInfoBean.getWebsite(), userInfoBean.getUserInfoId());
         int numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB,  "BuildUserData.java", "updateUserInfo() ");
         return numOfRowsInserted;
     }

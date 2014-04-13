@@ -269,9 +269,10 @@ public class Constants {
         RSVPRESPONSEDEMO("RSVPRESPONSEDEMO"),
         RSVPRESPONSE("RSVPRESPONSE"),
         CLIENT_PARENTSITE_ACCESS("CLIENT_PARENTSITE_ACCESS"),
-        NEW_TEAM_MEMBER_ACCESS("NEW_TEAM_MEMBER_ACCESS");
+        NEW_TEAM_MEMBER_ACCESS("NEW_TEAM_MEMBER_ACCESS"),
+        NEW_VENDOR_ACCESS("NEW_VENDOR_ACCESS");
 
-        private String emailTemplate = "";
+        private String emailTemplate = Constants.EMPTY;
 
         EMAIL_TEMPLATE(String emailTemplate) {
             this.emailTemplate = emailTemplate;

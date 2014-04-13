@@ -111,6 +111,9 @@
                     loadDashboardSummary(populateDashboardSummary)
                 }});
         });
+        if(mixpanel!=undefined) {
+            mixpanel.track("dashboard.jsp");
+        }
     });
     function loadDashboardSummary(callbackmethod) {
         var actionUrl = "/proc_load_dashboard_summary.aeve";

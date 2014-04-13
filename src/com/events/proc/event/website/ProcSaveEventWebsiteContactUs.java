@@ -50,6 +50,7 @@ public class ProcSaveEventWebsiteContactUs  extends HttpServlet {
                     String sPageType =  ParseUtil.checkNull(request.getParameter("page_type"));
                     String sEventWebsiteId =  ParseUtil.checkNull(request.getParameter("event_website_id"));
                     String sEventContactUsId =  ParseUtil.checkNull(request.getParameter("event_contactus_id"));
+                    String sEmail = ParseUtil.checkNull(request.getParameter("contactus_email"));
 
                     if(Utility.isNullOrEmpty(sEventWebsiteId)){
                         EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
@@ -65,7 +66,6 @@ public class ProcSaveEventWebsiteContactUs  extends HttpServlet {
                     }
                     String sName = ParseUtil.checkNull(request.getParameter("contactus_name"));
                     String sPhone = ParseUtil.checkNull(request.getParameter("contactus_phone"));
-                    String sEmail = ParseUtil.checkNull(request.getParameter("contactus_email"));
 
                     EventContactUsRequest eventContactUsRequest = new EventContactUsRequest();
                     eventContactUsRequest.setEventContactUsId(sEventContactUsId);

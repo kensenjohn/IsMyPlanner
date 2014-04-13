@@ -262,6 +262,7 @@ Button in menu bar
     border:none;
     box-shadow:none;
     margin:0px;
+    overflow: hidden;
 }
 
 .page-title {

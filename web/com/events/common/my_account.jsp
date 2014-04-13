@@ -65,6 +65,12 @@
                 <input type="text" class="form-control" id="company" name="company" placeholder="Company Name" value="{{company}}">
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="website" class="form_label">Website</label>
+                <input type="text" class="form-control" id="website" name="website" placeholder="Website" value="{{website}}">
+            </div>
+        </div>
     </div>
     <div class="form-group">
         <div class="row">
@@ -158,7 +164,7 @@
                     console.log('Is Saved' + jsonResponseObj.is_saved );
                     if( jsonResponseObj.is_saved == true ) {
                         displayMssgBoxAlert("Contact Information was successfully saved.", false);
-                        $('#top_nave_hello_name').text( $('#first_name').val() );
+                        $('#top_nave_hello_name').text( $('#first_name').val() +'\'s Account' );
                     } else {
                         displayMssgBoxAlert("We were unable to process your request. Please try again later. (saveAccountContact - 3)", true);
                     }
@@ -250,7 +256,8 @@
                 "cell_phone" : this.varUserInfoBean.cell_phone ,
                 "phone_num" : this.varUserInfoBean.phone_num ,
                 "company" : this.varUserInfoBean.company ,
-                "zipcode" : this.varUserInfoBean.zipcode
+                "zipcode" : this.varUserInfoBean.zipcode ,
+                "website" : this.varUserInfoBean.website
             }
             $(this.el).append( this.template( eval(varUserAccountContactInfo)  ) );
         }

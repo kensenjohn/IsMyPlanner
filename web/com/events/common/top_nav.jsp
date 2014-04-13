@@ -2,6 +2,7 @@
 <%@ page import="com.events.bean.users.UserBean" %>
 <%@ page import="com.events.bean.users.UserInfoBean" %>
 <%@ page import="com.events.common.ParseUtil" %>
+<%@ page import="com.events.common.Utility" %>
 <%
     String sRedirectTo = com.events.common.ParseUtil.checkNull(request.getParameter(Constants.AFTER_LOGIN_REDIRECT));
     if(!"".equalsIgnoreCase(sRedirectTo)) {
@@ -30,10 +31,12 @@
                     if(userBean!=null && !"".equalsIgnoreCase(userBean.getUserId())) {
                         UserInfoBean userInfoBean = userBean.getUserInfoBean();
 
-                        String sName =  userInfoBean.getFirstName();
-                        /*if(sName.length()>8) {
-                            sName = sName.substring(0,8);
-                        }*/
+                        String sName =  ParseUtil.checkNull(userInfoBean.getFirstName());
+                        if(Utility.isNullOrEmpty(sName)) {
+                            sName = "My Account";
+                        } else {
+                            sName = sName + "'s Account";
+                        }
                 %>
                         <li><a href="/com/events/common/my_account.jsp"><i class="fa fa-user"></i> <span id="top_nave_hello_name"><%=sName%></span></a></li>
                         <li><a href="/com/events/common/logout.jsp"> Logout <i class="fa fa-sign-out"></i></a></li>

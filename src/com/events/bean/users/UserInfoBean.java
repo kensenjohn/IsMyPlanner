@@ -36,6 +36,7 @@ public class UserInfoBean {
     private String humanPhoneNum = Constants.EMPTY;
     private String humanCreateDate = Constants.EMPTY;
     private String timezone = Constants.EMPTY;
+    private String website = Constants.EMPTY;
 
     private String company = Constants.EMPTY;
     private String zipcode = Constants.EMPTY;
@@ -60,8 +61,7 @@ public class UserInfoBean {
         this.email = ParseUtil.checkNull(hmUserInfo.get("EMAIL"));
         this.cellPhone = ParseUtil.checkNull(hmUserInfo.get("CELL_PHONE"));
         this.phoneNum = ParseUtil.checkNull(hmUserInfo.get("PHONE_NUM"));
-        this.humanCreateDate = ParseUtil.checkNull(hmUserInfo
-                .get("HUMAN_CREATEDATE"));
+        this.humanCreateDate = ParseUtil.checkNull(hmUserInfo.get("HUMAN_CREATEDATE"));
         this.timezone = ParseUtil.checkNull(hmUserInfo.get("TIMEZONE"));
 
 
@@ -71,6 +71,7 @@ public class UserInfoBean {
 
         this.company = ParseUtil.checkNull(hmUserInfo.get("COMPANY"));
         this.zipcode = ParseUtil.checkNull(hmUserInfo.get("ZIPCODE"));
+        this.website = ParseUtil.checkNull(hmUserInfo.get("WEBSITE"));
     }
 
     public String getHumanFormattedPhoneNumber(String sTmpPhoneNumber)
@@ -81,6 +82,14 @@ public class UserInfoBean {
             sHumanFormattedPhones = Utility.getHumanFormattedNumber(sTmpPhoneNumber, "US");
         }
         return sHumanFormattedPhones;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
     public String getTimezone() {
@@ -293,6 +302,7 @@ public class UserInfoBean {
             jsonObject.put("userinfo_id", this.userInfoId);
             jsonObject.put("company", this.company);
             jsonObject.put("zipcode", this.zipcode);
+            jsonObject.put("website", this.website);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -325,6 +335,7 @@ public class UserInfoBean {
         sb.append(", timezone='").append(timezone).append('\'');
         sb.append(", company='").append(company).append('\'');
         sb.append(", zipcode='").append(zipcode).append('\'');
+        sb.append(", website='").append(website).append('\'');
         sb.append('}');
         return sb.toString();
     }

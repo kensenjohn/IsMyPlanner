@@ -8,13 +8,28 @@
 <%@ page import="com.events.common.ParseUtil" %>
 <%@ page import="com.events.users.AccessUsers" %>
 <%@ page import="com.events.bean.users.ParentTypeBean" %>
+<%@ page import="com.events.vendors.AccessVendors" %>
+<%@ page import="com.events.bean.vendors.VendorResponseBean" %>
+<%@ page import="org.slf4j.Logger" %>
+<%@ page import="org.slf4j.LoggerFactory" %>
 <%
-    String sHomeUrl = Utility.createSiteDomainUrl(  ParseUtil.checkNull(request.getParameter("subdomain")) );
+
+    Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
+
+    String sHomeUrl = Constants.EMPTY;
     boolean isVendorSubDomainUsed = false;
     String sCopyrightCompany = Constants.EMPTY;
+    String sCopyrightCompanyUrl = Constants.EMPTY;
     HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmVendorWebsiteFeatureBean = new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE, VendorWebsiteFeatureBean>();
     if( session.getAttribute("SUBDOMAIN_VENDOR") != null && session.getAttribute("SUBDOMAIN_VENDOR_WEBSITE") !=null ) {
         VendorBean vendorBean = (VendorBean)  session.getAttribute("SUBDOMAIN_VENDOR");
+
+        AccessVendors accessVendors = new AccessVendors();
+        VendorResponseBean vendorResponseBean = accessVendors.getVendorContactInfo( vendorBean );
+        if(vendorResponseBean!=null && vendorResponseBean.getUserInfoBean()!=null){
+            sHomeUrl = ParseUtil.checkNull(vendorResponseBean.getUserInfoBean().getWebsite());
+        }
+
         sCopyrightCompany = ParseUtil.checkNull( vendorBean.getVendorName());
         VendorWebsiteBean vendorWebsiteBean = (VendorWebsiteBean) session.getAttribute("SUBDOMAIN_VENDOR_WEBSITE");
         if(vendorWebsiteBean!=null && !Utility.isNullOrEmpty(vendorWebsiteBean.getVendorWebsiteId())){
@@ -22,7 +37,6 @@
             AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
             hmVendorWebsiteFeatureBean =  accessVendorWebsite.getPublishedFeaturesForWebPages(vendorWebsiteBean);
         }
-
     }
     com.events.common.Configuration applicationConfig = com.events.common.Configuration.getInstance(com.events.common.Constants.APPLICATION_PROP);
 
@@ -94,6 +108,7 @@
      String sCopyrightYear = applicationConfig.get("copyright_year");
     if(Utility.isNullOrEmpty(sCopyrightCompany)){
         sCopyrightCompany = ParseUtil.checkNull(applicationConfig.get("copyright_company"));
+        sHomeUrl = ParseUtil.checkNull(applicationConfig.get("copyright_company_website"));
     }
 %>
 <footer>

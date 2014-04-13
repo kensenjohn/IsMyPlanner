@@ -91,21 +91,20 @@
           <jsp:param name="home_active" value="currently_active"/>
       </jsp:include>
       <div class="container-fluid">
-          <!--<div style="background-image: url('<%=sLandingPagePhoto%>'); margin-left: 0;margin-right: 0;background-position: 50% 0;">
-            &nbsp;
-          </div> -->
-          <div class="flexslider">
-              <ul class="slides">
-                  <li>
-                      <img src="<%=sLandingPagePhoto%>" />
-                      <!--<div class="container hidden-sm ">
-                          <div class="slide-caption bottom-left">
-                              <h1 style="color: #ffffff;">An Event Planner's Management Portal</h1>
-                              <p>Manage your team, clients and vendors from one place.</p>
-                          </div>
-                      </div>  -->
-                  </li>
-              </ul>
+          <div id="hero_image" style="background-image: url('<%=sLandingPagePhoto%>');background-size: cover; text-align: center;">
+              <div class="flexslider">
+                  <ul class="slides">
+                      <li>
+                          <img src="<%=sLandingPagePhoto%>" />
+                          <!--<div class="container hidden-sm ">
+                              <div class="slide-caption bottom-left">
+                                  <h1 style="color: #ffffff;">An Event Planner's Management Portal</h1>
+                                  <p>Manage your team, clients and vendors from one place.</p>
+                              </div>
+                          </div>  -->
+                      </li>
+                  </ul>
+              </div>
           </div>
       </div>
       <div class="container">
@@ -316,6 +315,9 @@
             p.src = '//assets.pinterest.com/js/pinit.js';
             f.parentNode.insertBefore(p, f);
         }(document));
+        if(mixpanel!=undefined) {
+            mixpanel.track("Landing Page");
+        }
     });
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>

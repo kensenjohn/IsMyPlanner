@@ -1,15 +1,17 @@
 package com.events.vendors.website;
 
+import com.events.bean.users.ParentTypeBean;
+import com.events.bean.users.UserBean;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorResponseBean;
-import com.events.bean.vendors.website.VendorWebsiteBean;
-import com.events.bean.vendors.website.VendorWebsiteFeatureBean;
-import com.events.bean.vendors.website.VendorWebsiteRequestBean;
-import com.events.bean.vendors.website.VendorWebsiteResponseBean;
+import com.events.bean.vendors.website.*;
+import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.data.vendors.website.AccessVendorWebsiteData;
+import com.events.users.AccessUsers;
+import com.events.vendors.AccessVendors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +24,7 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class AccessVendorWebsite extends VendorWebsite{
-
+    Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     public VendorWebsiteFeatureBean getSubDomain(VendorBean vendorBean) {
 
         VendorWebsiteFeatureBean vendorWebsiteFeatureBeanFromDB = new VendorWebsiteFeatureBean();
@@ -196,5 +198,39 @@ public class AccessVendorWebsite extends VendorWebsite{
 
         }
         return hmVendorWebsiteFeatureBean;
+    }
+
+    public VendorWebsiteURLBean getVendorWebsiteUrlBean(UserBean userBean){
+        VendorWebsiteURLBean vendorWebsiteURLBean = new VendorWebsiteURLBean();
+
+        if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId())) {
+            AccessUsers accessUsers = new AccessUsers();
+            ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser(userBean);
+            if(parentTypeBean!=null && parentTypeBean.getVendorBean()!=null){
+                VendorBean vendorBean = parentTypeBean.getVendorBean();
+
+                vendorWebsiteURLBean = getVendorWebsiteUrlBean(vendorBean);
+
+            }
+        }
+        
+
+        return vendorWebsiteURLBean;
+    }
+    public VendorWebsiteURLBean getVendorWebsiteUrlBean(VendorBean vendorBean){
+        VendorWebsiteURLBean vendorWebsiteURLBean = new VendorWebsiteURLBean();
+        if(vendorBean!=null && !Utility.isNullOrEmpty(vendorBean.getVendorId())) {
+            String sDomain = ParseUtil.checkNull(applicationConfig.get(Constants.APPLICATION_DOMAIN));
+            String sProtocol = ParseUtil.checkNull(applicationConfig.get(Constants.PROP_LINK_PROTOCOL));
+
+            AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
+            VendorWebsiteFeatureBean vendorWebsiteFeatureBean = accessVendorWebsite.getSubDomain(vendorBean);
+            String sSubDomain = ParseUtil.checkNull(vendorWebsiteFeatureBean.getValue());
+
+            vendorWebsiteURLBean.setSubDomain(ParseUtil.checkNull(sSubDomain));
+            vendorWebsiteURLBean.setDomain(sDomain );
+            vendorWebsiteURLBean.setProtocol( sProtocol );
+        }
+        return vendorWebsiteURLBean;
     }
 }

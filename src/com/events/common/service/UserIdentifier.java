@@ -47,7 +47,6 @@ public class UserIdentifier implements Filter {
         String sQueryString = request.getQueryString();
         String sSubDomain = ParseUtil.checkNull(request.getParameter("subdomain"));
 
-        appLogging.info("requestURL: " + requestURL  + " -  APPLICATION_DOMAIN : " + APPLICATION_DOMAIN + " sSubDomain : " + sSubDomain);
         if(!Utility.isNullOrEmpty(sSubDomain) && !sSubDomain.startsWith("www") ) {
 
 

@@ -3,6 +3,7 @@ event_admin_db=eventadmin
 event_host_db=eventhost
 copyright_year=2014
 copyright_company=Smarasoft Inc
+copyright_company_website=https://www.smarasoft.com
 
 file_host=https://s3.amazonaws.com
 file_upload_location=/usr/uploadloc

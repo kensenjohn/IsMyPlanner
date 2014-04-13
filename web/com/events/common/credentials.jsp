@@ -138,6 +138,9 @@
         $('#btn_register').click(function(){
             registerUser(getResult);
         });
+        if(mixpanel!=undefined) {
+            mixpanel.track("credentials.jsp");
+        }
     });
     function loginUser( callbackmethod) {
         var actionUrl = "/proc_login.aeve";

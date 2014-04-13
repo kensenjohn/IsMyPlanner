@@ -3,16 +3,16 @@ package com.events.users;
 import com.events.bean.common.email.EmailQueueBean;
 import com.events.bean.common.email.EmailSchedulerBean;
 import com.events.bean.common.email.EmailTemplateBean;
-import com.events.bean.users.ForgotPasswordBean;
-import com.events.bean.users.UserBean;
-import com.events.bean.users.UserInfoBean;
-import com.events.bean.users.UserRequestBean;
+import com.events.bean.users.*;
+import com.events.bean.vendors.VendorBean;
+import com.events.bean.vendors.website.*;
 import com.events.common.*;
 import com.events.common.email.creator.EmailCreator;
 import com.events.common.email.creator.MailCreator;
 import com.events.common.email.send.QuickMailSendThread;
 import com.events.data.email.EmailServiceData;
 import com.events.data.users.ForgotPasswordData;
+import com.events.vendors.website.AccessVendorWebsite;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -161,23 +162,29 @@ public class ForgotPassword {
             mapTextEmailValues.put("GIVEN_NAME",sGivenName);
             mapHtmlEmailValues.put("GIVEN_NAME", sGivenName);
 
+            String sBusinessName =  Constants.EMPTY;
+            VendorWebsiteURLBean vendorWebsiteURLBean = new VendorWebsiteURLBean();
+            AccessUsers accessUsers = new AccessUsers();
+            ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser(userBean);
+            if(parentTypeBean!=null && parentTypeBean.getVendorBean()!=null){
+                VendorBean vendorBean = parentTypeBean.getVendorBean();
+                sBusinessName = ParseUtil.checkNull(vendorBean.getVendorName());
 
-            String sResetDomain = ParseUtil.checkNull(applicationConfig.get(Constants.DOMAIN));
-            if(sResetDomain!=null && !"".equalsIgnoreCase(sResetDomain)) {
+                AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
+                vendorWebsiteURLBean = accessVendorWebsite.getVendorWebsiteUrlBean(vendorBean);
+            }
+            if(vendorWebsiteURLBean!=null && !Utility.isNullOrEmpty(vendorWebsiteURLBean.getDomain())) {
 
-
-                String sResetLink = ParseUtil.checkNull("https://" + sResetDomain + "/com/events/common/reset_password.jsp?lotophagi="+forgotPasswordBean.getSecureTokenId());
+                String sResetLink = ParseUtil.checkNull(vendorWebsiteURLBean.getUrl() + "/com/events/common/reset_password.jsp?lotophagi="+forgotPasswordBean.getSecureTokenId());
 
                 mapTextEmailValues.put("NEW_PASSWORD_RESET_LINK",sResetLink);
-                mapHtmlEmailValues.put("NEW_PASSWORD_RESET_LINK","<a href=\""+sResetLink+"\" target=\"_blank\">Reset Password</a>");
-
-                String sProductName = ParseUtil.checkNull(applicationConfig.get(Constants.PRODUCT_NAME));
-
-                mapTextEmailValues.put("PRODUCT_NAME",sProductName);
-                mapHtmlEmailValues.put("PRODUCT_NAME",sProductName);
+                mapHtmlEmailValues.put("NEW_PASSWORD_RESET_LINK",sResetLink);
 
 
+                mapTextEmailValues.put("BUSINESS_NAME",sBusinessName);
+                mapHtmlEmailValues.put("BUSINESS_NAME",sBusinessName);
 
+                appLogging.error("Html Email Value: " + mapHtmlEmailValues);
 
                 MustacheFactory mf = new DefaultMustacheFactory();
                 Mustache mustacheText =  mf.compile(new StringReader(sTxtTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_text");
@@ -193,6 +200,8 @@ public class ForgotPassword {
                     htmlWriter = new StringWriter();
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
+
+                appLogging.error("Html Email Writers: " + htmlWriter.toString());
 
                 emailQueueBean.setHtmlBody(htmlWriter.toString());
                 emailQueueBean.setTextBody(txtWriter.toString());
