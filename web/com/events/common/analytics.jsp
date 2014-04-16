@@ -10,7 +10,7 @@
 
     if(!"".equals(sGoogleTrackId))
     {
-%>
+%>                                                                                                                                    i
 
 <script type="text/javascript">
 
@@ -30,7 +30,6 @@
     }
 
     String sMixPanelTrackId = com.events.common.ParseUtil.checkNull(analyticsConfig.get(Constants.ANALYTICS_KEYS.MIXPANEL_TRACKING_ID.getKey()));
-    appLogging.info("sMixPanelTrackId : " + sMixPanelTrackId );
     if(!Utility.isNullOrEmpty( sMixPanelTrackId ) ) {
 %>
 <!-- start Mixpanel --><script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==

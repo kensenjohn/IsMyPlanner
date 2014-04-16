@@ -25,6 +25,7 @@
 <div class="page_wrap">
     <jsp:include page="/com/events/common/top_nav.jsp">
         <jsp:param name="AFTER_LOGIN_REDIRECT" value="index.jsp"/>
+        <jsp:param name="disable_account_link" value="true"/>
     </jsp:include>
     <jsp:include page="/com/events/common/menu_bar.jsp">
         <jsp:param name="hide_menu" value="true"/>
@@ -2104,7 +2105,6 @@
                         //$('#banner_foldername').val(varDataResult.foldername);
                         //couples_partner1_upload_id
                         var imagePath = varDataResult.imagehost+'/'+varDataResult.bucket+'/'+varDataResult.foldername+'/'+varDataResult.name;
-                        //console.log(varDataResult.upload_image.upload_id);
                         $('#couples_partner2_upload_id').val(varDataResult.upload_image.upload_id);
                         createImage(imagePath, 'partner2_image_name');
 
@@ -2153,7 +2153,6 @@
                 displayAjaxError(varResponseObj);
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
-                console.log('Saving Couple Party' );
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
                     var varEventPartyBean = jsonResponseObj.event_party_bean;

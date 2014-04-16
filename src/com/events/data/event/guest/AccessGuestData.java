@@ -165,10 +165,33 @@ public class AccessGuestData {
         }
         return arrGuestGroupEmailBean;
     }
+    public GuestResponseBean getGuestDetailsFromEmail(GuestRequestBean guestRequestBean) {
+        GuestResponseBean guestResponseBean = new GuestResponseBean();
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getEventId())&& !Utility.isNullOrEmpty(guestRequestBean.getEmail())){
+            String sQuery = "SELECT * FROM  GTEVENTGUESTGROUP GEVENT, GTGUESTGROUPEMAIL GEMAIL, GTGUEST GG, GTGUESTGROUP GGRP  WHERE " +
+                    " GEVENT.FK_EVENTID=? AND GEMAIL.EMAIL_ID= ? AND GEVENT.FK_GUESTGROUPID= GEMAIL.FK_GUESTGROUPID AND " +
+                    " GG.FK_GUESTGROUPID=GEVENT.FK_GUESTGROUPID  AND GGRP.GUESTGROUPID=GG.FK_GUESTGROUPID ";
+
+            ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getEventId() , guestRequestBean.getEmail());
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessGuestData.java", "getGuestDetailsFromEmail()");
+            if(arrResult!=null && !arrResult.isEmpty()) {
+                for( HashMap<String, String> hmResult : arrResult ) {
+                    GuestGroupBean guestGroupBean = new GuestGroupBean(hmResult);
+                    EventGuestGroupBean eventGuestGroupBean = new EventGuestGroupBean(hmResult);
+                    GuestBean guestBean = new GuestBean(hmResult);
+
+                    guestResponseBean.setGuestBean( guestBean );
+                    guestResponseBean.setEventGuestGroupBean( eventGuestGroupBean );
+                    guestResponseBean.setGuestGroupBean( guestGroupBean );
+                }
+            }
+        }
+        return guestResponseBean;
+    }
 
     public ArrayList<GuestGroupAddressBean> getGuestGroupAddress(GuestRequestBean guestRequestBean) {
         ArrayList<GuestGroupAddressBean>  arrGuestGroupAddressBean = new ArrayList<GuestGroupAddressBean>();
-        appLogging.info("guest group id : " + guestRequestBean.getGuestGroupId() );
         if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())){
             String sQuery = "SELECT * FROM GTGUESTGROUPADDRESS WHERE FK_GUESTGROUPID =?";
             ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getGuestGroupId());

@@ -49,7 +49,7 @@ public class VendorWebsiteURLBean {
             sTmpProtocol = "//";
         }
         if(Utility.isNullOrEmpty(this.subDomain) && !"localhost".equalsIgnoreCase(this.domain)) {
-            sTmpSubDomain = "www";
+            sTmpSubDomain = "www" + ".";
         }
 
         if(!Utility.isNullOrEmpty(this.subDomain) ){

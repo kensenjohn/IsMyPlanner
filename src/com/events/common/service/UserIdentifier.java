@@ -149,7 +149,6 @@ public class UserIdentifier implements Filter {
             }
 
         }
-        appLogging.info("Going to invoke do filter" );
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

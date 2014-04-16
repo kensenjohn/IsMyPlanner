@@ -10,10 +10,12 @@ import com.events.bean.users.*;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
 import com.events.bean.vendors.website.VendorWebsiteFeatureBean;
+import com.events.bean.vendors.website.VendorWebsiteURLBean;
 import com.events.clients.AccessClients;
 import com.events.common.email.creator.EmailCreator;
 import com.events.common.email.creator.MailCreator;
 import com.events.common.email.send.QuickMailSendThread;
+import com.events.common.exception.ExceptionHandler;
 import com.events.common.exception.users.ManagePasswordException;
 import com.events.data.ParentSiteEnabledData;
 import com.events.data.email.EmailServiceData;
@@ -232,19 +234,11 @@ public class ParentSiteEnabled {
                     mapTextEmailValues.put("GIVEN_NAME",sGivenName);
                     mapHtmlEmailValues.put("GIVEN_NAME", sGivenName);
 
-                    String sResetDomain = ParseUtil.checkNull(applicationConfig.get(Constants.DOMAIN));
-                    if(sResetDomain!=null && !"".equalsIgnoreCase(sResetDomain)) {
+                    AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
+                    VendorWebsiteURLBean vendorWebsiteURLBean = accessVendorWebsite.getVendorWebsiteUrlBean(vendorBean);
+                    if(vendorWebsiteURLBean!=null && !Utility.isNullOrEmpty(vendorWebsiteURLBean.getDomain())) {
 
-
-                        AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
-                        VendorWebsiteFeatureBean vendorWebsiteFeatureBean = accessVendorWebsite.getSubDomain( vendorBean );
-                        if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue())){
-                            sResetDomain = vendorWebsiteFeatureBean.getValue() + "." + sResetDomain;
-                        }
-
-                        String sProtocol = applicationConfig.get(Constants.PROP_LINK_PROTOCOL,"http");
-
-                        String sPortalLink = ParseUtil.checkNull(sProtocol + "://" + sResetDomain + "/com/events/common/set_password.jsp?lotophagi="+forgotPasswordBean.getSecureTokenId());
+                        String sPortalLink = ParseUtil.checkNull(vendorWebsiteURLBean.getUrl() + "/com/events/common/set_password.jsp?lotophagi="+forgotPasswordBean.getSecureTokenId());
 
                         mapTextEmailValues.put("PORTAL_LINK",sPortalLink);
                         mapHtmlEmailValues.put("PORTAL_LINK","<a href=\""+sPortalLink+"\" target=\"_blank\">Set New Password</a>");
@@ -268,16 +262,16 @@ public class ParentSiteEnabled {
                             mustacheHtml.execute(htmlWriter, mapHtmlEmailValues).flush();
                             mustacheSubject.execute(subjectWriter, mapHtmlEmailValues ).flush();
                         } catch (IOException e) {
+                            appLogging.error("Mustance Exception Parent Site Enabled: " + ExceptionHandler.getStackTrace(e));
                             txtWriter = new StringWriter();
                             htmlWriter = new StringWriter();
                             subjectWriter = new StringWriter();
-                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                         }
 
                         emailQueueBean.setHtmlBody(htmlWriter.toString());
                         emailQueueBean.setTextBody(txtWriter.toString());
                         emailQueueBean.setEmailSubject(subjectWriter.toString() );
-                        emailQueueBean.setCcAddress("kensenjohn@gmail.com");
+                        emailQueueBean.setBccAddress("kensenjohn@gmail.com");
 
                         {
                             // We are just creating a record in the database with this action.
@@ -288,12 +282,10 @@ public class ParentSiteEnabled {
                             emailQueueBean.setStatus(Constants.EMAIL_STATUS.SENT.getStatus());
                             MailCreator dummyEailCreator = new EmailCreator();
                             dummyEailCreator.create(emailQueueBean , new EmailSchedulerBean());
-                            appLogging.error("Text body of email. : " + emailQueueBean.getTextBody());
                         }
 
                         emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
 
-                        appLogging.error("Using the Mustache API to generate Email Querue Bean : " + emailQueueBean);
                         // This will actually send the email. Spawning a thread and continue
                         // execution.
                         Thread quickEmail = new Thread(new QuickMailSendThread( emailQueueBean), "Quick Email Password Reset");

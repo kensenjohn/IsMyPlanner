@@ -10,6 +10,7 @@ import com.events.common.*;
 import com.events.common.email.creator.EmailCreator;
 import com.events.common.email.creator.MailCreator;
 import com.events.common.email.send.QuickMailSendThread;
+import com.events.common.exception.ExceptionHandler;
 import com.events.data.email.EmailServiceData;
 import com.events.data.users.ForgotPasswordData;
 import com.events.vendors.website.AccessVendorWebsite;
@@ -184,7 +185,6 @@ public class ForgotPassword {
                 mapTextEmailValues.put("BUSINESS_NAME",sBusinessName);
                 mapHtmlEmailValues.put("BUSINESS_NAME",sBusinessName);
 
-                appLogging.error("Html Email Value: " + mapHtmlEmailValues);
 
                 MustacheFactory mf = new DefaultMustacheFactory();
                 Mustache mustacheText =  mf.compile(new StringReader(sTxtTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_text");
@@ -196,19 +196,18 @@ public class ForgotPassword {
                     mustacheText.execute(txtWriter, mapTextEmailValues).flush();
                     mustacheHtml.execute(htmlWriter, mapHtmlEmailValues).flush();
                 } catch (IOException e) {
+                    appLogging.error("reset Password mustache exception: " + ExceptionHandler.getStackTrace(e));
                     txtWriter = new StringWriter();
                     htmlWriter = new StringWriter();
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
 
-                appLogging.error("Html Email Writers: " + htmlWriter.toString());
+
 
                 emailQueueBean.setHtmlBody(htmlWriter.toString());
                 emailQueueBean.setTextBody(txtWriter.toString());
 
                 emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
 
-                appLogging.error("Using the Mustache API to generate Email Querue Bean : " + emailQueueBean);
                 // This will actually send the email. Spawning a thread and continue
                 // execution.
                 Thread quickEmail = new Thread(new QuickMailSendThread( emailQueueBean), "Quick Email Password Reset");

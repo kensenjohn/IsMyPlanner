@@ -145,6 +145,8 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link rel="stylesheet" type="text/css" href="/css/color/modern_blue.css">
+    <link rel="stylesheet" type="text/css" href="/css/messi.css">
+    <link rel="stylesheet" type="text/css" href="/css/messi_styled.css">>
     <link rel="stylesheet" type="text/css" href="/css/flexslider.css">
     <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/cl/<%=sThemeName%>/css/elegant_style.css">
@@ -1269,7 +1271,7 @@
         </div>
         <div class="row" >
             <div class="col-md-8">
-                <form>
+                <form id="frm_guest_rsvp">
                     <div class="row">
                         <div class="col-md-6">
                             <label for="rsvpFirstName" class="form_label">First Name</label><span class="required"> *</span>
@@ -1297,6 +1299,7 @@
                             <input type="text" class="form-control" id="rsvpNumOfGuests" name="rsvpNumOfGuests" placeholder="Number of Guests">
                         </div>
                     </div>
+                    <input type="hidden" name="event_id" value="<%=sEventId%>"/>
                 </form>
                 <button type="button" class="btn btn-filled" id="btn_submit_rsvp">Submit RSVP</button>
             </div>
@@ -1396,16 +1399,15 @@
 </div>
 </div>
 </body>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="/js/jquery-1.10.2.min.js">\x3C/script>')</script>
-<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+<jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.flexslider-min.js"></script>
-<script src="http://maps.google.com/maps/api/js?sensor=true"></script>
-<script src="http://www.smarasoft.com/js/jquery.gmap.min.js"></script>
+<script src="//maps.google.com/maps/api/js?sensor=true"></script>
+<script src="/js/jquery.gmap.min.js"></script>
 <script   type="text/javascript">
     var varCeremonyAddress = '<%=sCeremonyAddress%>';
     var varReceptionAddress = '<%=sReceptionAddress%>';
+    var varEventId = '<%=sEventId%>';
     $(window).load(function() {
         $('.flexslider').flexslider({
             animation: "slide"
@@ -1435,6 +1437,35 @@
                 }
             ]
         });
+
+        $('#btn_submit_rsvp').click(function(){
+            saveRsvp( getResult )
+        });
     });
+
+    function saveRsvp( callbackmethod ) {
+        var actionUrl = "/proc_save_guest_rsvp.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_guest_rsvp").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function getResult(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                }
+                displayAjaxOk(varResponseObj);
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
+    }
 </script>
 </html>

@@ -146,7 +146,6 @@
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
     function saveMyAccountContactInfo(callbackmethod) {
-        //console.log( $("#frm_my_account_contact_info").serialize() )
         var actionUrl = "/proc_save_my_account_contact.aeve";
         var methodType = "POST";
         var dataString = $("#frm_my_account_contact_info").serialize();
@@ -161,7 +160,6 @@
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
-                    console.log('Is Saved' + jsonResponseObj.is_saved );
                     if( jsonResponseObj.is_saved == true ) {
                         displayMssgBoxAlert("Contact Information was successfully saved.", false);
                         $('#top_nave_hello_name').text( $('#first_name').val() +'\'s Account' );

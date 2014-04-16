@@ -43,7 +43,6 @@ function setupFooterPanel() {
         toolbar1: "preview | insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link uploadimage"
     });
 
-    console.log('JS length : ' + tinymce.editors.length  + ' - ' + tinymce.get('about_us_content'));
     for(i=0; i < tinymce.editors.length; i++){
         //tinymce.get(tinymce.editors[i].id).setContent(value);
         console.log('id = ' + tinymce.editors[i].id);

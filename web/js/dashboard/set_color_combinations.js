@@ -3,8 +3,16 @@ var modern = {
                 filled_button:"#3F9CFF", filled_button_txt:"#ffffff",plain_button:"#ffffff", plain_button_txt:"#333333"
              };
 var warm_love = {
-                bkg:"#f9f5e3",highlighted:"#f09a9a",text:"#666666", nav_breadcrumb_tab_bkg:"#f9e6d4", border:"#fdd6c9",
+                bkg:"#ffffff",highlighted:"#f09a9a",text:"#666666", nav_breadcrumb_tab_bkg:"#fffefe", border:"#fdd6c9",
                 filled_button:"#f09a9a", filled_button_txt:"#ffffff",plain_button:"#ffffff", plain_button_txt:"#f09a9a"
+            };
+var nature_green = {
+                bkg:"#ffffff",highlighted:"#0a5c35",text:"#666666", nav_breadcrumb_tab_bkg:"#effbf5", border:"#e1fbd7",
+                filled_button:"#0a5c35", filled_button_txt:"#ffffff",plain_button:"#ffffff", plain_button_txt:"#0a5c35"
+            };
+var royal_purple = {
+                bkg:"#ffffff",highlighted:"#6005a1",text:"#666666", nav_breadcrumb_tab_bkg:"#fefcff", border:"#f6ecfd",
+                filled_button:"#6005a1", filled_button_txt:"#ffffff",plain_button:"#ffffff", plain_button_txt:"#6005a1"
             };
 
 
@@ -75,7 +83,7 @@ function getColorCombinationResult(jsonResult) {
 }
 
 function setColorCombination(varColorCombinationName){
-    if(varColorCombinationName!=undefined) {
+    if(varColorCombinationName!=undefined && varColorCombinationName!='') {
         var colorCombination = eval(varColorCombinationName);
 
         $('#website_color_bkg').spectrum("set", colorCombination.bkg);

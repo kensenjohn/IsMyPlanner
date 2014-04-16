@@ -52,6 +52,16 @@ public class AccessGuest {
         return guestResponseBean;
     }
 
+    public GuestResponseBean loadGuestFromEmail( GuestRequestBean guestRequestBean ) {
+        GuestResponseBean guestResponseBean = new GuestResponseBean();
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getEventId())
+                && !Utility.isNullOrEmpty(guestRequestBean.getEmail()) ) {
+            AccessGuestData accessGuestData = new AccessGuestData();
+            guestResponseBean = accessGuestData.getGuestDetailsFromEmail( guestRequestBean );
+        }
+        return guestResponseBean;
+    }
+
     public GuestGroupEmailBean getGuestEmail(GuestRequestBean guestRequestBean) {
         GuestGroupEmailBean guestGroupEmailBean = new GuestGroupEmailBean();
         if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestId()) ) {

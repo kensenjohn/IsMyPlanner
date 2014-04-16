@@ -79,7 +79,7 @@
                             </div>
                             <div class="row">
                                 <div class="offset_0_5 col-md-7" >
-                                    <h4>Email:</h4><span> kjohn@smarasoft.com</span>
+                                    <h4>Email:</h4><span> webmaster@ismyplanner.com</span>
                                 </div>
                             </div>
                             <div class="row">

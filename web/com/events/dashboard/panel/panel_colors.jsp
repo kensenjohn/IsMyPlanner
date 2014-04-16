@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label for="website_color_filled_button" class="form_label">Filled Button Text</label><br>
+                                        <label for="website_color_filled_button" class="form_label">Filled Button</label><br>
                                         <input type="text" value="000000" name="website_color_filled_button"  id="website_color_filled_button" class="pick-a-color">
                                     </div>
                                     <div class="col-md-3">
@@ -66,15 +66,18 @@
                                         <input type="text" value="dbf1ff" name="website_color_border"  id="website_color_border" class="pick-a-color">
                                     </div>
                                 </div>
-
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        &nbsp;
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <label for="website_color_combination" class="form_label">Color Combinations for Inspiration</label><span class="required"> *</span>
-                                        <select id="website_color_combination" class="form-control">
-                                            <option value="modern">Modern (Basic)</option>
-                                            <option value="warm_love">Warm Love</option>
-                                            <option value="hot_fire">Hot Fire</option>
-                                            <option value="ocean_blue">Ocean Blue</option>
+                                        <label for="website_color_combination" class="form_label">Color Combinations for Inspiration</label>
+                                        <select id="website_color_combination" name="website_color_combination" class="form-control">
+                                            <option value="">Try a Color Combination</option>
+                                            <option value="modern">Modern (Standard)</option>
+                                            <option value="warm_love">Warmth</option>
                                             <option value="nature_green">Nature Green</option>
                                             <option value="royal_purple">Royal Purple</option>
                                         </select>

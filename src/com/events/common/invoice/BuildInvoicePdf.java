@@ -117,24 +117,6 @@ public class BuildInvoicePdf {
 
                     // the XSL FO file
                     File invoiceCslFile = new File("/usr/uploadloc/invoices_basic.xsl");
-                    FileInputStream fis = null;
-
-                    try {
-                        fis = new FileInputStream(invoiceCslFile);
-                        appLogging.info("Total file size to read (in bytes) : "
-                                + fis.available());
-
-                        int content;
-                        String fileText = Constants.EMPTY;
-                        while ((content = fis.read()) != -1) {
-                            // convert to char and display it
-                            fileText = fileText +(char) content;
-                        }
-                        appLogging.info("fileText : " + fileText );
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
 
                     // creation of transform source
                     StreamSource transformInvoicePdfSource = new StreamSource(invoiceCslFile);
@@ -162,7 +144,6 @@ public class BuildInvoicePdf {
                             // Start XSLT transformation and FOP processing
                             try
                             {
-                                appLogging.info(ParseUtil.checkNullObject(xslfoTransformer) + " - " + res);
                                 // everything will happen here..
                                 xslfoTransformer.transform(invoiceXmlSource, res);
                                 // if you want to get the PDF bytes, use the following code
@@ -174,12 +155,12 @@ public class BuildInvoicePdf {
                                 AccessInvoicePdf accessInvoicePdf = new AccessInvoicePdf();
                                 String invoiceFilePath = accessInvoicePdf.getInvoicePdfLocation( invoicePdfRequestBean );
                                 File pdffile = new File(invoiceFilePath +"/"+ invoiceId + ".pdf");
-                                OutputStream out = new java.io.FileOutputStream(pdffile);
-                                out = new java.io.BufferedOutputStream(out);
+                                //OutputStream out = new java.io.FileOutputStream(pdffile);
+                                //out = new java.io.BufferedOutputStream(out);
                                 FileOutputStream str = new FileOutputStream(pdffile);
                                 str.write(outStream.toByteArray());
                                 str.close();
-                                out.close();
+                                //out.close();
 
                                 Folder folder = new Folder();
                                 String parentId = userBean.getParentId();
@@ -205,6 +186,14 @@ public class BuildInvoicePdf {
                     catch (TransformerFactoryConfigurationError e)
                     {
                         throw e;
+                    }finally{
+                        if( invoiceXmlSource.getInputStream()!=null ) {
+                            invoiceXmlSource.getInputStream().close();
+                        }
+
+                        if(outStream!=null){
+                            outStream.close();
+                        }
                     }
 
                 }

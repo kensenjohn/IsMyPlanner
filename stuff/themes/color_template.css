@@ -136,8 +136,8 @@ fieldset[disabled] .btn-filled.active {
 .menu_links .btn-filled
 {
     color: #ffffff;
-    background-color: #0E5AAC;
-    border-color: #0E5AAC;
+    background-color: __COLOR_FILLED_BUTTON__;
+    border-color: __COLOR_FILLED_BUTTON__;
 }
 
 .menu_links .btn-filled:hover ,
@@ -146,8 +146,8 @@ fieldset[disabled] .btn-filled.active {
 .menu_links a:active ,
 .menu_links .open .dropdown-toggle.btn-primary {
     color: #ffffff;
-    background-color: #0E5AAC;
-    border-color: #0E5AAC;
+    background-color: __COLOR_FILLED_BUTTON__;
+    border-color: __COLOR_FILLED_BUTTON__;
 }
 
 
@@ -220,5 +220,98 @@ html ul.tabs li.active a:hover {
     color: __COLOR_TEXT__;
     background-color: __COLOR_NAVBAR_BREADCRUMB_TAB_BKG__;
     border-color: __COLOR_BORDER__;
+}
+
+
+/** Image **/
+.img-circle {
+    background-color: __COLOR_BACKGROUND__;
+    border: 1px solid __COLOR_BORDER__;
+}
+
+/** Switch **/
+.bootstrap-switch>div>span.bootstrap-switch-primary {
+    color: #fff;
+    background: __COLOR_BACKGROUND__;
+}
+
+bootstrap-switch.bootstrap-switch-focused {
+    border-color: __COLOR_BORDER__;
+    outline: none;
+    -webkit-box-shadow: __COLOR_BACKGROUND__;
+    box-shadow: __COLOR_BACKGROUND__;
+    outline: none;
+}
+
+/** Messi Buttons **/
+
+.messi .btn:hover,
+.messi .btn:focus {
+    color: __COLOR_HIGHLIGHTED__;
+    background-color: #ebebeb;
+    border-color: __COLOR_BORDER__;
+}
+
+.messi .btn:active,
+.messi .btn.active {
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: inset 0 3px 5px rgb(0, 0, 0);
+    box-shadow: inset 0 3px 5px rgb(0, 0, 0);
+}
+
+.messi .btn-default {
+    color: #333333;
+    background-color: __COLOR_BACKGROUND__;
+    border-color: #cccccc;
+}
+
+.messi .btn-default:hover,
+.messi .btn-default:focus,
+.messi .btn-default:active,
+.messi .btn-default.active,
+.open .dropdown-toggle.btn-default {
+    color: __COLOR_HIGHLIGHTED__;
+    background-color: #ebebeb;
+    border-color: __COLOR_BORDER__;
+}
+
+/** footer stuff **/
+footer {
+    background-color: #ecf0f1;
+    border-top: 1px solid #dbf1ff;
+}
+ul.footer-tabs {
+    background: #ecf0f1;
+}
+ul.footer-tabs li a {
+    background-color: #ecf0f1;
+    color: #666666;
+    border-color: #ecf0f1 !important;
+}
+ul.footer-tabs li a:hover {
+    color: __COLOR_HIGHLIGHTED__;
+    background-color: #ecf0f1 !important;
+    border-bottom: 1px solid __COLOR_HIGHLIGHTED__;
+}
+
+ul.footer-tabs li.active, html ul.footer-tabs li.active a  {
+    color: __COLOR_HIGHLIGHTED__;
+    background-color: #ecf0f1;
+    border-color: __COLOR_HIGHLIGHTED__ !important;
+}
+html ul.footer-tabs li.active a:hover {
+    color: #FFFFFF;
+    background-color: #ecf0f1;
+    border-color: __COLOR_HIGHLIGHTED__ !important;
+}
+
+
+/** Table **/
+.dataTables_filter input:focus{
+    border-color: __COLOR_HIGHLIGHTED__;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
 

@@ -56,6 +56,8 @@ public class ProcSavePublishWebsiteColorPanel extends HttpServlet {
 
                     String sColorAction = ParseUtil.checkNull(request.getParameter("website_color_panel_action"));
 
+                    String sColorCombination = ParseUtil.checkNull(request.getParameter("website_color_combination"));
+
                     String sVendorWebsiteId = ParseUtil.checkNull(request.getParameter("vendorwebsite_id"));
                     String sVendoId = ParseUtil.checkNull(request.getParameter("vendor_id"));
 

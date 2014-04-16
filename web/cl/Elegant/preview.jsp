@@ -78,7 +78,7 @@
                 <div class="flexslider">
                     <ul class="slides">
                         <li>
-                            <img src="http://dummyimage.com/1600x600/999999/be5e5e.png&text=" />
+                            <img src="/cl/Elegant/img/Upload_Your_Image.png" />
                             <div class="container  hidden-phone ">
                                 <div class="slide-caption hidden-phone bottom-left">
                                     <h1>Julie & Simon</h1>

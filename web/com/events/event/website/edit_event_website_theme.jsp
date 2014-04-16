@@ -16,6 +16,7 @@
 <div class="page_wrap">
     <jsp:include page="/com/events/common/top_nav.jsp">
         <jsp:param name="AFTER_LOGIN_REDIRECT" value="index.jsp"/>
+        <jsp:param name="disable_account_link" value="true"/>
     </jsp:include>
     <jsp:include page="/com/events/common/menu_bar.jsp">
         <jsp:param name="hide_menu" value="true"/>

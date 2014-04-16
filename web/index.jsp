@@ -129,6 +129,17 @@
                   <h2><%=sGreetingText%></h2>
               </div>
           </div>
+          <%
+              if(!isVendorSite) {
+          %>
+              <div class="row">
+                  <div class="col-md-12" style="text-align:center;">
+                      <a href="/com/events/common/credentials.jsp" class="btn btn-filled btn-lg">Start Your Free Trial</a>
+                  </div>
+              </div>
+          <%
+              }
+          %>
           <div class="row">
               <div class="col-md-12">
                   &nbsp;
@@ -142,18 +153,18 @@
                   <div class="row ">
                       <div class="col-sm-4">
                           <h2><i class="fa fa-cloud"></i></h2>
-                          <h5>Management</h5>
-                          <p>Manage your clients, events, and vendors online. Track their progress and status from anywhere. </p>
+                          <h5>Branding and Management</h5>
+                          <p>Build a branded website for your business. Manage your clients, events, and vendors online. Track their progress and status from anywhere. </p>
+                      </div>
+                      <div class="col-sm-4 ">
+                          <h2><i class="fa fa-wrench"></i></h2>
+                          <h5>Custom URL</h5>
+                          <p>URL with your business name in it. eg: https://{your_business_name}.ismyplanner.com </p>
                       </div>
                       <div class="col-sm-4">
                           <h2><i class="fa fa-facebook"></i><i class="fa fa-twitter"></i><i class="fa fa-pinterest"></i></h2>
                           <h5>Social Media Marketing</h5>
                           <p>Create your custom landing pages with a targeted marketing message. Flaunt your social media feeds to attract for potential leads and clients. </p>
-                      </div>
-                      <div class="col-sm-4 ">
-                          <h2><i class="fa fa-wrench"></i></h2>
-                          <h5>Client Tools</h5>
-                          <p>Give access to clients to track and manage their event, vendors, guests, website.</p>
                       </div>
                   </div>
                   <div class="row">
@@ -169,10 +180,10 @@
                   </div>
 
                   <div class="row ">
-                      <div class="col-sm-4">
+                      <div class="col-sm-4 ">
                           <h2><i class="fa fa-comments"></i></h2>
-                          <h5>Collaboration</h5>
-                          <p>Collaborate with your clients during the event planning phase. Send and receive notifications to be immediately updated of any change. </p>
+                          <h5>Client Tools and Collaboration</h5>
+                          <p>Give access to clients to track and manage their event, vendors, guests, website. Collaborate with your clients and get notified of any changes during the event planning phase</p>
                       </div>
                       <div class="col-sm-4">
                           <h2><i class="fa fa-users"></i></h2>
@@ -202,7 +213,7 @@
                       </div>
                       <div class="col-sm-6">
                           <h2><i class="fa fa-gears"></i> New Features Coming Soon</h2>
-                          <p>Online Payments <br>Evernote Integration<br>RSVP by phone<br>Guest reminders by sms and emails.<br>And lots more..</p>
+                          <p>Online Payments <br>Evernote Integration<br>RSVP by phone<br>Guest reminders by sms and emails<br>Surveys and Questionaires for Clients<br>And lots more..</p>
                       </div>
                       <div class="col-sm-3 ">
                           &nbsp;

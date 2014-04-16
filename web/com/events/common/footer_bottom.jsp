@@ -43,6 +43,7 @@
     boolean isAboutUsShown = false;
     boolean isContactShown = false;
     boolean isPrivacyShown = false;
+    boolean isPricingShown = false;
     boolean isFollowusShown = false;
 
 
@@ -100,6 +101,8 @@
         isContactShown = true;
         isPrivacyShown = true;
         isFollowusShown = true;
+        isPricingShown = true;
+
         sFacebookUrl =  ParseUtil.checkNull(applicationConfig.get("facebook_url"));
         sTwitterUrl =  ParseUtil.checkNull(applicationConfig.get("twitter_url"));
     }
@@ -122,6 +125,7 @@
                                 <%if(isAboutUsShown){%><li><a href="/com/events/common/about_us.jsp">About</a></li><%}%>
                                 <%if(isContactShown){%><li><a href="/com/events/common/contact.jsp">Contact</a></li><%}%>
                                 <%if(isPrivacyShown){%><li><a href="/com/events/common/privacy.jsp">Privacy</a></li><%}%>
+                                <%if(isPrivacyShown){%><li><a href="/com/events/common/pricing.jsp">Pricing</a></li><%}%>
                             </ul>
                         </div>
                     </div>

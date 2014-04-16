@@ -190,7 +190,6 @@
         var methodType = "POST";
         var dataString = $('#frm_save_website_access').serialize();
         dataString = dataString + '&access_to_website=' + $('#access_to_website').bootstrapSwitch('state');
-        console.log('dataString  : ' + dataString);
         makeAjaxCall(actionUrl,dataString,methodType,getResult);
     }
     function getResult(jsonResult){

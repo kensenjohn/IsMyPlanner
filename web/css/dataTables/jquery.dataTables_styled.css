@@ -43,13 +43,6 @@ table.dataTable tr.even td.sorting_3 { background-color: #EEF1F3; }
     box-shadow: none;
 }
 
-.dataTables_filter input:focus{
-    border-color: #3F9CFF;
-    outline: 0;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-}
-
 /* Two button pagination - previous / next */
 .paginate_enabled_previous { background: url('/img/dataTables/back_enabled.png') no-repeat top left; }
 .paginate_enabled_previous:hover { background: url('/img/dataTables/back_enabled_hover.png') no-repeat top left; }

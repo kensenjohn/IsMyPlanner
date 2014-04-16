@@ -178,11 +178,9 @@
                     }
 
                     var varPassThruLink = jsonResponseObj.pass_thru_link;
-                    console.log('Passtru link : ' + varPassThruLink);
                     if(varPassThruLink!=undefined) {
                         $('#frm_passthru').attr('action',varPassThruLink );
                     }
-                    console.log('Form Action : ' +  $('#frm_passthru').attr('action') );
                     $('#frm_passthru').submit();
                 }
             } else {

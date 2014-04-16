@@ -22,6 +22,8 @@
     if( session.getAttribute("SUBDOMAIN_SHOW_REGISTRATION") != null ) {
         isShowRegistrationForm = (Boolean)session.getAttribute("SUBDOMAIN_SHOW_REGISTRATION");
     }
+
+    boolean isDisableAccountLink = com.events.common.ParseUtil.sTob(request.getParameter("disable_account_link"));
 %>
 <div class="top_navbar_format">
     <div class="container">
@@ -38,7 +40,15 @@
                             sName = sName + "'s Account";
                         }
                 %>
-                        <li><a href="/com/events/common/my_account.jsp"><i class="fa fa-user"></i> <span id="top_nave_hello_name"><%=sName%></span></a></li>
+
+                            <%
+                                if(isDisableAccountLink) {
+                                } else {
+                                %><li><a href="/com/events/common/my_account.jsp"><i class="fa fa-user"></i> <span id="top_nave_hello_name"><%=sName%></span></a></li><%
+                                }
+                            %>
+
+
                         <li><a href="/com/events/common/logout.jsp"> Logout <i class="fa fa-sign-out"></i></a></li>
                 <%
                     } else {

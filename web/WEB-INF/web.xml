@@ -873,6 +873,15 @@
     </servlet-mapping>
 
 
+    <servlet>
+        <servlet-name>Process Save Guest RSVP</servlet-name>
+        <servlet-class>com.events.proc.event.guest.ProcSaveGuestRSVP</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Guest RSVP</servlet-name>
+        <url-pattern>/proc_save_guest_rsvp.aeve</url-pattern>
+    </servlet-mapping>
+
 
 
     <filter>

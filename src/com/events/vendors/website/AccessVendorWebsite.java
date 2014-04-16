@@ -135,6 +135,7 @@ public class AccessVendorWebsite extends VendorWebsite{
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_footer_facebook) );
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_footer_twitter) );
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_footer_pinterest) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_themename) );
 
 
             String sVendorWebsiteId = ParseUtil.checkNull(vendorWebsiteBean.getVendorWebsiteId());

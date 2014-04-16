@@ -17,6 +17,7 @@
 <div class="page_wrap">
     <jsp:include page="/com/events/common/top_nav.jsp">
         <jsp:param name="AFTER_LOGIN_REDIRECT" value="index.jsp"/>
+        <jsp:param name="disable_account_link" value="true"/>
     </jsp:include>
     <jsp:include page="/com/events/common/menu_bar.jsp">
         <jsp:param name="hide_menu" value="true"/>
@@ -135,7 +136,7 @@
 
 <script src="/js/handlebars-v1.3.0.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 <script type="text/javascript">
     $(window).load(function() {
         loadThemeColorsAndFonts(populateThemeColorsAndFonts);
@@ -217,7 +218,6 @@
             this.varFonts = this.model.get('bb_fonts');
             this.varEventWebsite = this.model.get('bb_event_website');
             this.varTheme = this.model.get('bb_theme');
-            console.log( $('#template_font_name').html() );
         },
         events : {
             "click input[name='fonts']" : 'assignEventHandling'

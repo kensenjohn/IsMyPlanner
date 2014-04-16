@@ -83,7 +83,6 @@
         className   :   "col-md-9",
         tagName     :   "div",
         initialize  :   function(){
-            console.log( this.model );
             this.varNumOfUnReadNotifications = this.model.get('bb_num_of_unread_notifications');
             this.varUnReadNotifications = this.model.get('bb_unread_notifications');
         },

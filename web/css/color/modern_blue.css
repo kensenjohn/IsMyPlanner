@@ -133,8 +133,8 @@ fieldset[disabled] .btn-filled.active {
 .menu_links .btn-filled
 {
     color: #ffffff;
-    background-color: #0E5AAC;
-    border-color: #0E5AAC;
+    background-color: #3F9CFF;
+    border-color: #3F9CFF;
 }
 
 .menu_links .btn-filled:hover ,
@@ -143,8 +143,8 @@ fieldset[disabled] .btn-filled.active {
 .menu_links a:active ,
 .menu_links .open .dropdown-toggle.btn-primary {
     color: #ffffff;
-    background-color: #0E5AAC;
-    border-color: #0E5AAC;
+    background-color: #3F9CFF;
+    border-color: #3F9CFF;
 }
 
 
@@ -299,6 +299,14 @@ html ul.footer-tabs li.active a:hover {
     color: #FFFFFF;
     background-color: #ecf0f1;
     border-color: #3F9CFF !important;
+}
+
+/** Table **/
+.dataTables_filter input:focus{
+    border-color: #3F9CFF;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
 
 

@@ -273,7 +273,6 @@
         var actionUrl = "/proc_generate_downloadable_invoice.aeve";
         var methodType = "POST";
         var dataString = $("#frm_save_invoice").serialize();
-        console.log('generateDownloadableInvoice  : '+dataString);
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
 
