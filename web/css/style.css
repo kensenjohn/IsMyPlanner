@@ -586,5 +586,15 @@ ul.footer-tabs li.active, html ul.footer-tabs li.active a,  html ul.footer-tabs 
     max-width: 1200px;
     min-width: 800px;
 }
+.pricing-cost {
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+    font-weight: 900;
+}
+.pricing-cost-text {
+    letter-spacing: 1px;
+    margin-bottom: 0px;
+    font-weight: normal;
+}
 
 

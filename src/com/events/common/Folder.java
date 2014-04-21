@@ -40,22 +40,30 @@ public class Folder {
         }
         return isFolderCreated;
     }
-    public boolean createS3FolderForUser(String sFolderPath, String sRandomFilename, String sUserFolderName ) throws FileNotFoundException {
+    public boolean createS3FolderForUser(String sFolderPath, String sRandomFilename, String sUserFolderName ) throws IOException {
         boolean isFolderCreated = false;
         appLogging.info( "S3 sFolderPath : " + sFolderPath );
         if( !Utility.isNullOrEmpty(sFolderPath) ) {
-            // Set AWS access credentials
-            AmazonS3Client client = new AmazonS3Client(new BasicAWSCredentials(AMAZON_ACCESS_KEY,AMAZON_ACCESS_SECRET));
+            FileInputStream stream = null;
+            try{
+                // Set AWS access credentials
+                AmazonS3Client client = new AmazonS3Client(new BasicAWSCredentials(AMAZON_ACCESS_KEY,AMAZON_ACCESS_SECRET));
 
-            FileInputStream stream = new FileInputStream(sFolderPath+"/"+sRandomFilename);
-            ObjectMetadata objectMetadata = new ObjectMetadata();
-            PutObjectRequest putObjectRequest = new PutObjectRequest(AMAZON_S3_BUCKET, sUserFolderName+"/"+sRandomFilename, stream, objectMetadata);
-            PutObjectResult putObjectResult = client.putObject(putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead));
+                stream = new FileInputStream(sFolderPath+"/"+sRandomFilename);
+                ObjectMetadata objectMetadata = new ObjectMetadata();
+                PutObjectRequest putObjectRequest = new PutObjectRequest(AMAZON_S3_BUCKET, sUserFolderName+"/"+sRandomFilename, stream, objectMetadata);
+                PutObjectResult putObjectResult = client.putObject(putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead));
 
-            appLogging.info( "putObjectResult : " + putObjectResult.getETag() );
-            if(putObjectResult!=null){
-                isFolderCreated = true;
+                appLogging.info( "putObjectResult : " + putObjectResult.getETag() );
+                if(putObjectResult!=null){
+                    isFolderCreated = true;
+                }
+            } finally{
+                if(stream!=null){
+                    stream.close();
+                }
             }
+
         }
         return isFolderCreated;
     }

@@ -233,4 +233,27 @@ public class DateSupport {
         }
         return isValidDate;
     }
+
+    public static void main(String[] args){
+        try{
+            SimpleDateFormat inputDf = new SimpleDateFormat("yyyy/MMMMM/dd hh:mm a");
+            Date iInputDate = inputDf.parse("2014/April/24 10:30 AM");
+
+            /*SimpleDateFormat inputDf = new SimpleDateFormat("yyyy/MMMMM/dd hh:mm a");
+            Date iInputDate = inputDf.parse("2014/April/24 10:30 PM");*/
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(iInputDate);
+
+            System.out.println( "Months : " + cal.get(Calendar.MONTH));
+            System.out.println( "Year : " + cal.get(Calendar.YEAR));
+            System.out.println( "Day : " + cal.get(Calendar.DAY_OF_MONTH));
+            System.out.println( "Hour : " + cal.get(Calendar.HOUR));
+            System.out.println( "Minute : " + cal.get(Calendar.MINUTE));
+            System.out.println( "AM/PM : " + cal.get(Calendar.AM_PM));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 }

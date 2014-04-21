@@ -5,6 +5,7 @@ import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import redis.clients.jedis.HostAndPort;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -52,5 +53,11 @@ public class Pool {
                     hostAndPort.getPort(), ParseUtil.sToI(hmConfig.get(CONFIG_PROPS.TIMEOUT)) , hmConfig.get( CONFIG_PROPS.PASSWORD ) );
         }
         return jedisPool;
+    }
+
+    public void returnJedis(JedisPool jedisPool, Jedis jedis){
+        if( jedisPool!=null && jedis!=null ) {
+            jedisPool.returnResource(  jedis );
+        }
     }
 }

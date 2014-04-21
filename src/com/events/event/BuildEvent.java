@@ -38,7 +38,7 @@ public class BuildEvent {
 
         EventResponseBean eventResponseBean = new EventResponseBean();
         DateObject eventDate = DateSupport.convertTime(eventRequestBean.getEventDay()+ " " + eventRequestBean.getEventTime(),
-                DateSupport.getTimeZone( eventRequestBean.getEventTimeZone() ), "dd MMMMM, yyyy hh:mm aaa" ,
+                DateSupport.getTimeZone( eventRequestBean.getEventTimeZone() ), "yyyy/MMMMM/dd"+ " " + "hh:mm a" ,
                 DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE) , Constants.DATE_PATTERN_TZ  );
 
         eventRequestBean.setEventDate(eventDate.getMillis());

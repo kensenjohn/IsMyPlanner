@@ -132,7 +132,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 col-xs-6">
                     <div class="row"  >
                         <div class="col-md-12">
                             <label for="invoiceTerms" class="form_label">Invoice Terms And Conditions</label>
@@ -151,36 +151,36 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 col-xs-6">
                     <div class="row"  >
-                        <div class="col-md-4"  style="text-align:right;" >
+                        <div class="col-md-4  col-xs-4"  style="text-align:right;" >
                             <h5>Sub Total</h5>
                         </div>
-                        <div class="col-md-5"  style="text-align:right;">
+                        <div class="col-md-5  col-xs-5"  style="text-align:right;">
                             <h6><span id="sub_total">$0.00</span></h6>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4" style="text-align:right;">
+                        <div class="col-md-4  col-xs-4" style="text-align:right;">
                             <h5>Discount</h5>
                         </div>
-                        <div class="col-md-5"  style="text-align:right;">
+                        <div class="col-md-5  col-xs-5"  style="text-align:right;">
                             <h6><span id="discount_amount">$0.00</span></h6>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4" style="text-align:right;">
+                        <div class="col-md-4  col-xs-4" style="text-align:right;">
                             <h5>Tax</h5>
                         </div>
-                        <div class="col-md-5"  style="text-align:right;">
+                        <div class="col-md-5  col-xs-5"  style="text-align:right;">
                             <h6><span id="tax_amount">$0.00</span></h6>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4" style="text-align:right;">
+                        <div class="col-md-4  col-xs-4" style="text-align:right;">
                             <h5>Balance Due</h5>
                         </div>
-                        <div class="col-md-5"  style="text-align:right;">
+                        <div class="col-md-5  col-xs-5"  style="text-align:right;">
                             <h4><span id="balance_due">$0.00</span></h4>
                         </div>
                     </div>
@@ -203,9 +203,6 @@
             <div class="row">
                 <div class="col-md-1 col-sm-1">
                     <button class="btn btn-filled" id="btn_save_invoice">Save</button>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                    <button class="btn btn-filled" id="btn_email_invoice">Email Invoice</button>
                 </div>
                 <div class="col-md-2 col-sm-2">
                     <a class="btn btn-filled" id="download_invoice" target="_blank">Download Invoice</a>

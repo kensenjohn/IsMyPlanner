@@ -33,6 +33,7 @@ public class RedisDAO {
                     }
                 }
             }
+            returnJedis(jedis,sResource );
         }
         return iRowsAffected;
     }
@@ -44,6 +45,7 @@ public class RedisDAO {
             if(jedis!=null){
                 sValue = jedis.get(key);
             }
+            returnJedis(jedis,sResource );
         }
         return sValue;
     }
@@ -55,6 +57,7 @@ public class RedisDAO {
             if(jedis!=null){
                 status = jedis.set(key, value);
             }
+            returnJedis(jedis,sResource );
         }
         return status;
     }
@@ -69,6 +72,7 @@ public class RedisDAO {
                     iRowsAffected = 1;
                 }
             }
+            returnJedis(jedis,sResource );
         }
         return iRowsAffected;
     }
@@ -92,6 +96,7 @@ public class RedisDAO {
                     hashValue = (String)objValue;
                 }
             }
+            returnJedis(jedis,sResource );
         }
         return hashValue;
     }
@@ -103,6 +108,7 @@ public class RedisDAO {
             if(jedis!=null){
                 lId = jedis.incr( key );
             }
+            returnJedis(jedis,sResource );
         }
         return lId;
     }
@@ -114,6 +120,7 @@ public class RedisDAO {
             if(jedis!=null){
                 counter = jedis.incrBy( key , incrementBy );
             }
+            returnJedis(jedis,sResource );
         }
         return counter;
     }
@@ -136,6 +143,7 @@ public class RedisDAO {
             if(jedis!=null){
                 lId = jedis.lpush(key,id);
             }
+            returnJedis(jedis,sResource );
         }
         return lId;
     }
@@ -143,13 +151,25 @@ public class RedisDAO {
     public static ArrayList<String> getIdList( String sResource, String key){
         ArrayList<String> arrId = new ArrayList<String>();
         if(!Utility.isNullOrEmpty(key) ) {
-            Jedis jedis = getJedis(sResource);
+            JedisPoolStructure jedisPoolStructure = getJedisStructure( sResource );
+            if(jedisPoolStructure!=null  ){
+                Jedis jedis = jedisPoolStructure.jedis;
+                if(jedis!=null){
+                    Long lNumOfId = getNumOfIdInList(jedis , key );
+                    if(lNumOfId>0){
+                        arrId = (ArrayList<String>)jedis.lrange(key , 0, lNumOfId);
+                    }
+                    returnJedisPoolStructure(jedisPoolStructure );
+                }
+            }
+            /*Jedis jedis = getJedis(sResource);
             if(jedis!=null){
                 Long lNumOfId = getNumOfIdInList(jedis , key );
                 if(lNumOfId>0){
                     arrId = (ArrayList<String>)jedis.lrange(key , 0, lNumOfId);
                 }
-            }
+                returnJedis(jedis,sResource );
+            }*/
         }
         return arrId;
     }
@@ -160,6 +180,7 @@ public class RedisDAO {
             Jedis jedis = getJedis(sResource);
             if(jedis!=null){
                 listRecord = jedis.lpop(key);
+                returnJedis(jedis,sResource );
             }
         }
         return listRecord;
@@ -170,6 +191,7 @@ public class RedisDAO {
         if(!Utility.isNullOrEmpty(key) ) {
             Jedis jedis = getJedis(sResource);
             lNumOfId = getNumOfIdInList(jedis , key );
+            returnJedis(jedis,sResource );
         }
         return lNumOfId;
     }
@@ -190,8 +212,56 @@ public class RedisDAO {
                 if(jedisPool!=null ) {
                     jedis = jedisPool.getResource();
                 }
+
+
             }
         }
         return jedis;
+    }
+
+    private static JedisPoolStructure getJedisStructure(String sResource){
+        //Jedis jedis = null;
+        JedisPoolStructure jedisPoolStructure = new JedisPoolStructure();
+        if(!Utility.isNullOrEmpty(sResource) ) {
+            Pool pool = Pool.getInstance(  sResource );
+            if(pool!=null) {
+                JedisPool jedisPool = pool.getJedisPool();
+                if(jedisPool!=null ) {
+                    Jedis jedis = jedisPool.getResource();
+
+
+                    jedisPoolStructure.jedisPool = jedisPool;
+                    jedisPoolStructure.jedis = jedis;
+                    jedisPoolStructure.resource = sResource;
+                }
+
+
+            }
+        }
+        return jedisPoolStructure;
+    }
+
+    private static void returnJedisPoolStructure(JedisPoolStructure jedisPoolStructure){
+        if(jedisPoolStructure!=null && jedisPoolStructure.resource!=null) {
+            Pool pool = Pool.getInstance(  jedisPoolStructure.resource );
+            if(pool!=null) {
+                pool.returnJedis(jedisPoolStructure.jedisPool, jedisPoolStructure.jedis);
+            }
+        }
+    }
+
+    private static void returnJedis(Jedis jedis, String sResource){
+        if(!Utility.isNullOrEmpty(sResource) ) {
+            Pool pool = Pool.getInstance(  sResource );
+            if(pool!=null) {
+                //pool.returnJedis(jedis);
+            }
+        }
+    }
+
+    private static class JedisPoolStructure{
+        JedisPool jedisPool = null;
+        Jedis jedis = null;
+        String resource = null;
     }
 }
