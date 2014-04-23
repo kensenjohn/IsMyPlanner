@@ -1,8 +1,12 @@
 package com.events.proc.invoice;
 
+import com.events.bean.clients.ClientBean;
+import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.invoice.*;
 import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
+import com.events.bean.vendors.VendorResponseBean;
+import com.events.clients.AccessClients;
 import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
@@ -15,6 +19,7 @@ import com.events.common.invoice.BuildInvoicePdf;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
 import com.events.users.AccessUsers;
+import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +69,13 @@ public class ProcLoadInvoice   extends HttpServlet {
                         if(invoiceResponseBean!=null){
                             InvoiceBean invoiceBean = invoiceResponseBean.getInvoiceBean();
                             if(invoiceBean!=null){
+                                String sClientId = invoiceBean.getClientId();
+                                ClientRequestBean clientRequestBean = new ClientRequestBean();
+                                clientRequestBean.setClientId( sClientId );
+
+                                AccessClients accessClients = new AccessClients();
+                                ClientBean clientBean = accessClients.getClient(clientRequestBean );
+
                                 AccessInvoiceItems accessInvoiceItems = new AccessInvoiceItems();
                                 invoiceResponseBean = accessInvoiceItems.getInvoiceItems(invoiceRequestBean  ) ;
 
@@ -83,6 +95,10 @@ public class ProcLoadInvoice   extends HttpServlet {
 
                                         jsonResponseObj.put("invoice_bean", invoiceBean.toJson() );
 
+                                        if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientId())){
+                                            jsonResponseObj.put("client_bean", clientBean.toJson() );
+                                        }
+
                                         invoiceRequestBean.setInvoiceId( sInvoiceId );
 
                                         String sLogo = Constants.EMPTY;
@@ -91,14 +107,21 @@ public class ProcLoadInvoice   extends HttpServlet {
                                         }
                                         if(Utility.isNullOrEmpty(sLogo)) {
                                             String protocol = ParseUtil.checkNull(applicationConfig.get( Constants.PROP_LINK_PROTOCOL,"https"));
-                                            String domain = ParseUtil.checkNull(applicationConfig.get( Constants.APPLICATION_DOMAIN,"https"));
+                                            String domain = ParseUtil.checkNull(applicationConfig.get( Constants.APPLICATION_DOMAIN,"ismyplanner.com"));
+                                            if(!"localhost".equalsIgnoreCase(domain) && !domain.startsWith("www.")) {
+                                                domain = "www."+ domain;
+                                            }
                                             sLogo = protocol+"://"+domain+"/img/logo.png";
                                         }
+                                        AccessUsers accessUsers = new AccessUsers();
+                                        ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser( loggedInUserBean );
 
+                                        AccessVendors accessVendors = new AccessVendors();
+                                        VendorResponseBean vendorResponseBean =accessVendors.getVendorContactInfo(parentTypeBean.getVendorBean());
 
                                         InvoicePdfRequestBean invoicePdfRequestBean = new InvoicePdfRequestBean();
                                         invoicePdfRequestBean.setInvoiceId( sInvoiceId );
-                                        invoicePdfRequestBean.setUserBean( loggedInUserBean );
+                                        invoicePdfRequestBean.setUserBean( vendorResponseBean.getUserBean() );
                                         invoicePdfRequestBean.setLogo( sLogo );
 
                                         BuildInvoicePdf buildInvoicePdf = new BuildInvoicePdf();
@@ -106,7 +129,7 @@ public class ProcLoadInvoice   extends HttpServlet {
 
                                         AccessInvoicePdf accessInvoicePdf = new AccessInvoicePdf();
                                         String fileUploadLocation = applicationConfig.get(Constants.FILE_UPLOAD_LOCATION);
-                                        String sUserFolderName = accessInvoicePdf.getUserFolderName(loggedInUserBean, fileUploadLocation) ;
+                                        String sUserFolderName = accessInvoicePdf.getUserFolderName(vendorResponseBean.getUserBean() , fileUploadLocation) ;
                                         String fileUploadHost = Utility.getFileUploadHost();
                                         String bucket = Utility.getS3Bucket();
                                         jsonResponseObj.put("invoice_id", sInvoiceId);

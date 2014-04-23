@@ -21,7 +21,7 @@
     <link rel="stylesheet" type="text/css" href="css/windsor_color_warm_red.css">
 </head>
 <body>
-<div class="page_wrap">
+<div class="page_wrap" >
 <div class="container header_container">
     <div class="content_format">
         <header id="header">
@@ -75,8 +75,18 @@
     </div>
 </div>
 <div class="container">
-<div class="content_format">
-<div class="invitation-block">
+    <div class="content_format" style="padding-bottom:30px">
+        <div class="row" style="padding-top:450px;padding-bottom:350px;">
+            <div class="col-xs-12" style="	background: rgba(0, 0, 0, 0.3);	-ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#4C000000, endColorstr=#4C000000);	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#4C000000, endColorstr=#4C000000);	color: #ffffff;">
+                <h1> <div style="text-align: center;font-size: 85px;color: #ffffff;">Julie & Simone</div></h1>
+                <h5> <div style="text-align: center;font-size: 60px;color: #ffffff;">May 26, 2008</div> </h5>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+<div class="content_format" >
+<div class="invitation-block"  style="background-color: #FFFFFF	">
     <div class="row">
         <div class="col-md-12">
             <h1><div style="text-align: center">Julie Miller & Simone DeGaule</div></h1>
@@ -113,16 +123,21 @@
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row"  style="padding-top: 30px">
     <div class="col-md-12">
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row"  style="background-color: #FFFFFF;padding-bottom: 20px">
     <div class="col-md-12">
         <div class="row" id="about_the_couple">
-            <div class="col-md-12 page-title">
-                <h1>The Couple</h1>
+            <div class="col-md-offset-1  col-md-11">
+                <div class="row">
+                    <div class="col-md-12  page-title">
+                        <h1>The Couple</h1>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="row">
@@ -196,16 +211,20 @@
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row" style="padding-top: 30px">
     <div class="col-md-12">
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row"  style="background-color: #FFFFFF;padding-bottom: 20px;padding-right: 30px" >
     <div class="col-md-12">
         <div class="row" id="bridesmaid">
-            <div class="col-md-12 page-title">
-                <h1>Bride's Maids</h1>
+            <div class="col-xs-11 col-xs-offset-1">
+                <div class="row">
+                    <div class="col-md-12  page-title">
+                        <h1>Bride's Maids</h1>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -309,16 +328,21 @@
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row"  style="padding-top: 30px">
     <div class="col-md-12">
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row"  style="background-color: #FFFFFF;padding-bottom: 20px;padding-right: 30px">
     <div class="col-md-12">
         <div class="row" id="groomsmen">
-            <div class="col-md-12 page-title">
-                <h1>Groom's Men</h1>
+            <div class="col-xs-11 col-xs-offset-1">
+                <div class="row">
+                    <div class="col-md-12  page-title">
+                        <h1>Groom's Men</h1>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -424,30 +448,34 @@
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row" style="padding-top: 30px">
     <div class="col-md-12">
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row"  style="background-color: #FFFFFF;padding-bottom: 20px;padding-right: 30px" >
     <div class="col-md-12">
         <div class="row" id="ceremony">
-            <div class="col-md-12 page-title">
-                <h1>Ceremony</h1>
+            <div class="col-xs-11 col-xs-offset-1">
+                <div class="row">
+                    <div class="col-md-12  page-title">
+                        <h1>Ceremony</h1>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row" >
-            <div class="col-md-2">
+            <div class="col-xs-offset-1 col-xs-2">
                 <h6>Date and Time</h6>
                 <p>26 May, 2008, 3:30 pm</p>
             </div>
-            <div class="col-md-5">
+            <div class="col-xs-5">
                 <h6>Address</h6>
                 <p>100 Art Rooney Ave, Pittsburgh, PA 15212</p>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-xs-11 col-xs-offset-1">
                 <div id="googlemaps_ceremony" class="google-map google-map-full" style = "height: 300px"></div>
             </div>
         </div>
@@ -458,30 +486,34 @@
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row" style="padding-top: 30px">
     <div class="col-md-12">
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row"  style="background-color: #FFFFFF;padding-bottom: 20px;padding-right: 30px" >
     <div class="col-md-12">
         <div class="row" id="reception">
-            <div class="col-md-12 page-title">
-                <h1>Reception</h1>
+            <div class="col-xs-11 col-xs-offset-1">
+                <div class="row">
+                    <div class="col-md-12  page-title">
+                        <h1>Reception</h1>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row" >
-            <div class="col-md-2">
+            <div class="col-xs-offset-1  col-xs-2">
                 <h6>Date and Time</h6>
                 <p>26 May, 2008, 8:30 pm</p>
             </div>
-            <div class="col-md-5">
+            <div class="col-xs-5">
                 <h6>Address</h6>
                 <p>21 W 52nd St,  New York, NY, 10019</p>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-xs-offset-1  col-xs-11">
                 <div id="googlemaps_reception" class="google-map google-map-full" style = "height: 300px"></div>
             </div>
         </div>
@@ -492,31 +524,35 @@
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row" style="padding-top: 30px">
     <div class="col-md-12">
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row"  style="background-color: #FFFFFF;padding-bottom: 20px;padding-right: 30px" >
     <div class="col-md-12">
         <div class="row" id="travel">
-            <div class="col-md-12 page-title">
-                <h1>Travel</h1>
+            <div class="col-xs-11 col-xs-offset-1">
+                <div class="row">
+                    <div class="col-md-12  page-title">
+                        <h1>Travel</h1>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row" >
-            <div class="col-md-8">
+            <div class="col-xs-offset-1  col-xs-8">
                 <h6><i class="fa fa-plane"></i> Search Flights On</h6>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-xs-offset-1 col-xs-3">
                 <a href="http://www.hipmunk.com/" class="btn btn-default" target ="_blank"> Hipmunk&nbsp;<i class="fa fa-external-link"></i></a>
             </div>
-            <div class="col-md-3">
+            <div class="col-xs-3">
                 <a href="http://www.priceline.com/" class="btn btn-default" target ="_blank"> Priceline.com&nbsp;<i class="fa fa-external-link"></i></a>
             </div>
-            <div class="col-md-3">
+            <div class="col-xs-3">
                 <a href="http://www.travelocity.com/" class="btn btn-default" target ="_blank"> Travelocity&nbsp;<i class="fa fa-external-link"></i></a>
             </div>
         </div>
@@ -527,106 +563,110 @@
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row" style="padding-top: 30px">
     <div class="col-md-12">
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row"  style="background-color: #FFFFFF;padding-bottom: 20px;padding-right: 30px" >
     <div class="col-md-12">
         <div class="row" id="hotels">
-            <div class="col-md-12 page-title">
-                <h1>Hotels</h1>
+            <div class="col-xs-11 col-xs-offset-1">
+                <div class="row">
+                    <div class="col-md-12  page-title">
+                        <h1>Hotels</h1>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row" >
-            <div class="col-md-8">
+            <div class="col-xs-offset-1 col-xs-8">
                 <h6>Reserve rooms in these hotels to get discounts.</h6>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-xs-4 col-xs-offset-1 ">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         <a href="http://www.ihg.com/intercontinental/hotels/gb/en/dallas/dfwha/hoteldetail" target="_blank">  <p>Intercontinental Hotel and Resorts</p> </a>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         <a href="tel:2172721237"><i class="fa fa-phone"></i> &nbsp;(217)272-1237</a>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         15201 DALLAS PARKWAYDALLAS,<br>
                         TX , 75001
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         <a href="http://maps.google.com/?q=15201%20DALLAS%20PARKWAYDALLAS%20TX%20,%2075001" target="_blank"><i class="fa fa-map-marker"></i> &nbsp;Directions</a>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         &nbsp;
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         Use the code Julie_And_Simone for online discount. Mention "Julian And Simone Party" if booking on the phone.
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         &nbsp;
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         <a href="http://www.ihg.com/intercontinental/hotels/gb/en/dallas/dfwha/hoteldetail" class="btn btn-default" target ="_blank"> Website&nbsp;<i class="fa fa-external-link"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-xs-4">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         <a href="http://www.hoteladolphus.com" target="_blank">  <p>The Adolphus<i class="fa fa-external-link"></i></p> </a>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         <a href="tel:(214) 742-8200"><i class="fa fa-phone"></i> &nbsp;(214) 742-8200</a>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         1321 Commerce St,<br>
                         Dallas, TX 75202
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         <a href="http://maps.google.com/?q=1321 Commerce St,Dallas, TX 75202" target="_blank"><i class="fa fa-map-marker"></i> &nbsp;Directions</a>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         &nbsp;
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         Online Code: juliesimone. Mention "Julian And Simone Party" if booking on the phone.
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         &nbsp;
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12">
                         <a href="http://www.hoteladolphus.com" class="btn btn-default" target ="_blank"> Website&nbsp;<i class="fa fa-external-link"></i></a>
                     </div>
                 </div>
@@ -635,31 +675,35 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-xs-12">
         &nbsp;
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
+<div class="row" style="padding-top: 30px">
+    <div class="col-xs-12">
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row"  style="background-color: #FFFFFF;padding-bottom: 20px;padding-right: 30px" >
     <div class="col-md-12">
         <div class="row" id="registry">
-            <div class="col-md-12 page-title">
-                <h1>Registry</h1>
+            <div class="col-xs-11 col-xs-offset-1">
+                <div class="row">
+                    <div class="col-md-12  page-title">
+                        <h1>Registry</h1>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-xs-4 col-xs-offset-1">
                 <div class="row">
                     <div class="col-md-12">
                         <a href="#registry" class="btn btn-default" target="_blank"> Macy's&nbsp;<i class="fa fa-external-link"></i> </a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-xs-4">
                 <div class="row">
                     <div class="col-md-12">
                         <a href="#registry" class="btn btn-default" target="_blank">  Bed, Bath And Beyond&nbsp;<i class="fa fa-external-link"></i> </a>
@@ -674,16 +718,20 @@
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row" style="padding-top: 30px">
     <div class="col-md-12">
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row"  style="background-color: #FFFFFF;padding-bottom: 20px;padding-right: 30px" >
     <div class="col-md-12">
         <div class="row" id="rsvp">
-            <div class="col-md-12 page-title">
-                <h1>RSVP</h1>
+            <div class="col-xs-11 col-xs-offset-1">
+                <div class="row">
+                    <div class="col-md-12  page-title">
+                        <h1>RSVP</h1>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -692,7 +740,7 @@
             </div>
         </div>
         <div class="row" >
-            <div class="col-md-8">
+            <div class="col-xs-8 col-xs-offset-1">
                 <form>
                     <div class="row">
                         <div class="col-md-6">
@@ -732,69 +780,73 @@
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row" style="padding-top: 30px">
     <div class="col-md-12">
         &nbsp;
     </div>
 </div>
-<div class="row">
+<div class="row"  style="background-color: #FFFFFF;padding-bottom: 20px;padding-right: 30px" >
     <div class="col-md-12">
         <div class="row" id="contact_us">
-            <div class="col-md-12 page-title">
-                <h1>Contact Us</h1>
+            <div class="col-xs-11 col-xs-offset-1">
+                <div class="row">
+                    <div class="col-md-12  page-title">
+                        <h1>Contact Us</h1>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-xs-11 col-xs-offset-1">
                 <h6>Feel free to contact us if you have any questions</h6>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-offset-1 col-md-12">
+            <div class="col-xs-11 col-xs-offset-1">
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-xs-2">
                         <h6>Julie Miller</h6>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-1">
+                    <div class="col-xs-2">
                         <p><i class="fa fa-envelope-o"></i>&nbsp;Email:</p>
                     </div>
-                    <div class="col-md-11">
+                    <div class="col-xs-10">
                         <p><a href="mailto:regi@test.com">julie@test.com</a></p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-1">
+                    <div class="col-xs-2">
                         <p><i class="fa fa-phone"></i> Phone:</p>
                     </div>
-                    <div class="col-md-11">
+                    <div class="col-xs-10">
                         <p><a href="tel:2144219111">(214)421-9111</a></p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-xs-2">
                         &nbsp;
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-xs-2">
                         <h6>Simone DeFaulle</h6>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-1">
+                    <div class="col-xs-2">
                         <p><i class="fa fa-envelope-o"></i>&nbsp;Email:</p>
                     </div>
-                    <div class="col-md-11">
+                    <div class="col-xs-10">
                         <p><a href="mailto:regi@test.com">simone@test.com</a></p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-1">
+                    <div class="col-xs-2">
                         <p><i class="fa fa-phone"></i> Phone:</p>
                     </div>
-                    <div class="col-md-11">
+                    <div class="col-xs-10">
                         <p><a href="tel:3124219111">(312)421-9111</a></p>
                     </div>
                 </div>

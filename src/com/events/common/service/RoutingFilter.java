@@ -53,8 +53,8 @@ public class RoutingFilter implements Filter {
             if(strPathTokens!=null){
                 Integer iCount = 0;
                 while(strPathTokens.hasMoreTokens() ) {
-                    //appLogging.info((String)strPathTokens.nextToken());
                     String sToken = (String)strPathTokens.nextToken();
+                    appLogging.info("sToken : " + sToken );
                     if( iCount == 0 && sToken!=null && !"css".equalsIgnoreCase(sToken) && !"img".equalsIgnoreCase(sToken) ) {
 
                         EventWebsiteRequestBean eventWebsiteRequestBean = new EventWebsiteRequestBean();
@@ -62,7 +62,7 @@ public class RoutingFilter implements Filter {
 
                         AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
                         EventWebsiteBean eventWebsiteBean = accessEventWebsite.getEventWebsiteBeanFromUrl( eventWebsiteRequestBean );
-
+                        appLogging.info("eventWebsiteBean : " + eventWebsiteBean );
                         if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
                             AllWebsiteThemeRequestBean allWebsiteThemeRequestBean = new AllWebsiteThemeRequestBean();
                             allWebsiteThemeRequestBean.setWebsiteThemeId(  eventWebsiteBean.getWebsiteThemeId() );
@@ -82,6 +82,7 @@ public class RoutingFilter implements Filter {
             }
         }
 
+        appLogging.info("sEventId : " + sEventId );
         if(!Utility.isNullOrEmpty(sThemeName) && !Utility.isNullOrEmpty(sEventId) && !Utility.isNullOrEmpty(sPageName) ) {
             RequestDispatcher dispatcher = request.getRequestDispatcher("/cl/"+sThemeName+"/"+sPageName+"?ewi="+sEventId);
             dispatcher.forward(servletRequest, servletResponse);

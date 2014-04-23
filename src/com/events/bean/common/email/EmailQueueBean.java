@@ -72,6 +72,26 @@ public class EmailQueueBean extends EmailObject{
     }
 
     @Override
+    public String getReplyToAddress() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void setReplyToAddress(String replyToAddress) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String getReplyToAddressName() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void setReplyToAddressName(String replyToAddressName) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public String getCcAddress() {
         return this.ccAddress;  //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -160,6 +180,8 @@ public class EmailQueueBean extends EmailObject{
     public void setBccAddressName(String bccAddressName) {
         this.bccAddressName = bccAddressName;
     }
+
+
 
     @Override
     public String toString() {

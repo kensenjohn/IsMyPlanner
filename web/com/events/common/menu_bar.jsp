@@ -76,7 +76,7 @@
                             %>
 
                             <%
-                                if(checkPermission!=null && checkPermission.can(Perm.ACCESS_CLIENTS_TAB)) {
+                                if(checkPermission!=null && checkPermission.can(Perm.ACCESS_EVENTS_TAB)) {
                             %>
                                     <li class="<%=sEventLinkCurrentlyActive%>"><a href="/com/events/event/events.jsp">Events</a></li>
                             <%

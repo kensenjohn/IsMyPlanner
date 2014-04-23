@@ -1,3 +1,8 @@
+<%@ page import="com.events.common.Constants" %>
+<%@ page import="com.events.bean.users.UserBean" %>
+<%@ page import="com.events.common.Utility" %>
+<%@ page import="com.events.users.permissions.CheckPermission" %>
+<%@ page import="com.events.common.Perm" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -6,6 +11,20 @@
 
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <body>
+<%
+    boolean canCreateEditInvoice = false;
+    boolean canViewInvoice = false;
+    if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
+        UserBean loggedInUserBean = (UserBean)session.getAttribute(Constants.USER_LOGGED_IN_BEAN);
+        if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
+            CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
+            if(checkPermission!=null ) {
+                canCreateEditInvoice =  checkPermission.can(Perm.EDIT_INVOICE);
+                canViewInvoice =  checkPermission.can(Perm.VIEW_INVOICE);
+            }
+        }
+    }
+%>
 <div class="page_wrap">
     <jsp:include page="/com/events/common/top_nav.jsp">
         <jsp:param name="AFTER_LOGIN_REDIRECT" value="index.jsp"/>
@@ -34,20 +53,26 @@
                     &nbsp;
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <a href="/com/events/dashboard/invoice/edit_invoices.jsp" class="btn btn-filled">
-                        <span><i class="fa fa-plus"></i> New Invoice</span>
-                    </a>
-                </div>
-            </div>
+            <%
+                if(canCreateEditInvoice){
+            %>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <a href="/com/events/dashboard/invoice/edit_invoices.jsp" class="btn btn-filled">
+                                <span><i class="fa fa-plus"></i> New Invoice</span>
+                            </a>
+                        </div>
+                    </div>
+            <%
+                }
+            %>
+
             <div class="row">
                 <div class="col-md-12">
                     <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_invoice" >
                         <thead>
                         <tr role="row">
                             <th class="sorting col-md-2" role="columnheader">Invoice Num</th>
-                            <th class="sorting col-md-4" role="columnheader">Client</th>
                             <th class="sorting col-md-2" role="columnheader">Date </th>
                             <th class="sorting col-md-2" role="columnheader">Due Date </th>
                             <th class="center col-md-2" role="columnheader"></th>
@@ -70,6 +95,8 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 <script   type="text/javascript">
+    var varCanCreateEditInvoice = <%=canCreateEditInvoice%>
+    var varCanViewInvoice = <%=canViewInvoice%>
     $(window).load(function() {
         loadInvoices(populateInvoiceList);
         initializeTable();
@@ -131,11 +158,10 @@
                         var varInvoices = this.varAllInvoicesBean[i];
                         var varInvoiceId = varInvoices.invoice_id;
                         var varInvoiceNumber = varInvoices.invoice_number;
-                        var varClientId = varInvoices.client_id;
                         var varInvoiceDate = varInvoices.human_invoice_date;
                         var varDueDate = varInvoices.human_due_date;
 
-                        var ai = oTable.fnAddData( [varInvoiceNumber,varClientId,varInvoiceDate,varDueDate, createButtons(varInvoiceId) ] );
+                        var ai = oTable.fnAddData( [varInvoiceNumber,varInvoiceDate,varDueDate, createButtons(varInvoiceId) ] );
                         var nRow = oTable.fnSettings().aoData[ ai[0] ].nTr;
                         $(nRow).attr('id','row_'+varInvoiceId);
 
@@ -209,13 +235,22 @@
     function createButtons( varId ){
         var varButtons = '';
         varButtons = varButtons + createEditButton( varId );
-        varButtons = varButtons + '&nbsp;&nbsp;&nbsp;';
-        varButtons = varButtons + createDeleteButton( varId );
+        if(varCanCreateEditInvoice){
+            varButtons = varButtons + '&nbsp;&nbsp;&nbsp;';
+            varButtons = varButtons + createDeleteButton( varId );
+        }
         return varButtons;
     }
 
     function createEditButton(varId){
-        return '<a id="edit_'+varId+'" class="btn btn-default btn-xs" href="/com/events/dashboard/invoice/edit_invoices.jsp?invoice_id='+varId+'"><i class="fa fa-pencil"></i> Edit</a>';
+        var varButtonLink = '';
+        if(varCanViewInvoice){
+            varButtonLink =  '<a id="edit_'+varId+'" class="btn btn-default btn-xs" href="/com/events/dashboard/invoice/view_invoices.jsp?invoice_id='+varId+'"><i class="fa fa-pencil"></i> View</a>';
+        }
+        if(varCanCreateEditInvoice){
+            varButtonLink =  '<a id="edit_'+varId+'" class="btn btn-default btn-xs" href="/com/events/dashboard/invoice/edit_invoices.jsp?invoice_id='+varId+'"><i class="fa fa-pencil"></i> Edit</a>';
+        }
+        return varButtonLink ;
     }
     function createDeleteButton(varId){
         return '<a id="del_'+varId+'" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Delete</a>';
@@ -229,7 +264,6 @@
             "bFilter": false,
 
             "aoColumns": [
-                null,
                 null,
                 null,
                 null,

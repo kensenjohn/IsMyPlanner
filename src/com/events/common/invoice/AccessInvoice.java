@@ -49,6 +49,7 @@ public class AccessInvoice {
             InvoiceBean invoiceBean = accessInvoiceData.getInvoice(invoiceRequestBean);
             if(invoiceBean!=null) {
                 invoiceResponseBean.setInvoiceBean( invoiceBean );
+                invoiceResponseBean.setInvoiceId( ParseUtil.checkNull(invoiceBean.getInvoiceId()) );
             }
         }
         return invoiceResponseBean;

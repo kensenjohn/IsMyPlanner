@@ -1,0 +1,59 @@
+@import url(http://fonts.googleapis.com/css?family=Arizonia);
+
+
+.h1,.h2,.h3,h1,h2,h3 {
+    font-family: "Arizonia", cursive;
+    font-weight: 700;
+}
+.h4,.h5,.h6,h4,h5,h6{
+    font-family: "Arizonia", cursive;
+    font-weight: 400;
+}
+.h1,h1{
+    font-size: 55px;
+}
+.h2,h2{
+    font-size: 48px;
+}
+.h3,h3{
+    font-size: 40px;
+}
+.h4,h4{
+    font-size: 35px;
+}
+.h5,h5{
+    font-size: 30px;
+}
+.h6,h6{
+    font-size: 26px;
+}
+.navbar-brand {
+    font-family: "Arizonia", cursive;
+    font-weight: 700;
+    font-size: 40px;
+}
+
+/** Slide Caption */
+.slide-caption h1{
+    font-family: "Arizonia", cursive;
+    font-weight: 700;
+}
+.slide-caption h5{
+    font-family: "Arizonia", cursive;
+    font-weight: 700;
+}
+
+/** Inviation Block */
+.invitation-block h1,.invitation-block h2{
+    font-family: "Arizonia", cursive;
+    font-weight: 700;
+}
+.invitation-block h1 {
+    font-size: 85px;
+}
+.invitation-block p {
+    font-family: "Arizonia", cursive;
+    font-weight: 400;
+    font-size: 35px;
+}
+

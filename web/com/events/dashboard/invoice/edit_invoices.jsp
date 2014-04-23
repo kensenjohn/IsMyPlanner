@@ -205,6 +205,9 @@
                     <button class="btn btn-filled" id="btn_save_invoice">Save</button>
                 </div>
                 <div class="col-md-2 col-sm-2">
+                    <button class="btn btn-filled" id="btn_email_invoice">Email Invoice</button>
+                </div>
+                <div class="col-md-2 col-sm-2">
                     <a class="btn btn-filled" id="download_invoice" target="_blank">Download Invoice</a>
                 </div>
             </div>
@@ -213,6 +216,10 @@
 </div>
 <form id="frm_load_invoice">
     <input type="hidden"  id="load_invoice_id"  name="invoice_id" value="<%=sInvoiceId%>">
+</form>
+<form id="frm_email_invoice">
+    <input type="hidden"  id="email_invoice_id"  name="invoice_id" value="<%=sInvoiceId%>">
+    <input type="hidden"  id="email_client_id"  name="client_id" value="">
 </form>
 </body>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
@@ -245,6 +252,11 @@
             saveInvoice(getResult);
         })
 
+        $('#btn_email_invoice').click(function(){
+            generateItemList();
+            saveInvoice(getSaveEmailInvoiceResult);
+        })
+
         $('#btn_download_invoice').click(function(){
             generateDownloadableInvoice(getDownloadableInvoice);
         })
@@ -258,6 +270,12 @@
         var actionUrl = "/proc_load_invoice.aeve";
         var methodType = "POST";
         var dataString = $("#frm_load_invoice").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function emailInvoice( callbackmethod ) {
+        var actionUrl = "/proc_email_invoice.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_email_invoice").serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
     function saveInvoice( callbackmethod ) {
@@ -335,6 +353,62 @@
                     var varPathName = jsonResponseObj.folder_path_name;
                     $('#download_invoice').attr("href",varFileHost+'/'+varBucket+'/'+varPathName+'/'+varInvoiceId+'.pdf');
                 }
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
+    }
+
+    function getEmailInvoiceResult(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    if(jsonResponseObj!=undefined) {
+                        //$('#invoice_id').val(jsonResponseObj.invoice_id);
+                    }
+                }
+
+                displayAjaxOk(varResponseObj);
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
+    }
+
+    function getSaveEmailInvoiceResult(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+                    if(jsonResponseObj!=undefined) {
+                        $('#invoice_id').val(jsonResponseObj.invoice_id);
+                        $('#email_invoice_id').val(jsonResponseObj.invoice_id);
+                        $('#email_client_id').val(jsonResponseObj.client_id);
+
+
+                        var varInvoiceId = jsonResponseObj.invoice_id;
+                        var varFileHost = jsonResponseObj.file_host;
+                        var varBucket = jsonResponseObj.bucket;
+                        var varPathName = jsonResponseObj.folder_path_name;
+                        $('#download_invoice').attr("href",varFileHost+'/'+varBucket+'/'+varPathName+'/'+varInvoiceId+'.pdf');
+
+                        emailInvoice( getEmailInvoiceResult );
+                    }
+                }
+                //displayAjaxOk(varResponseObj);
             } else {
                 displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
             }

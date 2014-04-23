@@ -109,6 +109,13 @@ public class AccessPermissions {
                 arrLeadCoordinatorPermission.add( permissionsBean );
                 arrInternPermission.add( permissionsBean );
                 arrClientPermission.add(permissionsBean);
+            }  else  if(Perm.EDIT_INVOICE.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
+                arrLeadCoordinatorPermission.add( permissionsBean );
+                arrInternPermission.add( permissionsBean );
+            }  else  if(Perm.VIEW_INVOICE.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
+                arrLeadCoordinatorPermission.add( permissionsBean );
+                arrInternPermission.add( permissionsBean );
+                arrClientPermission.add(permissionsBean);
             }
 
             hmRolePermissions.put("Site Admin",arrVendorAllPermissionsBean);

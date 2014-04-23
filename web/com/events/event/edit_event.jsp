@@ -189,6 +189,11 @@
         });
         if(varIsLoggedInUserAClient == false ) {
             loadClients(populateClientList);
+        } else {
+            if(varLoadEventInfo){
+                var varEventId = '<%=sEventId%>';
+                loadEventInfo(populateEventInfo,varEventId);
+            }
         }
     });
 

@@ -29,6 +29,7 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 import org.apache.xmlgraphics.util.MimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.ErrorHandler;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -120,6 +121,7 @@ public class BuildInvoicePdf {
 
                     // creation of transform source
                     StreamSource transformInvoicePdfSource = new StreamSource(invoiceCslFile);
+                    appLogging.error("StreamSource invoked transformInvoicePdfSource ");
                     // create an instance of fop factory
                     FopFactory fopFactory = FopFactory.newInstance();
                      // a user agent is needed for transformation
@@ -132,6 +134,7 @@ public class BuildInvoicePdf {
                     try
                     {
                         xslfoTransformer = getTransformer(transformInvoicePdfSource);
+                        appLogging.error("xslfoTransformer invoked ");
                         // Construct fop with desired output format
                         Fop fop;
                         try
@@ -146,6 +149,7 @@ public class BuildInvoicePdf {
                             {
                                 // everything will happen here..
                                 xslfoTransformer.transform(invoiceXmlSource, res);
+                                appLogging.error("xslfoTransformer transform complete ");
                                 // if you want to get the PDF bytes, use the following code
                                 //return outStream.toByteArray();
                                 // if you want to save PDF file use the following code
@@ -154,39 +158,49 @@ public class BuildInvoicePdf {
 
                                 AccessInvoicePdf accessInvoicePdf = new AccessInvoicePdf();
                                 String invoiceFilePath = accessInvoicePdf.getInvoicePdfLocation( invoicePdfRequestBean );
+                                appLogging.error("invoiceFilePath  = " + invoiceFilePath + " invoiceId : " + invoiceId);
+
                                 File pdffile = new File(invoiceFilePath +"/"+ invoiceId + ".pdf");
                                 //OutputStream out = new java.io.FileOutputStream(pdffile);
                                 //out = new java.io.BufferedOutputStream(out);
                                 FileOutputStream str = new FileOutputStream(pdffile);
                                 str.write(outStream.toByteArray());
                                 str.close();
+
+                                appLogging.error("finished writeing stream to file");
                                 //out.close();
 
                                 Folder folder = new Folder();
                                 String parentId = userBean.getParentId();
                                 Constants.USER_TYPE userType = userBean.getUserType();
                                 String sFolderName = folder.getFolderName(userType , parentId );
+                                appLogging.error("sFolderName for userType and parentId = " + sFolderName);
 
                                 folder.createS3FolderForUser( invoiceFilePath,invoiceId+ ".pdf",sFolderName);
 
                                 pdffile.delete();
                             }
                             catch (TransformerException e) {
+                                appLogging.error("TransformerException 1" + ExceptionHandler.getStackTrace(e));
                                 throw e;
                             }
                         }
                         catch (FOPException e) {
+                            appLogging.error("FOPException 1" + ExceptionHandler.getStackTrace(e));
                             throw e;
                         }
                     }
                     catch (TransformerConfigurationException e)
                     {
+                        appLogging.error("TransformerConfigurationException 1" + ExceptionHandler.getStackTrace(e));
                         throw e;
                     }
                     catch (TransformerFactoryConfigurationError e)
                     {
+                        appLogging.error("TransformerFactoryConfigurationError 1" + ExceptionHandler.getStackTrace(e));
                         throw e;
                     }finally{
+                        appLogging.error("closing out all open stream");
                         if( invoiceXmlSource.getInputStream()!=null ) {
                             invoiceXmlSource.getInputStream().close();
                         }
@@ -208,6 +222,7 @@ public class BuildInvoicePdf {
         try {
             transformer = factory.newTransformer(streamSource);
         } catch (TransformerConfigurationException e) {
+            appLogging.error("Transformer exception : " + ExceptionHandler.getStackTrace(e));
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return transformer;

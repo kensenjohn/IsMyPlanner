@@ -28,8 +28,14 @@ public class BuildEventWebsite {
 
             AccessEventWebsite accessEventWebsite = new AccessEventWebsite();
             eventWebsiteBean = accessEventWebsite.getEventWebsite( eventWebsiteRequestBean ); // get the current event website bean
+
             if(eventWebsiteBean==null || (eventWebsiteBean!=null && Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())
-                    && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getWebsiteThemId()) ) ){
+                    && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getWebsiteThemId()) ) ||
+
+                    (eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())
+                            && !Utility.isNullOrEmpty(eventWebsiteRequestBean.getWebsiteThemId())
+                            && !eventWebsiteRequestBean.getWebsiteThemId().equalsIgnoreCase(eventWebsiteBean.getWebsiteThemeId()))
+                    ){
                 // this assumes that there is none so create one from default values
 
 
@@ -52,17 +58,19 @@ public class BuildEventWebsite {
                 eventWebsiteBean.setEventWebsiteId( Utility.getNewGuid() );
                 eventWebsiteBean.setUrlUniqueName( Utility.getNewGuid() );
                 eventWebsiteBean = createEventWebsite(eventWebsiteBean);
-                if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
-                    AccessEventWebsitePage accessEventWebsitePage = new AccessEventWebsitePage();
-                    ArrayList<EventWebsitePageBean> arrEventWebsitePageBean = accessEventWebsitePage.getEventWebsitePage( eventWebsiteBean ) ;
-                    if(arrEventWebsitePageBean == null || (arrEventWebsitePageBean!=null && arrEventWebsitePageBean.isEmpty()) ) {
-                        ArrayList<ThemePageBean> arrThemePageBean = getThemePages( eventWebsiteBean );
-                        ArrayList<EventWebsitePageBean> arrEventWebsitePage = createDefaultEventWebsitePages(arrThemePageBean, eventWebsiteBean );
-                    }
 
-                }
             } else {
                 eventWebsiteBean = updateEventWebsite( eventWebsiteBean );
+            }
+
+            if(eventWebsiteBean!=null && !Utility.isNullOrEmpty(eventWebsiteBean.getEventWebsiteId())) {
+                AccessEventWebsitePage accessEventWebsitePage = new AccessEventWebsitePage();
+                ArrayList<EventWebsitePageBean> arrEventWebsitePageBean = accessEventWebsitePage.getEventWebsitePage( eventWebsiteBean ) ;
+                if(arrEventWebsitePageBean == null || (arrEventWebsitePageBean!=null && arrEventWebsitePageBean.isEmpty()) ) {
+                    ArrayList<ThemePageBean> arrThemePageBean = getThemePages( eventWebsiteBean );
+                    ArrayList<EventWebsitePageBean> arrEventWebsitePage = createDefaultEventWebsitePages(arrThemePageBean, eventWebsiteBean );
+                }
+
             }
         }
         return eventWebsiteBean;

@@ -871,6 +871,14 @@
         <servlet-name>Process Downloadable Invoice</servlet-name>
         <url-pattern>/proc_downloadable_invoice.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Email Invoice</servlet-name>
+        <servlet-class>com.events.proc.invoice.ProcEmailInvoice</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Email Invoice</servlet-name>
+        <url-pattern>/proc_email_invoice.aeve</url-pattern>
+    </servlet-mapping>
 
 
     <servlet>

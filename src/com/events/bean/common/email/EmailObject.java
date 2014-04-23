@@ -14,6 +14,8 @@ import java.util.ArrayList;
 public abstract class EmailObject {
     protected String fromAddress = Constants.EMPTY;
     protected String fromAddressName = Constants.EMPTY;
+    protected String replyToAddress = Constants.EMPTY;
+    protected String replyToAddressName = Constants.EMPTY;
     protected String toAddress = Constants.EMPTY;
     protected String toAddressName = Constants.EMPTY;
     protected String ccAddress = Constants.EMPTY;
@@ -37,6 +39,14 @@ public abstract class EmailObject {
     public abstract String getToAddress();
 
     public abstract void setToAddress(String toAddressName);
+
+    public abstract String getReplyToAddress();
+
+    public abstract void setReplyToAddress(String replyToAddress);
+
+    public abstract String getReplyToAddressName();
+
+    public abstract void setReplyToAddressName(String replyToAddressName);
 
     public abstract String getCcAddress();
 

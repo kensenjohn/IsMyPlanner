@@ -169,7 +169,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#">Julie And Simon</a>
+                        <a class="navbar-brand" href="#"></a>
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -252,7 +252,7 @@
         <ul class="slides">
             <li>
                 <% if(bannerImageFeature!=null) {  %>
-                        <img src="<%=sImagePath+bannerImageFeature.getValue() %>" />
+                        <img src="<%=sImagePath+"/"+bannerImageFeature.getValue() %>" />
                 <%} %>
 
                 <div class="container  hidden-phone ">
@@ -1026,8 +1026,6 @@
 <!-- Reception Ends here -->
 <%}%>
 <% if(travelEventWebsitePageBean.isShow() ) {
-    HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmMultipleFeatures = eventWebsitePageFeature.getHashMultipleFeatures( couplesEventWebsitePageBean.getEventWebsitePageId() );
-
 
 %>
 <div class="row">
@@ -1248,8 +1246,6 @@
 <!-- Registry Ends here -->
 <%}%>
 <% if(rsvpEventWebsitePageBean.isShow() ) {
-    HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmMultipleFeatures = eventWebsitePageFeature.getHashMultipleFeatures( couplesEventWebsitePageBean.getEventWebsitePageId() );
-
 
 %>
 <div class="row">

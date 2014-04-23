@@ -65,7 +65,7 @@ public class ProcLoadDashboardSummary extends HttpServlet {
 
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAllEventEmail - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadDashSummary - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -79,7 +79,7 @@ public class ProcLoadDashboardSummary extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAllEventEmail - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadDashSummary - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

@@ -168,7 +168,10 @@ public class ProcSaveInvoice   extends HttpServlet {
                                 }
                                 if(Utility.isNullOrEmpty(sLogo)) {
                                     String protocol = ParseUtil.checkNull(applicationConfig.get( Constants.PROP_LINK_PROTOCOL,"https"));
-                                    String domain = ParseUtil.checkNull(applicationConfig.get( Constants.APPLICATION_DOMAIN,"https"));
+                                    String domain = ParseUtil.checkNull(applicationConfig.get( Constants.APPLICATION_DOMAIN,"ismyplanner.com"));
+                                    if(!"localhost".equalsIgnoreCase(domain) && !domain.startsWith("www.")) {
+                                        domain = "www."+ domain;
+                                    }
                                     sLogo = protocol+"://"+domain+"/img/logo.png";
                                 }
 
@@ -186,6 +189,7 @@ public class ProcSaveInvoice   extends HttpServlet {
                                 String fileUploadHost = Utility.getFileUploadHost();
                                 String bucket = Utility.getS3Bucket();
                                 jsonResponseObj.put("invoice_id",sInvoiceId );
+                                jsonResponseObj.put("client_id",sClientId );
                                 jsonResponseObj.put("file_host", fileUploadHost);
                                 jsonResponseObj.put("bucket", bucket);
                                 jsonResponseObj.put("folder_path_name", sUserFolderName);
