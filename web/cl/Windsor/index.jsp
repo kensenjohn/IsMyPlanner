@@ -141,7 +141,7 @@
     <meta name="author" content="Smarasoft Inc" />
     <link rel="icon"  type="image/png" href="/img/favicon.png">
 
-    <title>Wedding Website</title>
+    <title><%=ParseUtil.checkNull(captionTitleFeature.getValue())%></title>
 
     <!--[if lte IE 9]>
     <script type="text/javascript" src="/js/modernizr.custom.js"></script>
@@ -1238,7 +1238,7 @@
                                 Integer iColumnCount = 0;
                                 for(EventRegistryBean eventRegistryBean : arrEventRegistryBean ){
                                     String sRegistryURL = ParseUtil.checkNull(eventRegistryBean.getUrl());
-                                    if(!Utility.isNullOrEmpty(sRegistryURL) &&  ( !sRegistryURL.startsWith("http://") || !sRegistryURL.startsWith("https://"))  ){
+                                    if(!Utility.isNullOrEmpty(sRegistryURL) &&   !sRegistryURL.startsWith("http://") && !sRegistryURL.startsWith("https://")  ){
                                         sRegistryURL = "https://"+sRegistryURL;
                                     }
                                     if(iColumnCount == 0) {
@@ -1399,7 +1399,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-xs-offset-1 col-xs-12">
                         <h6>Please feel free to contact us if you have any questions</h6>
                     </div>
                 </div>
@@ -1462,12 +1462,11 @@
     </div>
 </div>
 </body>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="/js/jquery-1.10.2.min.js">\x3C/script>')</script>
+<jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
 <script src="//maps.google.com/maps/api/js?sensor=true"></script>
 <script src="/js/jquery.gmap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
 <script   type="text/javascript">
     var varCeremonyAddress = '<%=sCeremonyAddress%>';
     var varReceptionAddress = '<%=sReceptionAddress%>';

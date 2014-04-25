@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -44,6 +45,9 @@ public class AmazonEmailSend implements MailSender {
             emailSendRequest.withSource(emailObject.getFromAddress());
 
             emailSendRequest.setDestination( createDestinationEmailAddress(emailObject) );
+            if( !Utility.isNullOrEmpty(emailObject.getReplyToAddress()) ) {
+                emailSendRequest.setReplyToAddresses( createReplyToEmailAddress( emailObject ) );
+            }
 
             Content subjContent = new Content().withData(emailObject.getEmailSubject());
             Message msg = new Message().withSubject(subjContent);
@@ -92,6 +96,15 @@ public class AmazonEmailSend implements MailSender {
         }
 
         return destinationEmailAddress;
+    }
+    private Collection<String> createReplyToEmailAddress(EmailObject emailObject) {
+        Collection<String> collectionReplyToEmails = new ArrayList<String>();
+        if(emailObject!=null) {
+            if( !Utility.isNullOrEmpty(emailObject.getReplyToAddress()) ) {
+                collectionReplyToEmails.add( emailObject.getReplyToAddress() );
+            }
+        }
+        return collectionReplyToEmails;
     }
 
     protected ArrayList<String> getEmailAddress(String email) {

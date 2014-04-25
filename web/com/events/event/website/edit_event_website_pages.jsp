@@ -2180,7 +2180,7 @@
                     var jsonResponseObj = varResponseObj.payload;
 
                 }
-                displayAjaxOk(varResponseObj);
+                //displayAjaxOk(varResponseObj);
             } else {
                 displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
             }

@@ -76,9 +76,9 @@
         </div>
             <div>
                 <div class="flexslider">
-                    <ul class="slides">
+                    <ul class="slides">                                                             P
                         <li>
-                            <img src="/cl/Elegant/img/Upload_Your_Image.png" />
+                            <img src="/cl/Elegant/img/red_cupcake.jpg" />
                             <div class="container  hidden-phone ">
                                 <div class="slide-caption hidden-phone bottom-left">
                                     <h1>Julie & Simon</h1>

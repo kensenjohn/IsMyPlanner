@@ -38,7 +38,7 @@ a:focus {
     text-decoration: underline;
 }
 .header_container{
-    border-bottom: 1px solid !important;
+    /*border-bottom: 1px solid !important;*/
 }
 
 .navbar-default {

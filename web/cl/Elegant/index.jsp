@@ -130,6 +130,9 @@
     EventWebsitePageFeature eventWebsitePageFeature = new EventWebsitePageFeature();
     String sCeremonyAddress = Constants.EMPTY;
     String sReceptionAddress = Constants.EMPTY;
+
+    HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmMultipleWelcomeFeatures = eventWebsitePageFeature.getHashMultipleFeatures( welcomeEventWebsitePageBean.getEventWebsitePageId() );
+    EventWebsitePageFeatureBean captionTitleFeature = hmMultipleWelcomeFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.caption_title );
 %>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -137,7 +140,7 @@
     <meta name="author" content="Smarasoft Inc" />
     <link rel="icon"  type="image/png" href="/img/favicon.png">
 
-    <title>Wedding Website</title>
+    <title><%=ParseUtil.checkNull(captionTitleFeature.getValue())%></title>
 
     <!--[if lte IE 9]>
     <script type="text/javascript" src="/s/html5shiv.js"></script>
@@ -169,7 +172,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#"></a>
+                        <a class="navbar-brand" href="#"><%=ParseUtil.checkNull(captionTitleFeature.getValue())%></a>
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -241,10 +244,8 @@
 <%
     if(welcomeEventWebsitePageBean.isShow()) {
 
-        HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmMultipleFeatures = eventWebsitePageFeature.getHashMultipleFeatures( welcomeEventWebsitePageBean.getEventWebsitePageId() );
-        EventWebsitePageFeatureBean captionTitleFeature = hmMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.caption_title );
-        EventWebsitePageFeatureBean captionTagLineFeature = hmMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.caption_tag_line );
-        EventWebsitePageFeatureBean bannerImageFeature = hmMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.banner_image_name );
+        EventWebsitePageFeatureBean captionTagLineFeature = hmMultipleWelcomeFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.caption_tag_line );
+        EventWebsitePageFeatureBean bannerImageFeature = hmMultipleWelcomeFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.banner_image_name );
 
 %>
 <div>

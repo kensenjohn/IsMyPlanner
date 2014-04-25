@@ -74,7 +74,7 @@
                                                         </form>
                                                         <div class="row">
                                                             <div class="col-md-2">
-                                                                <button type="button" class="btn btn-default btn-xs" id="btn_landing_page_image_save">Save</button>
+                                                                <button type="button" class="btn btn-default btn-xs" id="btn_landing_page_image_save">Save & Publish</button>
                                                             </div>
                                                         </div>
                                                         <form id="frm_landingpage_image">
@@ -129,7 +129,7 @@
                                                         </form>
                                                         <div class="row">
                                                             <div class="col-md-2">
-                                                                <button type="button" class="btn btn-default btn-xs" id="btn_landing_page_greeting_save">Save</button>
+                                                                <button type="button" class="btn btn-default btn-xs" id="btn_landing_page_greeting_save">Save & Publish</button>
                                                             </div>
                                                         </div>
 
@@ -179,7 +179,7 @@
                                                         </form>
                                                         <div class="row">
                                                             <div class="col-md-2">
-                                                                <button type="button" class="btn btn-default btn-xs" id="btn_landing_page_social_media_save">Save</button>
+                                                                <button type="button" class="btn btn-default btn-xs" id="btn_landing_page_social_media_save">Save & Publish</button>
                                                             </div>
                                                         </div>
                                                     </div>

@@ -58,7 +58,7 @@
                                                         <h1 class="pricing-cost">$34.99</h1>
                                                     </div>
                                                     <div class="col-xs-12" style="text-align: center;">
-                                                        <h6>per month</h6>
+                                                        <h6>per month (No Contract)</h6>
                                                     </div>
                                                 </div>
                                             </div>
