@@ -41,6 +41,8 @@ public class AccessGuest {
             ArrayList<GuestGroupPhoneBean>  arrGuestGroupPhoneBean = accessGuestData.getGuestGroupPhone(guestRequestBean);
             ArrayList<GuestGroupEmailBean>  arrGuestGroupEmailBean = accessGuestData.getGuestGroupEmail(guestRequestBean);
             ArrayList<GuestGroupAddressBean>  arrGuestGroupAddressBean = accessGuestData.getGuestGroupAddress(guestRequestBean);
+            ArrayList<GuestGroupCommentsBean> arrGuestGroupCommentsBean = accessGuestData.getGuestComments(guestRequestBean);
+            GuestGroupFoodRestrictionAllergyBean guestGroupFoodRestrictionAllergyBean = accessGuestData.getGuestFoodRestrictionAllergy( guestRequestBean );
 
             guestResponseBean.setEventGuestGroupBean(eventGuestGroupBean);
             guestResponseBean.setGuestGroupBean(guestGroupBean);
@@ -48,6 +50,8 @@ public class AccessGuest {
             guestResponseBean.setArrGuestGroupPhoneBean(arrGuestGroupPhoneBean);
             guestResponseBean.setArrGuestGroupEmailBean(arrGuestGroupEmailBean);
             guestResponseBean.setArrGuestGroupAddressBean(arrGuestGroupAddressBean);
+            guestResponseBean.setArrGuestGroupCommentsBean( arrGuestGroupCommentsBean );
+            guestResponseBean.setGuestGroupFoodRestrictionAllergyBean( guestGroupFoodRestrictionAllergyBean );
         }
         return guestResponseBean;
     }
@@ -109,4 +113,23 @@ public class AccessGuest {
         }
         return jsonAllGuestJson;
     }
+
+    public GuestGroupFoodRestrictionAllergyBean getGuestGroupFoodRestrictionAllergy(GuestRequestBean guestRequestBean) {
+        GuestGroupFoodRestrictionAllergyBean guestGroupFoodRestrictionAllergyBean = new GuestGroupFoodRestrictionAllergyBean();
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId()) ) {
+            AccessGuestData accessGuestData = new AccessGuestData();
+            guestGroupFoodRestrictionAllergyBean = accessGuestData.getGuestFoodRestrictionAllergy(guestRequestBean);
+        }
+        return guestGroupFoodRestrictionAllergyBean;
+    }
+
+    public ArrayList<GuestGroupCommentsBean> getGuestGroupComments(GuestRequestBean guestRequestBean) {
+        ArrayList<GuestGroupCommentsBean> arrGuestGroupCommentsBean = new ArrayList<GuestGroupCommentsBean>();
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId()) ) {
+            AccessGuestData accessGuestData = new AccessGuestData();
+            arrGuestGroupCommentsBean = accessGuestData.getGuestComments(guestRequestBean);
+        }
+        return arrGuestGroupCommentsBean;
+    }
+
 }

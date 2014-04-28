@@ -42,10 +42,19 @@ function processEventInfo(varEventBean) {
         $('#client_selector').val(varEventBean.client_id);
         $('#event_title').text(varEventBean.event_name);
 
-        var pickerDay = $('#eventDay').pickadate('picker');
-        pickerDay.set('select', varEventBean.event_display_date.selected_day, { format: 'yyyy/mmmm/dd' });
+        if( $.fn.pickadate){
+            var pickerDay = $('#eventDay').pickadate('picker');
+            if(pickerDay!=undefined){
+                pickerDay.set('select', varEventBean.event_display_date.selected_day, { format: 'yyyy/mmmm/dd' });
+            }
+        }
 
-        var pickerTime = $('#eventTime').pickatime('picker')
-        pickerTime.set('select', varEventBean.event_display_date.selected_time, { format: 'h:i A' });
+        if( $.fn.pickatime ){
+            var pickerTime = $('#eventTime').pickatime('picker');
+            if(pickerTime!=undefined){
+                pickerTime.set('select', varEventBean.event_display_date.selected_time, { format: 'h:i A' });
+            }
+        }
+
     }
 }

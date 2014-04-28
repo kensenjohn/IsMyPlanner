@@ -3,13 +3,17 @@ package com.events.proc.users.account;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserInfoBean;
 import com.events.bean.users.UserRequestBean;
+import com.events.bean.vendors.VendorRequestBean;
+import com.events.bean.vendors.VendorResponseBean;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
+import com.events.users.AccessUsers;
 import com.events.users.BuildUsers;
+import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,31 +82,54 @@ public class ProcSaveMyAccountContact   extends HttpServlet {
                         userRequestBean.setCountry( country );
                         userRequestBean.setWebsite( website );
 
+                        boolean isSaveUserAccountAllowed = false;
+                        AccessUsers accessUsers = new AccessUsers();
+                        UserBean userBean = accessUsers.getUserByEmail( userRequestBean );
+                        if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId())){
+                            if(userId.equalsIgnoreCase( userBean.getUserId() )){
+                                isSaveUserAccountAllowed = true;
+                            }  else {
+                                isSaveUserAccountAllowed = false;
 
-                        BuildUsers buildUsers = new BuildUsers();
-                        UserInfoBean userInfoBean =  buildUsers.generateExistingUserInfoBean( userRequestBean );
-                        Integer iNumOfRecords = buildUsers.updateUserInfo( userInfoBean );
-                        if(iNumOfRecords>0){
-                            HttpSession loggedInUserSession = request.getSession(false);
-                            if(loggedInUserSession!=null){
-                                loggedInUserBean.setUserInfoBean( userInfoBean );
+                                Text errorText = new ErrorText("The email entered is not available. Please use a different email address.","err_mssg") ;
+                                arrErrorText.add(errorText);
 
-                                request.getSession().removeAttribute(Constants.USER_LOGGED_IN_BEAN);
-                                request.getSession().setAttribute(Constants.USER_LOGGED_IN_BEAN,loggedInUserBean);
-
+                                responseStatus = RespConstants.Status.ERROR;
                             }
-
-                            jsonResponseObj.put("is_saved" , true );
-                            Text okText = new OkText("User Contact Info saved","status_mssg") ;
-                            arrOkText.add(okText);
-                            responseStatus = RespConstants.Status.OK;
                         } else {
-                            appLogging.info("Invalid User Info Bean for logged in User " + ParseUtil.checkNullObject(loggedInUserBean) );
-                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAcc - 003)","err_mssg") ;
-                            arrErrorText.add(errorText);
+                            isSaveUserAccountAllowed = true;
+                        }
 
+
+                        if(isSaveUserAccountAllowed){
+                            BuildUsers buildUsers = new BuildUsers();
+                            UserInfoBean userInfoBean =  buildUsers.generateExistingUserInfoBean( userRequestBean );
+                            Integer iNumOfRecords = buildUsers.updateUserInfo( userInfoBean );
+                            if(iNumOfRecords>0){
+                                HttpSession loggedInUserSession = request.getSession(false);
+                                if(loggedInUserSession!=null){
+                                    loggedInUserBean.setUserInfoBean( userInfoBean );
+
+                                    request.getSession().removeAttribute(Constants.USER_LOGGED_IN_BEAN);
+                                    request.getSession().setAttribute(Constants.USER_LOGGED_IN_BEAN,loggedInUserBean);
+
+                                }
+
+                                jsonResponseObj.put("is_saved" , true );
+                                Text okText = new OkText("User Contact Info saved","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
+                            } else {
+                                appLogging.info("Invalid User Info Bean for logged in User " + ParseUtil.checkNullObject(loggedInUserBean) );
+                                Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAcc - 003)","err_mssg") ;
+                                arrErrorText.add(errorText);
+
+                                responseStatus = RespConstants.Status.ERROR;
+                            }
+                        } else {
                             responseStatus = RespConstants.Status.ERROR;
                         }
+
                     }
 
                 } else {

@@ -444,9 +444,9 @@ public class Constants {
     }
 
     public enum EVENT_WEBSITE_PAGE_FEATURETYPE{
-        caption_title, caption_tag_line,none, banner_image_name,invite_name,invite_text,invite_date,invite_location_name,invite_address,
+        caption_title, caption_tag_line,none, banner_image_name,invite_name,invite_text,invite_date,invite_location_name,invite_address,invite_instructions,
         ceremony_day,ceremony_time,ceremony_timezone,ceremony_address,ceremony_showmap,ceremony_instruction,
-        reception_day,reception_time,reception_timezone,reception_address,reception_showmap,reception_instruction;
+        reception_day,reception_time,reception_timezone,reception_address,reception_showmap,reception_instruction,rsvp_show_food_restriction_allergy,rsvp_show_comments;
     }
 
     public enum EVENT_PARTY_TYPE{

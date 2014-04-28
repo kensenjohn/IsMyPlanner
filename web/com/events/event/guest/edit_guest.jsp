@@ -192,20 +192,46 @@
                                 </div>
                             </div>
                         </div>
-                        <!--<div class="caption">
-                            <div class="row" id="edit_guest_list">
-                                <div class="col-md-3">
-                                    <span> Add/Edit Other Guest in this Group  </span>
+                        <div class="row">
+                            <div class="col-md-4">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <label for="guestFoodRestrictionAllergyExists_on" class="form_label">Food Restriction or Allergies</label> <br>
+                                    <input type="radio" id="guestFoodRestrictionAllergyExists_on" name="guestFoosRestrictionAllergyExists"  > &nbsp;Yes
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="radio" id="guestFoodRestrictionAllergyExists_off" name="guestFoosRestrictionAllergyExists"  > &nbsp;No
                                 </div>
                             </div>
-                            <div class="row" >
-                                <div class="col-md-2">
-                                    &nbsp;
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <label for="guestFoodRestrictionAllergyDetails" class="form_label">Details about Food Restriction or Allergies</label>
+                                    <textarea class="form-control" id="guestFoodRestrictionAllergyDetails" name="guestFoodRestrictionAllergyDetails"  > &nbsp;</textarea>
                                 </div>
                             </div>
                         </div>
-                        <div id="guest_name_list" style= "display:none">
-                        </div> -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5>Comments</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-offset-1 col-xs-8" id="div_guest_comments">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <button type="button" class="btn btn-filled" id="btn_save_guest">Save</button>
                         <input type="hidden" id="eventId" name="eventId" value="<%=sEventId%>">
                         <input type="hidden" id="guestGroupId" name="guestGroupId" value="<%=sGuestGroupId%>">
@@ -400,6 +426,45 @@
             }
             $('#guest_address').hide();
         }
+
+        var varFoodRestrictionAllergy = jsonResponseObj.guest_group_food_restriction_allergy;
+        if(varFoodRestrictionAllergy!=undefined){
+            var isFoodRestAllExists = varFoodRestrictionAllergy.is_foodrestriction_allergy_exists;
+            if(isFoodRestAllExists){
+                $('#guestFoodRestrictionAllergyExists_on').prop("checked",true);
+                $('#guestFoodRestrictionAllergyExists_off').prop("checked",false);
+            }else {
+                $('#guestFoodRestrictionAllergyExists_off').prop("checked",true);
+                $('#guestFoodRestrictionAllergyExists_on').prop("checked",false);
+            }
+
+            var isFoodRestAllDetails = varFoodRestrictionAllergy.details;
+            $('#guestFoodRestrictionAllergyDetails').val( isFoodRestAllDetails );
+        }
+
+        var varNumOfComments = jsonResponseObj.num_of_guest_group_comments;
+        if(varNumOfComments>0){
+            var varGroupCommentList = jsonResponseObj.guest_group_comments;
+            for(var varCount = 0; varCount<varNumOfComments; varCount++ ){
+                var varComment = varGroupCommentList[varCount];
+                var divComment = createComment( varComment.comments );
+
+                $('#div_guest_comments').append(divComment);
+            }
+        } else {
+            var divComment = createComment( 'No Comments.' );
+
+            $('#div_guest_comments').append(divComment);
+        }
+    }
+
+    function createComment( varCommentText ){
+
+        var $divRow = $("<div>", { class: "row"});
+        var $divCol = $("<div>", { class: "col-md-8"});
+        $divCol.append(varCommentText);
+        $divRow.append($divCol);
+        return $divRow;
     }
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>

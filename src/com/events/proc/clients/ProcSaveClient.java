@@ -1,11 +1,13 @@
 package com.events.proc.clients;
 
+import com.events.bean.clients.ClientBean;
 import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.clients.ClientResponseBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserRequestBean;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
+import com.events.clients.AccessClients;
 import com.events.clients.BuildClients;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
@@ -14,6 +16,7 @@ import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.json.*;
+import com.events.users.AccessUsers;
 import com.events.users.permissions.CheckPermission;
 import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
@@ -102,7 +105,6 @@ public class ProcSaveClient  extends HttpServlet {
                             userRequestBean.setUserType(Constants.USER_TYPE.CLIENT);
                             userRequestBean.setParentId(sClientId);
 
-
                             ClientRequestBean clientRequestBean = new ClientRequestBean();
                             clientRequestBean.setClientName(sClienttName);
                             clientRequestBean.setCorporateClient(isCorporateClient);
@@ -110,22 +112,51 @@ public class ProcSaveClient  extends HttpServlet {
                             clientRequestBean.setClientId(sClientId);
                             clientRequestBean.setVendorId(vendorBean.getVendorId());
 
-                            BuildClients buildClients = new BuildClients();
-                            ClientResponseBean clientResponseBean = buildClients.saveClient(clientRequestBean);
-                            if(clientResponseBean!=null && !"".equalsIgnoreCase(clientResponseBean.getClientId())){
-                                appLogging.info("A client's info was successfully edited. " + clientRequestBean );
-                                Text okText = new OkText("Your changes were saved successfully.","status_mssg") ;
-                                arrOkText.add(okText);
-                                responseStatus = RespConstants.Status.OK;
+                            boolean isSaveClientAllowed = false;
+                            AccessUsers accessUsers = new AccessUsers();
+                            UserBean userBean = accessUsers.getUserByEmail( userRequestBean );
 
-                                jsonResponseObj.put("client_response",clientResponseBean.toJson());
+                            if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId())){
+                                AccessClients accessClients = new AccessClients();
+                                ClientResponseBean clientResponseBean = accessClients.getClientContactInfo( clientRequestBean );
+                                if(clientResponseBean!=null && clientResponseBean.getUserInfoBean()!=null ){
+                                    ClientBean clientBean = clientResponseBean.getClientBean();
+
+                                    if(clientBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId()) && ( clientBean.getClientId().equalsIgnoreCase(clientRequestBean.getClientId()) ) ) {
+                                        isSaveClientAllowed = true;
+                                    } else {
+                                        isSaveClientAllowed = false;
+                                        Text errorText = new ErrorText("The email entered is not available. Please use a different email address.","err_mssg") ;
+                                        arrErrorText.add(errorText);
+                                    }
+                                }
                             } else {
-                                appLogging.info("A client could not be created . " + clientRequestBean );
-                                Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(002)","err_mssg") ;
-                                arrErrorText.add(errorText);
+                                isSaveClientAllowed = true;
+                            }
 
+                            if(isSaveClientAllowed){
+                                BuildClients buildClients = new BuildClients();
+                                ClientResponseBean clientResponseBean = buildClients.saveClient(clientRequestBean);
+                                if(clientResponseBean!=null && !"".equalsIgnoreCase(clientResponseBean.getClientId())){
+                                    appLogging.info("A client's info was successfully edited. " + clientRequestBean );
+                                    Text okText = new OkText("Your changes were saved successfully.","status_mssg") ;
+                                    arrOkText.add(okText);
+                                    responseStatus = RespConstants.Status.OK;
+
+                                    jsonResponseObj.put("client_response",clientResponseBean.toJson());
+                                } else {
+                                    appLogging.info("A client could not be created . " + clientRequestBean );
+                                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(002)","err_mssg") ;
+                                    arrErrorText.add(errorText);
+
+                                    responseStatus = RespConstants.Status.ERROR;
+                                }
+                            } else {
                                 responseStatus = RespConstants.Status.ERROR;
                             }
+
+
+
                         } else {
                             Text errorText = new ErrorText("Oops!! You are not authorized to perform this action.(saveClient - 003)","err_mssg") ;
                             arrErrorText.add(errorText);

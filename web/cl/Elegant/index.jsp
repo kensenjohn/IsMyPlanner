@@ -283,6 +283,7 @@
     EventWebsitePageFeatureBean inviationDateFeature = hmMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.invite_date );
     EventWebsitePageFeatureBean inviationLocationFeature = hmMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.invite_location_name );
     EventWebsitePageFeatureBean inviationAddressFeature = hmMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.invite_address );
+    EventWebsitePageFeatureBean inviationInstructionFeature = hmMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.invite_instructions );
 %>
 <div class="invitation-block">
     <% if(inviationNameFeature!=null && !Utility.isNullOrEmpty(inviationNameFeature.getValue())) { %>
@@ -322,6 +323,13 @@
     <div class="row">
         <div class="col-md-12">
             <div style="text-align: center"><p><%=inviationAddressFeature.getValue()%></p></div>
+        </div>
+    </div>
+    <%}%>
+    <% if(inviationInstructionFeature!=null && !Utility.isNullOrEmpty(inviationInstructionFeature.getValue())) { %>
+    <div class="row">
+        <div class="col-md-12">
+            <div style="text-align: center"><p><%=inviationInstructionFeature.getValue()%></p></div>
         </div>
     </div>
     <%}%>
@@ -1247,6 +1255,9 @@
 <!-- Registry Ends here -->
 <%}%>
 <% if(rsvpEventWebsitePageBean.isShow() ) {
+    HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmRSVPMultipleFeatures = eventWebsitePageFeature.getHashMultipleFeatures( rsvpEventWebsitePageBean.getEventWebsitePageId() );
+    EventWebsitePageFeatureBean rsvpShowFoodRestrictionAllergyFeature = hmRSVPMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.rsvp_show_food_restriction_allergy );
+    EventWebsitePageFeatureBean rsvpShowCommentFeature = hmRSVPMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.rsvp_show_comments );
 
 %>
 <div class="row">
@@ -1292,8 +1303,56 @@
                             <input type="radio" name="rsvpWillYouAttend" value="No"> &nbsp;&nbsp;No</input>
                         </div>
                         <div class="col-md-6">
-                            <label for="rsvpNumOfGuests" class="form_label">Number of Guests</label><span class="required"> *</span>
+                            <label for="rsvpNumOfGuests" class="form_label">Number of Guests attending (including yourself)</label><span class="required"> *</span>
                             <input type="text" class="form-control" id="rsvpNumOfGuests" name="rsvpNumOfGuests" placeholder="Number of Guests">
+                        </div>
+                    </div>
+                    <%
+                        if(rsvpShowFoodRestrictionAllergyFeature!=null && ParseUtil.sTob(rsvpShowFoodRestrictionAllergyFeature.getValue()) ){
+                    %>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="rsvpIsFoodRestrictionAllergyExist" class="form_label">Any Food Restrictions or Allergies?</label><span class="required"> *</span> <br>
+                                <input type="radio"  id="rsvpIsFoodRestrictionAllergyExist"  name="rsvpIsFoodRestrictionAllergyExist" value="Yes"> &nbsp;&nbsp;Yes</input> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                                <input type="radio" name="rsvpIsFoodRestrictionAllergyExist" value="No"> &nbsp;&nbsp;No</input>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="rsvpFoodRestrictionAllergyDetails" class="form_label">Specify food restrictions/allergies in detail</label><span class="required"> *</span> <br>
+                                <textarea class="form-control" rows="3" type="text"  id="rsvpFoodRestrictionAllergyDetails"  name="rsvpFoodRestrictionAllergyDetails"  placeholder="e.g. 2 guests are vegetarians. 1 guest is allergic to seafood. "></textarea>
+                            </div>
+                        </div>
+
+                    <%
+                        }
+                    %>
+                    <%
+                        if(rsvpShowCommentFeature!=null && ParseUtil.sTob(rsvpShowCommentFeature.getValue()) ){
+                    %>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="rsvpComments" class="form_label">Comments</label><br>
+                                <textarea class="form-control" rows="3" type="text"  id="rsvpComments"  name="rsvpComments"  placeholder="Add any other comments or suggestions"></textarea>
+                            </div>
+                        </div>
+
+                    <%
+                        }
+                    %>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            &nbsp;
                         </div>
                     </div>
                     <input type="hidden" name="event_id" value="<%=sEventId%>"/>

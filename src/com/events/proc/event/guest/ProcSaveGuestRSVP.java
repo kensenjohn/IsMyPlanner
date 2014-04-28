@@ -50,6 +50,12 @@ public class ProcSaveGuestRSVP   extends HttpServlet {
                 boolean isWillYouAttend = ParseUtil.sTob(request.getParameter("rsvpWillYouAttend"));
                 Integer iNumOfGuests = ParseUtil.sToI(request.getParameter("rsvpNumOfGuests"));
 
+                boolean isFoodRestrictionAllergyExist = ParseUtil.sTob(request.getParameter("rsvpIsFoodRestrictionAllergyExist"));
+                String foodRestrictionAllergyDetails = ParseUtil.checkNull(request.getParameter("rsvpFoodRestrictionAllergyDetails"));
+
+
+                String guestComments = ParseUtil.checkNull(request.getParameter("rsvpComments"));
+
                 if( Utility.isNullOrEmpty(sFirstName) || Utility.isNullOrEmpty(sLastName) || Utility.isNullOrEmpty(sEmail) || Utility.isNullOrEmpty(sWillYouAttend)
                         || Utility.isNullOrEmpty(sNumOfGuests) )  {
                     appLogging.warn("Invalid request parameters " + sEventId );
@@ -66,6 +72,9 @@ public class ProcSaveGuestRSVP   extends HttpServlet {
                     guestRequestBean.setHasResponded(true);
                     guestRequestBean.setNotAttending(!isWillYouAttend);
                     guestRequestBean.setRsvpSeats( iNumOfGuests );
+                    guestRequestBean.setComments( guestComments );
+                    guestRequestBean.setFoodRestrictionAllergyDetails( foodRestrictionAllergyDetails );
+                    guestRequestBean.setFoodRestrictionAllergyExists( isFoodRestrictionAllergyExist );
 
                     AccessGuest accessGuest = new AccessGuest();
                     GuestResponseBean guestResponseBean = accessGuest.loadGuestFromEmail( guestRequestBean );
@@ -93,8 +102,23 @@ public class ProcSaveGuestRSVP   extends HttpServlet {
 
                     if( !Utility.isNullOrEmpty(guestRequestBean.getGuestId())  &&  !Utility.isNullOrEmpty(guestRequestBean.getEventGuestGroupId()) &&  !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId()) ) {
                         guestResponseBean = buildGuest.updateEventGuestGroupRSVP(guestRequestBean);
+
+                        buildGuest.deleteGuestGroupFoodRestrictionAllergy( guestRequestBean );
+                        //if( !Utility.isNullOrEmpty( guestRequestBean.getFoodRestrictionAllergyDetails())) {
+                            guestRequestBean.setGuestGroupFoodRestrictionAllergyId( Utility.getNewGuid() );
+                            buildGuest.createGuestGroupFoodRestrictionAllergy(  guestRequestBean );
+                        //}
+
+                        if(!Utility.isNullOrEmpty(guestRequestBean.getComments())){
+                            guestRequestBean.setGuestGroupCommentId ( Utility.getNewGuid() );
+                            buildGuest.createGuestGroupComments( guestRequestBean );
+                        }
+
                     } else {
                         guestRequestBean.setGuestGroupName( "(New)" + ParseUtil.checkNull(guestRequestBean.getFirstName()) + " " + ParseUtil.checkNull(guestRequestBean.getLastName()));
+                        guestRequestBean.setComments(guestComments);
+                        guestRequestBean.setFoodRestrictionAllergyExists(isFoodRestrictionAllergyExist);
+                        guestRequestBean.setFoodRestrictionAllergyDetails(foodRestrictionAllergyDetails);
                         guestResponseBean = buildGuest.saveGuestGroup( guestRequestBean );
                     }
 

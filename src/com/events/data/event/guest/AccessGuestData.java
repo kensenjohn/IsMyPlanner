@@ -1,6 +1,5 @@
 package com.events.data.event.guest;
 
-import com.events.bean.event.EventBean;
 import com.events.bean.event.guest.*;
 import com.events.common.Configuration;
 import com.events.common.Constants;
@@ -221,5 +220,36 @@ public class AccessGuestData {
             }
         }
         return guestGroupEmailBean;
+    }
+
+    public GuestGroupFoodRestrictionAllergyBean getGuestFoodRestrictionAllergy(GuestRequestBean guestRequestBean){
+        GuestGroupFoodRestrictionAllergyBean guestGroupFoodRestrictionAllergyBean = new GuestGroupFoodRestrictionAllergyBean();
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())){
+            String sQuery = "SELECT * FROM GTGUESTGROUPFOODRESTRICTIONALLERGY WHERE FK_GUESTGROUPID =?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getGuestGroupId());
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessGuestData.java", "getGuestFoodRestrictionAllergy()");
+            if(arrResult!=null && !arrResult.isEmpty()) {
+                for( HashMap<String, String> hmResult : arrResult ) {
+                    guestGroupFoodRestrictionAllergyBean = new GuestGroupFoodRestrictionAllergyBean(hmResult);
+                }
+            }
+        }
+        return guestGroupFoodRestrictionAllergyBean;
+    }
+
+    public ArrayList<GuestGroupCommentsBean> getGuestComments(GuestRequestBean guestRequestBean){
+        ArrayList<GuestGroupCommentsBean> arrGuestGroupCommentsBean = new ArrayList<GuestGroupCommentsBean>();
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())){
+            String sQuery = "SELECT * FROM GTGUESTGROUPCOMMENTS WHERE FK_GUESTGROUPID =?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getGuestGroupId());
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessGuestData.java", "getGuestComments()");
+            if(arrResult!=null && !arrResult.isEmpty()) {
+                for( HashMap<String, String> hmResult : arrResult ) {
+                    GuestGroupCommentsBean guestGroupCommentsBean = new GuestGroupCommentsBean(hmResult);
+                    arrGuestGroupCommentsBean.add( guestGroupCommentsBean );
+                }
+            }
+        }
+        return arrGuestGroupCommentsBean;
     }
 }

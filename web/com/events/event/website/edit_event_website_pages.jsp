@@ -193,6 +193,12 @@
                                                             <input type="text" name="invite_address" id="invitation_invite_address" class="form-control">
                                                         </div>
                                                     </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="invitation_invite_instructions" class="form_label">Other Intructions </label>
+                                                            <input type="text" name="invite_instructions" id="invitation_invite_instructions" class="form-control">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <input type="hidden" name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.invitation.toString()%>"/>
                                                 <input type="hidden" name="event_id"  value="<%=sEventId%>"/>
@@ -537,17 +543,19 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-md-10">
+                                                        <div class="col-xs-9">
                                                             <label for="ceremony_ceremony_address" class="form_label">Address </label>
                                                             <input type="text" name="ceremony_address" id="ceremony_ceremony_address" class="form-control" >
                                                         </div>
-                                                        <div class="col-md-2">
-                                                            <label for="ceremony_ceremony_showmap" class="form_label">&nbsp;</label> <br>
-                                                            <input type="checkbox" name="ceremony_showmap" id="ceremony_ceremony_showmap" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.ceremony.toString()%>"  >  Show Map
+                                                        <div class="col-xs-3">
+                                                            <label for="ceremony_ceremony_showmap_on" class="form_label">Show Map</label> <br>
+                                                            <input type="radio" name="ceremony_showmap" id="ceremony_ceremony_showmap_on" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.ceremony.toString()%>" value="on" > Yes
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <input type="radio" name="ceremony_showmap" id="ceremony_ceremony_showmap_off" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.ceremony.toString()%>" value="off" > No
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-md-12">
+                                                        <div class="col-xs-12">
                                                             <label for="ceremony_ceremony_instruction" class="form_label">Instructions </label>
                                                             <input type="text" name="ceremony_instruction" id="ceremony_ceremony_instruction" class="form-control" >
                                                         </div>
@@ -612,13 +620,15 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-md-10">
+                                                        <div class="col-md-9">
                                                             <label for="reception_reception_address" class="form_label">Address </label>
                                                             <input type="text" name="reception_address" id="reception_reception_address" class="form-control" >
                                                         </div>
-                                                        <div class="col-md-2">
-                                                            <label for="reception_reception_showmap" class="form_label">&nbsp;</label> <br>
-                                                            <input type="checkbox" name="reception_showmap" id="reception_reception_showmap" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.reception.toString()%>"  >  Show Map
+                                                        <div class="col-md-3">
+                                                            <label for="reception_reception_showmap_on" class="form_label">Show Map</label> <br>
+                                                            <input type="radio" name="reception_showmap" id="reception_reception_showmap_on" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.reception.toString()%>" value="on" > Yes
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <input type="radio" name="reception_showmap" id="reception_reception_showmap_off" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.reception.toString()%>" value="off" > No
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -785,8 +795,40 @@
                             <div id="collapse_rsvp" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-md-8">
+                                        <div class="col-xs-8">
                                             <h5>Your Guests can use this form to RSVP online. </h5>
+
+                                            <form id="frm_save_rsvp">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <label for="rsvp_rsvp_show_food_restriction_allergy_on" class="form_label">Allow guests to specify food restrictions and allergies</label> <br>
+                                                            <input type="radio" name="rsvp_show_food_restriction_allergy" id="rsvp_rsvp_show_food_restriction_allergy_on" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.rsvp.toString()%>" value="on" > Yes  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="rsvp_show_food_restriction_allergy" id="rsvp_rsvp_show_food_restriction_allergy_off" value="off" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.rsvp.toString()%>"  > No
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <label for="rsvp_rsvp_show_comments_on" class="form_label">Allow guests to add a comment</label> <br>
+                                                            <input type="radio" name="rsvp_show_comments" id="rsvp_rsvp_show_comments_on" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.rsvp.toString()%>" value="on" > Yes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" name="rsvp_show_comments" id="rsvp_rsvp_show_comments_off" param="<%=Constants.EVENT_WEBSITE_PAGETYPE.rsvp.toString()%>" value="off" > No
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="event_id" value="<%=sEventId%>" />
+                                                <input type="hidden" name="page_type" value="<%=Constants.EVENT_WEBSITE_PAGETYPE.rsvp.toString()%>" />
+                                            </form>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xs-8">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <button class="btn btn-filled save-website-page" id="save_rsvp" param="rsvp">Save</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1001,7 +1043,7 @@
             toggleCollapseIcon('rsvp_collapse_icon');
         }).on('show.bs.collapse', function () {
             toggleCollapseIcon('rsvp_collapse_icon');
-            //loadWebsitePageFeatures('reception', populateWebsitePageFeatures)
+            loadWebsitePageFeatures('rsvp', populateWebsitePageFeatures)
         });
 
         $('#collapse_contactus').on('hide.bs.collapse', function () {
@@ -1032,7 +1074,7 @@
                 }
 
                 $('#save_web_page_type').val( $element.attr('param') );
-                saveWebsitePageSetting(getResult);
+                saveWebsitePageSetting(getShowHideResult);
             }
         });
         $('#reception_reception_day').pickadate();
@@ -1240,12 +1282,17 @@
                 var testKey = key.split('_image_name');
                 if(testKey == key) {
                     var varFeatureValue = this.varFeatures[key];
-                    if( (this.varPageType == 'reception' ||  this.varPageType == 'ceremony') && (key == (this.varPageType+'_showmap') ) ) {
+                    if( ((this.varPageType == 'reception' ||  this.varPageType == 'ceremony') && (key == (this.varPageType+'_showmap') ))
+                            ||
+                            (this.varPageType == 'rsvp' && (key == (this.varPageType+'_show_food_restriction_allergy') || key == (this.varPageType+'_show_comments') ) )    ) {
 
                         if( varFeatureValue == 'on' ) {
-                            $('#'+this.varPageType+'_'+key).prop( "checked", true );
+                            $('#'+this.varPageType+'_'+key+'_on').prop( "checked", true );
+                            $('#'+this.varPageType+'_'+key+'_off').prop( "checked", false );
                         } else {
-                            $('#'+this.varPageType+'_'+key).prop( "checked", false );
+                            //$('#'+this.varPageType+'_'+key).prop( "checked", false );
+                            $('#'+this.varPageType+'_'+key+'_on').prop( "checked", false );
+                            $('#'+this.varPageType+'_'+key+'_off').prop( "checked", true );
                         }
                     } else {
                         $('#'+this.varPageType+'_'+key).val( varFeatureValue );
@@ -2169,6 +2216,24 @@
             displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
         }
     }
+    function getShowHideResult(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+                    var jsonResponseObj = varResponseObj.payload;
+
+                }
+            } else {
+                displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
+            }
+        } else {
+            displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
+        }
+    }
     function getResult(jsonResult) {
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
@@ -2180,7 +2245,7 @@
                     var jsonResponseObj = varResponseObj.payload;
 
                 }
-                //displayAjaxOk(varResponseObj);
+                displayAjaxOk(varResponseObj);
             } else {
                 displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);
             }

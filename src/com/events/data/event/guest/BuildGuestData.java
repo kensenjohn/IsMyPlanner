@@ -142,8 +142,6 @@ public class BuildGuestData {
                     guestRequestBean.isHasResponded()?"1":"0",DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(),
                     guestRequestBean.getEventGuestGroupId(),guestRequestBean.getGuestGroupId(),guestRequestBean.getEventId());
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildGuestData.java", "updateEventGuestGroupRSVP() ");
-
-            appLogging.info("numOfRowsInserted : " + numOfRowsInserted +" Invoked this here" + sQuery + " aParams " + aParams);
         }
         return numOfRowsInserted;
     }
@@ -216,5 +214,50 @@ public class BuildGuestData {
         }
         return numOfRowsDeleted;
 
+    }
+
+    public Integer insertGuestGroupComments(GuestRequestBean guestRequestBean){
+        Integer numOfRowsInserted = 0;
+        if( guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupCommentId()) && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())
+                && !Utility.isNullOrEmpty(guestRequestBean.getComments()) ) {
+            // GUESTGROUPCOMMENTSID VARCHAR(45) PRIMARY KEY NOT NULL, FK_GUESTGROUPID VARCHAR(45) NOT NULL, COMMENTS TEXT NOT NULL,
+            // CREATEDATE BIGINT(20) NOT NULL DEFAULT 0 , HUMANCREATEDATE VARCHAR(45)
+            String sQuery = "INSERT into GTGUESTGROUPCOMMENTS(GUESTGROUPCOMMENTSID,FK_GUESTGROUPID,COMMENTS,     CREATEDATE,HUMANCREATEDATE ) VALUES " +
+                    " (?,?,?,    ?,?)";
+            ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getGuestGroupCommentId(),guestRequestBean.getGuestGroupId(),guestRequestBean.getComments(),
+                    DateSupport.getEpochMillis(), DateSupport.getUTCDateTime());
+
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildGuestData.java", "insertEventGuestGroup() ");
+        }
+        return numOfRowsInserted;
+    }
+
+    public Integer insertGuestGroupFoodRestrictionAllergy(GuestRequestBean guestRequestBean){
+        Integer numOfRowsInserted = 0;
+        if( guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupFoodRestrictionAllergyId()) && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())
+                && !Utility.isNullOrEmpty(guestRequestBean.getComments()) ) {
+            // GTGUESTGROUPFOODRESTRICTIONALLERGY( GUESTGROUPFOODRESTRICTIONALLERGYID VARCHAR(45) PRIMARY KEY NOT NULL,
+            // FK_GUESTGROUPID VARCHAR(45) NOT NULL, IS_FOODRESTRICTIONALLERGY_EXISTS INT(1) DEFAULT 0 NOT NULL,  DETAILS TEXT NOT NULL)
+            String sQuery = "INSERT into GTGUESTGROUPFOODRESTRICTIONALLERGY(GUESTGROUPFOODRESTRICTIONALLERGYID,FK_GUESTGROUPID,IS_FOODRESTRICTIONALLERGY_EXISTS,     DETAILS) VALUES " +
+                    " (?,?,?,    ?)";
+            ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getGuestGroupFoodRestrictionAllergyId(),guestRequestBean.getGuestGroupId(),guestRequestBean.isFoodRestrictionAllergyExists()?"1":"0",
+                    guestRequestBean.getFoodRestrictionAllergyDetails());
+
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildGuestData.java", "insertGuestGroupFoodRestrictionAllergy() ");
+        }
+        return numOfRowsInserted;
+    }
+
+    public Integer deleteGuestGroupFoodRestrictionAllergy(GuestRequestBean guestRequestBean){
+        Integer numOfRowsInserted = 0;
+        if( guestRequestBean!=null &&  !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())  ) {
+            // GTGUESTGROUPFOODRESTRICTIONALLERGY( GUESTGROUPFOODRESTRICTIONALLERGYID VARCHAR(45) PRIMARY KEY NOT NULL,
+            // FK_GUESTGROUPID VARCHAR(45) NOT NULL, IS_FOODRESTRICTIONALLERGY_EXISTS INT(1) DEFAULT 0 NOT NULL,  DETAILS TEXT NOT NULL)
+            String sQuery = "DELETE FROM GTGUESTGROUPFOODRESTRICTIONALLERGY WHERE FK_GUESTGROUPID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getGuestGroupId() );
+
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildGuestData.java", "deleteGuestGroupFoodRestrictionAllergy() ");
+        }
+        return numOfRowsInserted;
     }
 }

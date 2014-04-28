@@ -91,6 +91,26 @@ public class ProcLoadGuest  extends HttpServlet {
                                 jsonResponseObj.put(  "num_of_guest_group_address", arrGuestGroupAddressBean.size() );
                                 jsonResponseObj.put(  "guest_group_address", jsonGuestGroupAddress );
                             }
+
+                            GuestGroupFoodRestrictionAllergyBean guestGroupFoodRestrictionAllergyBean = guestResponseBean.getGuestGroupFoodRestrictionAllergyBean();
+                            if(guestGroupFoodRestrictionAllergyBean!=null && !Utility.isNullOrEmpty(guestGroupFoodRestrictionAllergyBean.getGuestGroupFoodRestrictionAllergyId())) {
+                                JSONObject jsonGuestGroupFoodRestrictionAllergy = new JSONObject();
+                                jsonResponseObj.put(  "guest_group_food_restriction_allergy", guestGroupFoodRestrictionAllergyBean.toJson() );
+                            }
+
+                            ArrayList<GuestGroupCommentsBean> arrGuestGroupCommentsBeans = guestResponseBean.getArrGuestGroupCommentsBean();
+                            if(arrGuestGroupCommentsBeans!=null && !arrGuestGroupCommentsBeans.isEmpty()){
+                                JSONObject jsonGuestGroupComments = new JSONObject();
+                                Integer iNumOfComments = 0;
+                                for(GuestGroupCommentsBean guestGroupCommentsBean : arrGuestGroupCommentsBeans ) {
+                                    jsonGuestGroupComments.put( ParseUtil.iToS(iNumOfComments), guestGroupCommentsBean.toJson());
+                                    iNumOfComments++;
+                                }
+                                jsonResponseObj.put(  "num_of_guest_group_comments", arrGuestGroupCommentsBeans.size() );
+                                jsonResponseObj.put(  "guest_group_comments", jsonGuestGroupComments );
+                            }
+
+
                             Text okText = new OkText("The event was saved successfully","status_mssg") ;
                             arrOkText.add(okText);
                             responseStatus = RespConstants.Status.OK;

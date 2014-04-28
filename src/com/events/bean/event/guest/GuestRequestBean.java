@@ -50,6 +50,13 @@ public class GuestRequestBean {
 
     private String eventGuestGroupId =  Constants.EMPTY;
 
+    private String guestGroupCommentId =  Constants.EMPTY;
+    private String comments =  Constants.EMPTY;
+
+    private String guestGroupFoodRestrictionAllergyId =  Constants.EMPTY;
+    private boolean isFoodRestrictionAllergyExists =  false;
+    private String foodRestrictionAllergyDetails =  Constants.EMPTY;
+
     private ArrayList<GuestGroupBean> arrGuestGroupBean = new ArrayList<GuestGroupBean>();
 
 /*
@@ -66,6 +73,46 @@ public class GuestRequestBean {
                     String sGuestInvitedSeats = ParseUtil.checkNull(request.getParameter("guestInvitedSeats"));
                     String sGuestRSVP = ParseUtil.checkNull(request.getParameter("guestRSVP"));
      */
+
+    public String getGuestGroupCommentId() {
+        return guestGroupCommentId;
+    }
+
+    public void setGuestGroupCommentId(String guestGroupCommentId) {
+        this.guestGroupCommentId = guestGroupCommentId;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public String getGuestGroupFoodRestrictionAllergyId() {
+        return guestGroupFoodRestrictionAllergyId;
+    }
+
+    public void setGuestGroupFoodRestrictionAllergyId(String guestGroupFoodRestrictionAllergyId) {
+        this.guestGroupFoodRestrictionAllergyId = guestGroupFoodRestrictionAllergyId;
+    }
+
+    public boolean isFoodRestrictionAllergyExists() {
+        return isFoodRestrictionAllergyExists;
+    }
+
+    public void setFoodRestrictionAllergyExists(boolean foodRestrictionAllergyExists) {
+        isFoodRestrictionAllergyExists = foodRestrictionAllergyExists;
+    }
+
+    public String getFoodRestrictionAllergyDetails() {
+        return foodRestrictionAllergyDetails;
+    }
+
+    public void setFoodRestrictionAllergyDetails(String foodRestrictionAllergyDetails) {
+        this.foodRestrictionAllergyDetails = foodRestrictionAllergyDetails;
+    }
 
     public String getGuestGroupId() {
         return guestGroupId;

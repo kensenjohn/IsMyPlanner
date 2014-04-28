@@ -75,6 +75,17 @@ public class BuildGuest {
                     iNumOfEventGuests = buildGuestData.updateEventGuestGroup(guestRequestBean);
                 }
 
+                buildGuestData.deleteGuestGroupFoodRestrictionAllergy( guestRequestBean );
+                if( !Utility.isNullOrEmpty( guestRequestBean.getFoodRestrictionAllergyDetails())) {
+                    guestRequestBean.setGuestGroupFoodRestrictionAllergyId( Utility.getNewGuid() );
+                    buildGuestData.insertGuestGroupFoodRestrictionAllergy( guestRequestBean );
+                }
+
+                if(!Utility.isNullOrEmpty(guestRequestBean.getComments())){
+                    guestRequestBean.setGuestGroupCommentId ( Utility.getNewGuid() );
+                    buildGuestData.insertGuestGroupComments( guestRequestBean );
+                }
+
                 guestResponseBean.setEventId( guestRequestBean.getEventId() );
                 guestResponseBean.setEventGuestGroupId( guestRequestBean.getEventGuestGroupId() );
             } else {
@@ -130,7 +141,6 @@ public class BuildGuest {
         GuestResponseBean guestResponseBean = new GuestResponseBean();
         if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId()) && !Utility.isNullOrEmpty(guestRequestBean.getEventId())
                 && !Utility.isNullOrEmpty(guestRequestBean.getEventGuestGroupId()) ){
-            appLogging.info("Invoked this here");
             BuildGuestData buildGuestData = new BuildGuestData();
             Integer iNumOfRows = buildGuestData.updateEventGuestGroupRSVP(guestRequestBean);
             if(iNumOfRows>0){
@@ -150,6 +160,33 @@ public class BuildGuest {
             } else {
                 appLogging.error("Event Guest Group could not be deleted : " + guestRequestBean );
             }
+        }
+        return guestResponseBean;
+    }
+
+    public GuestResponseBean createGuestGroupComments(GuestRequestBean guestRequestBean){
+        GuestResponseBean guestResponseBean =  new GuestResponseBean();
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())){
+            BuildGuestData buildGuestData = new BuildGuestData();
+            buildGuestData.insertGuestGroupComments(guestRequestBean);
+        }
+        return guestResponseBean;
+    }
+
+    public GuestResponseBean createGuestGroupFoodRestrictionAllergy(GuestRequestBean guestRequestBean){
+        GuestResponseBean guestResponseBean =  new GuestResponseBean();
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())){
+            BuildGuestData buildGuestData = new BuildGuestData();
+            buildGuestData.insertGuestGroupFoodRestrictionAllergy(guestRequestBean);
+        }
+        return guestResponseBean;
+    }
+
+    public GuestResponseBean deleteGuestGroupFoodRestrictionAllergy(GuestRequestBean guestRequestBean){
+        GuestResponseBean guestResponseBean =  new GuestResponseBean();
+        if(guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())){
+            BuildGuestData buildGuestData = new BuildGuestData();
+            buildGuestData.deleteGuestGroupFoodRestrictionAllergy(guestRequestBean);
         }
         return guestResponseBean;
     }

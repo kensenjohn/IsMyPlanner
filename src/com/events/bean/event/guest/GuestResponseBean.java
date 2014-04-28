@@ -38,6 +38,24 @@ public class GuestResponseBean {
     private ArrayList<GuestGroupPhoneBean>  arrGuestGroupPhoneBean = new ArrayList<GuestGroupPhoneBean>();
     private ArrayList<GuestGroupEmailBean>  arrGuestGroupEmailBean = new ArrayList<GuestGroupEmailBean>();
     private ArrayList<GuestGroupAddressBean>  arrGuestGroupAddressBean = new ArrayList<GuestGroupAddressBean>();
+    private ArrayList<GuestGroupCommentsBean> arrGuestGroupCommentsBean = new ArrayList<GuestGroupCommentsBean>();
+    private GuestGroupFoodRestrictionAllergyBean guestGroupFoodRestrictionAllergyBean = new GuestGroupFoodRestrictionAllergyBean();
+
+    public ArrayList<GuestGroupCommentsBean> getArrGuestGroupCommentsBean() {
+        return arrGuestGroupCommentsBean;
+    }
+
+    public void setArrGuestGroupCommentsBean(ArrayList<GuestGroupCommentsBean> arrGuestGroupCommentsBean) {
+        this.arrGuestGroupCommentsBean = arrGuestGroupCommentsBean;
+    }
+
+    public GuestGroupFoodRestrictionAllergyBean getGuestGroupFoodRestrictionAllergyBean() {
+        return guestGroupFoodRestrictionAllergyBean;
+    }
+
+    public void setGuestGroupFoodRestrictionAllergyBean(GuestGroupFoodRestrictionAllergyBean guestGroupFoodRestrictionAllergyBean) {
+        this.guestGroupFoodRestrictionAllergyBean = guestGroupFoodRestrictionAllergyBean;
+    }
 
     public boolean isGuestDeleted() {
         return isGuestDeleted;

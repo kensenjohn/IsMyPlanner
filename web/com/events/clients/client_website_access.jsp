@@ -1,5 +1,10 @@
 <%@ page import="com.events.common.ParseUtil" %>
 <%@ page import="com.events.common.Utility" %>
+<%@ page import="com.events.bean.clients.ClientRequestBean" %>
+<%@ page import="com.events.clients.AccessClients" %>
+<%@ page import="com.events.bean.clients.ClientBean" %>
+<%@ page import="com.events.bean.clients.ClientResponseBean" %>
+<%@ page import="com.events.bean.users.UserInfoBean" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -9,6 +14,17 @@
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
     String sClientId = ParseUtil.checkNull(request.getParameter("client_id"));
+    ClientRequestBean clientRequestBean = new ClientRequestBean();
+    clientRequestBean.setClientId( sClientId );
+
+    AccessClients accessClients = new AccessClients();
+    ClientBean clientBean = accessClients.getClient(clientRequestBean);
+    ClientResponseBean clientResponseBean = accessClients.getClientContactInfo(clientBean);
+
+    UserInfoBean userInfoBean = new UserInfoBean();
+    if(clientResponseBean!=null && !Utility.isNullOrEmpty(clientResponseBean.getUserInfoId())){
+        userInfoBean = clientResponseBean.getUserInfoBean();
+    }
 %>
 <body>
 <div class="page_wrap">
@@ -58,6 +74,18 @@
                             <input type="checkbox" checked data-size="small" data-on-text="Yes" data-off-text="No" class="hide-page" id="access_to_website" param="access_to_website">
                         </div>
                     </div>
+                        <%
+                            if(userInfoBean!=null && !Utility.isNullOrEmpty(userInfoBean.getEmail())) {
+                        %>
+                            <div class="row">
+                                <div class="col-xs-8" >
+                                    <label class="form_label">Your website link will be emailed to</label>
+                                    <label class="form_label"><h5><%=userInfoBean.getEmail()%></h5></label>
+                                </div>
+                            </div>
+                        <%
+                            }
+                        %>
                 </div>
                 <input type="hidden" name="client_id" value="<%=sClientId%>"/>
             </form>
@@ -66,6 +94,8 @@
                     &nbsp;
                 </div>
             </div>
+
+
             <div class="row">
                 <div class="col-md-8">
                     <button type="button" class="btn  btn-filled" id="btn_save_website_access">Save</button>

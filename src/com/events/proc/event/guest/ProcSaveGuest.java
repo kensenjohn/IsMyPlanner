@@ -75,6 +75,10 @@ public class ProcSaveGuest   extends HttpServlet {
                     boolean guestWillNotAttend = ParseUtil.sTob(request.getParameter("guestWillNotAttend"));
 
                     String sGuestRSVP = ParseUtil.checkNull( request.getParameter("guestRSVP") );
+
+                    boolean isFoodRestrictionAllergyExist = ParseUtil.sTob(request.getParameter("guestFoosRestrictionAllergyExists"));
+                    String foodRestrictionAllergyDetails = ParseUtil.checkNull(request.getParameter("guestFoodRestrictionAllergyDetails"));
+
                     /*if( "0".equalsIgnoreCase(sGuestRSVP)) {
                         guestWillNotAttend = true; // Guest has entered 0 so this can be identified as "Will not Attend".
                     }*/
@@ -113,6 +117,9 @@ public class ProcSaveGuest   extends HttpServlet {
                         guestRequestBean.setGuestGroupName(sGuestGroupName);
 
                         guestRequestBean.setEventGuestGroupId(sEventGuestGroupId);
+
+                        guestRequestBean.setFoodRestrictionAllergyDetails( foodRestrictionAllergyDetails );
+                        guestRequestBean.setFoodRestrictionAllergyExists( isFoodRestrictionAllergyExist );
 
                         guestRequestBean.setFirstName(sGuestFirstName);
                         guestRequestBean.setLastName(sGuestLastName);
