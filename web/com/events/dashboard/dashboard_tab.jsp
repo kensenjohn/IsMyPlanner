@@ -11,6 +11,7 @@
     String sDashBoardRolesAndPermissionsActive = ParseUtil.checkNull(request.getParameter("roles_and_permissions_active"));
     String sDashBoardVendorsActive = ParseUtil.checkNull(request.getParameter("vendors_active"));
     String sDashBoardInvoicesActive = ParseUtil.checkNull(request.getParameter("invoices_active"));
+    String sDashBoardFilesActive = ParseUtil.checkNull(request.getParameter("files_active"));
 
     UserBean loggedInUserBean = new UserBean();
     if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
@@ -64,5 +65,12 @@
        // }
     %>
 
+    <%
+        // if(checkPermission!=null && checkPermission.can(Perm.ACCESS_CLIENTS_TAB)) {
+    %>
+    <li class="<%=sDashBoardFilesActive%>"><a href="/com/events/dashboard/files.jsp">Files</a></li>
+    <%
+        // }
+    %>
 
 </ul>

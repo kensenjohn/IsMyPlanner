@@ -284,6 +284,48 @@
         <servlet-name>Process Upload Event Party Image</servlet-name>
         <url-pattern>/proc_upload_partner_image.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Upload Shared Files</servlet-name>
+        <servlet-class>com.events.proc.upload.ProcUploadSharedFile</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Upload Shared Files</servlet-name>
+        <url-pattern>/proc_upload_shared_file.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Shared Files</servlet-name>
+        <servlet-class>com.events.proc.upload.ProcSaveSharedFile</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Shared Files</servlet-name>
+        <url-pattern>/proc_save_shared_file.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Shared Files</servlet-name>
+        <servlet-class>com.events.proc.upload.ProcLoadSharedFile</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Shared Files</servlet-name>
+        <url-pattern>/proc_load_shared_file.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load File Groups</servlet-name>
+        <servlet-class>com.events.proc.upload.ProcLoadFileGroups</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load File Groups</servlet-name>
+        <url-pattern>/proc_load_file_groups.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Shared File</servlet-name>
+        <servlet-class>com.events.proc.upload.ProcDeleteSharedFile</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Shared File</servlet-name>
+        <url-pattern>/proc_delete_shared_file.aeve</url-pattern>
+    </servlet-mapping>
+
+
 
     <servlet>
         <servlet-name>Process Send Reset Password Link</servlet-name>

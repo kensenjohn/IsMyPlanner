@@ -153,7 +153,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-offset-10 col-md-2 col-sm-offset-10 col-sm-2" style="text-align:right;">
+                    <div class="col-xs-12" style="text-align:right;">
                         <a href="<%=sHomeUrl%>">&copy; <%=sCopyrightYear %> <%=sCopyrightCompany %></a>
                     </div>
                 </div>

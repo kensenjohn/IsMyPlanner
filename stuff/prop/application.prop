@@ -11,6 +11,9 @@ file_upload_location=/usr/uploadloc
 image_upload_location=/usr/uploadloc/images/
 image_host=https://s3.amazonaws.com
 
+shared_file_location=/usr/uploadloc/shared/
+shared_file_host=https://s3.amazonaws.com
+
 amazon.access_key=
 amazon.secret_key=
 amazon.s3_bucket=cdn.localhost

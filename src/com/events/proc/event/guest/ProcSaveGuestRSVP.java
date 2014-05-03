@@ -63,6 +63,11 @@ public class ProcSaveGuestRSVP   extends HttpServlet {
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
+                } else if (  ParseUtil.isValidInteger(request.getParameter("rsvpNumOfGuests")) ) {
+                    Text errorText = new ErrorText("Please use a valid numbers for guests who will attend. (E.g. 1, 2, 34 etc.","err_mssg") ;
+                    arrErrorText.add(errorText);
+
+                    responseStatus = RespConstants.Status.ERROR;
                 } else {
                     GuestRequestBean guestRequestBean = new GuestRequestBean();
                     guestRequestBean.setEventId(sEventId);

@@ -60,6 +60,8 @@ public class Constants {
     public final static String FILE_UPLOAD_LOCATION = "file_upload_location";
     public final static String IMAGE_LOCATION = "image_upload_location";
     public final static String IMAGE_HOST = "image_host";
+    public final static String SHARED_FILE_LOCATION = "shared_file_location";
+    public final static String SHARED_FILE_HOST = "shared_file_host";
 
     public final static String PRODUCT_NAME="product_name";
     public final static String DOMAIN="domain";

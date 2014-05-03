@@ -247,13 +247,18 @@
         EventWebsitePageFeatureBean captionTagLineFeature = hmMultipleWelcomeFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.caption_tag_line );
         EventWebsitePageFeatureBean bannerImageFeature = hmMultipleWelcomeFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.banner_image_name );
 
+        String sBackgrounImg = "/cl/Elegant/img/red_cupcake.jpg";
+        if(bannerImageFeature!=null && !Utility.isNullOrEmpty(bannerImageFeature.getValue())){
+            sBackgrounImg = sImagePath+"/"+bannerImageFeature.getValue() ;
+        }
+
 %>
 <div>
     <div class="flexslider">
         <ul class="slides">
             <li>
                 <% if(bannerImageFeature!=null) {  %>
-                        <img src="<%=sImagePath+"/"+bannerImageFeature.getValue() %>" />
+                        <img src="<%=sBackgrounImg%>" />
                 <%} %>
 
                 <div class="container  hidden-phone ">
@@ -285,7 +290,7 @@
     EventWebsitePageFeatureBean inviationAddressFeature = hmMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.invite_address );
     EventWebsitePageFeatureBean inviationInstructionFeature = hmMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.invite_instructions );
 %>
-<div class="invitation-block">
+<div class="invitation-block"   id="invitation">
     <% if(inviationNameFeature!=null && !Utility.isNullOrEmpty(inviationNameFeature.getValue())) { %>
     <div class="row">
         <div class="col-md-12">

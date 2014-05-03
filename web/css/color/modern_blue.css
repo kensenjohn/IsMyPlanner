@@ -310,5 +310,21 @@ html ul.footer-tabs li.active a:hover {
 }
 
 
+/** Chosen drop down **/
+.chosen-container-active .chosen-choices {
+    border: 1px solid #3F9CFF;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.chosen-container .chosen-results li.highlighted {
+    background-color: #3F9CFF;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(20%, #3F9CFF), color-stop(90%, #3F9CFF));
+    background-image: -webkit-linear-gradient(#3F9CFF 20%, #3F9CFF 90%);
+    background-image: -moz-linear-gradient(#3F9CFF 20%, #3F9CFF 90%);
+    background-image: -o-linear-gradient(#3F9CFF 20%, #3F9CFF 90%);
+    background-image: linear-gradient(#3F9CFF 20%, #3F9CFF 90%);
+    color: #fff;
+}
+
 
 

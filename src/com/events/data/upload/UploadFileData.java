@@ -28,9 +28,9 @@ public class UploadFileData {
         Integer numOfRowsInserted = 0;
         if(uploadRequestBean!=null && !Utility.isNullOrEmpty(uploadRequestBean.getUploadId())) {
             //UPLOADID   VARCHAR(45) NOT NULL, FILENAME TEXT NOT NULL, PATH TEXT NOT NULL,CREATEDATE BIGINT(20) NOT NULL DEFAULT 0,HUMANCREATEDATE VARCHAR(45) NOT NULL
-            String sQuery = "INSERT INTO GTUPLOADS (UPLOADID,FILENAME,PATH,   CREATEDATE,HUMANCREATEDATE) VALUES (?,?,?,    ?,?)";
+            String sQuery = "INSERT INTO GTUPLOADS (UPLOADID,FILENAME,PATH,   CREATEDATE,HUMANCREATEDATE,ORIGINAL_FILENAME) VALUES (?,?,?,    ?,?,?)";
             ArrayList<Object> aParams = DBDAO.createConstraint(uploadRequestBean.getUploadId(), ParseUtil.checkNull(uploadRequestBean.getFilename())
-                    , ParseUtil.checkNull(uploadRequestBean.getPath()), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime() );
+                    , ParseUtil.checkNull(uploadRequestBean.getPath()), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(), ParseUtil.checkNull(uploadRequestBean.getOriginalFileName()) );
 
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "UploadFileData.java", "insertUpload() ");
         }

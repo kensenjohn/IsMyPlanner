@@ -14,12 +14,16 @@ public class UploadRequestBean {
 
     private String uploadId = Constants.EMPTY;
     private String filename = Constants.EMPTY;
+    private String originalFileName = Constants.EMPTY;
     private String path = Constants.EMPTY;
 
     private String folderName = Constants.EMPTY;
     private String imageHost = Constants.EMPTY;
     private String s3Bucket = Constants.EMPTY;
     private Long imageSize = 0L;
+    private String mimeType = Constants.EMPTY;
+    private String sharedFileHost = Constants.EMPTY;
+
 
     private JSONObject jsonResponseObj = new JSONObject();
 
@@ -29,6 +33,22 @@ public class UploadRequestBean {
 
     public void setJsonResponseObj(JSONObject jsonResponseObj) {
         this.jsonResponseObj = jsonResponseObj;
+    }
+
+    public String getOriginalFileName() {
+        return originalFileName;
+    }
+
+    public void setOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
+    }
+
+    public String getSharedFileHost() {
+        return sharedFileHost;
+    }
+
+    public void setSharedFileHost(String sharedFileHost) {
+        this.sharedFileHost = sharedFileHost;
     }
 
     public String getS3Bucket() {
@@ -87,6 +107,13 @@ public class UploadRequestBean {
         this.path = path;
     }
 
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
 
     @Override
     public String toString() {

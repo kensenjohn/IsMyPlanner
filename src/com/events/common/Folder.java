@@ -64,8 +64,22 @@ public class Folder {
                 }
             }
 
+        } else {
+            appLogging.info( "S3 sFolderPath is not specified ");
         }
         return isFolderCreated;
+    }
+
+    public boolean deleteS3File(String sRandomFilename, String sUserFolderName ){
+        boolean isFileDeleted = false;
+        if( !Utility.isNullOrEmpty(sRandomFilename) && !Utility.isNullOrEmpty(sUserFolderName)){
+            // Set AWS access credentials
+            AmazonS3Client client = new AmazonS3Client(new BasicAWSCredentials(AMAZON_ACCESS_KEY,AMAZON_ACCESS_SECRET));
+            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(AMAZON_S3_BUCKET, sUserFolderName+"/"+sRandomFilename);
+
+            client.deleteObject(deleteObjectRequest);
+        }
+        return isFileDeleted;
     }
 
     public String getFolderForUser(UserBean userBean, String location) {

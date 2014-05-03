@@ -21,6 +21,7 @@ public class UploadBean {
     private String uploadId = Constants.EMPTY;
     private String filename = Constants.EMPTY;
     private String path = Constants.EMPTY;
+    private String originalFileName = Constants.EMPTY;
     private Long createDate = 0L;
     private String humanCreateDate = Constants.EMPTY;
 
@@ -28,6 +29,7 @@ public class UploadBean {
     public UploadBean(HashMap<String,String> hmResult){
         this.uploadId = ParseUtil.checkNull(hmResult.get("UPLOADID"));
         this.filename = ParseUtil.checkNull(hmResult.get("FILENAME"));
+        this.originalFileName = ParseUtil.checkNull(hmResult.get("ORIGINAL_FILENAME"));
         this.path = ParseUtil.checkNull(hmResult.get("PATH"));
     }
     public String getUploadId() {
@@ -76,6 +78,7 @@ public class UploadBean {
         sb.append("uploadId='").append(uploadId).append('\'');
         sb.append(", filename='").append(filename).append('\'');
         sb.append(", path='").append(path).append('\'');
+        sb.append(", originalFileName='").append(originalFileName).append('\'');
         sb.append(", createDate=").append(createDate);
         sb.append(", humanCreateDate='").append(humanCreateDate).append('\'');
         sb.append('}');
@@ -88,7 +91,9 @@ public class UploadBean {
         try {
             jsonObject.put("upload_id", this.uploadId );
             jsonObject.put("filename", this.filename );
+            jsonObject.put("original_filename", this.originalFileName );
             jsonObject.put("path", this.path );
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

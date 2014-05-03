@@ -134,6 +134,12 @@
     HashMap<Constants.EVENT_WEBSITE_PAGE_FEATURETYPE,EventWebsitePageFeatureBean> hmMultipleFeatures = eventWebsitePageFeature.getHashMultipleFeatures( welcomeEventWebsitePageBean.getEventWebsitePageId() );
     EventWebsitePageFeatureBean bannerImageFeature = hmMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.banner_image_name );
     EventWebsitePageFeatureBean captionTitleFeature = hmMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.caption_title );
+
+    String sBackgrounImg = "/cl/Windsor/img/red_white_shoes.jpg";
+    if(bannerImageFeature!=null && !Utility.isNullOrEmpty(bannerImageFeature.getValue())){
+        sBackgrounImg = sImagePath+"/"+bannerImageFeature.getValue() ;
+    }
+
 %>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -279,7 +285,7 @@
                 EventWebsitePageFeatureBean inviationAddressFeature = hmInvitationMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.invite_address );
                 EventWebsitePageFeatureBean inviationInstructionFeature = hmInvitationMultipleFeatures.get( Constants.EVENT_WEBSITE_PAGE_FEATURETYPE.invite_instructions );
             %>
-                <div class="invitation-block"  style="background-color: #FFFFFF	">
+                <div class="invitation-block"  style="background-color: #FFFFFF	"  id="invitation">
                     <% if(inviationNameFeature!=null && !Utility.isNullOrEmpty(inviationNameFeature.getValue())) { %>
                     <div class="row">
                         <div class="col-md-12">
@@ -1529,7 +1535,7 @@
     var varCeremonyAddress = '<%=sCeremonyAddress%>';
     var varReceptionAddress = '<%=sReceptionAddress%>';
     $(window).load(function() {
-        $.backstretch("<%=sImagePath+"/"+bannerImageFeature.getValue() %>");
+        $.backstretch("<%=sBackgrounImg%>");
         $('.dropdown-toggle').dropdown();
         $('#googlemaps_ceremony').gMap({
             maptype: 'ROADMAP',

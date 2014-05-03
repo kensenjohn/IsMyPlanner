@@ -78,7 +78,7 @@ public class AccessUsers {
 
     public UserInfoBean getUserInfoFromInfoId(UserRequestBean userRequestBean)  {
         UserInfoBean userInfoBean = new UserInfoBean();
-        if(userRequestBean!=null && !"".equalsIgnoreCase(userRequestBean.getUserInfoId()) ) {
+        if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getUserInfoId())  ) {
             AccessUserData accessUserData = new AccessUserData();
             userInfoBean = accessUserData.getUserInfoFromInfoId(userRequestBean);
         }
@@ -87,7 +87,7 @@ public class AccessUsers {
 
     public UserInfoBean getUserInfoFromUserId(UserRequestBean userRequestBean) {
         UserInfoBean userInfoBean = new UserInfoBean();
-        if(userRequestBean!=null && !"".equalsIgnoreCase(userRequestBean.getUserId()) ) {
+        if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getUserId()) ) {
             AccessUserData accessUserData = new AccessUserData();
             userInfoBean = accessUserData.getUserInfoFromUserId(userRequestBean);
         }
