@@ -52,3 +52,7 @@ echo "Backup of $zip_file_name - Complete!!"
 
 ### Delete lib jar (3rd party Jars)
 rm -rf $war_file_work_area/WEB-INF/lib/*
+
+### Creating zip file
+zip -r $war_file_work_area/$zip_file_name $war_file_work_area/*
+
