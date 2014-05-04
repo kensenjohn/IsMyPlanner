@@ -235,7 +235,7 @@ public class BuildGuestData {
     public Integer insertGuestGroupFoodRestrictionAllergy(GuestRequestBean guestRequestBean){
         Integer numOfRowsInserted = 0;
         if( guestRequestBean!=null && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupFoodRestrictionAllergyId()) && !Utility.isNullOrEmpty(guestRequestBean.getGuestGroupId())
-                && !Utility.isNullOrEmpty(guestRequestBean.getComments()) ) {
+                && !Utility.isNullOrEmpty(guestRequestBean.getFoodRestrictionAllergyDetails()) ) {
             // GTGUESTGROUPFOODRESTRICTIONALLERGY( GUESTGROUPFOODRESTRICTIONALLERGYID VARCHAR(45) PRIMARY KEY NOT NULL,
             // FK_GUESTGROUPID VARCHAR(45) NOT NULL, IS_FOODRESTRICTIONALLERGY_EXISTS INT(1) DEFAULT 0 NOT NULL,  DETAILS TEXT NOT NULL)
             String sQuery = "INSERT into GTGUESTGROUPFOODRESTRICTIONALLERGY(GUESTGROUPFOODRESTRICTIONALLERGYID,FK_GUESTGROUPID,IS_FOODRESTRICTIONALLERGY_EXISTS,     DETAILS) VALUES " +
