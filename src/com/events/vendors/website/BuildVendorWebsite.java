@@ -83,7 +83,7 @@ public class BuildVendorWebsite extends VendorWebsite {
         VendorWebsiteResponseBean vendorWebsiteResponseBean = saveWebsite( vendorWebsiteRequestBean );
         boolean isError = false;
         if(vendorWebsiteResponseBean!=null && !Utility.isNullOrEmpty(vendorWebsiteResponseBean.getVendorWebsiteId()) && vendorWebsiteRequestBean!=null
-                && !Utility.isNullOrEmpty(vendorWebsiteRequestBean.getContents() ) && !Utility.isNullOrEmpty(vendorWebsiteRequestBean.getVendorWebsiteTypeName() )) {
+               && !Utility.isNullOrEmpty(vendorWebsiteRequestBean.getVendorWebsiteTypeName() )) {
             String sVendorWebsiteId = vendorWebsiteResponseBean.getVendorWebsiteId();
             VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();
 

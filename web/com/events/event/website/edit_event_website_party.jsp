@@ -46,7 +46,7 @@
 
             String sImageFolderLocation = ParseUtil.checkNull(featureBean.getValue() );
 
-            sImagePath = Utility.getImageUploadHost() + "/" + sImageFolderLocation + "/" + uploadResponseBean.getUploadBean().getFilename();
+            sImagePath = Utility.getImageUploadHost() + "/" + Utility.getS3Bucket() + "/" + sImageFolderLocation + "/" + uploadResponseBean.getUploadBean().getFilename();
 
         }
 

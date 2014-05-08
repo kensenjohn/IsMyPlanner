@@ -50,7 +50,7 @@ public class VendorWebsiteFeature {
 
     public Integer setFeatureValue(VendorWebsiteFeatureBean vendorWebsiteFeatureBean) {
         Integer iNumOfRows = 0;
-        if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue()) && !Utility.isNullOrEmpty(ParseUtil.checkNull(vendorWebsiteFeatureBean.getFeatureType().toString()))) {
+        if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(ParseUtil.checkNull(vendorWebsiteFeatureBean.getFeatureType().toString()))) {
 
             VendorWebsiteFeatureBean currentVendorWebsiteFeatureBean = getFeature(vendorWebsiteFeatureBean);
             VendorWebsiteFeatureData vendorWebsiteFeatureData = new VendorWebsiteFeatureData();

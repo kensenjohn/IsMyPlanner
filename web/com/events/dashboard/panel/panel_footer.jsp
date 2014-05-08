@@ -34,7 +34,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         <div  style="margin-top:15px;">
-                                                            <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide"  class="footer-hide-feature" name="about_us_hide" id="about_us_hide" param="about_us">
+                                                            <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="footer-hide-feature" name="about_us_hide" id="about_us_hide" param="about_us">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -70,7 +70,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         <div  style="margin-top:15px;">
-                                                            <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide"  class="footer-hide-feature" name="contact_hide" id="contact_hide" param="contact">
+                                                            <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="footer-hide-feature" name="contact_hide" id="contact_hide" param="contact">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -106,7 +106,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         <div  style="margin-top:15px;">
-                                                            <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide"  class="footer-hide-feature" name="privacy_hide" id="privacy_hide" param="privacy">
+                                                            <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="footer-hide-feature" name="privacy_hide" id="privacy_hide" param="privacy">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -142,7 +142,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         <div  style="margin-top:15px;">
-                                                            <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide"  class="footer-hide-feature" name="followus_hide" id="followus_hide" param="followus">
+                                                            <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="footer-hide-feature" name="followus_hide" id="followus_hide" param="followus">
                                                         </div>
                                                     </div>
                                                 </div>

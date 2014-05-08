@@ -120,4 +120,10 @@
         // Return the jqXHR object so we can chain callbacks
         return jQuery.ajax( options );
     };
+
+    function invokeMixpanel(trackName, sessionid){
+        if(mixpanel!=undefined) {
+            mixpanel.track(trackName,{'session_id':sessionid});
+        }
+    }
 </script>

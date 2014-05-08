@@ -65,7 +65,6 @@ public class Notification {
             Long iNumOfUnreadNotifications = getNumberOfUnreadNotifyRecords(notifyBean , sResource );
             if(iNumOfUnreadNotifications>0){
                 String unReadNotifyUserKey = DISPLAY_UNREAD_NOTIFY + "." + notifyBean.getTo();
-                appLogging.info("unReadNotifyUserKey : " + unReadNotifyUserKey );
                 ArrayList<String> arrId = RedisDAO.getIdList(EVENTADMIN_DB ,  unReadNotifyUserKey);
                 if(arrId!=null && !arrId.isEmpty()) {
                     for(String id : arrId ) {
@@ -74,11 +73,11 @@ public class Notification {
 
                         NotifyBean newNotifyBean = new NotifyBean(hmResult);
 
-                        //String topIdFromQueue = removeUnReadNotificationId(newNotifyBean.getTo());
+                        String topIdFromQueue = removeUnReadNotificationId(newNotifyBean.getTo());
 
                         hmUnReadRecords.put(id , newNotifyBean);
 
-                        //RedisDAO.decrementCounter(EVENTADMIN_DB , unReadNotifyUserKey + ".counter", 1L );
+                        RedisDAO.decrementCounter(EVENTADMIN_DB , unReadNotifyUserKey + ".counter", 1L );
                     }
                 }
 /*

@@ -143,6 +143,19 @@ public class ProcSaveSharedFile extends HttpServlet {
                                 arrOkText.add(okText);
                                 responseStatus = RespConstants.Status.OK;
 
+                                // Creating a notification
+                                {
+                                    if(isSaveClicked){
+                                        String notifciationMessage = Constants.EMPTY;
+                                        if( sharedFilesResponseBean.isNewFileGroup() ) {
+                                            notifciationMessage = notifciationMessage + "Added one or more files. To view them go to 'Dashboard >> Files >> "+sFileGroupName+"'";
+                                        } else {
+                                            notifciationMessage = notifciationMessage + "Updated one or more files. To view them go to 'Dashboard >> Files >> "+sFileGroupName+"'";
+                                        }
+                                        buildSharedFiles.createNotifications( sharedFilesRequestBean , notifciationMessage );
+                                    }
+                                }
+
                             } else {
                                 Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveShareFile - 003)","err_mssg") ;
                                 arrErrorText.add(errorText);

@@ -22,12 +22,16 @@
 <link rel="stylesheet" href="/css/chosen.css">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
+    String sessionId = "NA";
+    if(session!=null){
+        sessionId = ParseUtil.checkNull(session.getId() );
+    }
     String sUploadFileId = ParseUtil.checkNull(request.getParameter("upload_file_id"));
     String sFileGroupId = ParseUtil.checkNull(request.getParameter("file_group_id"));
 
     String breadCrumbPageTitle = "Upload File - New";
     boolean loadUploadFile = false;
-    if(!Utility.isNullOrEmpty(sUploadFileId)) {
+    if(!Utility.isNullOrEmpty(sFileGroupId)) {
         loadUploadFile = true;
         breadCrumbPageTitle = "Upload File - Edit";
     }
@@ -138,6 +142,7 @@
                         <thead>
                         <tr role="row">
                             <th class="sorting" role="columnheader">Name</th>
+                            <th class="sorting" role="columnheader">Uploaded By</th>
                             <th class="center" role="columnheader"></th>
                         </tr>
                         </thead>
@@ -307,6 +312,7 @@
         $('#btn_save_uploaded_files').bind("click", function() {
             saveFile(getResult,$("#frm_file_group_details").serialize()  );
         });
+        invokeMixpanel("upload_file.jsp", "<%=sessionId%>");
     });
 
     $(function () {
@@ -370,9 +376,9 @@
         });
     });
 
-    function createFileTableRow(varOriginalFileName  , varUploadId,varFileName , varPath , varSharedFileHost , varBucket){
+    function createFileTableRow(varOriginalFileName  , varUploadId,varFileName , varPath , varSharedFileHost , varBucket , varUploadedBy){
         var oTable = objEveryUploadFileTable;
-        var ai = oTable.fnAddData( [varOriginalFileName , createButtons(varUploadId,varPath , varSharedFileHost , varBucket, varFileName ) ] );
+        var ai = oTable.fnAddData( [varOriginalFileName ,varUploadedBy, createButtons(varUploadId,varPath , varSharedFileHost , varBucket, varFileName ) ] );
         var nRow = oTable.fnSettings().aoData[ ai[0] ].nTr;
         $(nRow).attr('id','row_'+varUploadId);
 
@@ -482,7 +488,7 @@
                         for(var varCount = 0; varCount<varNumOfFiles; varCount++ ){
                             var varShareFile = varFilesBean[varCount+'_shared_files'];
                             var varUploadedFile = varFilesBean[varCount+'_uploaded_files'];
-                            createFileTableRow(varUploadedFile.original_filename , varUploadedFile.upload_id , varUploadedFile.filename  , varUploadedFile.path  , varSharedFileHost , varBucket );
+                            createFileTableRow(varUploadedFile.original_filename , varUploadedFile.upload_id , varUploadedFile.filename  , varUploadedFile.path  , varSharedFileHost , varBucket , varShareFile.uploaded_by  );
                         }
 
                         var varNumOfFilesViewers = jsonResponseObj.num_of_files_viewers;
@@ -534,7 +540,8 @@
             "bInfo": false,
             "bFilter": false,
             "aoColumns":  [
-                {"bSortable": true,"sClass":"col-xs-5"},
+                {"bSortable": true,"sClass":"col-xs-4"},
+                {"bSortable": true,"sClass":"col-xs-4"},
                 {"bSortable": false,"sClass":"center"}
             ]
         });

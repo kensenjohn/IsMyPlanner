@@ -1,7 +1,14 @@
+<%@ page import="com.events.common.ParseUtil" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
+<%
+    String sessionId = "NA";
+    if(session!=null){
+        sessionId = ParseUtil.checkNull(session.getId());
+    }
+%>
 <body>
 <div class="page_wrap">
     <div class="container">
@@ -13,7 +20,7 @@
             </div>
             <div class="row"  id="unread_notifications" >
                 <div class="col-md-9">
-                    <h5>There are currently no Notifications</h5>
+                    <h5><span id="load_message">Loading..</span></h5>
                 </div>
             </div>
         </div>
@@ -21,9 +28,28 @@
 </div>
 </body>
 <script id="template_unread_notifications" type="text/x-handlebars-template">
-    <div class="row">
-        <div class="col-md-12">
-            <span style="text-decoration: underline;font-weight: bold;">{{notification_from}}</span>&nbsp;&nbsp;{{notification_message}}
+    <div class="boxedcontent">
+        <div class="widget">
+            <div class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <span style="text-decoration: underline;font-weight: bold;">{{notification_from}}</span>&nbsp;&nbsp;{{notification_message}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="template_no_notifications" type="text/x-handlebars-template">
+    <div class="boxedcontent">
+        <div class="widget">
+            <div class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5>There are currently no notification.</h5>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </script>
@@ -34,6 +60,7 @@
 <script type="text/javascript">
     $(window).load(function() {
         loadNotifications(populateNotifications);
+        invokeMixpanel("view_notifications.jsp", "<%=sessionId%>");
     });
     function loadNotifications(callbackmethod) {
         var actionUrl = "/proc_load_unread_notifications.aeve";
@@ -64,6 +91,8 @@
                         $('#unread_notifications').empty();
                         $('#unread_notifications').html( unReadNotificationView.el );
 
+                    } else {
+                        $('#load_message').text('No new notifications.');
                     }
                 }
             } else {

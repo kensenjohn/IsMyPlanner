@@ -66,7 +66,6 @@ public class NotificationSenderService {
 
 
             String sTo = topNotifyBean.getTo();
-
             ArrayList<NotifyBean> arrRecepientNotifyBean = new ArrayList<NotifyBean>();
             if(Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString().equalsIgnoreCase(sTo)) {
                 ArrayList<UserBean> arrAllPlannersUserBean = getAllPlanners(fromUserBean ,fromUserInfoBean );
@@ -76,8 +75,23 @@ public class NotificationSenderService {
             } else if(Constants.NOTIFICATION_RECEPIENTS.ALL_CLIENTS.toString().equalsIgnoreCase(sTo)) {
 
             } else {
+                UserRequestBean toUserRequestBean = new UserRequestBean();
+                toUserRequestBean.setUserId( sTo );
+                UserBean toUserBean = accessUsers.getUserById( toUserRequestBean );
+                UserInfoBean toUserInfoBean = accessUsers.getUserInfoFromUserId( toUserRequestBean );
+
+                ArrayList<UserBean> arrToUserBean = new ArrayList<UserBean>();
+                if(toUserBean!=null && toUserInfoBean!=null && !Utility.isNullOrEmpty(toUserInfoBean.getUserInfoId())) {
+                    toUserBean.setUserInfoId( toUserInfoBean.getUserInfoId() );
+                    toUserBean.setUserInfoBean( toUserInfoBean );
+                    arrToUserBean.add( toUserBean );
+                }
+                if(arrToUserBean!=null && !arrToUserBean.isEmpty()) {
+                    arrRecepientNotifyBean = generateRecipientNotificationBeans(fromUserBean ,fromUserInfoBean , arrToUserBean ,topNotifyBean );
+                }
 
             }
+            appLogging.info("Notification recepients : " + arrRecepientNotifyBean );
             if(arrRecepientNotifyBean!=null && !arrRecepientNotifyBean.isEmpty()) {
                 createNotifications(arrRecepientNotifyBean);
             }
@@ -124,9 +138,9 @@ public class NotificationSenderService {
             String sFromName = ParseUtil.checkNull(ParseUtil.checkNull(fromUserInfoBean.getFirstName()) + " " + ParseUtil.checkNull(fromUserInfoBean.getLastName()));
             if(Utility.isNullOrEmpty(sFromName)){
                 if(Constants.USER_TYPE.CLIENT.getType().equalsIgnoreCase(fromUserBean.getUserType().getType())) {
-                    sFromName = "A Client";
+                    sFromName = "Your Client";
                 } else if(Constants.USER_TYPE.VENDOR.getType().equalsIgnoreCase(fromUserBean.getUserType().getType())) {
-                    sFromName = "The Planner";
+                    sFromName = "Your Planner";
                 }
             }
             for(UserBean userBean : arrRecepientUserBean ) {

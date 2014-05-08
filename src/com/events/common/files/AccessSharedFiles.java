@@ -4,10 +4,15 @@ import com.events.bean.common.files.*;
 import com.events.bean.upload.UploadBean;
 import com.events.bean.upload.UploadRequestBean;
 import com.events.bean.upload.UploadResponseBean;
+import com.events.bean.users.UserBean;
+import com.events.bean.users.UserInfoBean;
+import com.events.bean.users.UserRequestBean;
+import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.UploadFile;
 import com.events.common.Utility;
 import com.events.data.files.AccessSharedFilesData;
+import com.events.users.AccessUsers;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -58,6 +63,41 @@ public class AccessSharedFiles {
         }
         return arrSharedFilesBean;
     }
+    public ArrayList<SharedFilesBean> getSharedFilesDetails(SharedFilesRequestBean sharedFilesRequestBean){
+        ArrayList<SharedFilesBean> arrSharedFilesBean = new ArrayList<SharedFilesBean>();
+        ArrayList<SharedFilesBean>  arrTmpSharedFilesBean = getSharedFiles(sharedFilesRequestBean);
+        if(arrTmpSharedFilesBean!=null && !arrTmpSharedFilesBean.isEmpty()) {
+            for(SharedFilesBean sharedFilesBean : arrTmpSharedFilesBean ) {
+                UserRequestBean userRequestBean = new UserRequestBean();
+                userRequestBean.setUserId( sharedFilesBean.getUserId() );
+
+                AccessUsers accessUsers = new AccessUsers();
+                UserBean userBean = accessUsers.getUserById( userRequestBean );
+                UserInfoBean userInfoBean = accessUsers.getUserInfoFromUserId(userRequestBean );
+
+                String sGivenName = Constants.EMPTY;
+                if(userInfoBean!=null && !Utility.isNullOrEmpty( userInfoBean.getFirstName() )) {
+                    sGivenName = ParseUtil.checkNull(  userInfoBean.getFirstName() ) + " " + ParseUtil.checkNull(  userInfoBean.getLastName() );
+                }
+
+                if( userBean!=null && Utility.isNullOrEmpty( sGivenName ) ) {
+                    if(Constants.USER_TYPE.VENDOR.getType().equalsIgnoreCase( userBean.getUserType().getType() )) {
+                        sGivenName = "(Planner) "+ userInfoBean.getEmail();
+                    } else if(Constants.USER_TYPE.CLIENT.getType().equalsIgnoreCase( userBean.getUserType().getType() )) {
+                        sGivenName = "(Client) " + userInfoBean.getEmail();
+                    } else {
+                        sGivenName = "User";
+                    }
+
+                }
+
+                sharedFilesBean.setUploadedBy( sGivenName );
+                arrSharedFilesBean.add( sharedFilesBean );
+
+            }
+        }
+        return arrSharedFilesBean;
+    }
 
     public SharedFilesBean getSharedFilesFromUploadId(SharedFilesRequestBean sharedFilesRequestBean){
         SharedFilesBean sharedFilesBean = new SharedFilesBean();
@@ -82,7 +122,7 @@ public class AccessSharedFiles {
         SharedFilesResponseBean sharedFilesResponseBean = new SharedFilesResponseBean();
         if(sharedFilesRequestBean!=null && !Utility.isNullOrEmpty(sharedFilesRequestBean.getSharedFilesGroupId())) {
             SharedFilesGroupBean sharedFilesGroupBean = getSharedFileGroup(sharedFilesRequestBean);
-            ArrayList<SharedFilesBean> arrSharedFilesBean = getSharedFiles(sharedFilesRequestBean);
+            ArrayList<SharedFilesBean> arrSharedFilesBean = getSharedFilesDetails(sharedFilesRequestBean);
             HashMap<String,UploadBean> hmUploadBean = getUploadedFiles(arrSharedFilesBean);
             ArrayList<SharedFilesViewersBean> arrSharedFilesViewersBean = getSharedFilesViewers(sharedFilesRequestBean);
 

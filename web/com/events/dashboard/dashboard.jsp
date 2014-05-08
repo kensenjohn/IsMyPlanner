@@ -1,8 +1,15 @@
+<%@ page import="com.events.common.ParseUtil" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <link rel="stylesheet" href="/css/colorbox.css" id="theme_time">
+<%
+    String sessionId = "NA";
+    if(session!=null){
+        sessionId = ParseUtil.checkNull(session.getId());
+    }
+%>
 <body>
 <div class="page_wrap">
         <jsp:include page="/com/events/common/top_nav.jsp">
@@ -111,9 +118,6 @@
                     loadDashboardSummary(populateDashboardSummary)
                 }});
         });
-        if(mixpanel!=undefined) {
-            mixpanel.track("dashboard.jsp");
-        }
     });
     function loadDashboardSummary(callbackmethod) {
         var actionUrl = "/proc_load_dashboard_summary.aeve";
@@ -122,6 +126,7 @@
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
     function populateDashboardSummary(jsonResult) {
+        invokeMixpanel("dashboard", "<%=sessionId%>");
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {

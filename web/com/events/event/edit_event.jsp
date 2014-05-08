@@ -12,6 +12,10 @@
 <link rel="stylesheet" href="/css/datepicker/default.time.css" id="theme_time">
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
+    String sessionId = "NA";
+    if(session!=null){
+        sessionId = ParseUtil.checkNull(session.getId() );
+    }
     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
     boolean loadEventInfo = false;
     if(sEventId!=null && !"".equalsIgnoreCase(sEventId)) {
@@ -195,6 +199,7 @@
                 loadEventInfo(populateEventInfo,varEventId);
             }
         }
+        invokeMixpanel("edit_event.jsp", "<%=sessionId%>");
     });
 
     function saveEvent( callbackmethod, methdEventPickerDay) {

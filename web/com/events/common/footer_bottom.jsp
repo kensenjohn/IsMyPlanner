@@ -51,7 +51,7 @@
     String sTwitterUrl = Constants.EMPTY;
     String sPinterestUrl = Constants.EMPTY;
     if(isVendorSubDomainUsed && hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
-        VendorWebsiteFeatureBean vendorWebsiteFeaturAboutUsBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.show_footer_about_us);
+        VendorWebsiteFeatureBean vendorWebsiteFeaturAboutUsBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.show_footer_about_us );
         if(vendorWebsiteFeaturAboutUsBean!=null) {
             isAboutUsShown = ParseUtil.sTob(vendorWebsiteFeaturAboutUsBean.getValue() );
         }
@@ -61,7 +61,7 @@
             isContactShown = ParseUtil.sTob(vendorWebsiteFeatueContactBean.getValue() );
         }
 
-        VendorWebsiteFeatureBean vendorWebsiteFeatuePrivacyBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.show_footer_contact);
+        VendorWebsiteFeatureBean vendorWebsiteFeatuePrivacyBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.show_footer_privacy);
         if(vendorWebsiteFeatuePrivacyBean!=null) {
             isPrivacyShown = ParseUtil.sTob(vendorWebsiteFeatuePrivacyBean.getValue() );
         }
@@ -125,7 +125,7 @@
                                 <%if(isAboutUsShown){%><li><a href="/com/events/common/about_us.jsp">About</a></li><%}%>
                                 <%if(isContactShown){%><li><a href="/com/events/common/contact.jsp">Contact</a></li><%}%>
                                 <%if(isPrivacyShown){%><li><a href="/com/events/common/privacy.jsp">Privacy</a></li><%}%>
-                                <%if(isPrivacyShown){%><li><a href="/com/events/common/pricing.jsp">Pricing</a></li><%}%>
+                                <%if(isPricingShown){%><li><a href="/com/events/common/pricing.jsp">Pricing</a></li><%}%>
                             </ul>
                         </div>
                     </div>

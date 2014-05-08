@@ -86,7 +86,10 @@ public class AccessEventParty {
                 }
                 jsonEventParty.put("num_of_social_media" ,iNumOfSocialMedia);
                 if(hmUploadBean!=null && !hmUploadBean.isEmpty()){
-                    jsonEventParty.put("image_uploaded" ,hmUploadBean.get(eventPartyBean.getEventPartyId()).toJson());
+                    UploadBean uploadBean = hmUploadBean.get(eventPartyBean.getEventPartyId());
+                    if(uploadBean!=null){
+                        jsonEventParty.put("image_uploaded" ,uploadBean.toJson());
+                    }
                 }
 
 

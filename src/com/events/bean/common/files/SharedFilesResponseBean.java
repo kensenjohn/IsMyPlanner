@@ -21,7 +21,15 @@ public class SharedFilesResponseBean {
     private SharedFilesCommentsBean sharedFilesCommentsBean = new SharedFilesCommentsBean();
     private ArrayList<SharedFilesViewersBean> arrSharedFilesViewersBean = new ArrayList<SharedFilesViewersBean>();
     private ArrayList<SharedFilesGroupBean>  arrSharedFilesGroupBean = new ArrayList<SharedFilesGroupBean>();
+    private boolean isNewFileGroup = false;
 
+    public boolean isNewFileGroup() {
+        return isNewFileGroup;
+    }
+
+    public void setNewFileGroup(boolean newFileGroup) {
+        isNewFileGroup = newFileGroup;
+    }
 
     public ArrayList<SharedFilesGroupBean> getArrSharedFilesGroupBean() {
         return arrSharedFilesGroupBean;

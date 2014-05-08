@@ -8,9 +8,11 @@ import com.events.bean.common.FeatureBean;
 import com.events.bean.common.notify.NotifyBean;
 import com.events.bean.event.EventRequestBean;
 import com.events.bean.event.EventResponseBean;
+import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserInfoBean;
 import com.events.bean.users.UserRequestBean;
+import com.events.clients.AccessClients;
 import com.events.clients.BuildClients;
 import com.events.common.*;
 import com.events.common.exception.ExceptionHandler;
@@ -55,12 +57,60 @@ public class BuildEvent {
                 AccessUsers accessUsers = new AccessUsers();
                 UserBean userBean = accessUsers.getUserById(userRequestBean );
                 if( userBean!=null ) {
-                    NotifyBean notifyBean = new NotifyBean();
-                    notifyBean.setFrom(eventRequestBean.getUserId());
-                    notifyBean.setTo(Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString());
-                    notifyBean.setMessage("Created an event.");
+                    ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser( userBean );
 
-                    Notification.createNewNotifyRecord( notifyBean );
+                    if(parentTypeBean!=null){
+                        if(parentTypeBean.isUserAVendor()) {
+
+                            String sPlannerMessage = "Created a new event called '" + ParseUtil.checkNull( eventRequestBean.getEventName() ) + "'";
+                            String sClientId = ParseUtil.checkNull( eventRequestBean.getEventClient() );
+                            ClientResponseBean clientResponseBean = new ClientResponseBean();
+                            if(!Utility.isNullOrEmpty( sClientId )) {
+                                ClientRequestBean clientRequestBean = new ClientRequestBean();
+                                clientRequestBean.setClientId( sClientId );
+                                clientRequestBean.setVendorId( userBean.getParentId() );
+
+                                AccessClients accessClients = new AccessClients();
+                                ClientBean clientBean = accessClients.getClient( clientRequestBean );
+                                clientResponseBean = accessClients.getClientContactInfo(clientRequestBean);
+
+                                if(clientBean!=null && !Utility.isNullOrEmpty(clientBean.getClientName())){
+                                    sPlannerMessage = sPlannerMessage + " for client '" + ParseUtil.checkNull( clientBean.getClientName() ) + "'.";
+                                }
+
+                            }
+                            NotifyBean notifyBean = new NotifyBean();
+                            notifyBean.setFrom(eventRequestBean.getUserId());
+                            notifyBean.setTo(Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString());
+                            notifyBean.setMessage(sPlannerMessage );
+
+                            Notification.createNewNotifyRecord( notifyBean );
+
+
+                            if(clientResponseBean!=null && !Utility.isNullOrEmpty(clientResponseBean.getUserId())){
+                                String sClientMessage = "Created a new event '" + ParseUtil.checkNull( eventRequestBean.getEventName() ) + "' for you.";
+
+                                NotifyBean clientNotifyBean = new NotifyBean();
+                                clientNotifyBean.setFrom(eventRequestBean.getUserId());
+                                clientNotifyBean.setTo(clientResponseBean.getUserId());
+                                clientNotifyBean.setMessage(sClientMessage );
+
+                                Notification.createNewNotifyRecord( clientNotifyBean );
+                            }
+
+
+                        } else if(parentTypeBean.isUserAClient()){
+
+                            String sPlannerMessage = "Created an event called '" + ParseUtil.checkNull( eventRequestBean.getEventName() ) + "'";
+                            NotifyBean notifyBean = new NotifyBean();
+                            notifyBean.setFrom(eventRequestBean.getUserId());
+                            notifyBean.setTo(Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString());
+                            notifyBean.setMessage(sPlannerMessage );
+
+                            Notification.createNewNotifyRecord( notifyBean );
+                        }
+                    }
+
                 }
 
 

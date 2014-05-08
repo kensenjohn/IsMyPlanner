@@ -13,7 +13,10 @@
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
 
-
+    String sessionId = "NA";
+    if(session!=null){
+        sessionId = ParseUtil.checkNull(session.getId() );
+    }
     String imageHost = Utility.getImageUploadHost();
     String sBucket = Utility.getS3Bucket();
     String sFolderName = Constants.EMPTY;
@@ -63,7 +66,7 @@
             sGreetingText =  vendorWebsiteFeatureBean.getValue();
         }
     }
-    if(Utility.isNullOrEmpty(sGreetingText)){
+    if(Utility.isNullOrEmpty(sGreetingText) && !isVendorSite){
         sGreetingText = "A Platform to Manage Your Clients, Events, Vendors and Team";
     }
 
@@ -326,9 +329,8 @@
             p.src = '//assets.pinterest.com/js/pinit.js';
             f.parentNode.insertBefore(p, f);
         }(document));
-        if(mixpanel!=undefined) {
-            mixpanel.track("Landing Page");
-        }
+
+        invokeMixpanel("Landing Page", "<%=sessionId%>");
     });
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>

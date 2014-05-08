@@ -627,12 +627,16 @@
 
             if(iColumnCount == 0 ){
 %>
-                <div class="row">
-<%
-            }
+                    <div class="row">
+                        <div class="col-xs-offset-1 col-xs-3"  style="text-align: center">
+                <%
+                } else {
+                %>
+                        <div class="col-xs-3"  style="text-align: center">
+       <%
+                }
 
-%>
-                    <div class="col-md-offset-1 col-md-3"  style="text-align: center">
+       %>
                         <%if(!Utility.isNullOrEmpty(sBridesMaidImage)) { %>
                         <div class="row">
                             <div class="col-md-12">
@@ -686,7 +690,7 @@
 <%
             }
         }
-    if(iColumnCount <2 ) {
+    if(iColumnCount <3 ) {
 %>
     </div>
     <div class="row">
@@ -694,13 +698,17 @@
             &nbsp;
         </div>
     </div>
+</div>
     <%
+            } else {
+    %>
+    </div>
+<%
             }
 
     }
 
 %>
-    </div>
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -782,14 +790,18 @@
                 }
             }
 
-        if(iColumnCount == 0 ){
+            if(iColumnCount == 0 ){
 %>
         <div class="row">
-<%
-        }
+            <div class="col-xs-offset-1 col-xs-3"  style="text-align: center">
+                <%
+                } else {
+                %>
+                <div class="col-xs-3"  style="text-align: center">
+                    <%
+                        }
 
-%>
-            <div class="col-md-offset-1 col-md-3"  style="text-align: center">
+                    %>
                 <%if(!Utility.isNullOrEmpty(sGroomsManImage)) { %>
                 <div class="row">
                     <div class="col-md-12">
@@ -843,7 +855,7 @@
 <%
         }
     }
-        if(iColumnCount <2 ) {
+        if(iColumnCount <3 ) {
 %>
     </div>
     <div class="row">
@@ -851,13 +863,17 @@
             &nbsp;
         </div>
     </div>
+  </div>
 <%
         }
 
+} else {
+%>
+</div>
+<%
 }
 
 %>
-    </div>
 </div>
 <div class="row">
     <div class="col-md-12">

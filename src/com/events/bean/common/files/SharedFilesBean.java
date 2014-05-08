@@ -27,6 +27,7 @@ public class SharedFilesBean {
     private Long createDate = 0L;
     private String humanCreateDate = Constants.EMPTY;
     private String formattedCreateDate = Constants.EMPTY;
+    private String uploadedBy = Constants.EMPTY;
 
     public SharedFilesBean() {
     }
@@ -39,6 +40,14 @@ public class SharedFilesBean {
         this.userId = ParseUtil.checkNull( hmResult.get("FK_USERID") );
         this.createDate = ParseUtil.sToL( hmResult.get("CREATEDATE") );
         this.humanCreateDate = ParseUtil.checkNull( hmResult.get("HUMANCREATEDATE") );
+    }
+
+    public String getUploadedBy() {
+        return uploadedBy;
+    }
+
+    public void setUploadedBy(String uploadedBy) {
+        this.uploadedBy = uploadedBy;
     }
 
     public String getFormattedCreateDate() {
@@ -130,6 +139,7 @@ public class SharedFilesBean {
             jsonObject.put("user_id", this.userId);
             jsonObject.put("create_date", this.createDate);
             jsonObject.put("formatted_create_date", this.formattedCreateDate);
+            jsonObject.put("uploaded_by", this.uploadedBy);
         } catch (JSONException e) {
             e.printStackTrace();
         }

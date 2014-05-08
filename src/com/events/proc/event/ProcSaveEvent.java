@@ -6,6 +6,7 @@ import com.events.bean.common.notify.NotifyBean;
 import com.events.bean.event.EventRequestBean;
 import com.events.bean.event.EventResponseBean;
 import com.events.bean.users.UserBean;
+import com.events.bean.users.UserRequestBean;
 import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
 import com.events.clients.AccessClients;
@@ -16,6 +17,7 @@ import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.event.BuildEvent;
 import com.events.json.*;
+import com.events.users.AccessUsers;
 import com.events.vendors.AccessVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -85,6 +87,19 @@ public class ProcSaveEvent   extends HttpServlet {
                         vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
                     }
 
+                    boolean isAllowedToCreateClient = true;
+                    if("create_client".equalsIgnoreCase(sEventClient ) &&!Utility.isNullOrEmpty(sClientEmail)){
+                        UserRequestBean userRequestBean = new UserRequestBean();
+                        userRequestBean.setEmail( sClientEmail );
+                        AccessUsers accessUsers = new AccessUsers();
+                        UserBean userBean = accessUsers.getUserByEmail( userRequestBean );
+
+                        if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId())) {
+                            isAllowedToCreateClient = false;
+                        }
+                    }
+
+
 
 
                     if( sEventClient!=null && "create_client".equalsIgnoreCase(sEventClient )
@@ -105,6 +120,10 @@ public class ProcSaveEvent   extends HttpServlet {
                         responseStatus = RespConstants.Status.ERROR;
                     } else if (isLoggedInUserAClient && ( clientBean ==null || (clientBean!=null && Utility.isNullOrEmpty(clientBean.getClientId())) )  ) {
                         Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please login and try again.","err_mssg") ;
+                        arrErrorText.add(errorText);
+                        responseStatus = RespConstants.Status.ERROR;
+                    } else if("create_client".equalsIgnoreCase(sEventClient ) && !isAllowedToCreateClient ){
+                        Text errorText = new ErrorText("Please use a different client email. The email address already exists.","err_mssg") ;
                         arrErrorText.add(errorText);
                         responseStatus = RespConstants.Status.ERROR;
                     } else {

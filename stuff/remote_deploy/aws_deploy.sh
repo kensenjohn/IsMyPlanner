@@ -29,3 +29,4 @@ else
         echo "ROOT.war does not exist"
         exit 1
 fi
+

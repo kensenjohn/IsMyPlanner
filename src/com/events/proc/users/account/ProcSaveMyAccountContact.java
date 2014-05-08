@@ -1,8 +1,10 @@
 package com.events.proc.users.account;
 
+import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserInfoBean;
 import com.events.bean.users.UserRequestBean;
+import com.events.bean.vendors.VendorBean;
 import com.events.bean.vendors.VendorRequestBean;
 import com.events.bean.vendors.VendorResponseBean;
 import com.events.common.Constants;
@@ -14,6 +16,7 @@ import com.events.json.*;
 import com.events.users.AccessUsers;
 import com.events.users.BuildUsers;
 import com.events.vendors.AccessVendors;
+import com.events.vendors.BuildVendors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +110,23 @@ public class ProcSaveMyAccountContact   extends HttpServlet {
                             Integer iNumOfRecords = buildUsers.updateUserInfo( userInfoBean );
                             if(iNumOfRecords>0){
                                 HttpSession loggedInUserSession = request.getSession(false);
+
                                 if(loggedInUserSession!=null){
+
+                                    if(!Utility.isNullOrEmpty(userRequestBean.getCompanyName())){
+                                        ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser( loggedInUserBean );
+                                        if( parentTypeBean!=null && parentTypeBean.isUserAVendor() && parentTypeBean.getVendorBean()!=null ){
+                                            VendorBean vendorBean = parentTypeBean.getVendorBean();
+                                            vendorBean.setVendorName( userRequestBean.getCompanyName() );
+
+                                            BuildVendors buildVendors = new BuildVendors();
+                                            buildVendors.updateVendor( vendorBean );
+
+                                            request.getSession().removeAttribute("SUBDOMAIN_VENDOR");
+                                            request.getSession().setAttribute("SUBDOMAIN_VENDOR",vendorBean);
+                                        }
+                                    }
+
                                     loggedInUserBean.setUserInfoBean( userInfoBean );
 
                                     request.getSession().removeAttribute(Constants.USER_LOGGED_IN_BEAN);

@@ -24,7 +24,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         &nbsp;&nbsp;
-                                                        <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide"  class="layout-hide-feature" name="landing_page_picture_hide" id="landing_page_picture_hide" param="landing_page_picture">
+                                                        <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="layout-hide-feature" name="landing_page_picture_hide" id="landing_page_picture_hide" param="landing_page_picture">
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -100,7 +100,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         &nbsp;&nbsp;
-                                                        <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide"  class="layout-hide-feature" name="landing_page_greeting_hide" id="landing_page_greeting_hide" param="landing_page_greeting">
+                                                        <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="layout-hide-feature" name="landing_page_greeting_hide" id="landing_page_greeting_hide" param="landing_page_greeting">
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -150,7 +150,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         &nbsp;&nbsp;
-                                                        <input type="checkbox" checked data-size="small" data-on-text="Show" data-off-text="Hide"  class="layout-hide-feature" name="landing_page_social_media" id="landing_page_social_media" param="landing_page_social_media">
+                                                        <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="layout-hide-feature" name="landing_page_social_media" id="landing_page_social_media" param="landing_page_social_media">
                                                     </div>
                                                 </div>
 

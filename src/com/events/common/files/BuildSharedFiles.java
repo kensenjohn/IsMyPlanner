@@ -1,9 +1,14 @@
 package com.events.common.files;
 
+import com.events.bean.clients.ClientRequestBean;
+import com.events.bean.clients.ClientResponseBean;
 import com.events.bean.common.files.*;
+import com.events.bean.common.notify.NotifyBean;
+import com.events.clients.AccessClients;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
+import com.events.common.notify.Notification;
 import com.events.data.files.BuildSharedFilesData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +43,7 @@ public class BuildSharedFiles {
                 sharedFilesGroupBean.setSharedFilesGroupId( Utility.getNewGuid() );
                 sharedFilesRequestBean.setSharedFilesGroupId( sharedFilesGroupBean.getSharedFilesGroupId() );
                 iNumOfFileGroups = buildSharedFilesData.insertSharedFileGroup( sharedFilesGroupBean );
+                sharedFilesResponseBean.setNewFileGroup( true ); // a new file group was created.
             }
 
             if(iNumOfFileGroups>0){
@@ -141,5 +147,40 @@ public class BuildSharedFiles {
             sharedFilesCommentsBean.setFormattedCreateDate( "Just Now");
         }
         return sharedFilesCommentsBean;
+    }
+
+    public void createNotifications( SharedFilesRequestBean sharedFilesRequestBean , String sMessage){
+        if(sharedFilesRequestBean!=null && !Utility.isNullOrEmpty(sharedFilesRequestBean.getUserId()) && !Utility.isNullOrEmpty(sharedFilesRequestBean.getVendorId() )
+                && !Utility.isNullOrEmpty( sMessage ) ){
+
+            NotifyBean notifyBean = new NotifyBean();
+            notifyBean.setFrom(sharedFilesRequestBean.getUserId());
+
+            notifyBean.setMessage( sMessage );
+            if(sharedFilesRequestBean.isLoggedInUserAClient()){
+                notifyBean.setTo( Constants.NOTIFICATION_RECEPIENTS.ALL_PLANNERS.toString() );
+
+                Notification.createNewNotifyRecord(notifyBean);
+            } else {
+                if(sharedFilesRequestBean.getArrViewerId()!=null && !sharedFilesRequestBean.getArrViewerId().isEmpty()) {
+                    ArrayList<String> arrViewerId = sharedFilesRequestBean.getArrViewerId();
+                    for(String sViewerId : arrViewerId ){
+                        ClientRequestBean clientRequestBean = new ClientRequestBean();
+                        clientRequestBean.setClientId( sViewerId );
+                        clientRequestBean.setVendorId( sharedFilesRequestBean.getVendorId() );
+
+                        AccessClients accessClients = new AccessClients();
+                        ClientResponseBean clientResponseBean =accessClients.getClientContactInfo( clientRequestBean );
+                        if(clientResponseBean!=null && !Utility.isNullOrEmpty(clientResponseBean.getUserId())){
+                            notifyBean.setTo( clientResponseBean.getUserId() );
+
+                            Notification.createNewNotifyRecord(notifyBean);
+                        }
+                    }
+                }
+
+
+            }
+        }
     }
 }
