@@ -1536,6 +1536,7 @@
                 if(varIsPayloadExist == true) {
                     var jsonResponseObj = varResponseObj.payload;
                 }
+                $('#rsvpComments').val('');
                 displayAjaxOk(varResponseObj);
             } else {
                 displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);

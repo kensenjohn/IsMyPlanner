@@ -1,10 +1,12 @@
 package com.events.common;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -138,6 +140,17 @@ public class Utility {
         }
         sHomeUrl = APPLICATION_PROTOCOL+"://"+sHomeUrl;
         return sHomeUrl;
+    }
+
+
+    public static JSONObject getJsonHmLong( HashMap<String,Long> hmLong ){
+        JSONObject jsonLong = new JSONObject();
+        if( hmLong!=null && !hmLong.isEmpty()) {
+            for(Map.Entry<String, Long> mapLong : hmLong.entrySet()) {
+                jsonLong.put( mapLong.getKey(), mapLong.getValue() );
+            }
+        }
+        return jsonLong;
     }
 
 }

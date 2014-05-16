@@ -2,3 +2,9 @@ send_email.startup_delay=
 send_email.delay_between_call=
 create_email.startup_delay=
 create_email.delay_between_call=
+
+send_notification.startup_delay=
+send_notification.delay_between_call=
+
+create_todo_reminder.startup_delay=
+create_todo_reminder.delay_between_call=

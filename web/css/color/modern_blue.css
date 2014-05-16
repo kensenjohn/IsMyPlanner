@@ -326,5 +326,10 @@ html ul.footer-tabs li.active a:hover {
     color: #fff;
 }
 
+.chosen-container-active .chosen-single {
+    border: 1px solid #3F9CFF;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
 
 

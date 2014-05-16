@@ -1,9 +1,12 @@
 package com.events.data.event;
 
+import com.events.bean.common.todo.AssignedToDoEventsBean;
+import com.events.bean.common.todo.ToDoRequestBean;
 import com.events.bean.event.EventBean;
 import com.events.bean.event.EventRequestBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
+import com.events.common.Utility;
 import com.events.common.db.DBDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,4 +42,39 @@ public class AccessEventData {
         }
         return eventBean;
     }
+
+    public ArrayList<EventBean> getVendorEvents(EventRequestBean eventRequestBean ){
+        ArrayList<EventBean> arrEventBean = new ArrayList<EventBean>();
+        if(eventRequestBean!=null && !Utility.isNullOrEmpty(eventRequestBean.getEventVendorId())) {
+            String sQuery  = "SELECT * FROM GTEVENT WHERE FK_VENDORID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(eventRequestBean.getEventVendorId());
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventData.java", "getVendorEvents()");
+
+            if(arrResult!=null && !arrResult.isEmpty()) {
+                for( HashMap<String, String> hmResult : arrResult ) {
+                    EventBean eventBean = new EventBean(hmResult);
+                    arrEventBean.add(eventBean);
+                }
+            }
+        }
+        return  arrEventBean;
+    }
+
+    public ArrayList<EventBean> getClientEvents(EventRequestBean eventRequestBean ){
+        ArrayList<EventBean> arrEventBean = new ArrayList<EventBean>();
+        if(eventRequestBean!=null && !Utility.isNullOrEmpty(eventRequestBean.getEventClient())) {
+            String sQuery  = "SELECT * FROM GTEVENT WHERE FK_CLIENTID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(eventRequestBean.getEventClient());
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventData.java", "getClientEvents()");
+
+            if(arrResult!=null && !arrResult.isEmpty()) {
+                for( HashMap<String, String> hmResult : arrResult ) {
+                    EventBean eventBean = new EventBean(hmResult);
+                    arrEventBean.add(eventBean);
+                }
+            }
+        }
+        return  arrEventBean;
+    }
+
 }

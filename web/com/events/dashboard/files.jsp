@@ -185,7 +185,6 @@
     }
     function initializeTableForVendor(){
 
-        console.log('initializeTableForVendor');
         var objVendorFileGroupTable =  $('#every_file_uploaded').dataTable({
             "bPaginate": false,
             "bInfo": false,
@@ -201,7 +200,6 @@
     }
     function initializeTableForClient(){
 
-        console.log('initializeTableForClient');
         var objClientFileGroupTable =  $('#every_file_uploaded').dataTable({
             "bPaginate": false,
             "bInfo": false,

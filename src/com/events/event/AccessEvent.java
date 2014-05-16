@@ -7,15 +7,19 @@ import com.events.bean.event.EventRequestBean;
 import com.events.bean.event.EventResponseBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
+import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.feature.Feature;
 import com.events.common.feature.FeatureType;
 import com.events.data.event.AccessEventData;
 import com.events.data.feature.FeatureData;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -91,4 +95,49 @@ public class AccessEvent {
         }
         return featureBean;
     }
+
+    public ArrayList<EventBean> getVendorEvents(EventRequestBean eventRequestBean){
+        ArrayList<EventBean> arrEventBean = new ArrayList<EventBean>();
+        if(eventRequestBean !=null  && !Utility.isNullOrEmpty(eventRequestBean.getEventVendorId())) {
+            AccessEventData accessEventData = new AccessEventData();
+            arrEventBean = accessEventData.getVendorEvents( eventRequestBean );
+
+        }
+        return arrEventBean;
+    }
+    public ArrayList<EventBean> getClientEvents(EventRequestBean eventRequestBean){
+        ArrayList<EventBean> arrEventBean = new ArrayList<EventBean>();
+        if(eventRequestBean !=null  && !Utility.isNullOrEmpty(eventRequestBean.getEventClient())) {
+            AccessEventData accessEventData = new AccessEventData();
+            arrEventBean = accessEventData.getClientEvents( eventRequestBean );
+
+        }
+        return arrEventBean;
+    }
+
+    public JSONObject getJsonArrEventBean( ArrayList<EventBean> arrEventBean ) {
+        JSONObject jsonArrEventBean = new JSONObject();
+        Long iNumOfEvents = 0L;
+        if(arrEventBean!=null && !arrEventBean.isEmpty() ) {
+            for(EventBean eventBean : arrEventBean ) {
+                jsonArrEventBean.put(ParseUtil.LToS(iNumOfEvents), eventBean.toJson() );
+                iNumOfEvents++;
+            }
+        }
+        jsonArrEventBean.put("num_of_events",iNumOfEvents);
+        return jsonArrEventBean;
+    }
+
+
+    public JSONObject getJsonHmEventBean( HashMap<String,EventBean> hmEventBean ){
+        JSONObject jsonEventBean = new JSONObject();
+        if( hmEventBean!=null && !hmEventBean.isEmpty()) {
+            for(Map.Entry<String, EventBean> mapEventBean : hmEventBean.entrySet()) {
+                EventBean eventBean = mapEventBean.getValue();
+                jsonEventBean.put( mapEventBean.getKey(), eventBean.toJson() );
+            }
+        }
+        return jsonEventBean;
+    }
+
 }

@@ -36,6 +36,24 @@ public class UserRequestBean {
     private boolean isPlanner = false;
     private ArrayList<String> arrRoleId = new ArrayList<String>();
     private boolean isWebsiteAccessEnabled = false;
+    private String vendorId = Constants.EMPTY;
+    private String clientId = Constants.EMPTY;
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getVendorId() {
+        return vendorId;
+    }
+
+    public void setVendorId(String vendorId) {
+        this.vendorId = vendorId;
+    }
 
     public String getWebsite() {
         return website;

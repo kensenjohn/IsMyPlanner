@@ -104,6 +104,25 @@ public class AccessUsers {
         return isUserAuthenticated;
     }
 
+    public ArrayList<UserBean> getAllVendorUsers(UserRequestBean userRequestBean){
+        ArrayList<UserBean> arrUserBean = new ArrayList<UserBean>();
+        if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getVendorId())) {
+            AccessUserData accessUserData = new AccessUserData();
+            arrUserBean = accessUserData.getAllVendorUsers( userRequestBean );
+        }
+
+        return arrUserBean;
+    }
+
+    public ArrayList<UserBean> getAllVendorClientUsers(UserRequestBean userRequestBean){
+        ArrayList<UserBean> arrUserBean = new ArrayList<UserBean>();
+        if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getVendorId())) {
+            AccessUserData accessUserData = new AccessUserData();
+            arrUserBean = accessUserData.getAllVendorClientUsers( userRequestBean );
+        }
+        return arrUserBean;
+    }
+
     public UserBean getLoggedInUserBean(Cookie[] cookies) {
         UserBean userBean = new UserBean();
         if(cookies!=null) {
@@ -137,6 +156,20 @@ public class AccessUsers {
             }
         }
         return userBean;
+    }
+    public JSONObject getJsonUserBean(ArrayList<UserBean> arrUserBean){
+        JSONObject jsonObject = new JSONObject();
+        if(arrUserBean!=null && !arrUserBean.isEmpty()  ) {
+            Integer iNumOfUserBean = 0;
+            for(UserBean userBean : arrUserBean) {
+                if(userBean!=null){
+                    jsonObject.put( iNumOfUserBean.toString(), userBean.toJson() );
+                    iNumOfUserBean++;
+                }
+            }
+            jsonObject.put("num_of_userbean", iNumOfUserBean);
+        }
+        return jsonObject;
     }
 
     public JSONObject getJsonUserBeanAndInfo(ArrayList<UserBean> arrUserBean, ArrayList<UserInfoBean> arrUserInfoBean){

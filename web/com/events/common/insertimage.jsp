@@ -127,7 +127,7 @@
                 if( data.result != undefined ) {
                     var varDataResult = data.result[0];
                     if(varDataResult!=undefined && varDataResult.success) {
-                        var varLinkToImage = varDataResult.imagehost  + "/" + varDataResult.foldername + "/" + varDataResult.name;
+                        var varLinkToImage = varDataResult.imagehost + "/" + varDataResult.bucket  + "/" + varDataResult.foldername + "/" + varDataResult.name;
                         insertImage(varLinkToImage);
                     }
                 }

@@ -932,6 +932,75 @@
         <url-pattern>/proc_save_guest_rsvp.aeve</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Process Save ToDo</servlet-name>
+        <servlet-class>com.events.proc.todo.ProcSaveTodos</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save ToDo</servlet-name>
+        <url-pattern>/proc_save_todos.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load ToDo Summary</servlet-name>
+        <servlet-class>com.events.proc.todo.ProcLoadTodoSummary</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load ToDo Summary</servlet-name>
+        <url-pattern>/proc_load_todo_summary.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load ToDo</servlet-name>
+        <servlet-class>com.events.proc.todo.ProcLoadTodo</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load ToDo</servlet-name>
+        <url-pattern>/proc_load_todo.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save ToDo Reminder Schedule</servlet-name>
+        <servlet-class>com.events.proc.todo.ProcSaveTodosReminderSchedule</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save ToDo Reminder Schedule</servlet-name>
+        <url-pattern>/proc_save_todos_reminder_schedule.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load ToDo Reminder Schedule</servlet-name>
+        <servlet-class>com.events.proc.todo.ProcLoadTodosReminderSchedule</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load ToDo Reminder Schedule</servlet-name>
+        <url-pattern>/proc_load_todos_reminder_schedule.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load ToDo Filter Params</servlet-name>
+        <servlet-class>com.events.proc.todo.ProcLoadTodoFilterParams</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load ToDo Filter Params</servlet-name>
+        <url-pattern>/proc_load_todo_filter_params.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Update ToDo Status</servlet-name>
+        <servlet-class>com.events.proc.todo.ProcUpdateTodoStatus</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Update ToDo Status</servlet-name>
+        <url-pattern>/proc_update_todo_status.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete ToDo</servlet-name>
+        <servlet-class>com.events.proc.todo.ProcDeleteTodo</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete ToDo</servlet-name>
+        <url-pattern>/proc_delete_todo.aeve</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
 
 
     <filter>

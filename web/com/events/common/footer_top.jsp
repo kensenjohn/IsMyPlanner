@@ -126,4 +126,27 @@
             mixpanel.track(trackName,{'session_id':sessionid});
         }
     }
+    function loadingOverlay( varAction ){
+        if(varAction == 'hide' ){
+            $('#overlay').remove();
+        } else {
+            var docHeight = $(document).height();
+
+            $("body").append("<div id='overlay'><h5>Loading...</h5></div>");
+
+            $("#overlay")
+                    .height(docHeight)
+                    .css({
+                        'opacity' : 0.4,
+                        'position': 'fixed',
+                        'top': 0,
+                        'left': 0,
+                        'background-color': 'black',
+                        'width': '100%',
+                        'z-index': 5000
+                    });
+        }
+
+
+    }
 </script>

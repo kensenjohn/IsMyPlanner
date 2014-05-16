@@ -541,7 +541,7 @@ ul.tabs li.active, html ul.tabs li.active a,  html ul.tabs li.active a:hover  {
 .green { color: #0AA65B;}
 
 /** Toggle Div Link **/
-toggle-link{cursor: pointer}
+toggle-link{cursor:pointer;}
 
 
 /** footer **/
@@ -615,5 +615,8 @@ ul.footer-tabs li.active, html ul.footer-tabs li.active a,  html ul.footer-tabs 
     margin-bottom: 0px;
     font-weight: normal;
 }
+
+.right { text-align: right; }
+.left { text-align: left; }
 
 

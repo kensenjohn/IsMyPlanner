@@ -195,7 +195,8 @@ public class Constants {
     public enum SCHEDULER{
         SEND_EMAIL_STARTUP_DELAY("send_email.startup_delay"),SEND_EMAIL_DELAY_BETWEEN_CALL("send_email.delay_between_call"),
         CREATE_EMAIL_STARTUP_DELAY("create_email.startup_delay"),CREATE_EMAIL_DELAY_BETWEEN_CALL("create_email.delay_between_call"),
-        SEND_NOTIFICATION_STARTUP_DELAY("send_notification.startup_delay"),SEND_NOTIFICATION_DELAY_BETWEEN_CALL("send_email.delay_between_call");
+        SEND_NOTIFICATION_STARTUP_DELAY("send_notification.startup_delay"),SEND_NOTIFICATION_DELAY_BETWEEN_CALL("send_notification.delay_between_call"),
+        CREATE_TODO_REMINDER_STARTUP_DELAY("create_todo_reminder.startup_delay"),CREATE_TODO_REMINDER_BETWEEN_CALL("create_todo_reminder.delay_between_call");
 
         private String propName = Constants.EMPTY;
 
@@ -273,7 +274,8 @@ public class Constants {
         CLIENT_PARENTSITE_ACCESS("CLIENT_PARENTSITE_ACCESS"),
         NEW_TEAM_MEMBER_ACCESS("NEW_TEAM_MEMBER_ACCESS"),
         NEW_VENDOR_ACCESS("NEW_VENDOR_ACCESS"),
-        CLIENT_INVOICE("CLIENT_INVOICE");
+        CLIENT_INVOICE("CLIENT_INVOICE"),
+        TODO_REMINDER("TODO_REMINDER");
 
         private String emailTemplate = Constants.EMPTY;
 
@@ -483,5 +485,9 @@ public class Constants {
 
     public enum EMAIL_METRIC_TYPE{
         EMAIL_OPENED,LINKS_CLICKED,NONE;
+    }
+
+    public enum TODO_STATUS{
+        ALL,ACTIVE,COMPLETE;
     }
 }

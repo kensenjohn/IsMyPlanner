@@ -28,7 +28,7 @@ public class AccessGuestData {
     public ArrayList<EveryEventGuestGroupBean> getEventGuestGroupAndGuestGroup(GuestRequestBean guestRequestBean) {
         ArrayList<EveryEventGuestGroupBean> arrEveryEventGuestGroup = new ArrayList<EveryEventGuestGroupBean>();
         if(guestRequestBean!=null){
-            String sQuery = "SELECT * FROM GTEVENTGUESTGROUP EG, GTGUESTGROUP G WHERE EG.FK_EVENTID = ? AND EG.DEL_ROW=0 AND EG.FK_GUESTGROUPID = G.GUESTGROUPID";
+            String sQuery = "SELECT * FROM GTEVENTGUESTGROUP EG, GTGUESTGROUP G WHERE EG.FK_EVENTID = ? AND EG.DEL_ROW=0 AND EG.FK_GUESTGROUPID = G.GUESTGROUPID  ORDER BY EG.CREATEDATE DESC";
             ArrayList<Object> aParams = DBDAO.createConstraint(guestRequestBean.getEventId());
 
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessGuestData.java", "getEventGuestGroupAndGuestGroup()");

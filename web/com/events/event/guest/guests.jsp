@@ -227,7 +227,7 @@
         objEveryEventTable =  $('#every_guest_table').dataTable({
             "bPaginate": false,
             "bInfo": false,
-
+            "aaSorting": [],
             "aoColumns": [
                 null,
                 null,

@@ -5,6 +5,7 @@ import com.events.bean.users.UserInfoBean;
 import com.events.bean.users.UserRequestBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
+import com.events.common.Utility;
 import com.events.common.db.DBDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,4 +129,39 @@ public class AccessUserData {
         }
         return arrUserInfoBeans;
     }
+
+    public ArrayList<UserBean> getAllVendorUsers(UserRequestBean userRequestBean){
+        ArrayList<UserBean> arrUserBean = new ArrayList<UserBean>();
+        if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getVendorId())) {
+            String sQuery  = "SELECT * FROM GTUSER U, GTVENDOR V, GTUSERINFO UI  WHERE U.FK_PARENTID=V.VENDORID AND V.VENDORID=? AND UI.USERINFOID = U.FK_USERINFOID";
+            ArrayList<Object> aParams = DBDAO.createConstraint(userRequestBean.getVendorId() );
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessUserData.java", "getAllVendorUsers()");
+            if(arrResult!=null) {
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    UserBean userBean = new UserBean(hmResult);
+                    UserInfoBean userInfoBean = new UserInfoBean(hmResult);
+                    userBean.setUserInfoBean( userInfoBean );
+                    arrUserBean.add( userBean );
+                }
+            }
+        }
+        return arrUserBean;
+    }
+
+    public ArrayList<UserBean> getAllVendorClientUsers(UserRequestBean userRequestBean){
+        ArrayList<UserBean> arrUserBean = new ArrayList<UserBean>();
+        if(userRequestBean!=null && !Utility.isNullOrEmpty(userRequestBean.getVendorId())) {
+            String sQuery  = "SELECT * FROM GTUSER U, GTVENDOR V, GTUSERINFO UI  , GTCLIENT C WHERE U.FK_PARENTID=C.CLIENTID AND V.VENDORID=?  AND C.FK_VENDORID = V.VENDORID AND UI.USERINFOID = U.FK_USERINFOID";
+            ArrayList<Object> aParams = DBDAO.createConstraint(userRequestBean.getVendorId() );
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessUserData.java", "getAllVendorClientUsers()");
+            if(arrResult!=null) {
+                for(HashMap<String, String> hmResult : arrResult ) {
+                    UserBean userBean = new UserBean(hmResult);
+                    arrUserBean.add( userBean );
+                }
+            }
+        }
+        return arrUserBean;
+    }
+
 }

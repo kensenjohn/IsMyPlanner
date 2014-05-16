@@ -136,4 +136,8 @@ public class ParseUtil {
     public static Integer LToI(Long lInput) {
         return lInput.intValue();
     }
+
+    public static Long IToL(Integer iInput) {
+        return iInput.longValue();
+    }
 }

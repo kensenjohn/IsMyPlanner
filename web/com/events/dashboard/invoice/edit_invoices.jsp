@@ -261,7 +261,7 @@
             generateDownloadableInvoice(getDownloadableInvoice);
         })
 
-
+        loadingOverlay('show');
         loadClients(populateClientList);
         $('#invoiceDate').pickadate()
         $('#invoiceDueDate').pickadate()
@@ -359,6 +359,7 @@
         } else {
             displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (3)', true);
         }
+        loadingOverlay('hide');
     }
 
     function getEmailInvoiceResult(jsonResult) {

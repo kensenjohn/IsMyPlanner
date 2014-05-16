@@ -29,6 +29,7 @@ public class ScheduledServiceExecutions implements ServletContextListener {
     private ScheduledExecutorService emailCreatorThread;
     private ScheduledExecutorService notificationSenderThread;
     private ScheduledExecutorService imapReaderThread;
+    private ScheduledExecutorService todoReminderThread;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
@@ -65,6 +66,14 @@ public class ScheduledServiceExecutions implements ServletContextListener {
                 ParseUtil.sToL(configSchedulerProc.get( Constants.SCHEDULER.SEND_NOTIFICATION_DELAY_BETWEEN_CALL.getPropName() , "30" ) ),
                 TimeUnit.SECONDS  );
         schedulerLogging.info("notificationSender Scheduler started : startup context");
+
+        // Creating To Do Reminder thread to be inserted into the queue - from a Schedule that
+        todoReminderThread = Executors.newSingleThreadScheduledExecutor();
+        todoReminderThread.scheduleWithFixedDelay(new ToDoReminderCreatorThread(),
+                ParseUtil.sToL(configSchedulerProc.get( Constants.SCHEDULER.CREATE_TODO_REMINDER_STARTUP_DELAY.getPropName(), "350" ) ),
+                ParseUtil.sToL(configSchedulerProc.get( Constants.SCHEDULER.CREATE_TODO_REMINDER_BETWEEN_CALL.getPropName() , "65" ) ),
+                TimeUnit.SECONDS  );
+        schedulerLogging.info("To Do Reminder started : startup context");
     }
 
     @Override
@@ -88,5 +97,10 @@ public class ScheduledServiceExecutions implements ServletContextListener {
             imapReaderThread.shutdownNow();
             schedulerLogging.info("imapReaderThread  : shut down ");
         }*/
+
+        if(todoReminderThread!=null) {
+            todoReminderThread.shutdownNow();
+            schedulerLogging.info("todoReminderThread  : shut down ");
+        }
     }
 }
