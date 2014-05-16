@@ -1,11 +1,13 @@
 package com.events.common.todo;
 
 import com.events.bean.DateObject;
+import com.events.bean.common.notify.NotifyBean;
 import com.events.bean.common.todo.*;
 import com.events.common.Constants;
 import com.events.common.DateSupport;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
+import com.events.common.notify.Notification;
 import com.events.data.todo.BuildToDoData;
 
 import java.util.ArrayList;
@@ -171,6 +173,27 @@ public class BuildToDo {
             iNumOfRowsDeleted = buildToDoData.deleteTodoReminderSchedule(  toDoRequestBean  );
         }
         return iNumOfRowsDeleted;
+    }
+
+    public void createNotifications(ToDoRequestBean toDoRequestBean, String sMessage){
+        if(toDoRequestBean!=null && !Utility.isNullOrEmpty(toDoRequestBean.getUserId()) && toDoRequestBean.getArrAssignedToDoUsersBean()!=null && toDoRequestBean.getArrAssignedToDoUsersBean().size()>1) {
+            ArrayList<AssignedToDoUsersBean> arrAssignedToDoUsersBean = toDoRequestBean.getArrAssignedToDoUsersBean();
+            String sFromUserId = toDoRequestBean.getUserId();
+            if(arrAssignedToDoUsersBean!=null) {
+                for(AssignedToDoUsersBean assignedToDoUsersBean : arrAssignedToDoUsersBean ){
+                    String sToUserId = ParseUtil.checkNull( assignedToDoUsersBean.getUserId() );
+                    if(sFromUserId.equalsIgnoreCase(sToUserId)) {
+                        continue; // do not set To Do notification to self
+                    }
+                    NotifyBean notifyBean = new NotifyBean();
+                    notifyBean.setFrom( sFromUserId );
+                    notifyBean.setTo( sToUserId );
+                    notifyBean.setMessage( sMessage );
+
+                    Notification.createNewNotifyRecord(notifyBean);
+                }
+            }
+        }
     }
 
     public TodoReminderScheduleBean generateTodoReminderScheduleBean(ToDoRequestBean toDoRequestBean){

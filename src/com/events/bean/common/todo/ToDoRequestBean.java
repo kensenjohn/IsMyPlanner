@@ -24,6 +24,7 @@ public class ToDoRequestBean {
     private Constants.USER_TYPE userType = Constants.USER_TYPE.NONE;
     private String todoEventId = Constants.EMPTY;
     private ArrayList<String> arrAssignedUserId = new ArrayList<String>();
+    private ArrayList<AssignedToDoUsersBean> arrAssignedToDoUsersBean = new ArrayList<AssignedToDoUsersBean>();
 
 
     private String todoReminderScheduleId = Constants.EMPTY;
@@ -41,6 +42,14 @@ public class ToDoRequestBean {
     private boolean isDateFilterExists = false;
     private boolean isStatusFilterExists = false;
     private boolean isUserFilterExists = false;
+
+    public ArrayList<AssignedToDoUsersBean> getArrAssignedToDoUsersBean() {
+        return arrAssignedToDoUsersBean;
+    }
+
+    public void setArrAssignedToDoUsersBean(ArrayList<AssignedToDoUsersBean> arrAssignedToDoUsersBean) {
+        this.arrAssignedToDoUsersBean = arrAssignedToDoUsersBean;
+    }
 
     public boolean isDateFilterExists() {
         return isDateFilterExists;

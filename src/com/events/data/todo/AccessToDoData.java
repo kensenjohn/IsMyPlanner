@@ -43,7 +43,7 @@ public class AccessToDoData {
         return arrTodoBean;
     }
 
-    public ArrayList<ToDoBean> getClientTodoByFilter( ToDoRequestBean toDoRequestBean){
+    public ArrayList<ToDoBean> getClientTodoByFilter( ToDoRequestBean toDoRequestBean , ArrayList<ToDoBean> arrVendorTodoBean ){
         ArrayList<ToDoBean> arrTodoBean = new ArrayList<ToDoBean>();
         if(toDoRequestBean!=null && !Utility.isNullOrEmpty(toDoRequestBean.getVendorId())) {
 
@@ -77,6 +77,13 @@ public class AccessToDoData {
 
                 for(String sTodoUserId : arrUserId )  {
                     aParams.add( sTodoUserId );
+                }
+            }
+
+            if(arrVendorTodoBean!=null && !arrVendorTodoBean.isEmpty()){
+                sQuery = sQuery + " AND T.TODOID NOT IN ( "+DBDAO.createParamQuestionMarks( arrVendorTodoBean.size() ) +" ) ";
+                for(ToDoBean vendorTodoBean : arrVendorTodoBean )  {
+                    aParams.add( vendorTodoBean.getToDoId() );
                 }
             }
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessToDoData.java", "getVendorTodoByFilter()");

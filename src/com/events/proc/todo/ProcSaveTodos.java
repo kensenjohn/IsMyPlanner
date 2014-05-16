@@ -1,5 +1,6 @@
 package com.events.proc.todo;
 
+import com.events.bean.common.todo.AssignedToDoUsersBean;
 import com.events.bean.common.todo.ToDoBean;
 import com.events.bean.common.todo.ToDoRequestBean;
 import com.events.bean.users.ParentTypeBean;
@@ -11,6 +12,7 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
+import com.events.common.todo.AccessToDo;
 import com.events.common.todo.BuildToDo;
 import com.events.json.*;
 import com.events.users.AccessUsers;
@@ -100,6 +102,17 @@ public class ProcSaveTodos extends HttpServlet {
                         BuildToDo buildToDo = new BuildToDo();
                         ToDoBean toDoBean = buildToDo.saveToDo( toDoRequestBean );
                         if(toDoBean!=null && !Utility.isNullOrEmpty(toDoBean.getToDoId() )){
+
+                            toDoRequestBean.setUserId( loggedInUserBean.getUserId() );
+                            // Creating a notification
+                            {
+                                AccessToDo accessToDo = new AccessToDo();
+                                ArrayList<AssignedToDoUsersBean> arrAssignedToDoUsersBean = accessToDo.getAssignedTodoUsers( toDoRequestBean );
+                                toDoRequestBean.setArrAssignedToDoUsersBean( arrAssignedToDoUsersBean );
+                                String notifciationMessage = "To Do: "+ todo ;
+                                buildToDo.createNotifications( toDoRequestBean , notifciationMessage );
+                            }
+
                             jsonResponseObj.put("todo_bean",toDoBean.toJson());
                             Text okText = new OkText("Your changes were saved successfully.","status_mssg") ;
                             arrOkText.add(okText);

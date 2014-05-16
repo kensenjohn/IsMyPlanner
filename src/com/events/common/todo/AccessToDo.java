@@ -92,7 +92,20 @@ public class AccessToDo {
             if(Constants.USER_TYPE.VENDOR.getType().equalsIgnoreCase( toDoRequestBean.getUserType().getType() )) {
                 arrTodoBean = accessTodoData.getVendorTodoByFilter( toDoRequestBean );
             } else if(Constants.USER_TYPE.CLIENT.getType().equalsIgnoreCase( toDoRequestBean.getUserType().getType() )) {
-                arrTodoBean = accessTodoData.getClientTodoByFilter( toDoRequestBean );
+
+                ArrayList<ToDoBean> arrVendorTodoBean = accessTodoData.getVendorTodoByFilter( toDoRequestBean );
+                ArrayList<ToDoBean> arrClientTodoBean = accessTodoData.getClientTodoByFilter( toDoRequestBean , arrVendorTodoBean );
+                if(arrClientTodoBean!=null && !arrClientTodoBean.isEmpty() ){
+                    for(ToDoBean clientToDoBean : arrClientTodoBean )  {
+                        arrTodoBean.add(clientToDoBean);
+                    }
+                }
+
+                if(arrVendorTodoBean!=null && !arrVendorTodoBean.isEmpty() ){
+                    for(ToDoBean vendorTodoBean : arrVendorTodoBean )  {
+                        arrTodoBean.add(vendorTodoBean);
+                    }
+                }
             }
 
             if(arrTodoBean!=null && !arrTodoBean.isEmpty() ) {
