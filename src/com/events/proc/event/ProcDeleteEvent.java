@@ -53,7 +53,7 @@ public class ProcDeleteEvent  extends HttpServlet {
 
 
                     CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
-                    if(checkPermission!=null && !checkPermission.can(Perm.DELETE_CLIENT)) {
+                    if(checkPermission!=null && checkPermission.can(Perm.DELETE_EVENT)) {
                         boolean isLoggedInUserAClient = false;
                         ClientRequestBean clientRequestBean = new ClientRequestBean();
                         clientRequestBean.setClientId( loggedInUserBean.getParentId());

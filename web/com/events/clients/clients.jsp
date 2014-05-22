@@ -148,6 +148,7 @@
         initialize: function(){
             this.varNumOfClients = this.model.get('bb_num_of_clients');
             this.varClientListSummary = this.model.get('bb_client_list_summary');
+            this.varCanDeleteClient = this.model.get('bb_can_delete_client');
         },
         template : Handlebars.compile( $('#template_client_row').html() ),
         events : {
@@ -167,7 +168,7 @@
             }
         },
         assignEventHandling : function(event) {
-            if(this.bb_can_delete_client == true ){
+            if(this.varCanDeleteClient == true ){
                 var varTargetDeleteButton = $(event.target);
 
                 var client_obj = {

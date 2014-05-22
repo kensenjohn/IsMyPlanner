@@ -639,6 +639,7 @@
             var varResponseObj = jsonResult.response;
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
                 displayAjaxError(varResponseObj);
+                loadingOverlay('hide');
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
                 if(varIsPayloadExist == true) {
@@ -649,6 +650,7 @@
                     }
                     else {
                         //displayMssgBoxAlert("Create a new client here.", true);
+                        loadingOverlay('hide');
                     }
 
                 }
@@ -669,6 +671,8 @@
         var varLoadInvoice = <%=loadInvoice%>
         if(varLoadInvoice){
             loadInvoice(populateInvoice);
+        } else {
+            loadingOverlay('hide');
         }
     }
 </script>

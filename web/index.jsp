@@ -138,6 +138,8 @@
               <div class="row">
                   <div class="col-md-12" style="text-align:center;">
                       <a href="/com/events/common/credentials.jsp" class="btn btn-filled btn-lg">Start Your Free Trial</a>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <a href="/com/events/common/demo_email.jsp" class="btn btn-filled btn-lg">Request A Demo</a>
                   </div>
               </div>
           <%

@@ -343,6 +343,14 @@
         <servlet-name>Process Reset Password</servlet-name>
         <url-pattern>/proc_reset_password.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Request Demo</servlet-name>
+        <servlet-class>com.events.proc.dashboard.ProcRequestDemo</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Request Demo</servlet-name>
+        <url-pattern>/proc_request_demo.aeve</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>Process Load All Event Emails</servlet-name>
@@ -995,6 +1003,56 @@
     <servlet-mapping>
         <servlet-name>Process Delete ToDo</servlet-name>
         <url-pattern>/proc_delete_todo.aeve</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>Process Save Event Budget</servlet-name>
+        <servlet-class>com.events.proc.event.budget.ProcSaveEventBudget</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Event Budget</servlet-name>
+        <url-pattern>/proc_save_event_budget.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Event Budget</servlet-name>
+        <servlet-class>com.events.proc.event.budget.ProcLoadEventBudget</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Event Budget</servlet-name>
+        <url-pattern>/proc_load_event_budget.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Event Budget Category</servlet-name>
+        <servlet-class>com.events.proc.event.budget.ProcSaveEventBudgetCategory</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Event Budget Category</servlet-name>
+        <url-pattern>/proc_save_budget_category.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Event Budget Categories And Items</servlet-name>
+        <servlet-class>com.events.proc.event.budget.ProcLoadEventBudgetCategoriesAndItems</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Event Budget Categories And Items</servlet-name>
+        <url-pattern>/proc_load_event_budget_category_items.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Event Budget Category</servlet-name>
+        <servlet-class>com.events.proc.event.budget.ProcDeleteEventBudgetCategory</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Event Budget Category</servlet-name>
+        <url-pattern>/proc_delete_event_budget_category.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Event Budget Category</servlet-name>
+        <servlet-class>com.events.proc.event.budget.ProcLoadEventBudgetCategory</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Event Budget Category</servlet-name>
+        <url-pattern>/proc_load_budget_category.aeve</url-pattern>
     </servlet-mapping>
 
 

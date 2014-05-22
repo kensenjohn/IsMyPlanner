@@ -619,4 +619,25 @@ ul.footer-tabs li.active, html ul.footer-tabs li.active a,  html ul.footer-tabs 
 .right { text-align: right; }
 .left { text-align: left; }
 
+.budget {
+    text-decoration: none;
+    display: block;
+    font-family: 'Open Sans' !important;
+}
+.budget .price{
+    text-align: right;
+    white-space: nowrap;
+}
+.budget .category{
+    font-size: 13px;
+    font-weight: bold;
+}
+.budget .items{
+    font-size: 13px;
+    font-weight: normal;
+}
+.budget .items .item_name{
+    margin-left: 0px;
+}
+
 
