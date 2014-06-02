@@ -14,6 +14,7 @@ public class DashboardSummaryBean {
     private Long numberOfUnreadNotifications = 0L;
     private Long numberOfClients = 0L;
     private Long numberOfTeamMembers = 0L;
+    private Long numberOfEvents = 0L;
 
     public Long getNumberOfTeamMembers() {
         return numberOfTeamMembers;
@@ -39,6 +40,14 @@ public class DashboardSummaryBean {
         this.numberOfUnreadNotifications = numberOfUnreadNotifications;
     }
 
+    public Long getNumberOfEvents() {
+        return numberOfEvents;
+    }
+
+    public void setNumberOfEvents(Long numberOfEvents) {
+        this.numberOfEvents = numberOfEvents;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("DashboardSummaryBean{");
@@ -56,6 +65,7 @@ public class DashboardSummaryBean {
             jsonObject.put("num_of_unread_notifications", this.numberOfUnreadNotifications );
             jsonObject.put("num_of_clients", this.numberOfClients );
             jsonObject.put("num_of_team_members", this.numberOfTeamMembers );
+            jsonObject.put("num_of_events", this.numberOfEvents );
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -40,6 +40,22 @@ function setupLandingPagePanel() {
 
     $('.layout-hide-feature').bootstrapSwitch('size', 'mini');
     $('.layout-hide-feature').bootstrapSwitch('readonly', false);
+
+    $('.layout-hide-feature').on('switchChange', function (e, data) {
+        var $element = $(data.el);
+        var value = data.value;
+
+        if($element !=undefined && value!=undefined ) {
+            if(value == false) {
+                $('#save_landingpage_feature_action').val( 'hide' );
+            } else {
+                $('#save_landingpage_feature_action').val( 'show' );
+            }
+
+            $('#save_landingpage_feature_type').val( 'show_landingpage_' + $element.attr('param') );
+            showHide_LandingPageFeatureSetting(getLandingPageLayoutResult,'show_hide');
+        }
+    });
 }
 
 function setGeneralLandingPageParams(varAction){
@@ -84,6 +100,15 @@ function save_publish_LandingPage( callbackmethod, varAction ) {
     dataString = dataString + '&' + $('#frm_landingpage').serialize();
     makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
 }
+function showHide_LandingPageFeatureSetting( callbackmethod, varAction ) {
+    setGeneralLandingPageParams(varAction);
+    var actionUrl = "/proc_show_hide_vendor_feature.aeve";
+    var methodType = "POST";
+    var dataString = $('#frm_save_landingpage_features').serialize();
+    dataString = dataString + '&' + $('#frm_landingpage').serialize();
+    makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+
+}
 function getLandingPageLayoutResult(jsonResult) {
     if(jsonResult!=undefined) {
         var varResponseObj = jsonResult.response;
@@ -120,7 +145,7 @@ function enablePreviewOfLandingPage( ) {
     var varImageName = $('#landingpage_picture').val();
     $( '#btn_preview_landingpage_pic').unbind('click');
     if(varImageName!='') {
-        var varLinkToImage = $('#landingpage_imagehost').val()  + "/" + $('#landingpage_foldername').val() + "/" + varImageName;
+        var varLinkToImage = $('#landingpage_imagehost').val()  + "/" +  $('#landingpage_bucket').val() + "/" + $('#landingpage_foldername').val() + "/" + varImageName;
 
         $( '#btn_preview_landingpage_pic').click( function(){
             $.colorbox({href:varLinkToImage});

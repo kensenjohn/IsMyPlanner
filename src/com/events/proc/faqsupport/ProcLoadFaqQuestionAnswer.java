@@ -1,17 +1,15 @@
-package com.events.proc.dashboard;
+package com.events.proc.faqsupport;
 
-import com.events.bean.dashboard.DashboardSummaryBean;
-import com.events.bean.dashboard.SummaryRequest;
-import com.events.bean.users.ParentTypeBean;
-import com.events.bean.users.UserBean;
+import com.events.bean.common.faqsupport.SupportFaqQuesAndAnsBean;
+import com.events.bean.common.faqsupport.SupportFaqRequestBean;
+import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
+import com.events.common.faqsupport.AccessSupportFaq;
 import com.events.common.security.DataSecurityChecker;
-import com.events.dashboard.AccessDashboardSummary;
 import com.events.json.*;
-import com.events.users.AccessUsers;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,14 +24,15 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 3/8/14
- * Time: 9:30 PM
+ * Date: 5/24/14
+ * Time: 11:20 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadDashboardSummary extends HttpServlet {
+public class ProcLoadFaqQuestionAnswer extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
+    private static final Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
-    public void doPost(HttpServletRequest request,  HttpServletResponse response)  throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RespObjectProc responseObject = new RespObjectProc();
         JSONObject jsonResponseObj = new JSONObject();
         ArrayList<Text> arrOkText = new ArrayList<Text>();
@@ -41,40 +40,31 @@ public class ProcLoadDashboardSummary extends HttpServlet {
         RespConstants.Status responseStatus = RespConstants.Status.ERROR;
         try{
             if( !DataSecurityChecker.isInsecureInputResponse(request) ) {
-                UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
+                String sQuestionId = ParseUtil.checkNull( request.getParameter("faq_question_id"));
+                if( Utility.isNullOrEmpty( sQuestionId )) {
+                    Text errorText = new ErrorText("Please select a valid question.","faq_question_id") ;
+                    arrErrorText.add(errorText);
+                    responseStatus = RespConstants.Status.ERROR;
+                } else {
 
-                if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
+                    SupportFaqRequestBean supportFaqRequestBean = new SupportFaqRequestBean();
+                    supportFaqRequestBean.setSupportFaqQuestionId( sQuestionId );
 
+                    AccessSupportFaq accessSupportFaq = new AccessSupportFaq();
+                    SupportFaqQuesAndAnsBean supportFaqQuesAndAnsBean =accessSupportFaq.getFaqAnswer(supportFaqRequestBean);
+                    if(supportFaqQuesAndAnsBean!=null && !Utility.isNullOrEmpty(supportFaqQuesAndAnsBean.getSupportFaqQuesAnsId())) {
 
-                    SummaryRequest summaryRequest = new SummaryRequest();
-                    summaryRequest.setUserBean( loggedInUserBean);
-
-                    AccessUsers accessUsers = new AccessUsers();
-                    ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser(loggedInUserBean);
-                    summaryRequest.setParentTypeBean( parentTypeBean );
-
-                    AccessDashboardSummary accessDashboardSummary = new AccessDashboardSummary();
-                    DashboardSummaryBean dashboardSummaryBean = accessDashboardSummary.getCompleteDashBoardSummary(summaryRequest);
-
-                    if(dashboardSummaryBean!=null){
-                        jsonResponseObj.put("dashboard_summary", dashboardSummaryBean.toJson() );
-                        Text okText = new OkText("Summary was successfully loaded","status_mssg") ;
+                        jsonResponseObj.put("faq_question_and_answer" , supportFaqQuesAndAnsBean.toJson() );
+                        Text okText = new OkText("Load of Faq Question Complete.","status_mssg") ;
                         arrOkText.add(okText);
                         responseStatus = RespConstants.Status.OK;
                     } else {
-                        Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadDashSummary - 003)","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request. Please try again later.","account_num") ;
                         arrErrorText.add(errorText);
-
                         responseStatus = RespConstants.Status.ERROR;
                     }
 
 
-                } else {
-                    appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadDashSummary - 002)","err_mssg") ;
-                    arrErrorText.add(errorText);
-
-                    responseStatus = RespConstants.Status.ERROR;
                 }
 
             } else {
@@ -85,7 +75,7 @@ public class ProcLoadDashboardSummary extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadDashSummary - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadTodo - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

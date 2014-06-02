@@ -239,6 +239,18 @@
 
 
                     /*=====Landing Page Layour and Content Panel======= {Start}*/
+                    var varShowLandingPagePhoto = jsonResponseObj.show_landingpage_landingpagephoto;
+                    if(varShowLandingPagePhoto!=undefined) {
+                        $('#landingpagephoto_hide').bootstrapSwitch('state', eval(varShowLandingPagePhoto) ); // true || false
+                    }
+                    var varShowLandingPageSocialMedia = jsonResponseObj.show_landingpage_social_media;
+                    if(varShowLandingPageSocialMedia!=undefined) {
+                        $('#social_media_hide').bootstrapSwitch('state', eval(varShowLandingPageSocialMedia) ); // true || false
+                    }
+                    var varShowLandingPageGreeting = jsonResponseObj.show_landingpage_greeting;
+                    if(varShowLandingPageGreeting!=undefined) {
+                        $('#greeting_hide').bootstrapSwitch('state', eval(varShowLandingPageGreeting) ); // true || false
+                    }
                     var varLandingPagePhoto = jsonResponseObj.saved_landingpagephoto;
                     if(varLandingPagePhoto!=undefined) {
                         $('#landingpage_picture').val( varLandingPagePhoto );

@@ -16,9 +16,6 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class ToDoBean {
-    //GTTODO(TODOID VARCHAR(45) NOT NULL, //TODO TEXT, FK_USERID  VARCHAR(45) NOT NULL, FK_VENDORID  VARCHAR(45) NOT NULL, FK_CLIENTID  VARCHAR(45), USERTYPE VARCHAR(45) NOT NULL,
-    // TODOSTATUS VARCHAR(15) NOT NULL, CREATEDATE BIGINT(20) NOT NULL DEFAULT 0, HUMANCREATEDATE VARCHAR(45), PRIMARY KEY (TODOID) ) ENGINE = MyISAM DEFAULT CHARSET = utf8;
-    //  TODODATE BIGINT(20) NOT NULL DEFAULT 0, HUMANTODODATE VARCHAR(45),
     private String toDoId = Constants.EMPTY;
     private String toDo = Constants.EMPTY;
     private String userId = Constants.EMPTY;

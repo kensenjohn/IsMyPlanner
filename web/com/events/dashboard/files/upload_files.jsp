@@ -73,29 +73,55 @@
             sName = ParseUtil.checkNull( ParseUtil.checkNull( userInfoBean.getFirstName() ) + " " + ParseUtil.checkNull( userInfoBean.getLastName() ) ) ;
         }
     }
+
+    boolean isClientTabView = false;
+    String sView = ParseUtil.checkNull(request.getParameter("view"));
+    if(Constants.USER_TYPE.CLIENT.getType().equalsIgnoreCase(sView)){
+        isClientTabView = true;
+        sClientId = ParseUtil.checkNull(request.getParameter("client_id"));
+    }
 %>
 <body>
 <div class="page_wrap">
     <jsp:include page="/com/events/common/top_nav.jsp">
         <jsp:param name="AFTER_LOGIN_REDIRECT" value="index.jsp"/>
     </jsp:include>
-    <jsp:include page="/com/events/common/menu_bar.jsp">
-        <jsp:param name="dashboard_active" value="currently_active"/>
-    </jsp:include>
-    <div class="breadcrumb_format">
-        <div class="container">
-            <div class="page-title"><%=breadCrumbPageTitle%></div>
+    <%if(isClientTabView){%>
+        <jsp:include page="/com/events/common/menu_bar.jsp">
+            <jsp:param name="client_files_active" value="currently_active"/>
+        </jsp:include>
+        <div class="breadcrumb_format">
+            <div class="container">
+                <div class="page-title"> Client <span id="client_name_title"></span> <%=breadCrumbPageTitle%></div>
+            </div>
         </div>
-    </div>
+    <%} else {%>
+        <jsp:include page="/com/events/common/menu_bar.jsp">
+            <jsp:param name="dashboard_active" value="currently_active"/>
+        </jsp:include>
+        <div class="breadcrumb_format">
+            <div class="container">
+                <div class="page-title"><%=breadCrumbPageTitle%></div>
+            </div>
+        </div>
+    <%}%>
     <div class="container">
         <div class="content_format">
             <div class="row">
                 <div class="col-md-12">
-                    <div id="tabs">
-                        <jsp:include page="/com/events/dashboard/dashboard_tab.jsp">
-                            <jsp:param name="files_active" value="active"/>
-                        </jsp:include>
-                    </div>
+                    <%if(isClientTabView){%>
+                        <div>
+                            <jsp:include page="/com/events/clients/client_tab.jsp">
+                                <jsp:param name="client_files_active" value="active"/>
+                            </jsp:include>
+                        </div>
+                    <%} else {%>
+                        <div id="tabs">
+                            <jsp:include page="/com/events/dashboard/dashboard_tab.jsp">
+                                <jsp:param name="files_active" value="active"/>
+                            </jsp:include>
+                        </div>
+                    <%}%>
                 </div>
             </div>
             <div class="row">
@@ -298,15 +324,21 @@
 <script src="/js/upload/jquery.iframe-transport.js"></script>
 <script src="/js/upload/jquery.fileupload.js"></script>
 <script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/clients/clientcontactinfo.js"></script>
 <script type="text/javascript">
     var varFileGroupId = '<%=sFileGroupId%>';
     var varIsLoggedInUserAClient = <%=isLoggedInUserAClient%>;
+    var varIsClientTabView = <%=isClientTabView%>;
+    var varClientId = '<%=sClientId%>';
     $(window).load(function() {
         $("#uploadFileViewer").chosen();
         initializeUploadFileTable();
 
         if(varFileGroupId!=''){
             loadFile( getResult );
+        }
+        if(varIsClientTabView){
+            loadClientDetail(varClientId, 'event_info' , populateClientMinimum);
         }
 
         $('#btn_save_uploaded_files').bind("click", function() {
@@ -342,8 +374,9 @@
                         var varSharedFileHost = varDataResult.shared_file_host;
                         var varBucket = varDataResult.bucket;
                         var varPath = varDataResult.foldername;
+                        var varUploadedBy = varDataResult.uploaded_by;
 
-                        createFileTableRow(varOriginalFileName , varUploadId, varFileName  , varPath  , varSharedFileHost , varBucket );
+                        createFileTableRow(varOriginalFileName , varUploadId, varFileName  , varPath  , varSharedFileHost , varBucket , varUploadedBy );
 
 
                         $('#upload_id').val(varUploadId);

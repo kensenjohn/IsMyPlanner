@@ -108,7 +108,6 @@ function showHide_FooterFeatureSetting( callbackmethod, varAction ) {
     var methodType = "POST";
     var dataString = $('#frm_save_footer_features').serialize();
     dataString = dataString + '&' + $('#frm_footer').serialize();
-    console.log('dataString : ' + dataString);
     makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
 
 }

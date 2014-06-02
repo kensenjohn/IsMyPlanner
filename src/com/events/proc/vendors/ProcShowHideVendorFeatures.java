@@ -62,11 +62,11 @@ public class ProcShowHideVendorFeatures extends HttpServlet {
 
                     if(showHideVendorWebsiteResponseBean!=null  && !Utility.isNullOrEmpty(showHideVendorWebsiteResponseBean.getVendorWebsiteId()) ) {
                         jsonResponseObj.put("vendorwebsite_id",showHideVendorWebsiteResponseBean.getVendorWebsiteId());
-                        Text okText = new OkText("The footer layout was successfully updated.","status_mssg") ;
+                        Text okText = new OkText("Your change to the layout was successfully updated.","status_mssg") ;
                         arrOkText.add(okText);
                         responseStatus = RespConstants.Status.OK;
                     } else {
-                        Text errorText = new ErrorText("Oops!! We were unable to save the footer layout. Please try again later.","err_mssg") ;
+                        Text errorText = new ErrorText("Oops!! We were unable to save your change to the layout. Please try again later.","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;

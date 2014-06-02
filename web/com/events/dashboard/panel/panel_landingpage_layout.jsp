@@ -24,7 +24,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         &nbsp;&nbsp;
-                                                        <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="layout-hide-feature" name="landing_page_picture_hide" id="landing_page_picture_hide" param="landing_page_picture">
+                                                        <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="layout-hide-feature" name="landingpagephoto_hide" id="landingpagephoto_hide" param="landingpagephoto">
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -100,7 +100,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         &nbsp;&nbsp;
-                                                        <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="layout-hide-feature" name="landing_page_greeting_hide" id="landing_page_greeting_hide" param="landing_page_greeting">
+                                                        <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="layout-hide-feature" name="greeting_hide" id="greeting_hide" param="greeting">
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -150,7 +150,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         &nbsp;&nbsp;
-                                                        <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="layout-hide-feature" name="landing_page_social_media" id="landing_page_social_media" param="landing_page_social_media">
+                                                        <input type="checkbox" data-size="small" data-on-text="Show" data-off-text="Hide"  class="layout-hide-feature" name="social_media_hide" id="social_media_hide" param="social_media">
                                                     </div>
                                                 </div>
 
@@ -218,7 +218,7 @@
 
                         <div class="row">
                             <div class="col-md-3">
-                                <button type="button" class="btn btn-filled btn-lg" id="btn_landing_page_preview">Preview Landing Page</button>
+                                <button type="button" class="btn btn-filled" id="btn_landing_page_preview">Preview Landing Page</button>
                             </div>
                         </div>
                         <form id="frm_landingpage">
@@ -226,7 +226,10 @@
                             <input type="hidden" name="vendor_id" id="landingpage_vendor_id" value=""/>
                             <input type="hidden" name="website_landingpage_panel_action" id="website_landingpage_panel_action" value=""/>
                         </form>
-
+                        <form id="frm_save_landingpage_features">
+                            <input type="hidden" id="save_landingpage_feature_type" name="page_type" value=""/>
+                            <input type="hidden" id="save_landingpage_feature_action" name="action" value=""/>
+                        </form>
                     </div>
                 </div>
             </div>

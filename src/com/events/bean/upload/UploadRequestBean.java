@@ -23,7 +23,24 @@ public class UploadRequestBean {
     private Long imageSize = 0L;
     private String mimeType = Constants.EMPTY;
     private String sharedFileHost = Constants.EMPTY;
+    private String userId = Constants.EMPTY;
+    private String uploadedBy = Constants.EMPTY;
 
+    public String getUploadedBy() {
+        return uploadedBy;
+    }
+
+    public void setUploadedBy(String uploadedBy) {
+        this.uploadedBy = uploadedBy;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     private JSONObject jsonResponseObj = new JSONObject();
 

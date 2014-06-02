@@ -350,6 +350,7 @@ Button in menu bar
     background-color: #0A6896;
     color: #F7FCFF;
     border: 1px solid #0A6896;
+    margin-top: 10px;
 }
 .info_tile.red {
     background-color: #CA3E3D;
@@ -619,6 +620,8 @@ ul.footer-tabs li.active, html ul.footer-tabs li.active a,  html ul.footer-tabs 
 .right { text-align: right; }
 .left { text-align: left; }
 
+
+/** Budget **/
 .budget {
     text-decoration: none;
     display: block;
@@ -639,5 +642,19 @@ ul.footer-tabs li.active, html ul.footer-tabs li.active a,  html ul.footer-tabs 
 .budget .items .item_name{
     margin-left: 0px;
 }
+
+/** Checklist **/
+.chk_list_row{
+    margin-bottom: 6px;
+}
+.chk_list_row_selected{
+    background-color: #f8f8f8;
+    margin-bottom: 10px;
+}
+
+.icon_item_details{
+    cursor:pointer;
+}
+
 
 

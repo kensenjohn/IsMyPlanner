@@ -46,9 +46,12 @@
     String sUserFolderName = Constants.EMPTY;
     String sFacebookFeed = Constants.EMPTY;
     String sPinterestFeed = Constants.EMPTY;
+    String sGreetingHeader = Constants.EMPTY;
+    String sGreetingText = Constants.EMPTY;
 
 
     String imageHost = Utility.getImageUploadHost();
+    String sBucket = Utility.getS3Bucket();
     if(!Utility.isNullOrEmpty(sVendorWebsiteId) ) {
 
         AccessVendorWebsite accessVendorWebsite = new AccessVendorWebsite();
@@ -63,7 +66,7 @@
         Folder folder = new Folder();
         sUserFolderName = folder.getFolderName( Constants.USER_TYPE.VENDOR, vendorWebsiteBean.getVendorId() );
 
-        String sImageLocation =  imageHost + "/"+sUserFolderName+"/";
+        String sImageLocation =  imageHost + "/"+ sBucket+ "/"+sUserFolderName+"/";
 
 
 
@@ -72,6 +75,8 @@
         arrVendorWebsiteFeatureBean.add(accessVendorWebsite.generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_landingpagephoto));
         arrVendorWebsiteFeatureBean.add(accessVendorWebsite.generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_facebook_feed_script));
         arrVendorWebsiteFeatureBean.add(accessVendorWebsite.generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_pinterest_feed_script));
+        arrVendorWebsiteFeatureBean.add(accessVendorWebsite.generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_greeting_header));
+        arrVendorWebsiteFeatureBean.add(accessVendorWebsite.generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_greeting_text));
 
         VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();
         ArrayList<VendorWebsiteFeatureBean> arrMultipleFeatureBean = vendorWebsiteFeature.getMultipleFeatures( arrVendorWebsiteFeatureBean, sVendorWebsiteId );
@@ -99,6 +104,14 @@
 
             if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_WEBSITE_FEATURETYPE.saved_pinterest_feed_script.toString())) {
                 sPinterestFeed =   sValue;
+            }
+
+            if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_WEBSITE_FEATURETYPE.saved_greeting_header.toString())) {
+                sGreetingHeader =   sValue;
+            }
+
+            if(sFeatureName.equalsIgnoreCase( Constants.VENDOR_WEBSITE_FEATURETYPE.saved_greeting_text.toString())) {
+                sGreetingText =   sValue;
             }
         }
     }
@@ -140,6 +153,24 @@
                         <img src="<%=sLandingPagePic%>" />
                     </li>
                 </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12"  style="text-align:center;">
+                    <h1><%=sGreetingHeader%></h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12"  style="text-align:center;">
+                    <h2><%=sGreetingText%></h2>
+                </div>
             </div>
         </div>
         <%

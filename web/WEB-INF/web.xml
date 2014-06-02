@@ -1056,6 +1056,22 @@
     </servlet-mapping>
 
 
+    <servlet>
+        <servlet-name>Process Load Faq Category And Question</servlet-name>
+        <servlet-class>com.events.proc.faqsupport.ProcLoadFaqCategoriesAndQuestions</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Faq Category And Question</servlet-name>
+        <url-pattern>/proc_load_faq_categories_questions.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Faq Question Answer</servlet-name>
+        <servlet-class>com.events.proc.faqsupport.ProcLoadFaqQuestionAnswer</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Faq Question Answer</servlet-name>
+        <url-pattern>/proc_load_faq_question_answer.aeve</url-pattern>
+    </servlet-mapping>
 
 
 

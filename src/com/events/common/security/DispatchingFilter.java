@@ -56,12 +56,12 @@ public class DispatchingFilter implements Filter {
         } else if( !isUserLoggedIn && !path.endsWith("/credentials.jsp") && !path.endsWith("/forgot.jsp")&& !path.endsWith("/reset_password.jsp")
                 && !path.endsWith("/set_password.jsp")
                 && !path.endsWith("/privacy.jsp") && !path.endsWith("/contact.jsp") && !path.endsWith("/about_us.jsp")  && !path.endsWith("/rsvp.jsp" ) && !path.endsWith("/pricing.jsp")
-                && !path.endsWith("/demo_email.jsp")) {
+                && !path.endsWith("/demo_email.jsp") && !path.endsWith("/faq.jsp")  && !path.endsWith("/faqanswer.jsp") ) {
             servletRequest.getRequestDispatcher("/index.jsp").forward(servletRequest, servletResponse);
         }  else  if( (isUserLoggedIn && !isInsecureParamUsed) || path.endsWith("/credentials.jsp")  || path.endsWith("/forgot.jsp")
                 || path.endsWith("/reset_password.jsp") || path.endsWith("/set_password.jsp")
                 || path.endsWith("/privacy.jsp") || path.endsWith("/contact.jsp") || path.endsWith("/about_us.jsp") || path.endsWith("/rsvp.jsp")|| path.endsWith("/pricing.jsp")
-                || path.endsWith("/demo_email.jsp")) {
+                || path.endsWith("/demo_email.jsp")  || path.endsWith("/faq.jsp")  || path.endsWith("/faqanswer.jsp") ) {
             filterChain.doFilter(servletRequest, servletResponse);
         }
     }

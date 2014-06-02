@@ -136,6 +136,9 @@ public class AccessVendorWebsite extends VendorWebsite{
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_footer_twitter) );
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_footer_pinterest) );
             arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.saved_themename) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.show_landingpage_landingpagephoto) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.show_landingpage_social_media) );
+            arrVendorWebsiteFeatureBean.add( generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.show_landingpage_greeting) );
 
 
             String sVendorWebsiteId = ParseUtil.checkNull(vendorWebsiteBean.getVendorWebsiteId());
@@ -187,11 +190,16 @@ public class AccessVendorWebsite extends VendorWebsite{
 
 
             HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean> hmDefaultVendorWebsiteFeatureBean = new HashMap<Constants.VENDOR_WEBSITE_FEATURETYPE , VendorWebsiteFeatureBean>();
-            hmDefaultVendorWebsiteFeatureBean.put( Constants.VENDOR_WEBSITE_FEATURETYPE.published_greeting_header, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_bkg_color)   );
-            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_greeting_text, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_border_color));
-            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_facebook_feed_script, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_filled_button_color ));
-            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_pinterest_feed_script, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_filled_button_text_color ));
-            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_landingpagephoto, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_highlighted_color));
+            hmDefaultVendorWebsiteFeatureBean.put( Constants.VENDOR_WEBSITE_FEATURETYPE.published_greeting_header, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_greeting_header)   );
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_greeting_text, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_greeting_text));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_facebook_feed_script, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_facebook_feed_script ));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_pinterest_feed_script, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_pinterest_feed_script ));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.published_landingpagephoto, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.published_landingpagephoto));
+
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.show_landingpage_social_media, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.show_landingpage_social_media ));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.show_landingpage_landingpagephoto, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.show_landingpage_landingpagephoto));
+            hmDefaultVendorWebsiteFeatureBean.put(Constants.VENDOR_WEBSITE_FEATURETYPE.show_landingpage_greeting, generateVendorWebsiteFeatureBean(Constants.VENDOR_WEBSITE_FEATURETYPE.show_landingpage_greeting));
+
 
             String sVendorWebsiteId = ParseUtil.checkNull(vendorWebsiteBean.getVendorWebsiteId());
             VendorWebsiteFeature vendorWebsiteFeature = new VendorWebsiteFeature();

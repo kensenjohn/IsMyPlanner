@@ -74,6 +74,8 @@ public class UploadFile {
             jsono.put("thumbnail_url", "UploadServlet?getthumb=");
             jsono.put("delete_url", "UploadServlet?delfile=");
             jsono.put("delete_type", "GET");
+            jsono.put("user_id", ParseUtil.checkNull( uploadRequestBean.getUserId() ) );
+            jsono.put("uploaded_by", ParseUtil.checkNull( uploadRequestBean.getUploadedBy()) );
         } else {
             jsono = generateErrorUploadJson();
         }

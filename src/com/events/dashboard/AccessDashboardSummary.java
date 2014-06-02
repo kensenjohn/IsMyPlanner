@@ -5,6 +5,7 @@ import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.common.notify.NotifyBean;
 import com.events.bean.dashboard.DashboardSummaryBean;
 import com.events.bean.dashboard.SummaryRequest;
+import com.events.bean.event.EveryEventBean;
 import com.events.bean.event.EveryEventRequestBean;
 import com.events.bean.event.EveryEventResponseBean;
 import com.events.bean.users.ParentTypeBean;
@@ -16,6 +17,7 @@ import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.notify.Notification;
+import com.events.data.event.AccessEveryEventData;
 import com.events.event.AccessEveryEvent;
 import com.events.users.AccessUsers;
 
@@ -49,37 +51,65 @@ public class AccessDashboardSummary {
             }
 
             AccessUsers accessUsers = new AccessUsers();
-            ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser( userBean );
+            ParentTypeBean parentTypeBean = summaryRequest.getParentTypeBean();
 
             if(parentTypeBean!=null && !parentTypeBean.isUserAClient() && parentTypeBean.getVendorBean()!=null ) {
-                VendorBean vendorBean = parentTypeBean.getVendorBean();
-                // Clients for this User
-                {
-                    ClientRequestBean clientRequestBean = new ClientRequestBean();
-                    clientRequestBean.setVendorId( vendorBean.getVendorId() );
 
-                    AccessClients accessClients = new AccessClients();
-                    HashMap<Integer,ClientBean> hmClientBean =accessClients.getAllClientsSummary( clientRequestBean );
-                    if(hmClientBean!=null && !hmClientBean.isEmpty()){
-                        dashboardSummaryBean.setNumberOfClients(ParseUtil.sToL(ParseUtil.iToS(hmClientBean.size())));
+            }
+
+            if(parentTypeBean!=null){
+                VendorBean vendorBean = parentTypeBean.getVendorBean();
+                if(!parentTypeBean.isUserAClient() && parentTypeBean.getVendorBean()!=null ) {
+                    // Clients for this User
+                    {
+                        ClientRequestBean clientRequestBean = new ClientRequestBean();
+                        clientRequestBean.setVendorId( vendorBean.getVendorId() );
+
+                        AccessClients accessClients = new AccessClients();
+                        HashMap<Integer,ClientBean> hmClientBean =accessClients.getAllClientsSummary( clientRequestBean );
+                        if(hmClientBean!=null && !hmClientBean.isEmpty()){
+                            dashboardSummaryBean.setNumberOfClients(ParseUtil.sToL(ParseUtil.iToS(hmClientBean.size())));
+                        }
+
                     }
 
+
+                    // Team Members for this User
+                    {
+                        UserRequestBean userRequestBean = new UserRequestBean();
+                        userRequestBean.setParentId(vendorBean.getVendorId());
+                        userRequestBean.setUserType(Constants.USER_TYPE.VENDOR);
+                        userRequestBean.setUserId(userBean.getUserId());
+
+                        ArrayList<UserBean> arrUserBean =  accessUsers.getAllUsersByParentId( userRequestBean );
+                        if(arrUserBean!=null && !arrUserBean.isEmpty() ) {
+                            dashboardSummaryBean.setNumberOfTeamMembers( ParseUtil.sToL(ParseUtil.iToS(arrUserBean.size())) );
+                        }
+                    }
                 }
 
-
-                // Team Members for this User
+                // Events for this User
                 {
-                    UserRequestBean userRequestBean = new UserRequestBean();
-                    userRequestBean.setParentId(vendorBean.getVendorId());
-                    userRequestBean.setUserType(Constants.USER_TYPE.VENDOR);
-                    userRequestBean.setUserId(userBean.getUserId());
+                    EveryEventRequestBean everyEventRequestBean = new EveryEventRequestBean();
+                    everyEventRequestBean.setVendorId(vendorBean.getVendorId());
+                    everyEventRequestBean.setClientId( ParseUtil.checkNull( parentTypeBean.getClientdId() ));
+                    everyEventRequestBean.setDeletedEvent(false);
+                    everyEventRequestBean.setLoadEventsByClient( parentTypeBean.isUserAClient() );
 
-                    ArrayList<UserBean> arrUserBean =  accessUsers.getAllUsersByParentId( userRequestBean );
-                    if(arrUserBean!=null && !arrUserBean.isEmpty() ) {
-                        dashboardSummaryBean.setNumberOfTeamMembers( ParseUtil.sToL(ParseUtil.iToS(arrUserBean.size())) );
+                    AccessEveryEventData accessEveryEventData = new AccessEveryEventData();
+                    ArrayList<EveryEventBean> arrEveryEventBean  = new ArrayList<EveryEventBean>();
+                    if(everyEventRequestBean.isLoadEventsByClient()) {
+                        arrEveryEventBean  = accessEveryEventData.getEveryEventByClient(everyEventRequestBean);
+                    } else {
+                        arrEveryEventBean  = accessEveryEventData.getEveryEventByVendor(everyEventRequestBean);
+                    }
+                    if(arrEveryEventBean!=null && !arrEveryEventBean.isEmpty() ) {
+                        dashboardSummaryBean.setNumberOfEvents(  ParseUtil.sToL(ParseUtil.iToS(arrEveryEventBean.size())) );
                     }
                 }
             }
+
+
 
 
         }

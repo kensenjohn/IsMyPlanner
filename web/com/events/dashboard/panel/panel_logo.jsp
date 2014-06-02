@@ -63,6 +63,16 @@
                                 <button type="button" class="btn btn-default btn-sm" id="btn_logo_save">Save & Publish</button>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-filled" id="btn_logo_landing_page_preview">Preview Landing Page</button>
+                            </div>
+                        </div>
                         <form id="frm_website_logo">
                             <input type="hidden" name="logo_imagehost" id="logo_imagehost" value=""/>
                             <input type="hidden" name="logo_bucket" id="logo_bucket" value=""/>

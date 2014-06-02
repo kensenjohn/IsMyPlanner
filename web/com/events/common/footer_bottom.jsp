@@ -126,6 +126,7 @@
                                 <%if(isContactShown){%><li><a href="/com/events/common/contact.jsp">Contact</a></li><%}%>
                                 <%if(isPrivacyShown){%><li><a href="/com/events/common/privacy.jsp">Privacy</a></li><%}%>
                                 <%if(isPricingShown){%><li><a href="/com/events/common/pricing.jsp">Pricing</a></li><%}%>
+                                <li><a href="/com/events/common/faqsupport/faq.jsp">FAQ (How it Works?)</a></li>
                             </ul>
                         </div>
                     </div>

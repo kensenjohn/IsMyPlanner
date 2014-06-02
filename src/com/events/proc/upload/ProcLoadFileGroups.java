@@ -52,6 +52,8 @@ public class ProcLoadFileGroups  extends HttpServlet {
                 UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId())) {
+                    boolean isClientTabView = ParseUtil.sTob(request.getParameter("is_client_tab_view"));
+                    String clientId = ParseUtil.checkNull(request.getParameter("client_id"));
 
                     SharedFilesRequestBean sharedFilesRequestBean = new SharedFilesRequestBean();
                     AccessUsers accessUser = new AccessUsers();
@@ -59,11 +61,14 @@ public class ProcLoadFileGroups  extends HttpServlet {
                     ParentTypeBean parentTypeBean = accessUser.getParentTypeBeanFromUser( loggedInUserBean );
                     AccessSharedFiles accessSharedFiles = new AccessSharedFiles();
                     if(parentTypeBean!=null) {
-
-
                         if( parentTypeBean.isUserAVendor() ) {
-                            sharedFilesRequestBean.setVendorId( parentTypeBean.getVendorId() );
-                            sharedFilesResponseBean = accessSharedFiles.getVendorsSharedFileGroup(sharedFilesRequestBean);
+                            if(isClientTabView){  // list only files pertaining to a single client
+                                sharedFilesRequestBean.setClientId(clientId);
+                                sharedFilesResponseBean = accessSharedFiles.getClientsSharedFileGroup(sharedFilesRequestBean);
+                            } else {  // list files of every client
+                                sharedFilesRequestBean.setVendorId( parentTypeBean.getVendorId() );
+                                sharedFilesResponseBean = accessSharedFiles.getVendorsSharedFileGroup(sharedFilesRequestBean);
+                            }
                         } else if ( parentTypeBean.isUserAClient() ) {
                             sharedFilesRequestBean.setClientId(parentTypeBean.getClientdId());
                             sharedFilesResponseBean = accessSharedFiles.getClientsSharedFileGroup(sharedFilesRequestBean);

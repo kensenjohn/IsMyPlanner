@@ -17,6 +17,10 @@ function setupLogoPanel() {
     $('#btn_logo_publish').click(function() {
         save_publish_Logo( getLogoResult, 'publish' );
     });
+
+    $('#btn_logo_landing_page_preview').click(function(){
+        $.colorbox({width:"100%", height:"100%",iframe:true,href:"preview_vendor_landingpage.jsp?featuretype=facebook_url&vendor_website_id="+vendorWebsiteId});
+    });
 }
 function save_publish_Logo( callbackmethod, varAction ) {
     $('#logo_vendorwebsite_id').val( vendorWebsiteId );
@@ -52,7 +56,7 @@ function enablePreviewOfLogo( ) {
     var varImageName = $('#logo_imagename').val();
     $( '#btn_logo_preview').unbind('click');
     if(varImageName!='') {
-        var varLinkToImage = $('#logo_imagehost').val()  + "/" + $('#logo_foldername').val() + "/" + varImageName;
+        var varLinkToImage = $('#logo_imagehost').val() +"/" + $('#logo_bucket').val() + "/" + $('#logo_foldername').val() + "/" + varImageName;
 
         $( '#btn_logo_preview').click( function(){
             $.colorbox({href:varLinkToImage});

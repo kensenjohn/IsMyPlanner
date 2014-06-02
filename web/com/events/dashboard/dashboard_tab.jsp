@@ -13,6 +13,7 @@
     String sDashBoardInvoicesActive = ParseUtil.checkNull(request.getParameter("invoices_active"));
     String sDashBoardFilesActive = ParseUtil.checkNull(request.getParameter("files_active"));
     String sDashBoardTodoActive = ParseUtil.checkNull(request.getParameter("todo_active"));
+    String sDashBoardChecklistManagementActive = ParseUtil.checkNull(request.getParameter("checklist_management_active"));
 
     UserBean loggedInUserBean = new UserBean();
     if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
@@ -82,4 +83,11 @@
         // }
     %>
 
+    <%
+        if(checkPermission!=null && checkPermission.can(Perm.MANAGE_CHECKLIST_TEMPLATE_TAB)) {
+    %>
+            <!-- <li class="<%=sDashBoardChecklistManagementActive%>"><a href="/com/events/dashboard/manage_checklist.jsp">Checklist</a></li> -->
+    <%
+        }
+    %>
 </ul>

@@ -35,12 +35,32 @@
         }
     }
 
+    boolean isCustomLandingPageShown = false;
+    boolean isSocialMediaShown = false;
+    boolean isGreetingShown = false;
+    if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
+        VendorWebsiteFeatureBean vendorWebsiteFeatureShowCustomLandingPagePhotoBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.show_landingpage_landingpagephoto );
+        if(vendorWebsiteFeatureShowCustomLandingPagePhotoBean!=null) {
+            isCustomLandingPageShown = ParseUtil.sTob(vendorWebsiteFeatureShowCustomLandingPagePhotoBean.getValue() );
+        }
+
+        VendorWebsiteFeatureBean vendorWebsiteFeatureShowSocialMediaBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.show_landingpage_social_media );
+        if(vendorWebsiteFeatureShowSocialMediaBean!=null) {
+            isSocialMediaShown = ParseUtil.sTob(vendorWebsiteFeatureShowSocialMediaBean.getValue() );
+        }
+
+        VendorWebsiteFeatureBean vendorWebsiteFeatureShowGreetingBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.show_landingpage_greeting );
+        if(vendorWebsiteFeatureShowGreetingBean!=null) {
+            isGreetingShown = ParseUtil.sTob(vendorWebsiteFeatureShowGreetingBean.getValue() );
+        }
+    }
+
     String sLandingPagePhoto = Constants.EMPTY;
     String sGreetingHeader = Constants.EMPTY;
     String sGreetingText = Constants.EMPTY;
     String sFacebookFeed = Constants.EMPTY;
     String sPinterestFeed = Constants.EMPTY;
-    if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
+    if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty() && isCustomLandingPageShown) {
         VendorWebsiteFeatureBean vendorWebsiteFeatureBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_landingpagephoto);
         if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue()) && !Utility.isNullOrEmpty(sFolderName) && !Utility.isNullOrEmpty(imageHost)){
             sLandingPagePhoto =   imageHost + "/" + sBucket + "/" +  sFolderName + "/" +vendorWebsiteFeatureBean.getValue();
@@ -50,7 +70,7 @@
         sLandingPagePhoto = "/img/landingpage_wedding.jpg";
     }
 
-    if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
+    if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty() && isGreetingShown) {
         VendorWebsiteFeatureBean vendorWebsiteFeatureBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_greeting_header);
         if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue())){
             sGreetingHeader =  vendorWebsiteFeatureBean.getValue();
@@ -60,7 +80,7 @@
         sGreetingHeader = "";
     }
 
-    if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
+    if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty() && isGreetingShown) {
         VendorWebsiteFeatureBean vendorWebsiteFeatureBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_greeting_text);
         if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue())){
             sGreetingText =  vendorWebsiteFeatureBean.getValue();
@@ -70,14 +90,14 @@
         sGreetingText = "A Platform to Manage Your Clients, Events, Vendors and Team";
     }
 
-    if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
+    if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty() && isSocialMediaShown) {
         VendorWebsiteFeatureBean vendorWebsiteFeatureBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_facebook_feed_script);
         if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue())){
             sFacebookFeed =  vendorWebsiteFeatureBean.getValue();
         }
     }
 
-    if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()) {
+    if(hmVendorWebsiteFeatureBean!=null && !hmVendorWebsiteFeatureBean.isEmpty()  && isSocialMediaShown) {
         VendorWebsiteFeatureBean vendorWebsiteFeatureBean =  hmVendorWebsiteFeatureBean.get(Constants.VENDOR_WEBSITE_FEATURETYPE.published_pinterest_feed_script);
         if(vendorWebsiteFeatureBean!=null && !Utility.isNullOrEmpty(vendorWebsiteFeatureBean.getValue())){
             sPinterestFeed =  vendorWebsiteFeatureBean.getValue();

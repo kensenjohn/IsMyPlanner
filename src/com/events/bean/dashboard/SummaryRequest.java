@@ -1,5 +1,6 @@
 package com.events.bean.dashboard;
 
+import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
 
 /**
@@ -11,6 +12,7 @@ import com.events.bean.users.UserBean;
  */
 public class SummaryRequest {
     private UserBean userBean = new UserBean();
+    private ParentTypeBean parentTypeBean = new ParentTypeBean();
 
     public UserBean getUserBean() {
         return userBean;
@@ -20,6 +22,13 @@ public class SummaryRequest {
         this.userBean = userBean;
     }
 
+    public ParentTypeBean getParentTypeBean() {
+        return parentTypeBean;
+    }
+
+    public void setParentTypeBean(ParentTypeBean parentTypeBean) {
+        this.parentTypeBean = parentTypeBean;
+    }
 
     @Override
     public String toString() {

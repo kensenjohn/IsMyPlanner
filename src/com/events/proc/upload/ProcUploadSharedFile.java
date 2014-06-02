@@ -1,11 +1,17 @@
 package com.events.proc.upload;
 
+import com.events.bean.clients.ClientBean;
 import com.events.bean.upload.UploadRequestBean;
 import com.events.bean.upload.UploadResponseBean;
+import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
+import com.events.bean.users.UserInfoBean;
+import com.events.bean.users.UserRequestBean;
+import com.events.bean.vendors.VendorBean;
 import com.events.common.*;
 import com.events.common.exception.ExceptionHandler;
 import com.events.json.*;
+import com.events.users.AccessUsers;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -100,6 +106,7 @@ public class ProcUploadSharedFile extends HttpServlet {
                                 uploadRequestBean.setFilename( sRandomFilename );
                                 uploadRequestBean.setPath( sUserFolderName );
                                 uploadRequestBean.setOriginalFileName( sOriginalName );
+                                uploadRequestBean.setUserId( loggedInUserBean.getUserId() );
 
                                 folder.createS3FolderForUser( sFolderPath, sRandomFilename, sUserFolderName );
 
@@ -121,6 +128,21 @@ public class ProcUploadSharedFile extends HttpServlet {
                                     uploadRequestBean.setJsonResponseObj(jsonResponseObj );
                                     uploadRequestBean.setMimeType( sFileMimeType );
                                     uploadRequestBean.setUploadId( uploadResponseBean.getUploadId() );
+
+                                    AccessUsers accessUsers = new AccessUsers();
+                                    String sUploadedBy = Constants.EMPTY;
+
+                                    UserRequestBean userRequestBean = new UserRequestBean();
+                                    userRequestBean.setUserId( loggedInUserBean.getUserId() );
+                                    UserInfoBean userInfoBean = accessUsers.getUserInfoFromUserId(userRequestBean);
+                                    if(userInfoBean!=null ) {
+                                        sUploadedBy = ParseUtil.checkNull( userInfoBean.getFirstName() ) + " " + ParseUtil.checkNull( userInfoBean.getLastName() )  ;
+                                    }
+
+                                    if(Utility.isNullOrEmpty(sUploadedBy)){
+                                        sUploadedBy = "User";
+                                    }
+                                    uploadRequestBean.setUploadedBy(sUploadedBy );
 
                                     JSONObject jsono = UploadFile.generateSuccessUploadJson(uploadRequestBean);
 
