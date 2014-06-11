@@ -66,6 +66,7 @@ public class ProcSaveMyAccountContact   extends HttpServlet {
                     String userInfoId = ParseUtil.checkNull(request.getParameter("userinfo_id"));
                     String userId = ParseUtil.checkNull(request.getParameter("user_id"));
                     String userType = ParseUtil.checkNull(request.getParameter("user_type"));
+                    String timeZone = ParseUtil.checkNull(request.getParameter("user_timezone"));
 
                     if(!Utility.isNullOrEmpty(userId) && loggedInUserBean.getUserId().equalsIgnoreCase(userId)) {
                         UserRequestBean userRequestBean = new UserRequestBean();
@@ -84,6 +85,7 @@ public class ProcSaveMyAccountContact   extends HttpServlet {
                         userRequestBean.setPostalCode( zipcode );
                         userRequestBean.setCountry( country );
                         userRequestBean.setWebsite( website );
+                        userRequestBean.setTimeZone( timeZone );
 
                         boolean isSaveUserAccountAllowed = false;
                         AccessUsers accessUsers = new AccessUsers();

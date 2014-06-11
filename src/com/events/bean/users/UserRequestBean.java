@@ -38,6 +38,15 @@ public class UserRequestBean {
     private boolean isWebsiteAccessEnabled = false;
     private String vendorId = Constants.EMPTY;
     private String clientId = Constants.EMPTY;
+    private String timeZone = Constants.EMPTY;
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+    }
 
     public String getClientId() {
         return clientId;

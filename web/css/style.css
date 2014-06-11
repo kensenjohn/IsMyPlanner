@@ -656,5 +656,32 @@ ul.footer-tabs li.active, html ul.footer-tabs li.active a,  html ul.footer-tabs 
     cursor:pointer;
 }
 
+/** bootstrap navbar */
+.navbar {
+    border: 3px;
+}
+nav.navbar ul li a{
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    font-family: 'Open Sans' !important;
+    font-weight: normal;
+    border-bottom: 1px solid !important;
+}
+nav.menu-navbar ul li a{
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    font-family: 'Open Sans' !important;
+    font-weight: normal;
+    border-bottom: 3px !important;
+}
+.navbar-collapse {
+    max-height: 100%;
+}
+.navbar-default .navbar-nav > .active > a {
+    border-bottom: 1px solid  !important;
+}
+
 
 

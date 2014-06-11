@@ -1074,6 +1074,31 @@
     </servlet-mapping>
 
 
+    <servlet>
+        <servlet-name>Process Load Conversation</servlet-name>
+        <servlet-class>com.events.proc.conversation.ProcLoadConversation</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Conversation</servlet-name>
+        <url-pattern>/proc_load_conversation.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Conversation</servlet-name>
+        <servlet-class>com.events.proc.conversation.ProcSaveConversation</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Conversation</servlet-name>
+        <url-pattern>/proc_save_conversation.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load All User Conversations</servlet-name>
+        <servlet-class>com.events.proc.conversation.ProcLoadAllUserConversations</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load All User Conversations</servlet-name>
+        <url-pattern>/proc_load_all_user_conversation.aeve</url-pattern>
+    </servlet-mapping>
+
 
 
 
@@ -1111,6 +1136,10 @@
         <init-param>
             <param-name>privacy_content</param-name>
             <param-value>privacy_content</param-value>
+        </init-param>
+        <init-param>
+            <param-name>conversation_body</param-name>
+            <param-value>conversation_body</param-value>
         </init-param>
     </filter>
     <filter-mapping>

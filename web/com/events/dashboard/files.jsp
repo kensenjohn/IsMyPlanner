@@ -47,7 +47,7 @@
     </jsp:include>
     <%if(isClientTabView){%>
         <jsp:include page="/com/events/common/menu_bar.jsp">
-            <jsp:param name="client_active" value="currently_active"/>
+            <jsp:param name="client_active" value="active"/>
         </jsp:include>
         <div class="breadcrumb_format">
             <div class="container">
@@ -56,7 +56,7 @@
         </div>
     <%}else{%>
         <jsp:include page="/com/events/common/menu_bar.jsp">
-            <jsp:param name="dashboard_active" value="currently_active"/>
+            <jsp:param name="dashboard_active" value="active"/>
         </jsp:include>
         <div class="breadcrumb_format">
             <div class="container">

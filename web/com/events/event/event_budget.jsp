@@ -17,7 +17,7 @@
         <jsp:param name="AFTER_LOGIN_REDIRECT" value="index.jsp"/>
     </jsp:include>
     <jsp:include page="/com/events/common/menu_bar.jsp">
-        <jsp:param name="event_active" value="currently_active"/>
+        <jsp:param name="event_active" value="active"/>
     </jsp:include>
     <div class="breadcrumb_format">
         <div class="container">
@@ -48,27 +48,27 @@
                             <div class="content">
                                 <div class="row">
                                     <form class="form-horizontal" id="frm_save_budget_estimate">
-                                        <div class="col-xs-2 col-md-2">
+                                        <div class="col-md-3">
                                             <label for="budget_estimate" class="form_label">My Budget:</label>
                                             <div class="input-group"> <span class="input-group-addon">$</span>
                                                 <input type="text" class="form-control" id="budget_estimate" name="budget_estimate" param="My Budget"/>
                                             </div>
                                         </div>
-                                        <div class="col-xs-1">
+                                        <div class="col-md-1">
                                             &nbsp;
                                         </div>
-                                        <div class="col-xs-4 col-md-3">
+                                        <div class="col-md-3">
                                             <label for="remaining_estimate_cash" class="form_label" style="white-space: nowrap">My Budget - Total Estimated Cost:</label><br>
                                             <span id="remaining_estimate_cash" style="font-size: 14px;">$0.00</span>
                                         </div>
-                                        <div class="col-xs-4 col-md-3">
+                                        <div class="col-md-1">
+                                            &nbsp;
+                                        </div>
+                                        <div class="col-md-3">
                                             <label for="remaining_actual_cash" class="form_label" style="white-space: nowrap">My Budget - Total Actual Cost:</label> <br>
                                             <span id="remaining_actual_cash" style="font-size: 14px;">$0.00</span>
                                         </div>
-                                        <div class="col-xs-1">
-                                            &nbsp;
-                                        </div>
-                                        <div class="col-xs-2">
+                                        <div class="col-md-1">
                                             &nbsp;
                                         </div>
                                         <input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>

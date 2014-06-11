@@ -494,6 +494,7 @@ public class BuildUsers {
             userInfoBean.setCountry( ParseUtil.checkNull(userRequestBean.getCountry()));
             userInfoBean.setZipcode( ParseUtil.checkNull(userRequestBean.getPostalCode()));
             userInfoBean.setWebsite( ParseUtil.checkNull(userRequestBean.getWebsite()) );
+            userInfoBean.setTimezone( ParseUtil.checkNull(userRequestBean.getTimeZone()) );
         }
         return userInfoBean;
     }

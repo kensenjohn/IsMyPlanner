@@ -43,7 +43,7 @@ public class UploadFileData {
             String sQuery = "SELECT * FROM GTUPLOADS WHERE UPLOADID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint(uploadRequestBean.getUploadId());
 
-            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventData.java", "getEvent()");
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "UploadFileData.java", "getUploadBean()");
 
             if(arrResult!=null && !arrResult.isEmpty()) {
                 for( HashMap<String, String> hmResult : arrResult ) {
@@ -53,5 +53,27 @@ public class UploadFileData {
 
         }
         return uploadBean;
+    }
+
+    public ArrayList<UploadBean> getUploadBeanList(UploadRequestBean uploadRequestBean) {
+        ArrayList<UploadBean> arrUploadBean = new ArrayList<UploadBean>();
+        if(uploadRequestBean!=null && uploadRequestBean.getArrUploadId()!=null && !uploadRequestBean.getArrUploadId().isEmpty() ) {
+            ArrayList<String> arrUploadId = uploadRequestBean.getArrUploadId();
+            String sQuery = "SELECT * FROM GTUPLOADS WHERE UPLOADID in("+ DBDAO.createParamQuestionMarks(arrUploadId.size())+")";
+
+            ArrayList<Object> aParams = new ArrayList<Object>();
+            for(String uploadId : arrUploadId ){
+                aParams.add( uploadId  );
+            }
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "UploadFileData.java", "getUploadBean()");
+            if(arrResult!=null && !arrResult.isEmpty()) {
+                for( HashMap<String, String> hmResult : arrResult ) {
+                    UploadBean uploadBean = new UploadBean(hmResult);
+                    arrUploadBean.add( uploadBean );
+                }
+            }
+        }
+        return arrUploadBean;
     }
 }

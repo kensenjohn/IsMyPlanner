@@ -88,7 +88,7 @@
     </jsp:include>
     <%if(isClientTabView){%>
         <jsp:include page="/com/events/common/menu_bar.jsp">
-            <jsp:param name="client_files_active" value="currently_active"/>
+            <jsp:param name="client_files_active" value="active"/>
         </jsp:include>
         <div class="breadcrumb_format">
             <div class="container">
@@ -97,7 +97,7 @@
         </div>
     <%} else {%>
         <jsp:include page="/com/events/common/menu_bar.jsp">
-            <jsp:param name="dashboard_active" value="currently_active"/>
+            <jsp:param name="dashboard_active" value="active"/>
         </jsp:include>
         <div class="breadcrumb_format">
             <div class="container">
@@ -230,63 +230,6 @@
                                     &nbsp;
                                 </div>
                             </div>
-
-                            <!--
-                            <div class="row">
-                                <div class="col-xs-2">
-                                    &nbsp;
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <label for="uploadFileGroupComment" class="form_label"><%=sName%></label>
-                                    <textarea type="text" name="uploadFileGroupComment" id="uploadFileGroupComment"  class="form-control" placeholder="Add a Comment"></textarea>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-2">
-                                    &nbsp;
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="boxedcontent">
-                                        <div class="widget">
-                                            <div class="content">
-                                                <div class="row">
-                                                    <div class="col-xs-12">
-                                                        <h6 style="margin-bottom: 3px;font-weight: bold;">Kensen John</h6>
-                                                    </div>
-                                                    <div class="col-xs-12">
-                                                        Scam devil meets everyone
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-xs-2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                    <div class="boxedcontent">
-                                        <div class="widget">
-                                            <div class="content">
-                                                <div class="row">
-                                                    <div class="col-xs-12">
-                                                        <h6 style="margin-bottom: 3px;font-weight: bold;">Nisha Mathews</h6>
-                                                    </div>
-                                                    <div class="col-xs-12">
-                                                        <h6 style="margin-bottom: 0px">Scam devil meets everyone</h6>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                         <input type="hidden" name="file_group_id" id="file_group_id"  value="<%=sFileGroupId%>"/>
                         <input type="hidden" name="button_clicked" value="true"/>

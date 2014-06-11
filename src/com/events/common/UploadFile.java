@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -116,5 +117,16 @@ public class UploadFile {
             }
         }
         return sMimeType;
+    }
+
+    public ArrayList<UploadBean> getUploadFileList(ArrayList<String> arrUploadId){
+        ArrayList<UploadBean> arrUploadBean = new ArrayList<UploadBean>();
+        if(arrUploadId!=null && !arrUploadId.isEmpty()) {
+            UploadRequestBean uploadRequestBean = new UploadRequestBean();
+            uploadRequestBean.setArrUploadId( arrUploadId );
+            UploadFileData uploadFileData = new UploadFileData();
+            arrUploadBean = uploadFileData.getUploadBeanList( uploadRequestBean );
+        }
+        return arrUploadBean;
     }
 }

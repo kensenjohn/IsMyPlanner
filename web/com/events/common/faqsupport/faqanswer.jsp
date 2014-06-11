@@ -12,7 +12,7 @@
         <jsp:param name="AFTER_LOGIN_REDIRECT" value="index.jsp"/>
     </jsp:include>
     <jsp:include page="/com/events/common/menu_bar.jsp">
-        <jsp:param name="none" value="currently_active"/>
+        <jsp:param name="none" value="active"/>
     </jsp:include>
     <div class="breadcrumb_format">
         <div class="container">

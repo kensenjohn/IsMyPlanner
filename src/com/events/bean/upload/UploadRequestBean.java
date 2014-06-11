@@ -3,6 +3,8 @@ package com.events.bean.upload;
 import com.events.common.Constants;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: root
@@ -25,9 +27,18 @@ public class UploadRequestBean {
     private String sharedFileHost = Constants.EMPTY;
     private String userId = Constants.EMPTY;
     private String uploadedBy = Constants.EMPTY;
+    private ArrayList<String> arrUploadId = new ArrayList<String>();
 
     public String getUploadedBy() {
         return uploadedBy;
+    }
+
+    public ArrayList<String> getArrUploadId() {
+        return arrUploadId;
+    }
+
+    public void setArrUploadId(ArrayList<String> arrUploadId) {
+        this.arrUploadId = arrUploadId;
     }
 
     public void setUploadedBy(String uploadedBy) {

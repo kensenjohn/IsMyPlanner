@@ -1,3 +1,4 @@
+<%@ page import="com.events.common.Constants" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -55,6 +56,20 @@
             <div class="col-md-6">
                 <label for="last_name" class="form_label">Last Name</label><span class="required"> *</span>
                 <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" value="{{last_name}}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="user_timezone" class="form_label">Time Zone</label><span class="required"> *</span>
+                <select class="form-control" id="user_timezone" name="user_timezone">
+                    <%
+                        for(Constants.TIME_ZONE timeZone : Constants.TIME_ZONE.values()) {
+                    %>
+                    <option value="<%=timeZone.toString()%>"><%=timeZone.getTimeZoneDisplay()%></option>
+                    <%
+                        }
+                    %>
+                </select>
             </div>
         </div>
     </div>
@@ -200,6 +215,10 @@
                         var saveAccountContactInfoView  = new SaveAccountContactInfoView();
                         saveAccountContactInfoView.render();
                         $('#div_button_save_contact_info').append( saveAccountContactInfoView.el );
+
+                        if(varUserBean.user_info_bean.time_zone!=''){
+                            $('#user_timezone').val(varUserBean.user_info_bean.time_zone);
+                        }
 
 
                     } else {

@@ -62,7 +62,7 @@ public class UserInfoBean {
         this.cellPhone = ParseUtil.checkNull(hmUserInfo.get("CELL_PHONE"));
         this.phoneNum = ParseUtil.checkNull(hmUserInfo.get("PHONE_NUM"));
         this.humanCreateDate = ParseUtil.checkNull(hmUserInfo.get("HUMAN_CREATEDATE"));
-        this.timezone = ParseUtil.checkNull(hmUserInfo.get("TIMEZONE"));
+        this.timezone = ParseUtil.checkNull(hmUserInfo.get("TIME_ZONE"));
 
 
         this.humanCellPhone = getHumanFormattedPhoneNumber(this.cellPhone);

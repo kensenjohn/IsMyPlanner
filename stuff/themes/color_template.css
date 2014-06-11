@@ -290,7 +290,7 @@ ul.footer-tabs li a {
     border-color: #ecf0f1 !important;
 }
 ul.footer-tabs li a:hover {
-    color: __COLOR_HIGHLIGHTED__;
+    color: __COLOR_BACKGROUND__;
     background-color: #ecf0f1 !important;
     border-bottom: 1px solid __COLOR_HIGHLIGHTED__;
 }
@@ -314,4 +314,68 @@ html ul.footer-tabs li.active a:hover {
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+.chosen-container-active .chosen-single {border: 1px solid __COLOR_HIGHLIGHTED__; box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);}
 
+/** Chosen drop down **/
+.chosen-container-active .chosen-choices {
+    border: 1px solid __COLOR_HIGHLIGHTED__;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.chosen-container .chosen-results li.highlighted {
+    background-color: __COLOR_HIGHLIGHTED__;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(20%, __COLOR_HIGHLIGHTED__), color-stop(90%, __COLOR_HIGHLIGHTED__));
+    background-image: -webkit-linear-gradient(__COLOR_HIGHLIGHTED__ 20%, __COLOR_HIGHLIGHTED__ 90%);
+    background-image: -moz-linear-gradient(__COLOR_HIGHLIGHTED__ 20%, __COLOR_HIGHLIGHTED__ 90%);
+    background-image: -o-linear-gradient(__COLOR_HIGHLIGHTED__ 20%, __COLOR_HIGHLIGHTED__ 90%);
+    background-image: linear-gradient(__COLOR_HIGHLIGHTED__ 20%, __COLOR_HIGHLIGHTED__ 90%);
+    color: #fff;
+}
+
+.chosen-container-active .chosen-single {
+    border: 1px solid __COLOR_HIGHLIGHTED__;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+
+/** Bootstrap navbar **/
+.navbar-default {
+    background: #fcfcfc;
+}
+nav.navbar ul li a{
+    border-color: __COLOR_BORDER__ !important;
+}
+
+
+.navbar-default .navbar-nav > .active > a {
+    color: __COLOR_HIGHLIGHTED__;
+    background: transparent;
+    border-color: __COLOR_HIGHLIGHTED__ !important;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: __COLOR_NAVBAR_BREADCRUMB_TAB_BKG__;
+    background-color: __COLOR_HIGHLIGHTED__ !important;
+}
+.menu-navbar .navbar-nav > li > a:hover,
+.menu-navbar .navbar-nav > li > a:focus {
+    color: __COLOR_BACKGROUND__;
+    border-color: __COLOR_HIGHLIGHTED__ !important;
+    background-color: __COLOR_HIGHLIGHTED__ !important;
+}
+
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: __COLOR_BACKGROUND__;
+    background-color: __COLOR_HIGHLIGHTED__ !important;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+    color: __COLOR_BACKGROUND__;
+    background-color: __COLOR_HIGHLIGHTED__ !important
+}
+.navbar-default .navbar-toggle {
+    border-color: __COLOR_HIGHLIGHTED__;
+    color: __COLOR_HIGHLIGHTED__;
+}

@@ -14,6 +14,7 @@
     String sDashBoardFilesActive = ParseUtil.checkNull(request.getParameter("files_active"));
     String sDashBoardTodoActive = ParseUtil.checkNull(request.getParameter("todo_active"));
     String sDashBoardChecklistManagementActive = ParseUtil.checkNull(request.getParameter("checklist_management_active"));
+    String sDashBoardConversationsActive = ParseUtil.checkNull(request.getParameter("conversations_active"));
 
     UserBean loggedInUserBean = new UserBean();
     if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
@@ -24,70 +25,48 @@
         checkPermission = new CheckPermission(loggedInUserBean);
     }
 %>
-<ul class="tabs">
-    <li class="<%=sDashBoardActive%>"><a href="/com/events/dashboard/dashboard.jsp">Summary</a></li>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target="#dashboard_tab_collapse_1">
+                <span class="sr-only">Toggle Dashboard Tab</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
 
-    <%
-        if(checkPermission!=null && checkPermission.can(Perm.MANAGE_VENDOR_WEBSITE)) {
-    %>
-            <li class="<%=sDashBoardOurWebsiteActive%>"><a href="/com/events/dashboard/our_website.jsp">Website</a></li>
-    <%
-        }
-    %>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="dashboard_tab_collapse_1">
+                <ul class="nav navbar-nav  navbar-right">
+                    <li class="<%=sDashBoardActive%>"><a href="/com/events/dashboard/dashboard.jsp">Summary</a></li>
 
-    <%
-        if(checkPermission!=null && checkPermission.can(Perm.MANAGE_TEAM_MEMBERS)) {
-    %>
-            <li class="<%=sDashBoardOurTeamActive%>"><a href="/com/events/dashboard/our_team.jsp">Team</a></li>
-    <%
-        }
-    %>
+                    <%if(checkPermission!=null && checkPermission.can(Perm.MANAGE_VENDOR_WEBSITE)) {%>
+                        <li class="<%=sDashBoardOurWebsiteActive%>"><a href="/com/events/dashboard/our_website.jsp">Website</a></li>
+                    <% } %>
 
-    <%
-        if(checkPermission!=null && checkPermission.can(Perm.MANAGE_ROLE_PERMISSION)) {
-    %>
-            <li class="<%=sDashBoardRolesAndPermissionsActive%>"><a href="/com/events/dashboard/roles.jsp">Roles and Permissions</a></li>
-    <%
-        }
-    %>
+                    <% if(checkPermission!=null && checkPermission.can(Perm.MANAGE_TEAM_MEMBERS)) {  %>
+                        <li class="<%=sDashBoardOurTeamActive%>"><a href="/com/events/dashboard/our_team.jsp">Team</a></li>
+                    <% } %>
 
-    <%
-        if(checkPermission!=null && checkPermission.can(Perm.MANAGE_PARTNER_VENDORS)) {
-    %>
-            <li class="<%=sDashBoardVendorsActive%>"><a href="/com/events/dashboard/partner_vendors.jsp">Vendors</a></li>
-    <%
-        }
-    %>
+                    <% if(checkPermission!=null && checkPermission.can(Perm.MANAGE_ROLE_PERMISSION)) {  %>
+                        <li class="<%=sDashBoardRolesAndPermissionsActive%>"><a href="/com/events/dashboard/roles.jsp">Roles and Permissions</a></li>
+                    <% } %>
 
-    <%
-       // if(checkPermission!=null && checkPermission.can(Perm.ACCESS_CLIENTS_TAB)) {
-    %>
-    <li class="<%=sDashBoardInvoicesActive%>"><a href="/com/events/dashboard/invoices.jsp">Invoices</a></li>
-    <%
-       // }
-    %>
+                    <% if(checkPermission!=null && checkPermission.can(Perm.MANAGE_PARTNER_VENDORS)) {  %>
+                        <li class="<%=sDashBoardVendorsActive%>"><a href="/com/events/dashboard/partner_vendors.jsp">Vendors</a></li>
+                    <% } %>
 
-    <%
-        // if(checkPermission!=null && checkPermission.can(Perm.ACCESS_CLIENTS_TAB)) {
-    %>
-    <li class="<%=sDashBoardFilesActive%>"><a href="/com/events/dashboard/files.jsp">Files</a></li>
-    <%
-        // }
-    %>
+                    <li class="<%=sDashBoardInvoicesActive%>"><a href="/com/events/dashboard/invoices.jsp">Invoices</a></li>
+                    <li class="<%=sDashBoardFilesActive%>"><a href="/com/events/dashboard/files.jsp">Files</a></li>
+                    <li class="<%=sDashBoardTodoActive%>"><a href="/com/events/dashboard/todos.jsp">Todo</a></li>
 
-    <%
-        // if(checkPermission!=null && checkPermission.can(Perm.ACCESS_CLIENTS_TAB)) {
-    %>
-    <li class="<%=sDashBoardTodoActive%>"><a href="/com/events/dashboard/todos.jsp">Todo</a></li>
-    <%
-        // }
-    %>
-
-    <%
-        if(checkPermission!=null && checkPermission.can(Perm.MANAGE_CHECKLIST_TEMPLATE_TAB)) {
-    %>
-            <!-- <li class="<%=sDashBoardChecklistManagementActive%>"><a href="/com/events/dashboard/manage_checklist.jsp">Checklist</a></li> -->
-    <%
-        }
-    %>
-</ul>
+                    <%if(checkPermission!=null && checkPermission.can(Perm.MANAGE_CHECKLIST_TEMPLATE_TAB)) {%>
+                        <!-- <li class="<%=sDashBoardChecklistManagementActive%>"><a href="/com/events/dashboard/manage_checklist.jsp">Checklist</a></li> -->
+                    <% } %>
+                    <li class="<%=sDashBoardConversationsActive%>"><a href="/com/events/common/conversation/conversations.jsp">Conversations</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div>
+    </div>
+</nav>

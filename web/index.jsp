@@ -111,7 +111,7 @@
         <jsp:param name="AFTER_LOGIN_REDIRECT" value="index.jsp"/>
       </jsp:include>
       <jsp:include page="/com/events/common/menu_bar.jsp">
-          <jsp:param name="home_active" value="currently_active"/>
+          <jsp:param name="home_active" value="active"/>
       </jsp:include>
       <div class="container-fluid">
           <div id="hero_image" style="background-image: url('<%=sLandingPagePhoto%>');background-size: cover; text-align: center;">
@@ -156,9 +156,10 @@
               if(!isVendorSite) {
           %>
               <div class="row">
-                  <div class="col-md-12" style="text-align:center;">
+                  <div class="col-md-6" style="text-align:center; margin-top: 10px">
                       <a href="/com/events/common/credentials.jsp" class="btn btn-filled btn-lg">Start Your Free Trial</a>
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  </div>
+                  <div class="col-md-6" style="text-align:center; margin-top: 10px">
                       <a href="/com/events/common/demo_email.jsp" class="btn btn-filled btn-lg">Request A Demo</a>
                   </div>
               </div>

@@ -68,12 +68,10 @@ public class AccessVendors {
             AccessUsers accessUsers = new AccessUsers();
             UserBean userBean = accessUsers.getUserByParentId(userRequestBean);
 
-            appLogging.info("Vendor Contact Information from UserBean : " + userBean );
             if(userBean!=null &&  !Utility.isNullOrEmpty(userBean.getUserId()))  {
                 userRequestBean.setUserInfoId( userBean.getUserInfoId() );
                 UserInfoBean userInfoBean = accessUsers.getUserInfoFromInfoId(userRequestBean);
 
-                appLogging.info("Vendor Contact UserInfo : " + userInfoBean );
                 vendorResponseBean.setVendorId(vendorBean.getVendorId());
                 vendorResponseBean.setVendorBean(vendorBean);
 

@@ -51,14 +51,15 @@ public class BuildUserData {
     }
     public Integer insertUserInfo(UserInfoBean userInfoBean) {
         String sQuery = "INSERT INTO GTUSERINFO (USERINFOID,FIRST_NAME,LAST_NAME,   ADDRESS_1,ADDRESS_2,CITY,  STATE,COUNTRY,IP_ADDRESS,  " +
-                "CELL_PHONE,PHONE_NUM,EMAIL,    DEL_ROW,CREATEDATE,HUMANCREATEDATE,   COMPANY,ZIPCODE,WEBSITE)"
-                + " VALUES ( ?,?,?,  ?,?,?,  ?,?,?,  ?,?,?,  ?,?,?,   ?,?,?)";
+                "CELL_PHONE,PHONE_NUM,EMAIL,    DEL_ROW,CREATEDATE,HUMANCREATEDATE,   COMPANY,ZIPCODE,WEBSITE,  TIME_ZONE)"
+                + " VALUES ( ?,?,?,  ?,?,?,  ?,?,?,  ?,?,?,  ?,?,?,   ?,?,?, ?)";
 
         ArrayList<Object> aParams = DBDAO.createConstraint( userInfoBean.getUserInfoId(), userInfoBean.getFirstName(), userInfoBean.getLastName(),
                 userInfoBean.getAddress1(), userInfoBean.getAddress2(), userInfoBean.getCity(), userInfoBean.getState(), userInfoBean.getCountry(),
                 userInfoBean.getIpAddress(), userInfoBean.getCellPhone(), userInfoBean.getPhoneNum(), userInfoBean.getEmail(),
                 userInfoBean.getDeleteRow(), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(),
-                userInfoBean.getCompany(),userInfoBean.getZipcode(),userInfoBean.getWebsite());
+                userInfoBean.getCompany(),userInfoBean.getZipcode(),userInfoBean.getWebsite(),
+                userInfoBean.getTimezone() );
         int numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildUserData.java", "insertUserInfo() ");
 
         return numOfRowsInserted;
@@ -81,13 +82,13 @@ public class BuildUserData {
         String sQuery = "UPDATE GTUSERINFO SET USERINFOID = ?,FIRST_NAME = ?,LAST_NAME = ?,   ADDRESS_1 = ?,ADDRESS_2 = ?,CITY = ?,  " +
                 "STATE = ? ,COUNTRY = ?,IP_ADDRESS = ?,  " +
                 "CELL_PHONE = ?,PHONE_NUM=?,EMAIL = ?,   DEL_ROW = ?,MODIFIEDDATE = ?,    HUMANMODIFIEDDATE = ?,COMPANY = ?,ZIPCODE = ?,"
-                + "  WEBSITE=? WHERE USERINFOID = ?";
+                + "  WEBSITE=?,TIME_ZONE=? WHERE USERINFOID = ?";
 
         ArrayList<Object> aParams = DBDAO.createConstraint( userInfoBean.getUserInfoId(), userInfoBean.getFirstName(), userInfoBean.getLastName(),
                 userInfoBean.getAddress1(), userInfoBean.getAddress2(), userInfoBean.getCity(), userInfoBean.getState(), userInfoBean.getCountry(),
                 userInfoBean.getIpAddress(), userInfoBean.getCellPhone(), userInfoBean.getPhoneNum(), userInfoBean.getEmail(),
                 userInfoBean.getDeleteRow(), DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(), userInfoBean.getCompany(),userInfoBean.getZipcode(),
-                userInfoBean.getWebsite(), userInfoBean.getUserInfoId());
+                userInfoBean.getWebsite(),userInfoBean.getTimezone(), userInfoBean.getUserInfoId());
         int numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB,  "BuildUserData.java", "updateUserInfo() ");
         return numOfRowsInserted;
     }

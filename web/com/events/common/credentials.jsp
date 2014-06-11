@@ -38,7 +38,7 @@
                 </div>
             </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-6" style="margin-top: 10px">
                         <div class="boxedcontent">
                             <div class="widget">
                                 <div class="content">
@@ -65,7 +65,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" style="margin-top: 10px">
                         <div class="boxedcontent">
                             <div class="widget">
                                 <div class="content">
