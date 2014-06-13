@@ -4,6 +4,8 @@
 <%@ page import="com.events.bean.users.UserBean" %>
 <%@ page import="com.events.users.AccessUsers" %>
 <%@ page import="com.events.bean.users.ParentTypeBean" %>
+<%@ page import="com.events.users.permissions.CheckPermission" %>
+<%@ page import="com.events.common.Perm" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -13,10 +15,9 @@
 <jsp:include page="/com/events/common/header_bottom.jsp"/>
 <%
     String sConversationId = ParseUtil.checkNull( request.getParameter("conversation_id"));
+    boolean canAddUsersToConversation = false;
+    boolean canDeleteUsersToConversation = false;
     boolean isLoadConversation = false;
-    if(  !Utility.isNullOrEmpty(sConversationId) ) {
-        isLoadConversation = true;
-    }
 
     String currentUserId = Constants.EMPTY;
     if(session.getAttribute(Constants.USER_LOGGED_IN_BEAN)!=null) {
@@ -27,7 +28,20 @@
             AccessUsers accessUsers = new AccessUsers();
             ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser( loggedInUserBean );
         }
+        CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
+        if(checkPermission!=null ) {
+            if( checkPermission.can(Perm.ADD_USERS_TO_OLD_CONVERSATION) ) {
+                canAddUsersToConversation = true;
+            }
+        }
     }
+
+    if(  !Utility.isNullOrEmpty(sConversationId) ) {
+        isLoadConversation = true;
+        canAddUsersToConversation = true;
+        canDeleteUsersToConversation = true;
+    }
+
 %>
 <body>
 <div class="page_wrap">
@@ -204,6 +218,11 @@
 <form id="frm_delete_file">
     <input type="hidden" name="upload_id" id="delete_upload_id" value=""/>
 </form>
+<form id="frm_update_conversation_user">
+    <input type="hidden" name="conversation_id" id="update_conversation_user_id" value="<%=sConversationId%>"/>
+    <input type="hidden" name="user_id" id="conversation_user_id" value=""/>
+    <input type="hidden" name="action" id="conversation_action" value=""/>
+</form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/chosen.jquery.min.js"></script>
 <script src="/js/tinymce/tinymce.min.js"></script>
@@ -249,6 +268,12 @@
         var actionUrl = "/proc_load_conversation.aeve";
         var methodType = "POST";
         var dataString = $("#frm_conversation").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function updateConversationUser( callbackmethod ) {
+        var actionUrl = "/proc_update_conversation_users.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_update_conversation_user").serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
     function populateConversation(jsonResult) {
@@ -298,6 +323,7 @@
                             }
                         }
                         $('#conversation_users').trigger("chosen:updated");
+                        updateChosenUsers(varConversationBean.conversation_id);
 
 
                         var varNumOfConversationMessages = jsonResponseObj.num_of_conversation_messages;
@@ -350,8 +376,61 @@
         }
     }
 
+    function updateChosenUsers( varConversationId ) {
+        $('#conversation_users').on('change', function(evt, params) {
+            var varSelectedUserId = params.selected;
+            var varDeSelectedUserId = params.deselected;
+
+            var varAction = '';
+            var varUserId = '';
+            if(varSelectedUserId!=undefined && varSelectedUserId!='' ) {
+                varAction = 'selected';
+                varUserId = varSelectedUserId;
+            } else if(varDeSelectedUserId!=undefined && varDeSelectedUserId!='' ) {
+                varAction = 'deselected';
+                varUserId = varDeSelectedUserId;
+            }
+
+            $('#conversation_user_id').val( varUserId  );
+            $('#conversation_action').val( varAction  );
+            $('#update_conversation_user_id').val( $('#conversation_id').val() );
+
+            updateConversationUser( getConversationUserResult);
+        });
+    }
+
     function setConversationId( varConversationId){
         $('#conversation_id').val( varConversationId );
+    }
+
+    function getConversationUserResult( jsonResult ){
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var jsonResponseObj = varResponseObj.payload;
+                if(jsonResponseObj!=undefined) {
+                    var varIsSuccess = jsonResponseObj.is_success;
+                    var varUserId = jsonResponseObj.user_id;
+                    var varAction = jsonResponseObj.action;
+
+                    if(varIsSuccess){
+
+                    } else {                    $
+                        if(varAction == 'selected'){
+                            $('#'+varUserId).prop('selected', false);
+                        } else if( varAction == 'deselected' ) {
+                            $('#'+varUserId).prop('selected', true);
+                        }
+                        $('#conversation_users').trigger("chosen:updated");
+                        displayAjaxOk(varResponseObj);
+                    }
+                }
+            }
+        }
+        $('#conversation_user_id').val( ''  );
+        $('#conversation_action').val( ''  );
     }
     function getResult(jsonResult) {
         if(jsonResult!=undefined) {
@@ -404,7 +483,7 @@
                     tinymce.get(tinymce_editor_id).setContent('');
 
                     $('.upload_id').remove();
-
+                    $('#update_conversation_user_id').val( varConversationBean.conversation_id );
                 }
             } else {
                 displayMssgBoxAlert('Oops!! We were unable to process your request. Please try again later. (1)', true);

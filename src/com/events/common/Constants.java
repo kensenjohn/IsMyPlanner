@@ -275,7 +275,8 @@ public class Constants {
         NEW_TEAM_MEMBER_ACCESS("NEW_TEAM_MEMBER_ACCESS"),
         NEW_VENDOR_ACCESS("NEW_VENDOR_ACCESS"),
         CLIENT_INVOICE("CLIENT_INVOICE"),
-        TODO_REMINDER("TODO_REMINDER");
+        TODO_REMINDER("TODO_REMINDER"),
+        CONVERSATION_MESSAGE("CONVERSATION_MESSAGE");
 
         private String emailTemplate = Constants.EMPTY;
 

@@ -1098,6 +1098,14 @@
         <servlet-name>Process Load All User Conversations</servlet-name>
         <url-pattern>/proc_load_all_user_conversation.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Update Conversation Users</servlet-name>
+        <servlet-class>com.events.proc.conversation.ProcUpdateConversationUsers</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Update Conversation Users</servlet-name>
+        <url-pattern>/proc_update_conversation_users.aeve</url-pattern>
+    </servlet-mapping>
 
 
 

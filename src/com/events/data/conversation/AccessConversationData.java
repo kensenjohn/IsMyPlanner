@@ -41,6 +41,24 @@ public class AccessConversationData {
         }
         return conversationBean;
     }
+    public ArrayList<ConversationBean> getConversationByVendor(ConversationRequestBean conversationRequestBean){
+        ArrayList<ConversationBean> arrConversationBean = new ArrayList<ConversationBean>();
+        if(conversationRequestBean!=null){
+            String sQuery = "SELECT * FROM GTCONVERSATION GC WHERE GC.FK_VENDORID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(conversationRequestBean.getVendorId() );
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessConversationData.java", "getConversationByVendor()");
+
+            if(arrResult!=null && !arrResult.isEmpty()) {
+                for( HashMap<String, String> hmResult : arrResult ) {
+                    ConversationBean conversationBean = new ConversationBean( hmResult );
+
+                    arrConversationBean.add( conversationBean );
+                }
+            }
+        }
+        return arrConversationBean;
+    }
     public ArrayList<ConversationBean> getConversationByUser( ConversationRequestBean conversationRequestBean){
         ArrayList<ConversationBean> arrConversationBean = new ArrayList<ConversationBean>();
         if(conversationRequestBean!=null){
@@ -103,26 +121,22 @@ public class AccessConversationData {
     public HashMap<Long, ConversationMessageBean > getConversationMessages( ConversationRequestBean conversationRequestBean){
         HashMap<Long, ConversationMessageBean > hmConversationMessageBean = new HashMap<Long, ConversationMessageBean>();
         ArrayList<ConversationMessageBean> arrConversationMessageBean = new ArrayList<ConversationMessageBean>();
-        if(conversationRequestBean!=null){
+        if(conversationRequestBean!=null && !Utility.isNullOrEmpty(conversationRequestBean.getConversationId())){
             String sQuery = "SELECT * FROM GTCONVOMESSAGE WHERE FK_CONVERSATIONID = ?  ORDER BY CREATEDATE ASC";
             ArrayList<Object> aParams = DBDAO.createConstraint(conversationRequestBean.getConversationId() );
 
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessConversationData.java", "getConversationMessages()");
-            appLogging.info("Conversationmessage : " + arrResult );
 
             if(arrResult!=null && !arrResult.isEmpty()) {
                 Long lMessageCount = 0L;
                 for(Integer lTmpTrack = 0; lTmpTrack<arrResult.size(); lTmpTrack++ ){
-                    appLogging.info(lTmpTrack + " - " + arrResult.get(lTmpTrack) );
                     ConversationMessageBean conversationMessageBean = new ConversationMessageBean(  arrResult.get(lTmpTrack) );
                     hmConversationMessageBean.put(lMessageCount,conversationMessageBean);
                     lMessageCount++;
                 }
             }
         }
-        for(Map.Entry<Long,ConversationMessageBean > mapConversationMessageBean : hmConversationMessageBean.entrySet() ){
-            appLogging.info(mapConversationMessageBean.getKey() + " - " + mapConversationMessageBean.getValue().getMessage() );
-        }
+
         return hmConversationMessageBean;
     }
 

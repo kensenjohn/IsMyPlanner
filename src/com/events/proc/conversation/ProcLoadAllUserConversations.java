@@ -3,6 +3,7 @@ package com.events.proc.conversation;
 import com.events.bean.common.conversation.ConversationBean;
 import com.events.bean.common.conversation.ConversationRequestBean;
 import com.events.bean.common.conversation.ConversationResponseBean;
+import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserInfoBean;
 import com.events.bean.users.UserRequestBean;
@@ -70,12 +71,10 @@ public class ProcLoadAllUserConversations extends HttpServlet {
 
                     AccessConversation accessConversation = new AccessConversation();
                     ConversationResponseBean conversationResponseBean = new ConversationResponseBean();
-                    CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
-                    if(checkPermission!=null ) {
-                        if( checkPermission.can(Perm.MANAGE_EVERY_USERS_CONVERSATION) ) {
-                            conversationRequestBean.setCanManageEveryConversation( true );
-                        }
-                    }
+
+                    ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser(loggedInUserBean);
+                    conversationRequestBean.setVendorId( parentTypeBean.getVendorId() );
+
                     conversationResponseBean = accessConversation.loadAllUserConversations(conversationRequestBean);
 
                     Long lNumOfConversations = 0L;
@@ -112,7 +111,7 @@ public class ProcLoadAllUserConversations extends HttpServlet {
 
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadConversation - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAllConversation - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -126,7 +125,7 @@ public class ProcLoadAllUserConversations extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadTodo - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadAllConversation - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

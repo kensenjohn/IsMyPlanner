@@ -1,13 +1,37 @@
 package com.events.common.conversation;
 
 import com.events.bean.common.conversation.*;
+import com.events.bean.common.email.EmailQueueBean;
+import com.events.bean.common.email.EmailSchedulerBean;
+import com.events.bean.common.email.EmailTemplateBean;
+import com.events.bean.common.notify.NotifyBean;
 import com.events.bean.upload.UploadBean;
-import com.events.common.DateSupport;
-import com.events.common.UploadFile;
-import com.events.common.Utility;
+import com.events.bean.users.ParentTypeBean;
+import com.events.bean.users.UserBean;
+import com.events.bean.users.UserInfoBean;
+import com.events.bean.users.UserRequestBean;
+import com.events.bean.vendors.VendorBean;
+import com.events.common.*;
+import com.events.common.email.creator.EmailCreator;
+import com.events.common.email.creator.MailCreator;
+import com.events.common.email.send.QuickMailSendThread;
+import com.events.common.exception.ExceptionHandler;
+import com.events.common.notify.Notification;
 import com.events.data.conversation.BuildConversationData;
+import com.events.data.email.EmailServiceData;
+import com.events.users.AccessUsers;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,19 +41,24 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class BuildConversation {
+    private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
+
     public ConversationResponseBean saveConversation(ConversationRequestBean conversationRequestBean){
         ConversationResponseBean conversationResponseBean = new ConversationResponseBean();
         if( conversationRequestBean!=null ) {
             ConversationBean conversationBean = new ConversationBean();
+            String notificationMessage = "Started a new conversation : " + conversationRequestBean.getConversationBody();
             if(Utility.isNullOrEmpty(conversationRequestBean.getConversationId())) {
                 conversationBean = createConversation(conversationRequestBean);
+                notificationMessage = "Started a new conversation: " + conversationRequestBean.getConversationName();
             } else {
                 conversationBean = updateConversation(conversationRequestBean);
+                notificationMessage = "Added a new new message to conversation: " + conversationRequestBean.getConversationName();
             }
 
             if(conversationBean!=null && !Utility.isNullOrEmpty(conversationBean.getConversationId())) {
                 ArrayList<UserConversationBean> arrUserConversationBean = generateArrUserConversationBean( conversationRequestBean , conversationBean );
-                deleteUserConversation( conversationRequestBean );
+                deleteAllUserConversation(conversationRequestBean);
 
                 BuildConversationData buildConversationData = new BuildConversationData();
                 Integer numOfUserConversations = buildConversationData.insertUserConversation(  arrUserConversationBean  );
@@ -69,10 +98,163 @@ public class BuildConversation {
                     conversationResponseBean.setConversationMessageBean( conversationMessageBean );
                     conversationResponseBean.setConversationMessageUserBean( conversationMessageUserBean );
 
+                    createNotifications(conversationRequestBean, notificationMessage);
+                    createEmailNotification(conversationRequestBean);
+
                 }
             }
         }
         return conversationResponseBean;
+    }
+    public void createNotifications(ConversationRequestBean conversationRequestBean, String sMessage){
+        if(conversationRequestBean!=null && !Utility.isNullOrEmpty(conversationRequestBean.getCurrentUserId()) &&
+                conversationRequestBean.getArrConversationUserId()!=null && conversationRequestBean.getArrConversationUserId().size()>1) {
+
+            ArrayList<String> arrConversationUserId = conversationRequestBean.getArrConversationUserId();
+            String sFromUserId = conversationRequestBean.getCurrentUserId();
+            if(arrConversationUserId!=null) {
+                for(String sToUserId : arrConversationUserId ){
+                    if(sFromUserId.equalsIgnoreCase(sToUserId)) {
+                        continue; // do not set To Do notification to self
+                    }
+                    NotifyBean notifyBean = new NotifyBean();
+                    notifyBean.setFrom( sFromUserId );
+                    notifyBean.setTo( sToUserId );
+                    notifyBean.setMessage( sMessage );
+
+                    Notification.createNewNotifyRecord(notifyBean);
+                }
+            }
+        }
+    }
+
+    public boolean createEmailNotification(ConversationRequestBean conversationRequestBean){
+        boolean isSuccess = false;
+        if(conversationRequestBean!=null && !Utility.isNullOrEmpty(conversationRequestBean.getConversationId())  ) {
+            String sUserId = conversationRequestBean.getCurrentUserId();
+            UserRequestBean userRequestBean = new UserRequestBean();
+            userRequestBean.setUserId( sUserId);
+            AccessUsers accessUsers = new AccessUsers();
+            UserBean fromUserBean = accessUsers.getUserById(userRequestBean);
+            UserInfoBean fromUserInfoBean = accessUsers.getUserInfoFromUserId( userRequestBean );
+
+            EmailServiceData emailServiceData = new EmailServiceData();
+            EmailTemplateBean emailTemplateBean = emailServiceData.getEmailTemplate(Constants.EMAIL_TEMPLATE.CONVERSATION_MESSAGE);
+
+            String sHtmlTemplate = emailTemplateBean.getHtmlBody();
+            String sTxtTemplate = emailTemplateBean.getTextBody();
+
+            ArrayList<String> arrConversationUserId = conversationRequestBean.getArrConversationUserId();
+            if(arrConversationUserId!=null && !arrConversationUserId.isEmpty() ) {
+                for(String sToUserId : arrConversationUserId ){
+                    userRequestBean.setUserId( sToUserId);
+
+                    UserInfoBean toUserInfoBean = accessUsers.getUserInfoFromUserId( userRequestBean );
+
+                    EmailQueueBean emailQueueBean = new EmailQueueBean();
+                    emailQueueBean.setEmailSubject(emailTemplateBean.getEmailSubject());
+                    emailQueueBean.setFromAddress(emailTemplateBean.getFromAddress());
+                    emailQueueBean.setFromAddressName(emailTemplateBean.getFromAddressName());
+
+                    String sFromFirstName = ParseUtil.checkNull(fromUserInfoBean.getFirstName());
+                    String sFromLastName = ParseUtil.checkNull(fromUserInfoBean.getLastName());
+                    String sFromGivenName = ParseUtil.checkNull( sFromFirstName + " " + sFromLastName);
+
+                    String sToFirstName = ParseUtil.checkNull(toUserInfoBean.getFirstName());
+                    String sToLastName = ParseUtil.checkNull(toUserInfoBean.getLastName());
+                    String sToGivenName = ParseUtil.checkNull( sToFirstName + " " + sToLastName);
+
+                    emailQueueBean.setToAddress( toUserInfoBean.getEmail() );
+                    emailQueueBean.setToAddressName(toUserInfoBean.getEmail() );
+                    emailQueueBean.setHtmlBody(sHtmlTemplate);
+                    emailQueueBean.setTextBody(sTxtTemplate);
+
+                    // mark it as sent so that it wont get picked up by email service. The email gets sent below
+                    emailQueueBean.setStatus(Constants.EMAIL_STATUS.SENT.getStatus());
+
+                    // We are just creating a record in the database with this action.
+                    // The new password will be sent separately.
+                    // This must be changed so that user will have to click link to
+                    // generate the new password.
+                    MailCreator dummyEailCreator = new EmailCreator();
+                    dummyEailCreator.create(emailQueueBean , new EmailSchedulerBean());
+
+                    // Now here we will be putting the correct password in the email
+                    // text and
+                    // send it out directly.
+                    // This needs to be changed. Warning bells are rining.
+                    // Lots of potential to fail.
+
+                    Map<String, Object> mapTextEmailValues = new HashMap<String, Object>();
+                    Map<String, Object> mapHtmlEmailValues = new HashMap<String, Object>();
+                    mapTextEmailValues.put("USER_GIVEN_NAME",sToGivenName);
+                    mapHtmlEmailValues.put("USER_GIVEN_NAME", sToGivenName);
+                    mapTextEmailValues.put("CONVERSATION_FROM",sFromGivenName);
+                    mapHtmlEmailValues.put("CONVERSATION_FROM", sFromGivenName);
+                    mapTextEmailValues.put("CONVERSATION_TITLE",conversationRequestBean.getConversationName());
+                    mapHtmlEmailValues.put("CONVERSATION_TITLE", conversationRequestBean.getConversationName());
+
+                    MustacheFactory mf = new DefaultMustacheFactory();
+                    Mustache mustacheText =  mf.compile(new StringReader(sTxtTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_text");
+                    Mustache mustacheHtml = mf.compile(new StringReader(sHtmlTemplate), Constants.EMAIL_TEMPLATE.NEWPASSWORD.toString()+"_html");
+
+                    StringWriter txtWriter = new StringWriter();
+                    StringWriter htmlWriter = new StringWriter();
+                    try {
+                        mustacheText.execute(txtWriter, mapTextEmailValues).flush();
+                        mustacheHtml.execute(htmlWriter, mapHtmlEmailValues).flush();
+                    } catch (IOException e) {
+                        appLogging.error("reset Password mustache exception: " + ExceptionHandler.getStackTrace(e));
+                        txtWriter = new StringWriter();
+                        htmlWriter = new StringWriter();
+                    }
+
+                    emailQueueBean.setHtmlBody(htmlWriter.toString());
+                    emailQueueBean.setTextBody(txtWriter.toString());
+
+                    emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
+
+                    // This will actually send the email. Spawning a thread and continue
+                    // execution.
+                    Thread quickEmail = new Thread(new QuickMailSendThread( emailQueueBean), "Quick Email Password Reset");
+                    quickEmail.start();
+                    isSuccess = true;
+                }
+            }
+        }
+        return isSuccess;
+    }
+
+    public Integer addUserToConversation(ConversationRequestBean conversationRequestBean){
+        Integer numOfUserConversations = 0;
+        if(conversationRequestBean!=null && !Utility.isNullOrEmpty(conversationRequestBean.getConversationId())) {
+            BuildConversationData buildConversationData = new BuildConversationData();
+
+            ConversationBean conversationBean = new ConversationBean();
+            conversationBean.setConversationId( conversationRequestBean.getConversationId() );
+            if(conversationBean!=null && !Utility.isNullOrEmpty(conversationBean.getConversationId())) {
+                ArrayList<UserConversationBean> arrUserConversationBean = generateArrUserConversationBean( conversationRequestBean , conversationBean );
+
+                numOfUserConversations = buildConversationData.insertUserConversation(  arrUserConversationBean  );
+            }
+        }
+        return numOfUserConversations;
+    }
+
+    public Integer deleteUserFromConversation(ConversationRequestBean conversationRequestBean){
+        Integer numOfUserConversations = 0;
+        if(conversationRequestBean!=null && !Utility.isNullOrEmpty(conversationRequestBean.getConversationId())) {
+            BuildConversationData buildConversationData = new BuildConversationData();
+
+            ConversationBean conversationBean = new ConversationBean();
+            conversationBean.setConversationId( conversationRequestBean.getConversationId() );
+            if(conversationBean!=null && !Utility.isNullOrEmpty(conversationBean.getConversationId())) {
+                ArrayList<UserConversationBean> arrUserConversationBean = generateArrUserConversationBean( conversationRequestBean , conversationBean );
+
+                numOfUserConversations = buildConversationData.deleteUserFromConversation(conversationRequestBean);
+            }
+        }
+        return numOfUserConversations;
     }
 
     public ConversationBean createConversation(ConversationRequestBean conversationRequestBean){
@@ -97,11 +279,11 @@ public class BuildConversation {
         return conversationBean;
     }
 
-    public boolean deleteUserConversation(  ConversationRequestBean conversationRequestBean  ){
+    public boolean deleteAllUserConversation(  ConversationRequestBean conversationRequestBean  ){
         boolean isDeletedSuccess = false;
         if(conversationRequestBean!=null){
             BuildConversationData buildConversationData = new BuildConversationData();
-            buildConversationData.deleteUserConversation( conversationRequestBean );
+            buildConversationData.deleteAllUserConversations(conversationRequestBean);
         }
         return isDeletedSuccess;
     }

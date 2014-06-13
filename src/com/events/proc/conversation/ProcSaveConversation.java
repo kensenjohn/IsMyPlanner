@@ -2,6 +2,7 @@ package com.events.proc.conversation;
 
 import com.events.bean.common.conversation.*;
 import com.events.bean.upload.UploadBean;
+import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserInfoBean;
 import com.events.bean.users.UserRequestBean;
@@ -106,6 +107,9 @@ public class ProcSaveConversation extends HttpServlet {
                         conversationRequestBean.setArrConversationUserId( arrConversationUserId );
                         conversationRequestBean.setTimeZone( sTimeZone );
                         conversationRequestBean.setArrUploadId( arrUploadId );
+
+                        ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser(loggedInUserBean);
+                        conversationRequestBean.setVendorId( parentTypeBean.getVendorId() );
 
                         BuildConversation buildConversation = new BuildConversation();
                         ConversationResponseBean conversationResponseBean = buildConversation.saveConversation( conversationRequestBean );

@@ -85,7 +85,6 @@ public class UserIdentifier implements Filter {
                     VendorResponseBean vendorResponseBean = accessVendorWebsite.getVendorBySubDomain( vendorWebsiteRequestBean );
                     //appLogging.info(vendorBean.toString());
                     if(vendorResponseBean!=null &&  vendorResponseBean.getVendorBean()!=null ) {
-                        appLogging.info("User's sub domain from feature : " + vendorResponseBean.getSubDomain());
                         VendorBean vendorBean = vendorResponseBean.getVendorBean();
                         if(vendorBean!=null && !Utility.isNullOrEmpty(vendorBean.getVendorId())) {
 

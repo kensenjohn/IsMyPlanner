@@ -28,9 +28,10 @@ public class BuildConversationData {
     public Integer insertConversation( ConversationBean conversationBean ){
         Integer numOfRowsInserted = 0;
         if(conversationBean!=null){
-            String sQuery = "INSERT INTO GTCONVERSATION (CONVERSATIONID,NAME,CREATEDATE,     HUMANCREATEDATE,MODIFIEDDATE,HUMANMODIFIEDDATE ) VALUES (?,?,?,   ?,?,?)";
+            String sQuery = "INSERT INTO GTCONVERSATION (CONVERSATIONID,NAME,CREATEDATE,     HUMANCREATEDATE,MODIFIEDDATE,HUMANMODIFIEDDATE,    FK_VENDORID ) VALUES (?,?,?,   ?,?,?,    ?)";
             ArrayList<Object> aParams = DBDAO.createConstraint(conversationBean.getConversationId(), conversationBean.getName(),DateSupport.getEpochMillis(),
-                    DateSupport.getUTCDateTime(),DateSupport.getEpochMillis(),DateSupport.getUTCDateTime());
+                    DateSupport.getUTCDateTime(),DateSupport.getEpochMillis(),DateSupport.getUTCDateTime(),
+                    conversationBean.getVendorId() );
 
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildConversationData.java", "insertConversation() ");
         }
@@ -84,7 +85,24 @@ public class BuildConversationData {
         return numOfRowsInserted;
     }
 
-    public Integer deleteUserConversation( ConversationRequestBean conversationRequestBean){
+    public Integer deleteUserFromConversation( ConversationRequestBean conversationRequestBean){
+        Integer numOfRowsDeleted = 0;
+        if(conversationRequestBean!=null && conversationRequestBean.getArrConversationUserId()!=null){
+            ArrayList<String> arrConversationUserId = conversationRequestBean.getArrConversationUserId();
+            if(arrConversationUserId!=null && !arrConversationUserId.isEmpty()) {
+                String sQuery = "DELETE FROM GTUSERCONVERSATION WHERE FK_CONVERSATIONID = ? AND FK_USERID in ("+DBDAO.createParamQuestionMarks(arrConversationUserId.size())+")";
+                ArrayList<Object> aParams = DBDAO.createConstraint(conversationRequestBean.getConversationId() );
+                for(String userId : arrConversationUserId ) {
+                    aParams.add(userId);
+                }
+                numOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildConversationData.java", "deleteUserConversation() ");
+            }
+
+        }
+        return numOfRowsDeleted;
+    }
+
+    public Integer deleteAllUserConversations( ConversationRequestBean conversationRequestBean){
         Integer numOfRowsDeleted = 0;
         if(conversationRequestBean!=null){
             String sQuery = "DELETE FROM GTUSERCONVERSATION WHERE FK_CONVERSATIONID = ?";

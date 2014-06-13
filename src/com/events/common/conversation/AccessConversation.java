@@ -102,11 +102,12 @@ public class AccessConversation {
         ArrayList<ConversationBean> arrConversationBean = new ArrayList<ConversationBean>();
         if(conversationRequestBean!=null){
             AccessConversationData accessConversationData = new AccessConversationData();
-            if(conversationRequestBean!=null && conversationRequestBean.isCanManageEveryConversation() ) {
-                arrConversationBean =  accessConversationData.getConversationByUser(conversationRequestBean);
+            /*if(conversationRequestBean!=null && conversationRequestBean.isCanManageEveryConversation() ) {
+                arrConversationBean =  accessConversationData.getConversationByVendor(conversationRequestBean);
             } else {
                 arrConversationBean =  accessConversationData.getConversationByUser(conversationRequestBean);
-            }
+            }*/
+            arrConversationBean =  accessConversationData.getConversationByUser(conversationRequestBean);
             if(arrConversationBean!=null && !arrConversationBean.isEmpty()){
 
                 conversationResponseBean.setArrConversationBean( arrConversationBean );

@@ -26,6 +26,7 @@ public class ConversationBean {
     private String humanModifiedDate = Constants.EMPTY;
     private String formattedHumanModifiedDate = Constants.EMPTY;
     private boolean hasReadMessage = false;
+    private String vendorId = Constants.EMPTY;
 
 
     public ConversationBean() {
@@ -38,6 +39,15 @@ public class ConversationBean {
         this.humanCreateDate =  ParseUtil.checkNull(hmResult.get("HUMANCREATEDATE"));
         this.modifiedDate =  ParseUtil.sToL(hmResult.get("MODIFIEDDATE"));
         this.humanModifiedDate =  ParseUtil.checkNull(hmResult.get("HUMANMODIFIEDDATE"));
+        this.vendorId =  ParseUtil.checkNull(hmResult.get("FK_VENDORID"));
+    }
+
+    public String getVendorId() {
+        return vendorId;
+    }
+
+    public void setVendorId(String vendorId) {
+        this.vendorId = vendorId;
     }
 
     public boolean isHasReadMessage() {

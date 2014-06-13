@@ -116,6 +116,14 @@ public class AccessPermissions {
                 arrLeadCoordinatorPermission.add( permissionsBean );
                 arrInternPermission.add( permissionsBean );
                 arrClientPermission.add(permissionsBean);
+            } else  if(Perm.ADD_USERS_TO_OLD_CONVERSATION.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
+                arrLeadCoordinatorPermission.add( permissionsBean );
+                arrInternPermission.add( permissionsBean );
+                arrClientPermission.add(permissionsBean);
+            } else  if(Perm.DELETE_USERS_FROM_OLD_CONVERSATION.toString().equalsIgnoreCase(permissionsBean.getShortName())) {
+                arrLeadCoordinatorPermission.add( permissionsBean );
+                arrInternPermission.add( permissionsBean );
+                arrClientPermission.add(permissionsBean);
             }
 
             hmRolePermissions.put("Site Admin",arrVendorAllPermissionsBean);

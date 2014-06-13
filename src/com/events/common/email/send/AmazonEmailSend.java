@@ -69,11 +69,11 @@ public class AmazonEmailSend implements MailSender {
                 emailerLogging.info("After send result : " + sendEmailResult.getMessageId() + " - " + sendEmailResult);
             } catch (AmazonClientException e) {
                 isSuccess = false;
-                emailerLogging.error("AmazonClientException "+ emailObject.getToAddress() + " " + emailObject.getFromAddress() + " "
+                emailerLogging.error("AmazonClientException To: " + emailObject.getToAddress() + " From:" + emailObject.getFromAddress() + " Subject:"
                         + emailObject.getEmailSubject() + "\n" + ExceptionHandler.getStackTrace(e));
             } catch (Exception e) {
                 isSuccess = false;
-                emailerLogging.error("Exception " + emailObject.getToAddress() + " " + emailObject.getEmailSubject() + "\n"
+                emailerLogging.error("Exception To:" + emailObject.getToAddress() + " From:" + emailObject.getFromAddress() + "  Subject: " + emailObject.getEmailSubject() + "\n"
                         + ExceptionHandler.getStackTrace(e));
             }
         }  else {

@@ -23,6 +23,15 @@ public class ConversationRequestBean {
     private String timeZone = Constants.EMPTY;
     private  ArrayList<String> arrUploadId = new ArrayList<String>();
     private boolean canManageEveryConversation = false;
+    private String vendorId = Constants.EMPTY;
+
+    public String getVendorId() {
+        return vendorId;
+    }
+
+    public void setVendorId(String vendorId) {
+        this.vendorId = vendorId;
+    }
 
     public boolean isCanManageEveryConversation() {
         return canManageEveryConversation;

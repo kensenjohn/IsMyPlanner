@@ -3,6 +3,7 @@ package com.events.proc.clients;
 import com.events.bean.clients.ClientBean;
 import com.events.bean.clients.ClientRequestBean;
 import com.events.bean.clients.ClientResponseBean;
+import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
 import com.events.bean.users.UserRequestBean;
 import com.events.bean.vendors.VendorBean;
@@ -82,10 +83,10 @@ public class ProcSaveClient  extends HttpServlet {
 
                         CheckPermission checkPermission = new CheckPermission(loggedInUserBean);
                         if(checkPermission!=null && checkPermission.can(Perm.EDIT_CLIENT)) {
-                            VendorRequestBean vendorRequestBean = new VendorRequestBean();
-                            vendorRequestBean.setUserId( loggedInUserBean.getUserId() );
-                            AccessVendors accessVendor = new AccessVendors();
-                            VendorBean vendorBean = accessVendor.getVendorByUserId( vendorRequestBean ) ;  // get  vendor from user id
+                            AccessUsers accessUsers = new AccessUsers();
+                            ParentTypeBean parentTypeBean = accessUsers.getParentTypeBeanFromUser( loggedInUserBean );
+
+                            VendorBean vendorBean = parentTypeBean.getVendorBean() ;  // get  vendor from user id
 
                             UserRequestBean userRequestBean = new UserRequestBean();
                             userRequestBean.setFirstName(sClientFirstName);
@@ -113,7 +114,6 @@ public class ProcSaveClient  extends HttpServlet {
                             clientRequestBean.setVendorId(vendorBean.getVendorId());
 
                             boolean isSaveClientAllowed = false;
-                            AccessUsers accessUsers = new AccessUsers();
                             UserBean userBean = accessUsers.getUserByEmail( userRequestBean );
 
                             if(userBean!=null && !Utility.isNullOrEmpty(userBean.getUserId())){
@@ -126,7 +126,7 @@ public class ProcSaveClient  extends HttpServlet {
                                         isSaveClientAllowed = true;
                                     } else {
                                         isSaveClientAllowed = false;
-                                        Text errorText = new ErrorText("The email entered is not available. Please use a different email address.","err_mssg") ;
+                                        Text errorText = new ErrorText("The email you entered is already in use. Please use a different email address.","err_mssg") ;
                                         arrErrorText.add(errorText);
                                     }
                                 }
@@ -137,8 +137,8 @@ public class ProcSaveClient  extends HttpServlet {
                             if(isSaveClientAllowed){
                                 BuildClients buildClients = new BuildClients();
                                 ClientResponseBean clientResponseBean = buildClients.saveClient(clientRequestBean);
+                                appLogging.info("Proc page to save client" );
                                 if(clientResponseBean!=null && !"".equalsIgnoreCase(clientResponseBean.getClientId())){
-                                    appLogging.info("A client's info was successfully edited. " + clientRequestBean );
                                     Text okText = new OkText("Your changes were saved successfully.","status_mssg") ;
                                     arrOkText.add(okText);
                                     responseStatus = RespConstants.Status.OK;

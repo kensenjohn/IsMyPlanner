@@ -69,6 +69,7 @@ public class BuildClients {
                     appLogging.error("Client record was not created  ");
                     throw new EditClientException();
                 }  else {
+                    appLogging.info("Creating Client RecordClient Id " );
                     clientResponseBean.setUserId(userBean.getUserId());
                     clientResponseBean.setUserInfoId(userBean.getUserInfoId());
                     clientResponseBean.setClientId(clientBean.getClientId());
@@ -90,6 +91,7 @@ public class BuildClients {
     public ClientResponseBean saveClient( ClientRequestBean clientRequestBean ) throws EditClientException {
         ClientResponseBean clientResponseBean = new ClientResponseBean();
         Integer iNumOfRecords = 0;
+        appLogging.info("Client Id : " + clientRequestBean.getClientId() );
         if(clientRequestBean!=null && !"".equalsIgnoreCase(clientRequestBean.getClientId()) ) {
             clientResponseBean = updateClient(clientRequestBean);
         } else {
@@ -117,6 +119,7 @@ public class BuildClients {
             try {
                 buildUsers.updateUserInfo(userInfoBean);
                 buildUsers.updateUser(userBean);
+                appLogging.info("Client Id userinfo bean: " + userInfoBean.getUserInfoId() + " emailk : " + userInfoBean.getEmail() );
 
                 // generating a simple client bean
                 ClientBean clientBean = new ClientBean();
@@ -132,6 +135,7 @@ public class BuildClients {
                     appLogging.error("Client record was not updated");
                     throw new EditClientException();
                 } else {
+                    appLogging.info("Client Id records update complete "  );
                     clientResponseBean.setUserId(userBean.getUserId());
                     clientResponseBean.setUserInfoId(userBean.getUserInfoId());
                     clientResponseBean.setClientId(clientBean.getClientId());

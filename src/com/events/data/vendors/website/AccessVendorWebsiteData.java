@@ -89,7 +89,6 @@ public class AccessVendorWebsiteData {
             String sQuery = "SELECT V.* , VW.* FROM GTVENDORWEBSITEFEATURES VF, GTVENDORWEBSITE VW, GTVENDOR V WHERE  " +
                     " VF.FEATURENAME = '"+Constants.VENDOR_WEBSITE_FEATURETYPE.subdomain_name.toString()+"' AND VF.FK_VENDORWEBSITEID = VW.VENDORWEBSITEID " +
                     " AND VF.VALUE = ? AND V.VENDORID = VW.FK_VENDORID";
-            appLogging.info("getVendorBySubDomain " + sQuery + " -  " + sSubDomain);
             ArrayList<Object> aParams = DBDAO.createConstraint(sSubDomain);
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessVendorWebsiteData.java", "getVendorBySubDomain()");
 

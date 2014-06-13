@@ -340,7 +340,7 @@ html ul.footer-tabs li.active a:hover {
 
 /** Bootstrap navbar **/
 .navbar-default {
-    background: #fcfcfc;
+    background: __COLOR_NAVBAR_BREADCRUMB_TAB_BKG__;
 }
 nav.navbar ul li a{
     border-color: __COLOR_BORDER__ !important;

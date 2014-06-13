@@ -153,8 +153,6 @@ public class ProcUploadSharedFile extends HttpServlet {
                                     jsono.put("bucket", bucket);
 
                                     json.put(jsono);
-
-                                    appLogging.info("JSON Respond" + json.toString() );
                                 }else {
                                     appLogging.info("There was error uploading file" + uploadRequestBean );
                                     Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEvent - 002)","err_mssg") ;
