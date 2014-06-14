@@ -2,6 +2,7 @@
 <script>window.jQuery || document.write('<script src="/js/jquery-1.10.2.min.js">\x3C/script>')</script>
 
 <script src="/js/messi.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 <script src="/js/bootstrap.collapse.min.js"></script>
 <script type="text/javascript">
     $('#btn_create_event').click(function(){

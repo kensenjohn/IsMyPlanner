@@ -1477,7 +1477,6 @@
 </div>
 </body>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
-<script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.flexslider-min.js"></script>
 <script src="//maps.google.com/maps/api/js?sensor=true"></script>
 <script src="/js/jquery.gmap.min.js"></script>

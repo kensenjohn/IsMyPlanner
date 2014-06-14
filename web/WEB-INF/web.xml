@@ -1109,6 +1109,44 @@
 
 
 
+    <servlet>
+        <servlet-name>Process Save Checklist Template</servlet-name>
+        <servlet-class>com.events.proc.dashboard.checklist.ProcSaveChecklistTemplate</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Checklist Template</servlet-name>
+        <url-pattern>/proc_save_checklist_template.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Checklist Template</servlet-name>
+        <servlet-class>com.events.proc.dashboard.checklist.ProcLoadChecklistTemplate</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Checklist Template</servlet-name>
+        <url-pattern>/proc_load_checklist_template.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load All Checklist Template</servlet-name>
+        <servlet-class>com.events.proc.dashboard.checklist.ProcLoadAllChecklistTemplates</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load All Checklist Template</servlet-name>
+        <url-pattern>/proc_load_all_checklist_templates.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Checklist Template</servlet-name>
+        <servlet-class>com.events.proc.dashboard.checklist.ProcDeleteChecklistTemplates</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Checklist Template</servlet-name>
+        <url-pattern>/proc_delete_checklist_template.aeve</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+
 
     <filter>
         <filter-name>User Identifier Filter</filter-name>

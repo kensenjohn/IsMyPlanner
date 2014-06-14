@@ -1,3 +1,5 @@
+<%@ page import="com.events.common.ParseUtil" %>
+<%@ page import="com.events.common.Utility" %>
 <jsp:include page="/com/events/common/header_top.jsp">
     <jsp:param name="page_title" value=""/>
 </jsp:include>
@@ -7,6 +9,13 @@
 <style>
     #sortable_chk_list { list-style-type: none;}
 </style>
+<%
+    String sChecklistTemplateId = ParseUtil.checkNull(request.getParameter("checklist_template_id"));
+    boolean isLoadChecklistTemplate = false;
+    if(!Utility.isNullOrEmpty(sChecklistTemplateId)){
+        isLoadChecklistTemplate = true;
+    }
+%>
 <body>
 <div class="page_wrap">
     <jsp:include page="/com/events/common/top_nav.jsp">
@@ -38,27 +47,14 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <form class="form-horizontal" id="frm_save_todo">
+                    <form class="form-horizontal" id="frm_save_checklist_template">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <label for="checklist_template_name" class="form_label">Checklist Template Name:</label><span class="required"> *</span>
                                 <input type="text" class="form-control" id="checklist_template_name" name="checklist_template_name"/>
                             </div>
-                            <div class="col-md-2">
-                                <label for="checklist_template_name" class="form_label">Enable Comments:</label>
-                                <select class="form-control" >
-                                    <option>Yes</option>
-                                    <option>No</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <label for="checklist_template_name" class="form_label">Enable Reminders:</label>
-                                <select class="form-control" >
-                                    <option>Yes</option>
-                                    <option>No</option>
-                                </select>
-                            </div>
                         </div>
+                        <input type="hidden" name="checklist_template_id" id="checklist_template_id" value="<%=sChecklistTemplateId%>"/>
                     </form>
                     <div class="row">
                         <div class="col-md-12">
@@ -66,8 +62,18 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-filled" id="btn_save_checklist_template"><i class="fa fa-floppy-o"></i> Save</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row" style="display:none;" id="div_add_checklist_item">
                         <div class="col-md-2">
-                            <button class="btn btn-default btn-xs" id="btn_checklist_item"><i class="fa fa-plus"></i> Add Item</button>
+                            <button class="btn btn-default btn-xs" id="btn_add_checklist_item"><i class="fa fa-plus"></i> Add Item</button>
                         </div>
                     </div>
                     <div class="row">
@@ -145,6 +151,9 @@
     </div>
 </div>
 </body>
+<form id="frm_load_checklist_template">
+    <input type="hidden" name="checklist_template_id" value="<%=sChecklistTemplateId%>"/>
+</form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script src="/js/datepicker/picker.js"></script>
@@ -154,18 +163,8 @@
 <script src="/js/jquery.colorbox-min.js"></script>
 <script src="/js/jquery.ui.touch-punch.min.js"></script>
 <script   type="text/javascript">
+    var varIsLoadLoadChecklistTemplate = <%=isLoadChecklistTemplate%>;
     $(window).load(function() {
-        $('#btn_checklist_item').click(function(){
-            $.colorbox({
-                href:'edit_checklist_item_template.jsp',
-                iframe:true,
-                innerWidth: '90%',
-                innerHeight: '85%',
-                scrolling: true,
-                onClosed : function() {
-                    // loadWebsitePageFeatureParty('bridesmaids', populateWebsitePagePartyMembers)
-                }});
-        });
         $( "#sortable_chk_list" ).sortable( {
             stop: function( event, ui ) {
                 finalizeSortChecklist();
@@ -180,7 +179,81 @@
             var varCheckListId = $('#'+varIconId).attr('param');
             openCheckListDetail( varCheckListId )
         });
+
+        $('#btn_save_checklist_template').bind('click',function(event){
+            saveChecklistTemplate(getResult);
+        });
+
+        if(varIsLoadLoadChecklistTemplate){
+            loadChecklistTemplate(populateChecklistTemplate);
+        }
     });
+
+    function saveChecklistTemplate( callbackmethod ) {
+        var actionUrl = "/proc_save_checklist_template.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_save_checklist_template").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+
+    function loadChecklistTemplate( callbackmethod ) {
+        var actionUrl = "/proc_load_checklist_template.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_load_checklist_template").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+
+    function getResult(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var jsonResponseObj = varResponseObj.payload;
+                if(jsonResponseObj!=undefined) {
+                    var varChecklistTemplateBean = jsonResponseObj.checklist_template_bean;
+                    $('#checklist_template_id').val( varChecklistTemplateBean.checklist_template_id );
+                    $('#div_add_checklist_item').show();
+
+                    createAddItemEvent();
+                }
+            }
+        }
+    }
+
+    function populateChecklistTemplate(jsonResult){
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var jsonResponseObj = varResponseObj.payload;
+                if(jsonResponseObj!=undefined) {
+                    var varChecklistTemplateBean = jsonResponseObj.checklist_template_bean;
+                    $('#checklist_template_id').val( varChecklistTemplateBean.checklist_template_id );
+                    $('#checklist_template_name').val( varChecklistTemplateBean.name );
+
+                    $('#div_add_checklist_item').show();
+
+                    createAddItemEvent();
+                }
+            }
+        }
+    }
+
+    function createAddItemEvent(){
+        $('#btn_add_checklist_item').click(function(){
+            $.colorbox({
+                href:'edit_checklist_item_template.jsp',
+                iframe:true,
+                innerWidth: '90%',
+                innerHeight: '85%',
+                scrolling: true,
+                onClosed : function() {
+                    // loadWebsitePageFeatureParty('bridesmaids', populateWebsitePagePartyMembers)
+                }});
+        });
+    }
 
     function finalizeSortChecklist(){
         var chkListElement = $('#sortable_chk_list').find('.sort_tracker');
