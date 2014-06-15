@@ -645,6 +645,7 @@ ul.footer-tabs li.active, html ul.footer-tabs li.active a,  html ul.footer-tabs 
 
 /** Checklist **/
 .chk_list_row{
+    background-color: #f8f8f8;
     margin-bottom: 6px;
 }
 .chk_list_row_selected{
@@ -652,7 +653,8 @@ ul.footer-tabs li.active, html ul.footer-tabs li.active a,  html ul.footer-tabs 
     margin-bottom: 10px;
 }
 
-.icon_item_details{
+.icon_item_details,
+.sort_tracker{
     cursor:pointer;
 }
 

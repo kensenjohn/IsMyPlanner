@@ -1,6 +1,7 @@
 package com.events.data.dashboard.checklist;
 
 import com.events.bean.dashboard.checklist.ChecklistTemplateBean;
+import com.events.bean.dashboard.checklist.ChecklistTemplateItemBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateRequestBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
@@ -55,5 +56,41 @@ public class AccessChecklistTemplateData {
             }
         }
         return arrChecklistTemplateBean;
+    }
+
+    //CREATE TABLE GTCHECKLISTTEMPLATEITEM( CHECKLISTTEMPLATEITEMID VARCHAR(45) NOT NULL, FK_CHECKLISTTEMPLATEID VARCHAR(45) NOT NULL,
+    // NAME VARCHAR(500) NOT NULL, CREATEDATE  BIGINT(20) NOT NULL DEFAULT 0, HUMANCREATEDATE VARCHAR(45),
+    public ChecklistTemplateItemBean getChecklistTemplateItemBean(ChecklistTemplateRequestBean checklistTemplateRequestBean){
+        ChecklistTemplateItemBean checklistTemplateItemBean = new ChecklistTemplateItemBean();
+        if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateId())
+                && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateItemId())){
+            String sQuery = "SELECT * FROM GTCHECKLISTTEMPLATEITEM WHERE CHECKLISTTEMPLATEITEMID = ? AND FK_CHECKLISTTEMPLATEID=?";
+            ArrayList<Object> aParams = DBDAO.createConstraint( checklistTemplateRequestBean.getChecklistTemplateItemId(), checklistTemplateRequestBean.getChecklistTemplateId() );
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessChecklistTemplateData.java", "getChecklistTemplateItemBean()");
+            if(arrResult!=null && !arrResult.isEmpty()) {
+                for( HashMap<String, String> hmResult : arrResult ) {
+                    checklistTemplateItemBean = new ChecklistTemplateItemBean( hmResult );
+                }
+            }
+        }
+        return checklistTemplateItemBean;
+    }
+
+    public ArrayList<ChecklistTemplateItemBean> getAllChecklistTemplateItemBean(ChecklistTemplateRequestBean checklistTemplateRequestBean) {
+        ArrayList<ChecklistTemplateItemBean> arrChecklistTemplateItemBean = new ArrayList<ChecklistTemplateItemBean>();
+        if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateId()) ){
+            String sQuery = "SELECT * FROM GTCHECKLISTTEMPLATEITEM WHERE FK_CHECKLISTTEMPLATEID=? ORDER BY SORT_ORDER ASC";
+            ArrayList<Object> aParams = DBDAO.createConstraint(checklistTemplateRequestBean.getChecklistTemplateId() );
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessChecklistTemplateData.java", "getAllChecklistTemplateItemBean()");
+            if(arrResult!=null && !arrResult.isEmpty()) {
+                for( HashMap<String, String> hmResult : arrResult ) {
+                    ChecklistTemplateItemBean checklistTemplateItemBean = new ChecklistTemplateItemBean( hmResult );
+                    arrChecklistTemplateItemBean.add( checklistTemplateItemBean );
+                }
+            }
+        }
+        return arrChecklistTemplateItemBean;
     }
 }

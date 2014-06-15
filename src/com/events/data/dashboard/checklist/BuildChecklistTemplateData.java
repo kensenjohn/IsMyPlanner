@@ -1,6 +1,7 @@
 package com.events.data.dashboard.checklist;
 
 import com.events.bean.dashboard.checklist.ChecklistTemplateBean;
+import com.events.bean.dashboard.checklist.ChecklistTemplateItemBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateRequestBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
@@ -50,6 +51,43 @@ public class BuildChecklistTemplateData {
         return numOfRowsInserted;
     }
 
+    // GTCHECKLISTTEMPLATEITEM( CHECKLISTTEMPLATEITEMID VARCHAR(45) NOT NULL, FK_CHECKLISTTEMPLATEID VARCHAR(45) NOT NULL,
+    // NAME VARCHAR(500) NOT NULL, CREATEDATE  BIGINT(20) NOT NULL DEFAULT 0, HUMANCREATEDATE VARCHAR(45), PRIMARY KEY (CHECKLISTTEMPLATEITEMID) ) ENGINE = MyISAM DEFAULT CHARSET = utf8;
+    public Integer insertChecklistTemplateItem( ChecklistTemplateItemBean checklistTemplateItemBean){
+        Integer numOfRowsInserted = 0;
+        if(checklistTemplateItemBean!=null && !Utility.isNullOrEmpty(checklistTemplateItemBean.getChecklistTemplateId()) && !Utility.isNullOrEmpty(checklistTemplateItemBean.getName())
+                && !Utility.isNullOrEmpty(checklistTemplateItemBean.getChecklistTemplateItemId())  ) {
+            String sQuery = "INSERT INTO GTCHECKLISTTEMPLATEITEM (CHECKLISTTEMPLATEITEMID, FK_CHECKLISTTEMPLATEID,NAME,   CREATEDATE,HUMANCREATEDATE,SORT_ORDER) VALUES (?,?,?,   ?,?,?)";
+            ArrayList<Object> aParams = DBDAO.createConstraint(checklistTemplateItemBean.getChecklistTemplateItemId() , checklistTemplateItemBean.getChecklistTemplateId(), checklistTemplateItemBean.getName(),
+                    DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(), checklistTemplateItemBean.getSortOrder() );
+
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "insertChecklistTemplateItem() ");
+        }
+        return numOfRowsInserted;
+    }
+
+    public Integer updateChecklistTemplateItemSort( ChecklistTemplateItemBean checklistTemplateItemBean){
+        Integer numOfRowsSortUpdated = 0;
+        if(checklistTemplateItemBean!=null){
+            String sQuery = "UPDATE GTCHECKLISTTEMPLATEITEM SET SORT_ORDER = ? WHERE CHECKLISTTEMPLATEITEMID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(checklistTemplateItemBean.getSortOrder(), checklistTemplateItemBean.getChecklistTemplateItemId() );
+            numOfRowsSortUpdated = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "updateChecklistTemplateItemSort() ");
+        }
+        return numOfRowsSortUpdated;
+    }
+
+    public Integer updateChecklistTemplateItem( ChecklistTemplateItemBean checklistTemplateItemBean){
+        Integer numOfRowsInserted = 0;
+        if(checklistTemplateItemBean!=null && !Utility.isNullOrEmpty(checklistTemplateItemBean.getChecklistTemplateId()) && !Utility.isNullOrEmpty(checklistTemplateItemBean.getName())
+                && !Utility.isNullOrEmpty(checklistTemplateItemBean.getChecklistTemplateItemId())  ) {
+            String sQuery = "UPDATE GTCHECKLISTTEMPLATEITEM SET NAME = ? WHERE CHECKLISTTEMPLATEITEMID=? AND FK_CHECKLISTTEMPLATEID=?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(checklistTemplateItemBean.getName(),checklistTemplateItemBean.getChecklistTemplateItemId() , checklistTemplateItemBean.getChecklistTemplateId());
+
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "updateChecklistTemplateItem() ");
+        }
+        return numOfRowsInserted;
+    }
+
     public Integer deleteChecklistTemplate( ChecklistTemplateRequestBean checklistTemplateRequestBean){
         Integer numOfRowsInserted = 0;
         if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateId()) ) {
@@ -57,6 +95,18 @@ public class BuildChecklistTemplateData {
             ArrayList<Object> aParams = DBDAO.createConstraint( checklistTemplateRequestBean.getChecklistTemplateId() );
 
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "deleteChecklistTemplate() ");
+        }
+        return numOfRowsInserted;
+    }
+
+    public Integer deleteChecklistTemplateItem( ChecklistTemplateRequestBean checklistTemplateRequestBean){
+        Integer numOfRowsInserted = 0;
+        if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateId())
+                && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateItemId()) ) {
+            String sQuery = "DELETE FROM GTCHECKLISTTEMPLATEITEM WHERE FK_CHECKLISTTEMPLATEID = ? AND CHECKLISTTEMPLATEITEMID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint( checklistTemplateRequestBean.getChecklistTemplateId(),checklistTemplateRequestBean.getChecklistTemplateItemId() );
+
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "deleteChecklistTemplateItem() ");
         }
         return numOfRowsInserted;
     }

@@ -2,6 +2,8 @@ package com.events.bean.dashboard.checklist;
 
 import com.events.common.Constants;
 
+import java.util.HashMap;
+
 /**
  * Created with IntelliJ IDEA.
  * User: root
@@ -14,6 +16,42 @@ public class ChecklistTemplateRequestBean {
     private String checklistTemplateName = Constants.EMPTY;
     private String vendorId = Constants.EMPTY;
     private boolean isDefault = false;
+    private String checklistTemplateItemId =  Constants.EMPTY;
+    private String checklistTemplateItemName = Constants.EMPTY;
+    private Long sortOrder = 0L;
+    private HashMap<String,Long> hmSortChecklistTemplateId = new HashMap<String, Long>();
+
+    public HashMap<String, Long> getHmSortChecklistTemplateId() {
+        return hmSortChecklistTemplateId;
+    }
+
+    public void setHmSortChecklistTemplateId(HashMap<String, Long> hmSortChecklistTemplateId) {
+        this.hmSortChecklistTemplateId = hmSortChecklistTemplateId;
+    }
+
+    public Long getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(Long sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
+    public String getChecklistTemplateItemId() {
+        return checklistTemplateItemId;
+    }
+
+    public void setChecklistTemplateItemId(String checklistTemplateItemId) {
+        this.checklistTemplateItemId = checklistTemplateItemId;
+    }
+
+    public String getChecklistTemplateItemName() {
+        return checklistTemplateItemName;
+    }
+
+    public void setChecklistTemplateItemName(String checklistTemplateItemName) {
+        this.checklistTemplateItemName = checklistTemplateItemName;
+    }
 
     public String getChecklistTemplateId() {
         return checklistTemplateId;

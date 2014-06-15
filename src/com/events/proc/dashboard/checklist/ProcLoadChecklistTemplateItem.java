@@ -1,6 +1,5 @@
 package com.events.proc.dashboard.checklist;
 
-import com.events.bean.dashboard.checklist.ChecklistTemplateBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateItemBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateRequestBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateResponseBean;
@@ -27,11 +26,11 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 6/13/14
- * Time: 3:40 PM
+ * Date: 6/14/14
+ * Time: 11:30 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadChecklistTemplate extends HttpServlet {
+public class ProcLoadChecklistTemplateItem extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     private static final Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
@@ -46,53 +45,36 @@ public class ProcLoadChecklistTemplate extends HttpServlet {
                 UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
-                    String sChecklistTemplateId = ParseUtil.checkNull( request.getParameter("checklist_template_id"));
+                    String sChecklistTemplateItemId = ParseUtil.checkNull(request.getParameter("checklist_template_item_id"));
+                    String sChecklistTemplateId = ParseUtil.checkNull(request.getParameter("checklist_template_id"));
 
-                    if(Utility.isNullOrEmpty(sChecklistTemplateId)) {
-                        Text errorText = new ErrorText("Please select a valid checklist template.","err_mssg") ;
-                        arrErrorText.add(errorText);
+                    ChecklistTemplateRequestBean checklistTemplateRequestBean = new ChecklistTemplateRequestBean();
+                    checklistTemplateRequestBean.setChecklistTemplateItemId( sChecklistTemplateItemId );
+                    checklistTemplateRequestBean.setChecklistTemplateId( sChecklistTemplateId );
 
-                        responseStatus = RespConstants.Status.ERROR;
-                    } else {
-                        ChecklistTemplateRequestBean checklistTemplateRequestBean = new ChecklistTemplateRequestBean();
-                        checklistTemplateRequestBean.setChecklistTemplateId( sChecklistTemplateId );
+                    AccessChecklistTemplate accessChecklistTemplate = new AccessChecklistTemplate();
+                    ChecklistTemplateResponseBean checklistTemplateResponseBean = accessChecklistTemplate.loadChecklistTemplateItemDetails( checklistTemplateRequestBean );
 
-                        AccessChecklistTemplate accessChecklistTemplate = new AccessChecklistTemplate();
-                        ChecklistTemplateResponseBean checklistTemplateResponseBean = accessChecklistTemplate.loadChecklistTemplateDetails( checklistTemplateRequestBean );
+                    if(checklistTemplateResponseBean!=null){
+                        ChecklistTemplateItemBean checklistTemplateItemBean = checklistTemplateResponseBean.getChecklistTemplateItemBean();
 
-                        if(checklistTemplateResponseBean!=null){
-                            ChecklistTemplateBean checklistTemplateBean = checklistTemplateResponseBean.getChecklistTemplateBean();
+                        if(checklistTemplateItemBean!=null && !Utility.isNullOrEmpty(checklistTemplateItemBean.getChecklistTemplateItemId()  )) {
+                            jsonResponseObj.put( "checklist_template_item_bean", checklistTemplateItemBean.toJson() );
 
-                            if(checklistTemplateBean!=null && !Utility.isNullOrEmpty(checklistTemplateBean.getChecklistTemplateId() )) {
-                                jsonResponseObj.put( "checklist_template_bean", checklistTemplateBean.toJson() );
-
-                                ArrayList<ChecklistTemplateItemBean> arrChecklistTemplateItemBean = checklistTemplateResponseBean.getArrChecklistTemplateItemBean();
-                                JSONObject jsonAllChecklistTemplateItems = accessChecklistTemplate.getJsonAllChecklistTemplateItems( arrChecklistTemplateItemBean );
-                                Long lNumOfItems = 0L;
-                                if(jsonAllChecklistTemplateItems!=null){
-                                    lNumOfItems = jsonAllChecklistTemplateItems.optLong("num_of_checklist_template_items");
-                                    if(lNumOfItems>0){
-                                        jsonResponseObj.put( "checklist_template_items" , jsonAllChecklistTemplateItems );
-                                    }
-                                }
-                                jsonResponseObj.put( "num_of_checklist_template_items", lNumOfItems );
-
-
-                                Text okText = new OkText("Load of Checklist Template Complete.","status_mssg") ;
-                                arrOkText.add(okText);
-                                responseStatus = RespConstants.Status.OK;
-                            } else {
-                                Text errorText = new ErrorText("Oops!! We were unable to save the checklist template. Please try again later.(saveChecklistTemplate - 004)","err_mssg") ;
-                                arrErrorText.add(errorText);
-
-                                responseStatus = RespConstants.Status.ERROR;
-                            }
+                            Text okText = new OkText("Load of Checklist Template Item Complete.","status_mssg") ;
+                            arrOkText.add(okText);
+                            responseStatus = RespConstants.Status.OK;
                         } else {
-                            Text errorText = new ErrorText("Oops!! We were unable to save the checklist template. Please try again later.(saveChecklistTemplate - 003)","err_mssg") ;
+                            Text errorText = new ErrorText("Oops!! We were unable to save the checklist template. Please try again later.(saveChecklistTemplate - 004)","err_mssg") ;
                             arrErrorText.add(errorText);
 
                             responseStatus = RespConstants.Status.ERROR;
                         }
+                    } else {
+                        Text errorText = new ErrorText("Oops!! We were unable to save the checklist template. Please try again later.(saveChecklistTemplate - 003)","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
                     }
 
                 } else {
@@ -128,4 +110,3 @@ public class ProcLoadChecklistTemplate extends HttpServlet {
         response.getWriter().write( responseObject.getJson().toString() );
     }
 }
-

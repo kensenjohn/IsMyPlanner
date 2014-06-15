@@ -1141,6 +1141,42 @@
         <servlet-name>Process Delete Checklist Template</servlet-name>
         <url-pattern>/proc_delete_checklist_template.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Checklist Template Item</servlet-name>
+        <servlet-class>com.events.proc.dashboard.checklist.ProcSaveChecklistTemplateItem</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Checklist Template Item</servlet-name>
+        <url-pattern>/proc_save_checklist_template_item.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Checklist Template Item</servlet-name>
+        <servlet-class>com.events.proc.dashboard.checklist.ProcLoadChecklistTemplateItem</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Checklist Template Item</servlet-name>
+        <url-pattern>/proc_load_checklist_template_item.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Checklist Template Item</servlet-name>
+        <servlet-class>com.events.proc.dashboard.checklist.ProcDeleteChecklistTemplateItem</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Checklist Template Item</servlet-name>
+        <url-pattern>/proc_delete_checklist_template_item.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Sort Checklist Template Item</servlet-name>
+        <servlet-class>com.events.proc.dashboard.checklist.ProcSortChecklistTemplateItem</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Sort Checklist Template Item</servlet-name>
+        <url-pattern>/proc_sort_checklist_template_item.aeve</url-pattern>
+    </servlet-mapping>
+
+
+
+
 
 
 

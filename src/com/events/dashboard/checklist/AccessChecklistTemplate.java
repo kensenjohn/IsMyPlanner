@@ -1,6 +1,7 @@
 package com.events.dashboard.checklist;
 
 import com.events.bean.dashboard.checklist.ChecklistTemplateBean;
+import com.events.bean.dashboard.checklist.ChecklistTemplateItemBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateRequestBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateResponseBean;
 import com.events.common.ParseUtil;
@@ -23,6 +24,10 @@ public class AccessChecklistTemplate {
         ChecklistTemplateResponseBean checklistTemplateResponseBean = new ChecklistTemplateResponseBean();
         ChecklistTemplateBean checklistTemplateBean = getChecklistTemplateBean(checklistTemplateRequestBean);
         checklistTemplateResponseBean.setChecklistTemplateBean( checklistTemplateBean );
+
+        ArrayList<ChecklistTemplateItemBean>  arrChecklistTemplateItemBean = getAllChecklistTemplateItems( checklistTemplateRequestBean ) ;
+        checklistTemplateResponseBean.setArrChecklistTemplateItemBean(  arrChecklistTemplateItemBean );
+
         return checklistTemplateResponseBean;
     }
 
@@ -33,6 +38,32 @@ public class AccessChecklistTemplate {
             checklistTemplateBean = accessChecklistTemplateData.getChecklistTemplateBean( checklistTemplateRequestBean );
         }
         return checklistTemplateBean;
+    }
+
+    public ChecklistTemplateResponseBean loadChecklistTemplateItemDetails( ChecklistTemplateRequestBean checklistTemplateRequestBean){
+        ChecklistTemplateResponseBean checklistTemplateResponseBean = new ChecklistTemplateResponseBean();
+        ChecklistTemplateItemBean checklistTemplateItemBean = getChecklistTemplateItem(checklistTemplateRequestBean) ;
+        checklistTemplateResponseBean.setChecklistTemplateItemBean( checklistTemplateItemBean );
+        return checklistTemplateResponseBean;
+    }
+
+    public ArrayList<ChecklistTemplateItemBean>  getAllChecklistTemplateItems(  ChecklistTemplateRequestBean checklistTemplateRequestBean ){
+        ArrayList<ChecklistTemplateItemBean>  arrChecklistTemplateItemBean = new ArrayList<ChecklistTemplateItemBean>();
+        if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateId())  ) {
+            AccessChecklistTemplateData accessChecklistTemplateData = new AccessChecklistTemplateData();
+            arrChecklistTemplateItemBean =  accessChecklistTemplateData.getAllChecklistTemplateItemBean(checklistTemplateRequestBean);
+        }
+        return arrChecklistTemplateItemBean;
+    }
+
+    public ChecklistTemplateItemBean getChecklistTemplateItem( ChecklistTemplateRequestBean checklistTemplateRequestBean ){
+        ChecklistTemplateItemBean checklistTemplateItemBean = new ChecklistTemplateItemBean();
+        if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateId())
+                && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateItemId())  ) {
+            AccessChecklistTemplateData accessChecklistTemplateData = new AccessChecklistTemplateData();
+            checklistTemplateItemBean = accessChecklistTemplateData.getChecklistTemplateItemBean(checklistTemplateRequestBean);
+        }
+        return  checklistTemplateItemBean;
     }
 
     public ArrayList<ChecklistTemplateBean> getAllChecklistTemplatesByVendor( ChecklistTemplateRequestBean checklistTemplateRequestBean ){
@@ -57,5 +88,28 @@ public class AccessChecklistTemplate {
         return jsonAllChecklistTemplates;
     }
 
+    public JSONObject getJsonAllChecklistTemplateItems(ArrayList<ChecklistTemplateItemBean> arrChecklistTemplateItemBean){
+        JSONObject jsonAllChecklistTemplateItems = new JSONObject();
+        Long lNumberOfChecklistTemplateItems = 0L;
+        if(arrChecklistTemplateItemBean!=null && !arrChecklistTemplateItemBean.isEmpty()){
+            for(ChecklistTemplateItemBean checklistTemplateItemBean : arrChecklistTemplateItemBean ){
+                jsonAllChecklistTemplateItems.put(ParseUtil.LToS(lNumberOfChecklistTemplateItems) , checklistTemplateItemBean.toJson() ) ;
+                lNumberOfChecklistTemplateItems++;
+            }
+        }
+        jsonAllChecklistTemplateItems.put("num_of_checklist_template_items",lNumberOfChecklistTemplateItems);
+        return jsonAllChecklistTemplateItems;
+    }
 
+    public Long getNumOfItems(ChecklistTemplateRequestBean checklistTemplateRequestBean){
+        Long lNumberOfItems = 0L;
+        if(checklistTemplateRequestBean!=null){
+            ArrayList<ChecklistTemplateItemBean>  arrChecklistTemplateItemBean =  getAllChecklistTemplateItems(checklistTemplateRequestBean);
+            if(arrChecklistTemplateItemBean!=null && !arrChecklistTemplateItemBean.isEmpty()){
+                lNumberOfItems = ParseUtil.iToI(arrChecklistTemplateItemBean.size()).longValue();
+            }
+        }
+        return lNumberOfItems;
+
+    }
 }

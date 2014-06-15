@@ -23,6 +23,7 @@ public class ChecklistTemplateItemBean {
     private String name = Constants.EMPTY;
     private Long createDate = 0L;
     private String humanCreateDate = Constants.EMPTY;
+    private Long sortOrder = 0L;
 
     public ChecklistTemplateItemBean() {
     }
@@ -33,6 +34,15 @@ public class ChecklistTemplateItemBean {
         this.name = ParseUtil.checkNull( hmResult.get("NAME"));
         this.createDate = ParseUtil.sToL(hmResult.get("CREATEDATE"));
         this.humanCreateDate = ParseUtil.checkNull( hmResult.get("HUMANCREATEDATE"));
+        this.sortOrder = ParseUtil.sToL(hmResult.get("SORT_ORDER"));
+    }
+
+    public Long getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(Long sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     public String getChecklistTemplateItemId() {
@@ -94,6 +104,7 @@ public class ChecklistTemplateItemBean {
             jsonObject.put("checklist_template_item_id", this.checklistTemplateItemId );
             jsonObject.put("checklist_template_id", this.checklistTemplateId );
             jsonObject.put("name", this.name );
+            jsonObject.put("sort_order", this.sortOrder );
         } catch (JSONException e) {
             e.printStackTrace();
         }

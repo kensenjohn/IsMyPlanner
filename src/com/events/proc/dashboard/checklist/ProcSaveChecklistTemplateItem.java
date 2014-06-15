@@ -1,6 +1,5 @@
 package com.events.proc.dashboard.checklist;
 
-import com.events.bean.dashboard.checklist.ChecklistTemplateBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateItemBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateRequestBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateResponseBean;
@@ -11,7 +10,7 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.dashboard.checklist.AccessChecklistTemplate;
+import com.events.dashboard.checklist.BuildChecklistTemplate;
 import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -27,11 +26,11 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 6/13/14
- * Time: 3:40 PM
+ * Date: 6/14/14
+ * Time: 9:56 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadChecklistTemplate extends HttpServlet {
+public class ProcSaveChecklistTemplateItem extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     private static final Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
@@ -46,58 +45,49 @@ public class ProcLoadChecklistTemplate extends HttpServlet {
                 UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
-                    String sChecklistTemplateId = ParseUtil.checkNull( request.getParameter("checklist_template_id"));
-
-                    if(Utility.isNullOrEmpty(sChecklistTemplateId)) {
-                        Text errorText = new ErrorText("Please select a valid checklist template.","err_mssg") ;
+                    String sChecklistTemplateItemId = ParseUtil.checkNull(request.getParameter("checklist_template_item_id"));
+                    String sChecklistTemplateId = ParseUtil.checkNull(request.getParameter("checklist_template_id"));
+                    String sChecklistTemplateItemName = ParseUtil.checkNull(request.getParameter("checklist_template_item_name"));
+                    if( Utility.isNullOrEmpty(sChecklistTemplateItemName)) {
+                        Text errorText = new ErrorText("","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
                     } else {
-                        ChecklistTemplateRequestBean checklistTemplateRequestBean = new ChecklistTemplateRequestBean();
-                        checklistTemplateRequestBean.setChecklistTemplateId( sChecklistTemplateId );
 
-                        AccessChecklistTemplate accessChecklistTemplate = new AccessChecklistTemplate();
-                        ChecklistTemplateResponseBean checklistTemplateResponseBean = accessChecklistTemplate.loadChecklistTemplateDetails( checklistTemplateRequestBean );
+                        ChecklistTemplateRequestBean checklistTemplateRequestBean = new ChecklistTemplateRequestBean();
+                        checklistTemplateRequestBean.setChecklistTemplateItemId( sChecklistTemplateItemId );
+                        checklistTemplateRequestBean.setChecklistTemplateId( sChecklistTemplateId );
+                        checklistTemplateRequestBean.setChecklistTemplateItemName( sChecklistTemplateItemName );
+
+                        BuildChecklistTemplate buildChecklistTemplate = new BuildChecklistTemplate();
+                        ChecklistTemplateResponseBean checklistTemplateResponseBean = buildChecklistTemplate.saveChecklistTemplateItem( checklistTemplateRequestBean );
 
                         if(checklistTemplateResponseBean!=null){
-                            ChecklistTemplateBean checklistTemplateBean = checklistTemplateResponseBean.getChecklistTemplateBean();
+                            ChecklistTemplateItemBean checklistTemplateItemBean = checklistTemplateResponseBean.getChecklistTemplateItemBean();
 
-                            if(checklistTemplateBean!=null && !Utility.isNullOrEmpty(checklistTemplateBean.getChecklistTemplateId() )) {
-                                jsonResponseObj.put( "checklist_template_bean", checklistTemplateBean.toJson() );
+                            if(checklistTemplateItemBean!=null && !Utility.isNullOrEmpty(checklistTemplateItemBean.getChecklistTemplateItemId() )) {
+                                jsonResponseObj.put( "checklist_template_item_bean", checklistTemplateItemBean.toJson() );
 
-                                ArrayList<ChecklistTemplateItemBean> arrChecklistTemplateItemBean = checklistTemplateResponseBean.getArrChecklistTemplateItemBean();
-                                JSONObject jsonAllChecklistTemplateItems = accessChecklistTemplate.getJsonAllChecklistTemplateItems( arrChecklistTemplateItemBean );
-                                Long lNumOfItems = 0L;
-                                if(jsonAllChecklistTemplateItems!=null){
-                                    lNumOfItems = jsonAllChecklistTemplateItems.optLong("num_of_checklist_template_items");
-                                    if(lNumOfItems>0){
-                                        jsonResponseObj.put( "checklist_template_items" , jsonAllChecklistTemplateItems );
-                                    }
-                                }
-                                jsonResponseObj.put( "num_of_checklist_template_items", lNumOfItems );
-
-
-                                Text okText = new OkText("Load of Checklist Template Complete.","status_mssg") ;
+                                Text okText = new OkText("Your changes were saved successfully.","status_mssg") ;
                                 arrOkText.add(okText);
                                 responseStatus = RespConstants.Status.OK;
                             } else {
-                                Text errorText = new ErrorText("Oops!! We were unable to save the checklist template. Please try again later.(saveChecklistTemplate - 004)","err_mssg") ;
+                                Text errorText = new ErrorText("Oops!! We were unable to save the checklist template item. Please try again later.(saveChecklistTemplateItem - 004)","err_mssg") ;
                                 arrErrorText.add(errorText);
 
                                 responseStatus = RespConstants.Status.ERROR;
                             }
                         } else {
-                            Text errorText = new ErrorText("Oops!! We were unable to save the checklist template. Please try again later.(saveChecklistTemplate - 003)","err_mssg") ;
+                            Text errorText = new ErrorText("Oops!! We were unable to save the checklist template item. Please try again later.(saveChecklistTemplateItem - 003)","err_mssg") ;
                             arrErrorText.add(errorText);
 
                             responseStatus = RespConstants.Status.ERROR;
                         }
                     }
-
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveChecklistTemplate - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveChecklistTemplateItem - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
