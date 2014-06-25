@@ -1,9 +1,6 @@
 package com.events.proc.dashboard.checklist;
 
-import com.events.bean.dashboard.checklist.ChecklistTemplateBean;
-import com.events.bean.dashboard.checklist.ChecklistTemplateItemBean;
-import com.events.bean.dashboard.checklist.ChecklistTemplateRequestBean;
-import com.events.bean.dashboard.checklist.ChecklistTemplateResponseBean;
+import com.events.bean.dashboard.checklist.*;
 import com.events.bean.users.UserBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
@@ -23,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,8 +64,8 @@ public class ProcLoadChecklistTemplate extends HttpServlet {
                             if(checklistTemplateBean!=null && !Utility.isNullOrEmpty(checklistTemplateBean.getChecklistTemplateId() )) {
                                 jsonResponseObj.put( "checklist_template_bean", checklistTemplateBean.toJson() );
 
-                                ArrayList<ChecklistTemplateItemBean> arrChecklistTemplateItemBean = checklistTemplateResponseBean.getArrChecklistTemplateItemBean();
-                                JSONObject jsonAllChecklistTemplateItems = accessChecklistTemplate.getJsonAllChecklistTemplateItems( arrChecklistTemplateItemBean );
+                                HashMap<Long, ChecklistTemplateItemBean> hmChecklistTemplateItemBean = checklistTemplateResponseBean.getHmChecklistTemplateItemBean();
+                                JSONObject jsonAllChecklistTemplateItems = accessChecklistTemplate.getJsonAllChecklistTemplateItems( hmChecklistTemplateItemBean );
                                 Long lNumOfItems = 0L;
                                 if(jsonAllChecklistTemplateItems!=null){
                                     lNumOfItems = jsonAllChecklistTemplateItems.optLong("num_of_checklist_template_items");
@@ -77,6 +75,14 @@ public class ProcLoadChecklistTemplate extends HttpServlet {
                                 }
                                 jsonResponseObj.put( "num_of_checklist_template_items", lNumOfItems );
 
+                                HashMap<String, ArrayList<ChecklistTemplateTodoBean>> hmChecklistTemplateTodoBean = checklistTemplateResponseBean.getHmChecklistTemplateTodoBean();
+                                JSONObject jsonHmChecklistTemplateTodos = accessChecklistTemplate.getJsonAllChecklistTemplateTodos(hmChecklistTemplateTodoBean);
+                                Long lNumOfItemTodos = 0L;
+                                if(jsonHmChecklistTemplateTodos!=null){
+                                    lNumOfItemTodos = jsonHmChecklistTemplateTodos.optLong("num_of_checklist_template_items_with_todos");
+                                    jsonResponseObj.put( "items_with_todos", jsonHmChecklistTemplateTodos );
+                                }
+                                jsonResponseObj.put( "num_of_checklist_template_items_with_todos", lNumOfItemTodos );
 
                                 Text okText = new OkText("Load of Checklist Template Complete.","status_mssg") ;
                                 arrOkText.add(okText);

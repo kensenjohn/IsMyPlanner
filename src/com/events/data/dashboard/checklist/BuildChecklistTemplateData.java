@@ -3,6 +3,7 @@ package com.events.data.dashboard.checklist;
 import com.events.bean.dashboard.checklist.ChecklistTemplateBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateItemBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateRequestBean;
+import com.events.bean.dashboard.checklist.ChecklistTemplateTodoBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.DateSupport;
@@ -88,6 +89,28 @@ public class BuildChecklistTemplateData {
         return numOfRowsInserted;
     }
 
+
+
+    public Integer insertChecklistTemplateTodo( ArrayList<ChecklistTemplateTodoBean> arrChecklistTemplateTodoBean){
+        Integer numOfRowsInserted = 0;
+        if(arrChecklistTemplateTodoBean!=null && !arrChecklistTemplateTodoBean.isEmpty() ) {
+            String sQuery = "INSERT INTO GTCHECKLISTTEMPLATETODO (CHECKLISTTEMPLATETODOID,FK_CHECKLISTTEMPLATEITEMID,FK_CHECKLISTTEMPLATEID,     NAME,CREATEDATE,HUMANCREATEDATE) VALUES (?,?,?,    ?,?,?)";
+            ArrayList< ArrayList<Object> > aBatchParams = new ArrayList<ArrayList<Object>>();
+            for(ChecklistTemplateTodoBean checklistTemplateTodoBean : arrChecklistTemplateTodoBean ) {
+                ArrayList<Object> aParams = DBDAO.createConstraint(checklistTemplateTodoBean.getChecklistTemplateTodoId(),checklistTemplateTodoBean.getChecklistTemplateItemId(),checklistTemplateTodoBean.getChecklistTemplateId(),
+                        checklistTemplateTodoBean.getName(),DateSupport.getEpochMillis(),DateSupport.getUTCDateTime());
+                aBatchParams.add( aParams );
+            }
+            int[] numOfRowsAffected = DBDAO.putBatchRowsQuery( sQuery, aBatchParams, EVENTADMIN_DB, "BuildConversationData.java", "insertChecklistTemplateTodo() " );
+            if(numOfRowsAffected!=null && numOfRowsAffected.length > 0 ) {
+                for(int iCount : numOfRowsAffected ) {
+                    numOfRowsInserted = numOfRowsInserted + iCount;
+                }
+            }
+        }
+        return numOfRowsInserted;
+    }
+
     public Integer deleteChecklistTemplate( ChecklistTemplateRequestBean checklistTemplateRequestBean){
         Integer numOfRowsInserted = 0;
         if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateId()) ) {
@@ -107,6 +130,28 @@ public class BuildChecklistTemplateData {
             ArrayList<Object> aParams = DBDAO.createConstraint( checklistTemplateRequestBean.getChecklistTemplateId(),checklistTemplateRequestBean.getChecklistTemplateItemId() );
 
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "deleteChecklistTemplateItem() ");
+        }
+        return numOfRowsInserted;
+    }
+
+    public Integer deleteChecklistTemplateTodo( ChecklistTemplateRequestBean checklistTemplateRequestBean){
+        Integer numOfRowsInserted = 0;
+        if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateTodoId())  ) {
+            String sQuery = "DELETE FROM GTCHECKLISTTEMPLATETODO WHERE CHECKLISTTEMPLATETODOID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint( checklistTemplateRequestBean.getChecklistTemplateTodoId());
+
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "deleteChecklistTemplateTodo() ");
+        }
+        return numOfRowsInserted;
+    }
+
+    public Integer deleteAllChecklistTemplateTodo( ChecklistTemplateRequestBean checklistTemplateRequestBean){
+        Integer numOfRowsInserted = 0;
+        if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateItemId())  ) {
+            String sQuery = "DELETE FROM GTCHECKLISTTEMPLATETODO WHERE FK_CHECKLISTTEMPLATEITEMID = ? ";
+            ArrayList<Object> aParams = DBDAO.createConstraint( checklistTemplateRequestBean.getChecklistTemplateItemId() );
+
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "deleteChecklistTemplateTodo() ");
         }
         return numOfRowsInserted;
     }

@@ -3,6 +3,7 @@ package com.events.proc.dashboard.checklist;
 import com.events.bean.dashboard.checklist.ChecklistTemplateItemBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateRequestBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateResponseBean;
+import com.events.bean.dashboard.checklist.ChecklistTemplateTodoBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
@@ -48,6 +49,32 @@ public class ProcSaveChecklistTemplateItem extends HttpServlet {
                     String sChecklistTemplateItemId = ParseUtil.checkNull(request.getParameter("checklist_template_item_id"));
                     String sChecklistTemplateId = ParseUtil.checkNull(request.getParameter("checklist_template_id"));
                     String sChecklistTemplateItemName = ParseUtil.checkNull(request.getParameter("checklist_template_item_name"));
+                    String[] aChecklistTodoId = request.getParameterValues("checklist_template_todo_id[]");
+
+                    ArrayList<String> arrChecklistTodoId = new ArrayList<String>();
+                    if(aChecklistTodoId!=null && aChecklistTodoId.length>0){
+                        for(String checklistTodoId : aChecklistTodoId )  {
+                            arrChecklistTodoId.add(checklistTodoId);
+                        }
+                    }
+
+                    ArrayList<ChecklistTemplateTodoBean> arrChecklistTemplateTodoBean = new ArrayList<ChecklistTemplateTodoBean>();
+                    if(arrChecklistTodoId!=null && !arrChecklistTodoId.isEmpty() ) {
+                        for(String checklistTodoId : arrChecklistTodoId )  {
+                            ChecklistTemplateTodoBean checklistTemplateTodoBean = new ChecklistTemplateTodoBean();
+                            checklistTemplateTodoBean.setChecklistTemplateTodoId( checklistTodoId );
+                            checklistTemplateTodoBean.setChecklistTemplateItemId( sChecklistTemplateItemId );
+                            checklistTemplateTodoBean.setChecklistTemplateId( sChecklistTemplateId );
+                            String sTodo = ParseUtil.checkNull( request.getParameter("checklist_item_todo_"+checklistTodoId) );
+                            if(!Utility.isNullOrEmpty(sTodo)){
+                                checklistTemplateTodoBean.setName( sTodo );
+                                arrChecklistTemplateTodoBean.add( checklistTemplateTodoBean );
+                            }
+                        }
+                    }
+
+                    /*checklist_template_todo_id[]:40a1267e-99c3-629e-5abd-e81ccfe85f9f
+                    checklist_template_todo_id[]:8*/
                     if( Utility.isNullOrEmpty(sChecklistTemplateItemName)) {
                         Text errorText = new ErrorText("","err_mssg") ;
                         arrErrorText.add(errorText);
@@ -59,6 +86,9 @@ public class ProcSaveChecklistTemplateItem extends HttpServlet {
                         checklistTemplateRequestBean.setChecklistTemplateItemId( sChecklistTemplateItemId );
                         checklistTemplateRequestBean.setChecklistTemplateId( sChecklistTemplateId );
                         checklistTemplateRequestBean.setChecklistTemplateItemName( sChecklistTemplateItemName );
+                        checklistTemplateRequestBean.setArrChecklistTemplateTodoBean( arrChecklistTemplateTodoBean );
+
+
 
                         BuildChecklistTemplate buildChecklistTemplate = new BuildChecklistTemplate();
                         ChecklistTemplateResponseBean checklistTemplateResponseBean = buildChecklistTemplate.saveChecklistTemplateItem( checklistTemplateRequestBean );

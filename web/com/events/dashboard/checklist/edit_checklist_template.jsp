@@ -72,8 +72,8 @@
                         </div>
                     </div>
                     <div class="row" style="display:none;" id="div_add_checklist_item">
-                        <div class="col-md-2">
-                            <button class="btn btn-default btn-xs" id="btn_add_checklist_item"><i class="fa fa-plus"></i> Add Item</button>
+                        <div class="col-md-4">
+                            <button class="btn btn-default btn-xs" id="btn_add_checklist_item"><i class="fa fa-plus"></i> Add New Checklist Item</button>
                         </div>
                     </div>
                     <div class="row">
@@ -125,11 +125,8 @@
 </script>
 <script id="template_checklist_template_item_todo" type="text/x-handlebars-template">
     <div class="row">
-        <div class="col-xs-offset-1 col-xs-5">
-            <input type="checkbox">&nbsp;&nbsp;&nbsp;<span>{{checklist_template_item_todo_name}}</span>
-        </div>
-        <div class="col-xs-6">
-            <button class="btn btn-default btn-xs" id=""><i class="fa fa-trash-o"></i></button>
+        <div class="col-xs-offset-1 col-xs-11">
+            <span>{{checklist_template_item_todo_name}}</span>
         </div>
     </div>
 </script>
@@ -263,22 +260,48 @@
 
                     var varNumberOfItems = jsonResponseObj.num_of_checklist_template_items;
                     if(varNumberOfItems>0){
+                        var varNumOfItemWithTodos = jsonResponseObj.num_of_checklist_template_items_with_todos;
+                        var varItemsWithTodos = '';
+                        if(varNumOfItemWithTodos>0){
+                            varItemsWithTodos = jsonResponseObj.items_with_todos
+                        }
+
+
                         var varAllChecklisTemplateItems = jsonResponseObj.checklist_template_items;
                         for( var varCount = 0; varCount<varNumberOfItems; varCount++ ){
 
                             var varChecklistTemplateItemBean = varAllChecklisTemplateItems[varCount];
+                            var varChecklistTemplateItemId = varChecklistTemplateItemBean.checklist_template_item_id;
+                            if(varChecklistTemplateItemBean!=undefined){
+                                this.checklistTemplateItemModel = new ChecklistTemplateItemModel({
+                                    'bb_item_sequence_number' : varCount,
+                                    'bb_checklist_template_item_id' : varChecklistTemplateItemId,
+                                    'bb_checklist_template_item_name' : varChecklistTemplateItemBean.name
+                                });
+                                var checklistTemplateItemView = new ChecklistTemplateItemView({model:this.checklistTemplateItemModel});
+                                checklistTemplateItemView.render();
+                                $("#sortable_chk_list").append(checklistTemplateItemView.el);
 
-                            this.checklistTemplateItemModel = new ChecklistTemplateItemModel({
-                                'bb_item_sequence_number' : varCount,
-                                'bb_checklist_template_item_id' : varChecklistTemplateItemBean.checklist_template_item_id,
-                                'bb_checklist_template_item_name' : varChecklistTemplateItemBean.name
-                            });
-                            var checklistTemplateItemView = new ChecklistTemplateItemView({model:this.checklistTemplateItemModel});
-                            checklistTemplateItemView.render();
-                            $("#sortable_chk_list").append(checklistTemplateItemView.el);
+                                createEditItemEvent(varChecklistTemplateItemBean.checklist_template_id,varChecklistTemplateItemBean.checklist_template_item_id);
+                                addChecklistTemplateItemDeleteClickEvent(varChecklistTemplateItemBean.checklist_template_id,varChecklistTemplateItemBean.checklist_template_item_id, varCount);
 
-                            createEditItemEvent(varChecklistTemplateItemBean.checklist_template_id,varChecklistTemplateItemBean.checklist_template_item_id);
-                            addChecklistTemplateItemDeleteClickEvent(varChecklistTemplateItemBean.checklist_template_id,varChecklistTemplateItemBean.checklist_template_item_id, varCount);
+
+                                if( varItemsWithTodos!='' && varItemsWithTodos!=undefined){
+                                    var varItemTodoList =  varItemsWithTodos[ varChecklistTemplateItemId ];
+
+                                    if(varItemTodoList!=undefined){
+                                        this.checklistTemplateTodoModel = new ChecklistTemplateTodoModel({
+                                            'bb_item_todo_list' : varItemTodoList,
+                                            'bb_num_of_todos' : varItemTodoList.num_of_checklist_template_todos
+                                        });
+
+                                        var checklistTemplateTodoView = new ChecklistTemplateTodoView({model:this.checklistTemplateTodoModel});
+                                        checklistTemplateTodoView.render();
+                                        $("#checklist_template_todo_list_"+varChecklistTemplateItemId).append(checklistTemplateTodoView.el);
+                                    }
+                                }
+                            }
+
                         }
                     }
                     createIconEvents();
@@ -333,6 +356,7 @@
 
                             var varChecklistTemplateItemRowNum = jsonResponseObj.row_number;
                             $('#sort_tracker_item_'+varChecklistTemplateItemRowNum).remove();
+
                         } else {
                             displayMssgBoxAlert("The checklist template was not deleted. Please try again later.", true);
                         }
@@ -345,6 +369,37 @@
             displayMssgBoxAlert("Please try again later (deleteRegistry - 2)", true);
         }
     }
+    var ChecklistTemplateTodoModel = Backbone.Model.extend({
+        defaults: {
+            bb_item_todo_list:undefined,
+            bb_num_of_todos: 0
+        }
+    });
+    var ChecklistTemplateTodoView = Backbone.View.extend({
+        initialize: function(){
+            this.varBBItemTodoList = this.model.get('bb_item_todo_list');
+            this.varBBNumOfTodos = this.model.get('bb_num_of_todos');
+        },
+        template : Handlebars.compile( $('#template_checklist_template_item_todo').html() ),
+        render : function() {
+
+            if(this.varBBNumOfTodos>0){
+                for( var varTodoCount = 0; varTodoCount<this.varBBNumOfTodos; varTodoCount++ ){
+                    var varTodoBean = this.varBBItemTodoList[varTodoCount];
+
+                    var varTmpTodoBean = {
+                        "checklist_template_item_todo_name": varTodoBean.name
+                    }
+
+                    var checklistTodoRow = this.template(  eval( varTmpTodoBean )  );
+                    $(this.el).append( checklistTodoRow );
+                }
+            }
+
+
+        }
+    });
+
     var ChecklistTemplateItemModel = Backbone.Model.extend({
         defaults: {
             bb_item_sequence_number:undefined,

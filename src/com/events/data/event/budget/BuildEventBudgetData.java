@@ -120,16 +120,31 @@ public class BuildEventBudgetData {
     // FK_EVENTBUDGETID VARCHAR(45) NOT NULL,FK_EVENTID VARCHAR(45) NOT NULL,  ITEMNAME TEXT NOT NULL, ESTIMATE_AMOUNT VARCHAR(45),
     // ACTUAL_AMOUNT VARCHAR(45), IS_PAID INT(1) NOT NULL DEFAULT 0, MODIFIEDDATE BIGINT(20) NOT NULL DEFAULT 0, HUMANMODIFIEDDATE VARCHAR(45),
     // FK_USERID VARCHAR(45), PRIMARY KEY (BUDGETCATEGORYITEMID) ) ENGINE = MyISAM DEFAULT CHARSET = utf8;
-    public Integer deleteEventBudgetCategoryItems( EventBudgetRequestBean eventBudgetRequestBean ) {
+    public Integer deleteAllEventBudgetCategoryItems( EventBudgetRequestBean eventBudgetRequestBean ) {
         Integer iNumOfRowsDeleted = 0;
         if(eventBudgetRequestBean!=null && !Utility.isNullOrEmpty(eventBudgetRequestBean.getBudgetCategoryId() )) {
             String sQuery = "DELETE FROM GTEVENTBUDGETCATEGORYITEM WHERE FK_BUDGETCATEGORYID = ? AND FK_EVENTID =?";
             ArrayList<Object> aParams = DBDAO.createConstraint(eventBudgetRequestBean.getBudgetCategoryId(),eventBudgetRequestBean.getEventId() );
 
-            iNumOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildEventBudgetData.java", "deleteEventBudgetCategoryItems() ");
+            iNumOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildEventBudgetData.java", "deleteAllEventBudgetCategoryItems() ");
         }
         return iNumOfRowsDeleted;
     }
+    public Integer deleteEventBudgetCategoryItem( EventBudgetRequestBean eventBudgetRequestBean ) {
+        Integer iNumOfRowsDeleted = 0;
+        if(eventBudgetRequestBean!=null && eventBudgetRequestBean.getEventBudgetCategoryItemBean()!=null ){
+            EventBudgetCategoryItemBean eventBudgetCategoryItemBean =  eventBudgetRequestBean.getEventBudgetCategoryItemBean();
+            if(eventBudgetCategoryItemBean!=null && !Utility.isNullOrEmpty(eventBudgetCategoryItemBean.getBudgetCategoryItemId())
+                    && !Utility.isNullOrEmpty(eventBudgetCategoryItemBean.getEventId())  ) {
+                String sQuery = "DELETE FROM GTEVENTBUDGETCATEGORYITEM WHERE BUDGETCATEGORYITEMID = ? AND FK_EVENTID =?";
+                ArrayList<Object> aParams = DBDAO.createConstraint(eventBudgetCategoryItemBean.getBudgetCategoryItemId(),eventBudgetCategoryItemBean.getEventId() );
+
+                iNumOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildEventBudgetData.java", "deleteEventBudgetCategoryItems() ");
+            }
+        }
+        return iNumOfRowsDeleted;
+    }
+
 
     public Integer insertEventBudgetCategoryItems( EventBudgetRequestBean eventBudgetRequestBean ) {
         Integer iNumOfRowsInserted = 0;

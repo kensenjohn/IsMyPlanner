@@ -2,6 +2,7 @@ package com.events.bean.dashboard.checklist;
 
 import com.events.common.Constants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -20,6 +21,42 @@ public class ChecklistTemplateRequestBean {
     private String checklistTemplateItemName = Constants.EMPTY;
     private Long sortOrder = 0L;
     private HashMap<String,Long> hmSortChecklistTemplateId = new HashMap<String, Long>();
+    private ArrayList<String> arrChecklistTodoId = new ArrayList<String>();
+    private ArrayList<ChecklistTemplateTodoBean> arrChecklistTemplateTodoBean = new ArrayList<ChecklistTemplateTodoBean>();
+    private String checklistTemplateTodoId =  Constants.EMPTY;
+    private String clientId = Constants.EMPTY;
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getChecklistTemplateTodoId() {
+        return checklistTemplateTodoId;
+    }
+
+    public void setChecklistTemplateTodoId(String checklistTemplateTodoId) {
+        this.checklistTemplateTodoId = checklistTemplateTodoId;
+    }
+
+    public ArrayList<ChecklistTemplateTodoBean> getArrChecklistTemplateTodoBean() {
+        return arrChecklistTemplateTodoBean;
+    }
+
+    public void setArrChecklistTemplateTodoBean(ArrayList<ChecklistTemplateTodoBean> arrChecklistTemplateTodoBean) {
+        this.arrChecklistTemplateTodoBean = arrChecklistTemplateTodoBean;
+    }
+
+    public ArrayList<String> getArrChecklistTodoId() {
+        return arrChecklistTodoId;
+    }
+
+    public void setArrChecklistTodoId(ArrayList<String> arrChecklistTodoId) {
+        this.arrChecklistTodoId = arrChecklistTodoId;
+    }
 
     public HashMap<String, Long> getHmSortChecklistTemplateId() {
         return hmSortChecklistTemplateId;

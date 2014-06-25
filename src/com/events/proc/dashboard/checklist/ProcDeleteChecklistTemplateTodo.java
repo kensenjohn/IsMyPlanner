@@ -1,6 +1,6 @@
 package com.events.proc.dashboard.checklist;
 
-import com.events.bean.dashboard.checklist.*;
+import com.events.bean.dashboard.checklist.ChecklistTemplateRequestBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
@@ -8,7 +8,8 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.dashboard.checklist.AccessChecklistTemplate;
+import com.events.dashboard.checklist.BuildChecklistTemplate;
+import com.events.data.dashboard.checklist.BuildChecklistTemplateData;
 import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -24,11 +25,11 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 6/14/14
- * Time: 11:30 AM
+ * Date: 6/18/14
+ * Time: 1:11 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadChecklistTemplateItem extends HttpServlet {
+public class ProcDeleteChecklistTemplateTodo extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     private static final Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
@@ -45,59 +46,45 @@ public class ProcLoadChecklistTemplateItem extends HttpServlet {
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
                     String sChecklistTemplateItemId = ParseUtil.checkNull(request.getParameter("checklist_template_item_id"));
                     String sChecklistTemplateId = ParseUtil.checkNull(request.getParameter("checklist_template_id"));
+                    String sChecklistTemplateTodoId = ParseUtil.checkNull(request.getParameter("checklist_template_todo_id"));
 
-                    ChecklistTemplateRequestBean checklistTemplateRequestBean = new ChecklistTemplateRequestBean();
-                    checklistTemplateRequestBean.setChecklistTemplateItemId( sChecklistTemplateItemId );
-                    checklistTemplateRequestBean.setChecklistTemplateId( sChecklistTemplateId );
+                    if( Utility.isNullOrEmpty(sChecklistTemplateTodoId)) {
+                        Text errorText = new ErrorText("Please select a valid Todo item","err_mssg") ;
+                        arrErrorText.add(errorText);
 
-                    AccessChecklistTemplate accessChecklistTemplate = new AccessChecklistTemplate();
-                    ChecklistTemplateResponseBean checklistTemplateResponseBean = accessChecklistTemplate.loadChecklistTemplateItemDetails( checklistTemplateRequestBean );
+                        responseStatus = RespConstants.Status.ERROR;
+                    } else {
+                        ChecklistTemplateRequestBean checklistTemplateRequestBean = new ChecklistTemplateRequestBean();
+                        checklistTemplateRequestBean.setChecklistTemplateTodoId( sChecklistTemplateTodoId );
 
-                    if(checklistTemplateResponseBean!=null){
-                        ChecklistTemplateBean checklistTemplateBean = checklistTemplateResponseBean.getChecklistTemplateBean();
-                        if(checklistTemplateBean!=null){
-                            jsonResponseObj.put( "checklist_template_bean", checklistTemplateBean.toJson() );
+
+                        BuildChecklistTemplate buildChecklistTemplate = new BuildChecklistTemplate();
+                        Integer iNumOfChecklistTemplateTodoDeleted =buildChecklistTemplate.deleteChecklistTemplateTodo( checklistTemplateRequestBean );
+
+                        boolean isDeleted = false;
+                        if(iNumOfChecklistTemplateTodoDeleted>0){
+                            jsonResponseObj.put("deleted_checklist_Template_todo_id", sChecklistTemplateTodoId );
+                            isDeleted = true;
                         }
+                        jsonResponseObj.put("is_deleted", isDeleted );
 
 
-                        ChecklistTemplateItemBean checklistTemplateItemBean = checklistTemplateResponseBean.getChecklistTemplateItemBean();
-
-                        if(checklistTemplateItemBean!=null && !Utility.isNullOrEmpty(checklistTemplateItemBean.getChecklistTemplateItemId()  )) {
-                            jsonResponseObj.put( "checklist_template_item_bean", checklistTemplateItemBean.toJson() );
-
-                            ArrayList<ChecklistTemplateTodoBean> arrChecklistTemplateTodoBean = checklistTemplateResponseBean.getArrChecklistTemplateTodoBean();
-                            Long lNumOfTodos = 0L;
-                            if(arrChecklistTemplateTodoBean!=null && !arrChecklistTemplateTodoBean.isEmpty()) {
-                                JSONObject jsonAllChecklistTemplateTodos = accessChecklistTemplate.getJsonAllChecklistTemplateTodos(arrChecklistTemplateTodoBean);
-
-                                if( jsonAllChecklistTemplateTodos!=null ){
-                                    lNumOfTodos = jsonAllChecklistTemplateTodos.optLong( "num_of_checklist_template_todos" );
-                                    if(lNumOfTodos>0){
-                                        jsonResponseObj.put( "all_checklist_template_todo" , jsonAllChecklistTemplateTodos );
-                                    }
-                                }
-                            }
-                            jsonResponseObj.put( "num_of_checklist_template_todos" , lNumOfTodos );
-
-                            Text okText = new OkText("Load of Checklist Template Item Complete.","status_mssg") ;
+                        if(isDeleted) {
+                            Text okText = new OkText("Todo was successfully deleted.","status_mssg") ;
                             arrOkText.add(okText);
                             responseStatus = RespConstants.Status.OK;
                         } else {
-                            Text errorText = new ErrorText("Oops!! We were unable to save the checklist template. Please try again later.(loadChecklistTemplateItem - 004)","err_mssg") ;
+                            Text errorText = new ErrorText("Oops!! We were unable to deleted this todo. Please try again later.","err_mssg") ;
                             arrErrorText.add(errorText);
 
                             responseStatus = RespConstants.Status.ERROR;
                         }
-                    } else {
-                        Text errorText = new ErrorText("Oops!! We were unable to save the checklist template. Please try again later.(loadChecklistTemplateItem - 003)","err_mssg") ;
-                        arrErrorText.add(errorText);
-
-                        responseStatus = RespConstants.Status.ERROR;
                     }
+
 
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadChecklistTemplateItem - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(deleteChecklistTemplateItem - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -111,7 +98,7 @@ public class ProcLoadChecklistTemplateItem extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadChecklistTemplateItem - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(deleteChecklistTemplateItem - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;

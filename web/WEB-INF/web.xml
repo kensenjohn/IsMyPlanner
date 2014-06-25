@@ -1054,6 +1054,15 @@
         <servlet-name>Process Load Event Budget Category</servlet-name>
         <url-pattern>/proc_load_budget_category.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Event Budget Category Item</servlet-name>
+        <servlet-class>com.events.proc.event.budget.ProcDeleteEventBudgetCategoryItem</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Event Budget Category Item</servlet-name>
+        <url-pattern>/proc_delete_event_budget_category_item.aeve</url-pattern>
+    </servlet-mapping>
+
 
 
     <servlet>
@@ -1173,6 +1182,33 @@
         <servlet-name>Process Sort Checklist Template Item</servlet-name>
         <url-pattern>/proc_sort_checklist_template_item.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Checklist Template Todo</servlet-name>
+        <servlet-class>com.events.proc.dashboard.checklist.ProcDeleteChecklistTemplateTodo</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Checklist Template Todo</servlet-name>
+        <url-pattern>/proc_delete_checklist_template_todo.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Event Checklist Template</servlet-name>
+        <servlet-class>com.events.proc.event.checklist.ProcLoadEventChecklistTemplates</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Event Checklist Template</servlet-name>
+        <url-pattern>/proc_load_event_checklist_templates_summary.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Event Checklist</servlet-name>
+        <servlet-class>com.events.proc.event.checklist.ProcSaveEventChecklist</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Event Checklist</servlet-name>
+        <url-pattern>/proc_save_event_checklist.aeve</url-pattern>
+    </servlet-mapping>
+
+
+
 
 
 

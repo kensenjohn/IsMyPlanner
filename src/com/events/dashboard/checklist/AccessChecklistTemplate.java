@@ -1,15 +1,14 @@
 package com.events.dashboard.checklist;
 
-import com.events.bean.dashboard.checklist.ChecklistTemplateBean;
-import com.events.bean.dashboard.checklist.ChecklistTemplateItemBean;
-import com.events.bean.dashboard.checklist.ChecklistTemplateRequestBean;
-import com.events.bean.dashboard.checklist.ChecklistTemplateResponseBean;
+import com.events.bean.dashboard.checklist.*;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.data.dashboard.checklist.AccessChecklistTemplateData;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,9 +24,11 @@ public class AccessChecklistTemplate {
         ChecklistTemplateBean checklistTemplateBean = getChecklistTemplateBean(checklistTemplateRequestBean);
         checklistTemplateResponseBean.setChecklistTemplateBean( checklistTemplateBean );
 
-        ArrayList<ChecklistTemplateItemBean>  arrChecklistTemplateItemBean = getAllChecklistTemplateItems( checklistTemplateRequestBean ) ;
-        checklistTemplateResponseBean.setArrChecklistTemplateItemBean(  arrChecklistTemplateItemBean );
+        HashMap<Long, ChecklistTemplateItemBean> hmChecklistTemplateItemBean = getAllChecklistTemplateItems( checklistTemplateRequestBean ) ;
+        checklistTemplateResponseBean.setHmChecklistTemplateItemBean(hmChecklistTemplateItemBean);
 
+        HashMap<String, ArrayList<ChecklistTemplateTodoBean>> hmChecklistTemplateTodoBean = getAllChecklistTemplateTodos( hmChecklistTemplateItemBean );
+        checklistTemplateResponseBean.setHmChecklistTemplateTodoBean(hmChecklistTemplateTodoBean);
         return checklistTemplateResponseBean;
     }
 
@@ -42,18 +43,33 @@ public class AccessChecklistTemplate {
 
     public ChecklistTemplateResponseBean loadChecklistTemplateItemDetails( ChecklistTemplateRequestBean checklistTemplateRequestBean){
         ChecklistTemplateResponseBean checklistTemplateResponseBean = new ChecklistTemplateResponseBean();
+        ChecklistTemplateBean checklistTemplateBean = getChecklistTemplateBean(checklistTemplateRequestBean);
+        checklistTemplateResponseBean.setChecklistTemplateBean( checklistTemplateBean );
+
         ChecklistTemplateItemBean checklistTemplateItemBean = getChecklistTemplateItem(checklistTemplateRequestBean) ;
         checklistTemplateResponseBean.setChecklistTemplateItemBean( checklistTemplateItemBean );
+
+        ArrayList<ChecklistTemplateTodoBean> arrChecklistTemplateTodoBean =  getChecklistTemplateTodo(checklistTemplateRequestBean);
+        checklistTemplateResponseBean.setArrChecklistTemplateTodoBean( arrChecklistTemplateTodoBean );
         return checklistTemplateResponseBean;
     }
 
-    public ArrayList<ChecklistTemplateItemBean>  getAllChecklistTemplateItems(  ChecklistTemplateRequestBean checklistTemplateRequestBean ){
-        ArrayList<ChecklistTemplateItemBean>  arrChecklistTemplateItemBean = new ArrayList<ChecklistTemplateItemBean>();
+    public HashMap<Long, ChecklistTemplateItemBean>  getAllChecklistTemplateItems(  ChecklistTemplateRequestBean checklistTemplateRequestBean ){
+        HashMap<Long, ChecklistTemplateItemBean> hmChecklistTemplateItemBean = new HashMap<Long, ChecklistTemplateItemBean>();
         if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateId())  ) {
             AccessChecklistTemplateData accessChecklistTemplateData = new AccessChecklistTemplateData();
-            arrChecklistTemplateItemBean =  accessChecklistTemplateData.getAllChecklistTemplateItemBean(checklistTemplateRequestBean);
+            hmChecklistTemplateItemBean =  accessChecklistTemplateData.getAllChecklistTemplateItemBean(checklistTemplateRequestBean);
         }
-        return arrChecklistTemplateItemBean;
+        return hmChecklistTemplateItemBean;
+    }
+
+    public HashMap<String, ArrayList<ChecklistTemplateTodoBean>> getAllChecklistTemplateTodos(HashMap<Long, ChecklistTemplateItemBean> hmChecklistTemplateItemBean){
+        HashMap<String, ArrayList<ChecklistTemplateTodoBean>> hmChecklistTemplateTodoBean = new HashMap<String, ArrayList<ChecklistTemplateTodoBean>>();
+        if(hmChecklistTemplateItemBean!=null &&  !hmChecklistTemplateItemBean.isEmpty() ) {
+            AccessChecklistTemplateData accessChecklistTemplateData = new AccessChecklistTemplateData();
+            hmChecklistTemplateTodoBean = accessChecklistTemplateData.getAllChecklistTemplateTodoBean(hmChecklistTemplateItemBean);
+        }
+        return hmChecklistTemplateTodoBean;
     }
 
     public ChecklistTemplateItemBean getChecklistTemplateItem( ChecklistTemplateRequestBean checklistTemplateRequestBean ){
@@ -64,6 +80,16 @@ public class AccessChecklistTemplate {
             checklistTemplateItemBean = accessChecklistTemplateData.getChecklistTemplateItemBean(checklistTemplateRequestBean);
         }
         return  checklistTemplateItemBean;
+    }
+
+    public ArrayList<ChecklistTemplateTodoBean> getChecklistTemplateTodo( ChecklistTemplateRequestBean checklistTemplateRequestBean ){
+        ArrayList<ChecklistTemplateTodoBean> arrChecklistTemplateTodoBean = new ArrayList<ChecklistTemplateTodoBean>();
+        if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateId())
+                && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateItemId())  ) {
+            AccessChecklistTemplateData accessChecklistTemplateData = new AccessChecklistTemplateData();
+            arrChecklistTemplateTodoBean = accessChecklistTemplateData.getAllChecklistTemplateItemTodo(checklistTemplateRequestBean);
+        }
+        return  arrChecklistTemplateTodoBean;
     }
 
     public ArrayList<ChecklistTemplateBean> getAllChecklistTemplatesByVendor( ChecklistTemplateRequestBean checklistTemplateRequestBean ){
@@ -88,12 +114,12 @@ public class AccessChecklistTemplate {
         return jsonAllChecklistTemplates;
     }
 
-    public JSONObject getJsonAllChecklistTemplateItems(ArrayList<ChecklistTemplateItemBean> arrChecklistTemplateItemBean){
+    public JSONObject getJsonAllChecklistTemplateItems(HashMap<Long, ChecklistTemplateItemBean> hmChecklistTemplateItemBean){
         JSONObject jsonAllChecklistTemplateItems = new JSONObject();
         Long lNumberOfChecklistTemplateItems = 0L;
-        if(arrChecklistTemplateItemBean!=null && !arrChecklistTemplateItemBean.isEmpty()){
-            for(ChecklistTemplateItemBean checklistTemplateItemBean : arrChecklistTemplateItemBean ){
-                jsonAllChecklistTemplateItems.put(ParseUtil.LToS(lNumberOfChecklistTemplateItems) , checklistTemplateItemBean.toJson() ) ;
+        if(hmChecklistTemplateItemBean!=null && !hmChecklistTemplateItemBean.isEmpty()){
+            for(Map.Entry<Long,ChecklistTemplateItemBean> mapChecklistTemplateItemBean : hmChecklistTemplateItemBean.entrySet() ){
+                jsonAllChecklistTemplateItems.put(ParseUtil.LToS(mapChecklistTemplateItemBean.getKey()) , mapChecklistTemplateItemBean.getValue().toJson() ) ;
                 lNumberOfChecklistTemplateItems++;
             }
         }
@@ -101,12 +127,43 @@ public class AccessChecklistTemplate {
         return jsonAllChecklistTemplateItems;
     }
 
+    public JSONObject getJsonAllChecklistTemplateTodos( HashMap<String, ArrayList<ChecklistTemplateTodoBean>> hmChecklistTemplateTodoBean ){
+        JSONObject jsonHmChecklistTemplateTodos = new JSONObject();
+        Long lNumOfItems = 0L;
+        if(hmChecklistTemplateTodoBean!=null && !hmChecklistTemplateTodoBean.isEmpty()){
+            for( Map.Entry<String, ArrayList<ChecklistTemplateTodoBean>> mapChecklistTemplateTodoBean : hmChecklistTemplateTodoBean.entrySet() ){
+                String sItemId = mapChecklistTemplateTodoBean.getKey();
+                ArrayList<ChecklistTemplateTodoBean> arrmapChecklistTemplateTodoBean = mapChecklistTemplateTodoBean.getValue();
+
+                JSONObject jsonAllChecklistTemplateTodos =  getJsonAllChecklistTemplateTodos( arrmapChecklistTemplateTodoBean );
+                jsonHmChecklistTemplateTodos.put( sItemId , jsonAllChecklistTemplateTodos );
+                lNumOfItems++;
+            }
+        }
+        jsonHmChecklistTemplateTodos.put("num_of_checklist_template_items_with_todos" , lNumOfItems);
+        return jsonHmChecklistTemplateTodos;
+    }
+
+    public JSONObject getJsonAllChecklistTemplateTodos(ArrayList<ChecklistTemplateTodoBean> arrChecklistTemplateTodoBean){
+        JSONObject jsonAllChecklistTemplateTodos = new JSONObject();
+        Long lNumberOfChecklistTemplateTodos = 0L;
+        if(arrChecklistTemplateTodoBean!=null && !arrChecklistTemplateTodoBean.isEmpty()){
+            for(ChecklistTemplateTodoBean checklistTemplateTodoBean : arrChecklistTemplateTodoBean ){
+                jsonAllChecklistTemplateTodos.put(ParseUtil.LToS(lNumberOfChecklistTemplateTodos) , checklistTemplateTodoBean.toJson() ) ;
+                lNumberOfChecklistTemplateTodos++;
+            }
+        }
+        jsonAllChecklistTemplateTodos.put("num_of_checklist_template_todos",lNumberOfChecklistTemplateTodos);
+        return jsonAllChecklistTemplateTodos;
+    }
+
+
     public Long getNumOfItems(ChecklistTemplateRequestBean checklistTemplateRequestBean){
         Long lNumberOfItems = 0L;
         if(checklistTemplateRequestBean!=null){
-            ArrayList<ChecklistTemplateItemBean>  arrChecklistTemplateItemBean =  getAllChecklistTemplateItems(checklistTemplateRequestBean);
-            if(arrChecklistTemplateItemBean!=null && !arrChecklistTemplateItemBean.isEmpty()){
-                lNumberOfItems = ParseUtil.iToI(arrChecklistTemplateItemBean.size()).longValue();
+            HashMap<Long, ChecklistTemplateItemBean> hmChecklistTemplateItemBean = getAllChecklistTemplateItems(checklistTemplateRequestBean);
+            if(hmChecklistTemplateItemBean!=null && !hmChecklistTemplateItemBean.isEmpty()){
+                lNumberOfItems = ParseUtil.iToI(hmChecklistTemplateItemBean.size()).longValue();
             }
         }
         return lNumberOfItems;

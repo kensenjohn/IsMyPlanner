@@ -62,7 +62,7 @@
                     <li class="<%=sDashBoardTodoActive%>"><a href="/com/events/dashboard/todos.jsp">Todo</a></li>
 
                     <%if(checkPermission!=null &&  (checkPermission.can(Perm.MANAGE_CHECKLIST_TEMPLATE_TAB) || checkPermission.can(Perm.MANAGE_ITENARY_TEMPLATE_TAB) ) ) {%>
-                        <li class="dropdown">
+                        <li class="dropdown <%=sDashBoardChecklistManagementActive%>">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Templates<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                             <%if(checkPermission!=null && checkPermission.can(Perm.MANAGE_CHECKLIST_TEMPLATE_TAB)) {%>

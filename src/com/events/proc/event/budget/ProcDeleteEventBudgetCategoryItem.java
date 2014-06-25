@@ -9,7 +9,6 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.event.budget.AccessEventBudget;
 import com.events.event.budget.BuildEventBudget;
 import com.events.json.*;
 import org.json.JSONObject;
@@ -26,11 +25,11 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 5/20/14
- * Time: 12:28 AM
+ * Date: 6/15/14
+ * Time: 11:09 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcDeleteEventBudgetCategory extends HttpServlet {
+public class ProcDeleteEventBudgetCategoryItem extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     private static final Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
@@ -46,55 +45,27 @@ public class ProcDeleteEventBudgetCategory extends HttpServlet {
 
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
                     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
-                    String sEventBudgetCategoryId = ParseUtil.checkNull( request.getParameter("category_id") );
-                    if(Utility.isNullOrEmpty(sEventBudgetCategoryId) ) {
-                        Text errorText = new ErrorText("Please select a valid category and try again.","err_mssg") ;
-                        arrErrorText.add(errorText);
+                    String sEventBudgetCategoryItemId = ParseUtil.checkNull( request.getParameter("event_budget_category_item_id") );
 
-                        responseStatus = RespConstants.Status.ERROR;
-                    } else if(Utility.isNullOrEmpty(sEventBudgetCategoryId) ) {
-                        Text errorText = new ErrorText("Please select a valid event and try again.","err_mssg") ;
-                        arrErrorText.add(errorText);
+                    EventBudgetCategoryItemBean eventBudgetCategoryItemBean = new EventBudgetCategoryItemBean();
+                    eventBudgetCategoryItemBean.setBudgetCategoryItemId(sEventBudgetCategoryItemId);
+                    eventBudgetCategoryItemBean.setEventId( sEventId );
 
-                        responseStatus = RespConstants.Status.ERROR;
-                    } else {
-                        EventBudgetRequestBean eventBudgetRequestBean = new EventBudgetRequestBean();
-                        eventBudgetRequestBean.setBudgetCategoryId( sEventBudgetCategoryId );
-                        eventBudgetRequestBean.setEventId( sEventId );
+                    EventBudgetRequestBean eventBudgetRequestBean = new EventBudgetRequestBean();
+                    eventBudgetRequestBean.setEventBudgetCategoryItemBean( eventBudgetCategoryItemBean );
 
+                    BuildEventBudget buildEventBudget = new BuildEventBudget();
+                    boolean isDeleted = buildEventBudget.deleteEventBudgetCategoryItem( eventBudgetRequestBean );
 
-                        BuildEventBudget buildEventBudget = new BuildEventBudget();
-                        boolean isSuccess = buildEventBudget.deleteEventBudgetCategory(eventBudgetRequestBean);
-                        if(isSuccess){
-
-                            AccessEventBudget accessEventBudget = new AccessEventBudget();
-                            ArrayList<EventBudgetCategoryItemBean> arrEventBudgetCategoryItemBean = accessEventBudget.getBudgetCategoryItemsByCategory(eventBudgetRequestBean);
-
-                            if(arrEventBudgetCategoryItemBean!=null && !arrEventBudgetCategoryItemBean.isEmpty() ) {
-                                buildEventBudget.deleteAllEventBudgetCategoryItems(eventBudgetRequestBean);
-                                JSONObject jsonItems = accessEventBudget.getJsonBudgetItems(arrEventBudgetCategoryItemBean);
-                                Long lNumOfItems = 0L;
-                                if(jsonItems!=null){
-                                    lNumOfItems = jsonItems.optLong("num_of_items");
-                                    if(lNumOfItems>0){
-                                        jsonResponseObj.put("deleted_items",jsonItems);
-                                    }
-                                    jsonResponseObj.put("num_of_items",lNumOfItems );
-                                }
-
-                            }
-
-                            jsonResponseObj.put("deleted_category_id" , sEventBudgetCategoryId);
-                            Text okText = new OkText("Successfully Deleted..","status_mssg") ;
-                            arrOkText.add(okText);
-                            responseStatus = RespConstants.Status.OK;
-                        } else {
-                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(delCategory - 003)","err_mssg") ;
-                            arrErrorText.add(errorText);
-                        }
-                        jsonResponseObj.put("is_deleted" , isSuccess);
-
+                    if(isDeleted){
+                        jsonResponseObj.put("deleted_category_item_id",sEventBudgetCategoryItemId );
                     }
+                    jsonResponseObj.put("is_deleted",isDeleted);
+
+                    Text okText = new OkText("Successfully Deleted..","status_mssg") ;
+                    arrOkText.add(okText);
+                    responseStatus = RespConstants.Status.OK;
+
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
                     Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventBudgetCategory - 002)","err_mssg") ;

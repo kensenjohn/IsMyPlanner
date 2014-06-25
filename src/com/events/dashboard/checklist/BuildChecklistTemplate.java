@@ -1,9 +1,6 @@
 package com.events.dashboard.checklist;
 
-import com.events.bean.dashboard.checklist.ChecklistTemplateBean;
-import com.events.bean.dashboard.checklist.ChecklistTemplateItemBean;
-import com.events.bean.dashboard.checklist.ChecklistTemplateRequestBean;
-import com.events.bean.dashboard.checklist.ChecklistTemplateResponseBean;
+import com.events.bean.dashboard.checklist.*;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.data.dashboard.checklist.AccessChecklistTemplateData;
@@ -59,10 +56,29 @@ public class BuildChecklistTemplate {
             }
 
             if(checklistTemplateItemBean!=null && !Utility.isNullOrEmpty(checklistTemplateItemBean.getChecklistTemplateItemId())) {
+                ArrayList<ChecklistTemplateTodoBean> arrChecklistTemplateTodoBean = checklistTemplateRequestBean.getArrChecklistTemplateTodoBean();
+                deleteAllChecklistTemplateTodoBean( checklistTemplateRequestBean );
+                Integer iNumberOfTodos = createChecklistTemplateTodoBean( arrChecklistTemplateTodoBean );
                 checklistTemplateResponseBean.setChecklistTemplateItemBean( checklistTemplateItemBean );
             }
         }
         return checklistTemplateResponseBean;
+    }
+
+    public void deleteAllChecklistTemplateTodoBean(ChecklistTemplateRequestBean checklistTemplateRequestBean){
+        if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateItemId()) ){
+            BuildChecklistTemplateData buildChecklistTemplateData = new BuildChecklistTemplateData();
+            buildChecklistTemplateData.deleteAllChecklistTemplateTodo( checklistTemplateRequestBean );
+        }
+    }
+
+    public Integer createChecklistTemplateTodoBean(ArrayList<ChecklistTemplateTodoBean> arrChecklistTemplateTodoBean){
+        Integer iNumberOfTodos = 0;
+        if(arrChecklistTemplateTodoBean!=null && !arrChecklistTemplateTodoBean.isEmpty() ){
+            BuildChecklistTemplateData buildChecklistTemplateData = new BuildChecklistTemplateData();
+            iNumberOfTodos = buildChecklistTemplateData.insertChecklistTemplateTodo(arrChecklistTemplateTodoBean);
+        }
+        return iNumberOfTodos;
     }
 
     public Integer deleteChecklistTemplateItem( ChecklistTemplateRequestBean checklistTemplateRequestBean ){
@@ -73,6 +89,15 @@ public class BuildChecklistTemplate {
             iNumOfChecklistTemplateItemDeleted = buildChecklistTemplateData.deleteChecklistTemplateItem(checklistTemplateRequestBean);
         }
         return iNumOfChecklistTemplateItemDeleted;
+    }
+
+    public Integer deleteChecklistTemplateTodo( ChecklistTemplateRequestBean checklistTemplateRequestBean ){
+        Integer iNumOfChecklistTemplateTodoDeleted = 0;
+        if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getChecklistTemplateTodoId())   ){
+            BuildChecklistTemplateData buildChecklistTemplateData = new BuildChecklistTemplateData();
+            iNumOfChecklistTemplateTodoDeleted = buildChecklistTemplateData.deleteChecklistTemplateTodo(checklistTemplateRequestBean);
+        }
+        return iNumOfChecklistTemplateTodoDeleted;
     }
 
     public void sortChecklistTemplateItem(  ChecklistTemplateRequestBean checklistTemplateRequestBean  ){

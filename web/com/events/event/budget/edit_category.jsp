@@ -100,6 +100,10 @@
     </div>
 </div>
 </body>
+<form id="frm_delete_event_budget_category_item">
+    <input type="hidden" name="event_id"  value="<%=sEventId%>" />
+    <input type="hidden" name="event_budget_category_item_id" id="delete_budget_category_item_id" value="" />
+</form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/jquery.dataTables.min.js"></script>
 <script src="/js/bignumber.min.js"></script>
@@ -118,7 +122,7 @@
         });
 
         $('#add_item').click(function(){
-            var itemId = getTimeStamp();
+            var itemId = guidGenerator();
             fnClickAddRow(itemId);
         });
     });
@@ -211,8 +215,11 @@
         }
     }
     var arrayItemId =  [];
-    function getTimeStamp() {
-        return Math.round(new Date().getTime() / 1000) ;
+    function guidGenerator() {
+        var S4 = function() {
+            return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        };
+        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
     }
     function fnClickAddRow(varItemId) {
         var oTable = objBudgetCategoryItemsTable;
@@ -221,7 +228,7 @@
             '<div class="input-group"> <span class="input-group-addon">$</span><input type="text" class="form-control" id="budget_item_estimate_'+varItemId+'" name="budget_item_estimate_'+varItemId+'"/></div>',
             '<div class="input-group"> <span class="input-group-addon">$</span><input type="text" class="form-control" id="budget_item_actual_'+varItemId+'" name="budget_item_actual_'+varItemId+'"/></div>',
             '<input type="checkbox" id="budget_item_ispaid_'+varItemId+'" name="budget_item_ispaid_'+varItemId+'"/>',
-            '<button class="btn btn-xs btn-default" id="delete_'+varItemId+'" name="delete_'+varItemId+'"><i class="fa fa-trash-o"></i>&nbsp; Delete</button>'] );
+            '<button type="button" class="btn btn-xs btn-default" id="delete_'+varItemId+'" name="delete_'+varItemId+'" ><i class="fa fa-trash-o"></i>&nbsp; Delete</button>'] );
 
         var oSettings = oTable.fnSettings();
         var rows=$('#budget_category_item tr').length-2;
@@ -237,11 +244,67 @@
         });
 
         $('#delete_'+varItemId).bind("click", function() {
-            updateCategoryTotal();
+
+            var delete_category_item_obj = {
+                category_item_id:  varItemId,
+                printObj: function () {
+                    return this.category_item_id ;
+                }
+            }
+            displayConfirmBox(
+                    "Are you sure you want to delete this item? ",
+                    "Delete Item",
+                    "Yes", "No", deleteCategoryItem,delete_category_item_obj);
+
         });
 
         arrayItemId.push( varItemId );
 
+    }
+    function deleteCategoryItem(  varCategoryItemObj  ){
+        $('#delete_budget_category_item_id').val(varCategoryItemObj.category_item_id);
+
+        var actionUrl = "/proc_delete_event_budget_category_item.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_delete_event_budget_category_item").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,processCategoryItemDeletion);
+    }
+    function processCategoryItemDeletion (jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+
+                    var jsonResponseObj = varResponseObj.payload;
+                    var varIsCategoryItemDeleted = jsonResponseObj.is_deleted;
+
+                    if(varIsCategoryItemDeleted){
+
+                        $('#delete_budget_category_item_id').val('');
+
+                        var varCategoryItemId = jsonResponseObj.deleted_category_item_id;
+                        // $('#row_'+varCategoryItemId).remove();
+
+                        var oTable = objBudgetCategoryItemsTable;
+                        if(oTable!='' && oTable!=undefined) {
+                            oTable.fnDeleteRow((oTable.$('#row_'+varCategoryItemId))[0] );
+                        }
+
+                        updateCategoryTotal();
+
+                    } else {
+                        displayMssgBoxAlert("The budget category item was not deleted. Please try again later.", true);
+                    }
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (deleteCategoryItem - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (deleteCategoryItem - 2)", true);
+        }
     }
     function generateItemList(){
         $('#hidden_item_ids').empty();
