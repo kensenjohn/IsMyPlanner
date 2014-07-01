@@ -63,11 +63,12 @@
                             <div class="col-md-8">
                                 <label for="checklist_name" class="form_label">Checklist Template:</label>
                                 <select class="form-control" id="checklist_templates" name="checklist_template_id">
-                                    <option>Select a Template</option>
+                                    <option value="">Select a Template</option>
                                 </select>
                             </div>
                         </div>
                         <input type="hidden" name="checklist_id" id="checklist_id" value="<%=sChecklistId%>"/>
+                        <input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
                     </form>
                     <div class="row">
                         <div class="col-md-12">
@@ -183,11 +184,30 @@
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
     function saveChecklistTemplate( callbackmethod ) {
-        var actionUrl = "/proc_save_checklist_template.aeve";
+        var actionUrl = "/proc_save_event_checklist.aeve";
         var methodType = "POST";
-        var dataString = $("#frm_load_checklist_template_items").serialize();
+        var dataString = $("#frm_save_checklist").serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
+
+    function getResult(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var jsonResponseObj = varResponseObj.payload;
+                if(jsonResponseObj!=undefined) {
+                    /*var varChecklistTemplateBean = jsonResponseObj.checklist_template_bean;
+                    $('#checklist_template_id').val( varChecklistTemplateBean.checklist_template_id );
+                    $('#div_add_checklist_item').show();
+
+                    createAddItemEvent( varChecklistTemplateBean.checklist_template_id );*/
+                }
+            }
+        }
+    }
+
     function populateChecklistTemplateDropDown(jsonResult){
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
@@ -238,7 +258,6 @@
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
                 var jsonResponseObj = varResponseObj.payload;
                 if(jsonResponseObj!=undefined) {
-                     console.log( 'populateTemplateItems ' );
                     var varChecklistTemplateBean = jsonResponseObj.checklist_template_bean;
 
                     var varNumberOfItems = jsonResponseObj.num_of_checklist_template_items;

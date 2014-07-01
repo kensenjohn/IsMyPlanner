@@ -36,6 +36,33 @@ public class BuildToDoData {
         return numOfRowsInserted;
     }
 
+    public Integer insertTodoList( ArrayList<ToDoBean> arrToDoBean ){
+        Integer numOfRowsInserted = 0;
+        if(arrToDoBean!=null && !arrToDoBean.isEmpty()   ){
+            String sQuery = "INSERT INTO GTTODO (TODOID,TODO,FK_USERID,    FK_VENDORID,FK_CLIENTID,USERTYPE,   TODOSTATUS,TODODATE,HUMANTODODATE,     " +
+                    "   CREATEDATE, HUMANCREATEDATE,TODOTIMEZONE ) VALUES (?,?,?,   ?,?,?,   ?,?,?,   ?,?,?)";
+
+            ArrayList< ArrayList<Object> > aBatchParams = new ArrayList<ArrayList<Object>>();
+            for(ToDoBean toDoBean : arrToDoBean ) {
+                ArrayList<Object> aParams = DBDAO.createConstraint(toDoBean.getToDoId(),toDoBean.getToDo(),toDoBean.getUserId(),
+                        toDoBean.getVendorId(),ParseUtil.checkNull(toDoBean.getClientId()),toDoBean.getUserType().getType(),
+                        toDoBean.getTodoStatus().toString(),toDoBean.getToDoDate(),toDoBean.getHumanToDoDate(),
+                        DateSupport.getEpochMillis(),DateSupport.getUTCDateTime(),toDoBean.getTodoTimeZone() );
+                aBatchParams.add( aParams );
+            }
+
+
+            int[] aNumOfRowsInserted= DBDAO.putBatchRowsQuery( sQuery, aBatchParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "insertTodoList() " );
+
+            if(aNumOfRowsInserted!=null && aNumOfRowsInserted.length > 0 ) {
+                for(int iCount : aNumOfRowsInserted ) {
+                    numOfRowsInserted = numOfRowsInserted + iCount;
+                }
+            }
+        }
+        return numOfRowsInserted;
+    }
+
     public Integer updateTodo( ToDoBean toDoBean ){
         Integer numOfRowsUpdated = 0;
         if(toDoBean!=null && !Utility.isNullOrEmpty(toDoBean.getToDoId())  && !Utility.isNullOrEmpty(toDoBean.getToDo())    ){

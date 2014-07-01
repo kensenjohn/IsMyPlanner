@@ -1,5 +1,8 @@
 package com.events.proc.event.checklist;
 
+import com.events.bean.event.checklist.EventChecklistBean;
+import com.events.bean.event.checklist.EventChecklistRequestBean;
+import com.events.bean.event.checklist.EventChecklistResponseBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
@@ -7,10 +10,8 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.json.ErrorText;
-import com.events.json.RespConstants;
-import com.events.json.RespObjectProc;
-import com.events.json.Text;
+import com.events.event.checklist.BuildEventChecklist;
+import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,9 +46,58 @@ public class ProcSaveEventChecklist extends HttpServlet {
 
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
 
-                    String sChecklistTemplateName = ParseUtil.checkNull(request.getParameter("checklist_name"));
+                    String sEventChecklistName = ParseUtil.checkNull(request.getParameter("checklist_name"));
                     String sChecklistTemplateId = ParseUtil.checkNull( request.getParameter("checklist_template_id"));
                     String sChecklistId = ParseUtil.checkNull( request.getParameter("checklist_id"));
+                    String sEventId = ParseUtil.checkNull( request.getParameter("event_id"));
+
+                    if( Utility.isNullOrEmpty(sEventChecklistName)){
+                        Text errorText = new ErrorText("Please select a valid checklist name.","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
+                    } else if( Utility.isNullOrEmpty(sEventId)){
+                        Text errorText = new ErrorText("Please select a valid event.","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
+                    } else {
+
+                        EventChecklistRequestBean eventChecklistRequestBean = new EventChecklistRequestBean();
+                        eventChecklistRequestBean.setChecklistName( sEventChecklistName );
+                        eventChecklistRequestBean.setChecklistTemplateId( sChecklistTemplateId );
+                        eventChecklistRequestBean.setChecklistId( sChecklistId );
+                        eventChecklistRequestBean.setEventId( sEventId );
+
+                        BuildEventChecklist buildEventChecklist = new BuildEventChecklist();
+                        EventChecklistResponseBean eventChecklistResponseBean = buildEventChecklist.saveEventChecklist( eventChecklistRequestBean );
+                        if(eventChecklistResponseBean!=null){
+                            EventChecklistBean eventChecklistBean = eventChecklistResponseBean.getEventChecklistBean();
+
+                            if(eventChecklistBean!=null && !Utility.isNullOrEmpty(eventChecklistBean.getEventChecklistId())){
+
+                                jsonResponseObj.put("event_checklist_bean", eventChecklistBean.toJson() );
+
+                                Text okText = new OkText("The checklist was saved successfully.","status_mssg") ;
+                                arrOkText.add(okText);
+                                responseStatus = RespConstants.Status.OK;
+                            }  else {
+                                Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventChecklist - 004)","err_mssg") ;
+                                arrErrorText.add(errorText);
+
+                                responseStatus = RespConstants.Status.ERROR;
+                            }
+
+
+                        } else {
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventChecklist - 003)","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
+                        }
+                    }
+
+
 
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
