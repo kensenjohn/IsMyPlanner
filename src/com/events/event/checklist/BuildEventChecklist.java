@@ -123,6 +123,41 @@ public class BuildEventChecklist {
         return hmEventChecklistItemBean;
     }
 
+    public Integer deleteEventChecklist( EventChecklistRequestBean eventChecklistRequestBean ){
+        Integer numOfRowsDeleted = 0;
+        if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistId())){
+            BuildEventChecklistData buildEventChecklistData = new BuildEventChecklistData();
+            numOfRowsDeleted = buildEventChecklistData.deleteEventChecklist( eventChecklistRequestBean );
+        }
+        return numOfRowsDeleted;
+    }
+
+    public Integer deleteEventChecklistItem(  EventChecklistRequestBean eventChecklistRequestBean  ){
+        Integer numOfRowsDeleted = 0;
+        if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistItemId())){
+            BuildEventChecklistData buildEventChecklistData = new BuildEventChecklistData();
+            numOfRowsDeleted = buildEventChecklistData.deleteEventChecklistItem( eventChecklistRequestBean );
+        }
+        return numOfRowsDeleted;
+    }
+    public Integer deleteEventChecklistTodo(  EventChecklistRequestBean eventChecklistRequestBean  ){
+        Integer numOfRowsDeleted = 0;
+        if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistTodoId())){
+            BuildEventChecklistData buildEventChecklistData = new BuildEventChecklistData();
+            numOfRowsDeleted = buildEventChecklistData.deleteEventChecklistTodo( eventChecklistRequestBean );
+        }
+        return numOfRowsDeleted;
+    }
+
+    public Integer updateEventChecklistItemAction(   EventChecklistRequestBean eventChecklistRequestBean ){
+        Integer numOfRowsUpdated = 0;
+        if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistItemId())){
+            BuildEventChecklistData buildEventChecklistData = new BuildEventChecklistData();
+            numOfRowsUpdated = buildEventChecklistData.updateEventChecklistItemAction( eventChecklistRequestBean );
+        }
+        return numOfRowsUpdated;
+    }
+
     private ToDoBean generateTodoBean (EventChecklistTodoBean eventChecklistTodoBean, EventChecklistRequestBean eventChecklistRequestBean ){
         ToDoBean toDoBean = new ToDoBean();
         if(eventChecklistTodoBean!=null){

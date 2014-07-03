@@ -104,7 +104,6 @@
     $(window).load(function() {
         $('#btn_checklist_item_todo').click(function(){
             var varChecklistTemplateTodoId = guidGenerator();
-            console.log('varChecklistTemplateTodoId : ' + varChecklistTemplateTodoId );
 
             this.checkListTodoModel = new CheckListTodoModel({
                 'bb_checklist_template_todo_id' : varChecklistTemplateTodoId,

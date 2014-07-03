@@ -2,6 +2,7 @@ package com.events.data.event.checklist;
 
 import com.events.bean.event.checklist.EventChecklistBean;
 import com.events.bean.event.checklist.EventChecklistItemBean;
+import com.events.bean.event.checklist.EventChecklistRequestBean;
 import com.events.bean.event.checklist.EventChecklistTodoBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
@@ -51,6 +52,46 @@ public class BuildEventChecklistData {
             numOfRowsUpdated = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "insertChecklistTemplate() ");
         }
         return numOfRowsUpdated;
+    }
+
+    public Integer deleteEventChecklist( EventChecklistRequestBean eventChecklistRequestBean ){
+        Integer numOfRowsDeleted = 0;
+        if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistId() )) {
+            String sQuery = "DELETE FROM GTEVENTCHECKLIST WHERE EVENTCHECKLISTID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(eventChecklistRequestBean.getChecklistId());
+            numOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "deleteEventChecklist() ");
+        }
+        return numOfRowsDeleted;
+    }
+
+    public Integer deleteEventChecklistItem( EventChecklistRequestBean eventChecklistRequestBean ){
+        Integer numOfRowsDeleted = 0;
+        if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistItemId() )) {
+            String sQuery = "DELETE FROM GTEVENTCHECKLISTITEM WHERE EVENTCHECKLISTITEMID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(eventChecklistRequestBean.getChecklistItemId());
+            numOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "deleteEventChecklistItem() ");
+        }
+        return numOfRowsDeleted;
+    }
+
+    public Integer deleteEventChecklistTodo( EventChecklistRequestBean eventChecklistRequestBean ){
+        Integer numOfRowsDeleted = 0;
+        if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistTodoId() )) {
+            String sQuery = "DELETE FROM GTEVENTCHECKLISTTODO WHERE EVENTCHECKLISTTODOID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(eventChecklistRequestBean.getChecklistTodoId());
+            numOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "deleteEventChecklistTodo() ");
+        }
+        return numOfRowsDeleted;
+    }
+
+    public Integer updateEventChecklistItemAction( EventChecklistRequestBean eventChecklistRequestBean ){
+        Integer numOfRowsDeleted = 0;
+        if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistItemId())) {
+            String sQuery = "UPDATE GTEVENTCHECKLISTITEM SET IS_COMPLETE =? WHERE EVENTCHECKLISTITEMID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint(eventChecklistRequestBean.isComplete()?"1":"0",eventChecklistRequestBean.getChecklistItemId());
+            numOfRowsDeleted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "updateEventChecklistItemAction() ");
+        }
+        return numOfRowsDeleted;
     }
 
     // GTEVENTCHECKLISTITEM( EVENTCHECKLISTITEMID VARCHAR(45) NOT NULL, FK_EVENTCHECKLISTID VARCHAR(45) NOT NULL, NAME VARCHAR(500) NOT NULL,

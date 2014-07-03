@@ -1,6 +1,6 @@
 package com.events.proc.event.checklist;
 
-import com.events.bean.event.checklist.*;
+import com.events.bean.event.checklist.EventChecklistRequestBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
@@ -8,7 +8,7 @@ import com.events.common.ParseUtil;
 import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
-import com.events.event.checklist.AccessEventChecklist;
+import com.events.event.checklist.BuildEventChecklist;
 import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -20,16 +20,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 6/19/14
- * Time: 1:01 PM
+ * Date: 7/2/14
+ * Time: 9:35 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcLoadEventChecklist extends HttpServlet {
+public class ProcDeleteEventChecklist extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     private static final Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
@@ -44,54 +43,35 @@ public class ProcLoadEventChecklist extends HttpServlet {
                 UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
                 if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
-                    String sChecklistId = ParseUtil.checkNull(request.getParameter("checklist_id"));
 
-                    if(Utility.isNullOrEmpty(sChecklistId)) {
-                        Text errorText = new ErrorText("Please select a valid checklist.","err_mssg") ;
+                    String sEventChecklistId = ParseUtil.checkNull(request.getParameter("event_checklist_id"));
+
+                    if( Utility.isNullOrEmpty(sEventChecklistId)){
+                        Text errorText = new ErrorText("Please select a valid event checklist.","err_mssg") ;
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
                     } else {
+
                         EventChecklistRequestBean eventChecklistRequestBean = new EventChecklistRequestBean();
-                        eventChecklistRequestBean.setChecklistId( sChecklistId );
+                        eventChecklistRequestBean.setChecklistId( sEventChecklistId );
 
-                        AccessEventChecklist accessEventChecklist = new AccessEventChecklist();
-                        EventChecklistResponseBean eventChecklistResponseBean = accessEventChecklist.getEventChecklistDetails(eventChecklistRequestBean);
-
-                        if(eventChecklistResponseBean!=null){
-                            EventChecklistBean eventChecklistBean = eventChecklistResponseBean.getEventChecklistBean();
-
-                            HashMap<Long,EventChecklistItemBean> hmEventChecklistItemBean = eventChecklistResponseBean.getHmEventChecklistItemBean();
-                            JSONObject jsonAllEventChecklistItems = accessEventChecklist.getJsonAllChecklistItems( hmEventChecklistItemBean );
-                                    Long lNumOfItems = 0L;
-                            if(jsonAllEventChecklistItems!=null){
-                                lNumOfItems = jsonAllEventChecklistItems.optLong("num_of_event_checklist_items");
-                                if(lNumOfItems>0){
-                                    jsonResponseObj.put( "event_checklist_items" , jsonAllEventChecklistItems );
-                                }
-                            }
-                            jsonResponseObj.put( "num_of_event_checklist_items", lNumOfItems );
-
-
-                            HashMap<String, ArrayList<EventChecklistTodoBean> > hmEventChecklistTodoBean = eventChecklistResponseBean.getHmEventChecklistTodoBean();
-                            JSONObject jsonHmAllEventChecklistTodos = accessEventChecklist.getJsonAllEventChecklistTodos(hmEventChecklistTodoBean);
-                            Long lNumOfItemTodos = 0L;
-                            if(jsonHmAllEventChecklistTodos!=null){
-                                lNumOfItemTodos = jsonHmAllEventChecklistTodos.optLong("num_of_event_checklist_items_with_todos");
-                                jsonResponseObj.put( "items_with_todos", jsonHmAllEventChecklistTodos );
-                            }
-                            jsonResponseObj.put( "num_of_event_checklist_items_with_todos", lNumOfItemTodos );
-
-                            jsonResponseObj.put("event_checklist_bean",eventChecklistBean.toJson());
+                        BuildEventChecklist buildEventChecklist = new BuildEventChecklist();
+                        Integer iNumOfChecklistDeleted = buildEventChecklist.deleteEventChecklist( eventChecklistRequestBean );
+                        boolean isDeleted = false;
+                        if( iNumOfChecklistDeleted>0 ){
+                            isDeleted = true;
                         }
+                        jsonResponseObj.put("is_deleted",isDeleted);
+                        jsonResponseObj.put("deleted_event_checklist_id",sEventChecklistId);
 
-                        Text okText = new OkText("The event checklist was successfully loaded.","status_mssg") ;
+                        Text okText = new OkText("The event checklist was successfully deleted.","status_mssg") ;
                         arrOkText.add(okText);
                         responseStatus = RespConstants.Status.OK;
                     }
                 } else {
                     appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
-                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventChecklist - 002)","err_mssg") ;
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveChecklistTemplate - 002)","err_mssg") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
@@ -105,7 +85,7 @@ public class ProcLoadEventChecklist extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(loadEventChecklist - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveChecklistTemplate - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;
@@ -122,3 +102,4 @@ public class ProcLoadEventChecklist extends HttpServlet {
         response.getWriter().write( responseObject.getJson().toString() );
     }
 }
+

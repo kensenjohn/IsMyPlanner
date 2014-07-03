@@ -1206,6 +1206,66 @@
         <servlet-name>Process Save Event Checklist</servlet-name>
         <url-pattern>/proc_save_event_checklist.aeve</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load All Event Checklists</servlet-name>
+        <servlet-class>com.events.proc.event.checklist.ProcLoadAllEventChecklists</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load All Event Checklists</servlet-name>
+        <url-pattern>/proc_load_all_event_checklists.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Event Checklists</servlet-name>
+        <servlet-class>com.events.proc.event.checklist.ProcDeleteEventChecklist</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Event Checklists</servlet-name>
+        <url-pattern>/proc_delete_event_checklist.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Event Checklist</servlet-name>
+        <servlet-class>com.events.proc.event.checklist.ProcLoadEventChecklist</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Event Checklist</servlet-name>
+        <url-pattern>/proc_load_event_checklist.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Load Event Checklist Item</servlet-name>
+        <servlet-class>com.events.proc.event.checklist.ProcLoadEventChecklistItem</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Load Event Checklist Item</servlet-name>
+        <url-pattern>/proc_load_event_checklist_item.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Event Checklist Item</servlet-name>
+        <servlet-class>com.events.proc.event.checklist.ProcDeleteEventChecklistItem</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Event Checklist Item</servlet-name>
+        <url-pattern>/proc_delete_event_checklist_item.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Delete Event Checklist Todo</servlet-name>
+        <servlet-class>com.events.proc.event.checklist.ProcDeleteEventChecklistTodo</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Delete Event Checklist Todo</servlet-name>
+        <url-pattern>/proc_delete_event_checklist_todo.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Update Event Checklist Item Action</servlet-name>
+        <servlet-class>com.events.proc.event.checklist.ProcUpdateEventChecklistItemAction</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Update Event Checklist Item Action</servlet-name>
+        <url-pattern>/proc_update_event_checklist_item_action.aeve</url-pattern>
+    </servlet-mapping>
+
+
+
+
 
 
 

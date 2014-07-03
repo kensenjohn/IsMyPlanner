@@ -17,6 +17,33 @@ public class EventChecklistRequestBean {
     private String eventId = Constants.EMPTY;
     private String clientId = Constants.EMPTY;
     private String vendorId = Constants.EMPTY;
+    private String checklistItemId = Constants.EMPTY;
+    private String checklistTodoId = Constants.EMPTY;
+    private boolean isComplete = false;
+
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    public void setComplete(boolean complete) {
+        isComplete = complete;
+    }
+
+    public String getChecklistTodoId() {
+        return checklistTodoId;
+    }
+
+    public void setChecklistTodoId(String checklistTodoId) {
+        this.checklistTodoId = checklistTodoId;
+    }
+
+    public String getChecklistItemId() {
+        return checklistItemId;
+    }
+
+    public void setChecklistItemId(String checklistItemId) {
+        this.checklistItemId = checklistItemId;
+    }
 
     public String getEventId() {
         return eventId;

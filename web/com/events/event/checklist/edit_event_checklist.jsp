@@ -10,7 +10,7 @@
     #sortable_chk_list { list-style-type: none;}
 </style>
 <%
-    String sChecklistId = ParseUtil.checkNull(request.getParameter("checklist_id"));
+    String sChecklistId = ParseUtil.checkNull(request.getParameter("event_checklist_id"));
     boolean isLoadChecklist = false;
     if(!Utility.isNullOrEmpty(sChecklistId)){
         isLoadChecklist = true;
@@ -145,10 +145,46 @@
         </div>
     </div>
 </script>
-<script id="template_checklist_template_option" type="text/x-handlebars-template">
-    <option id="{{checklist_template_id}}" value="{{checklist_template_id}}">{{checklist_template_name}}</option>
+<script id="template_event_checklist_item" type="text/x-handlebars-template">
+    <li class="sort_tracker" id="sort_tracker_event_checklist_item_{{item_sequence_number}}" param="{{event_checklist_item_id}}">
+        <div class="row chk_list_row" id="row_event_checklist_item_{{event_checklist_item_id}}" param="event_checklist_item{{item_number}}">
+            <div class="col-xs-6">
+                <h5><input type="checkbox" id="update_checklist_item_{{event_checklist_item_id}}" name="event_checklist_item_status" value="{{event_checklist_item_id}}">&nbsp;&nbsp;<span class="chk_list_name">{{event_checklist_item_name}}</span> &nbsp;&nbsp;&nbsp; <i class="fa fa-chevron-right icon_item_details" id="icon_event_checklist_item_{{event_checklist_item_id}}" param="item_{{event_checklist_item_id}}"></i> </h5>
+            </div>
+            <div class="col-xs-6">
+                <h5><button class="btn btn-default btn-xs" id="edit_event_checklist_item_{{event_checklist_item_id}}"><i class="fa fa-pencil"></i> Edit</button>
+                &nbsp;&nbsp;&nbsp;
+                <button class="btn btn-default btn-xs" id="delete_event_checklist_item_{{event_checklist_item_id}}"><i class="fa fa-trash-o"></i> Delete</button></h5>
+            </div>
+            <div class="col-xs-12" id="chk_list_details_item_{{event_checklist_item_id}}"  style="display:none">
+                <div class="row">
+                    <div class="col-xs-offset-1 col-xs-5">
+                        <span style="font-weight: bold;">Tasks</span>
+                    </div>
+                </div>
+                <div id="event_checklist_todo_list_{{event_checklist_item_id}}">
+
+                </div>
+            </div>
+        </div>
+    </li>
 </script>
+<script id="template_event_checklist_item_todo" type="text/x-handlebars-template">
+    <div class="row">
+        <div class="col-xs-offset-1 col-xs-11">
+            <input type="checkbox" id="update_checklist_item_todo_{{event_checklist_item_todo_id}}" name="event_checklist_item_todo_status" value="{{event_checklist_item_todo_id}}">&nbsp;&nbsp;<span>{{event_checklist_item_todo_name}}</span>
+        </div>
+    </div>
+</script>
+
+<form id="frm_delete_event_checklist_item">
+    <input type="hidden" id="delete_event_checklist_id" name="event_checklist_id"/>
+    <input type="hidden" id="delete_event_checklist_item_id" name="event_checklist_item_id"/>
+    <input type="hidden" id="delete_event_checklist_item_row_number" name="event_checklist_item_row_number"/>
+</form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
+<script src="/js/jquery.colorbox-min.js"></script>
+<script src="/js/jquery.ui.touch-punch.min.js"></script>
 <script src="/js/handlebars-v1.3.0.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
@@ -203,6 +239,7 @@
                     $('#div_add_checklist_item').show();
 
                     createAddItemEvent( varChecklistTemplateBean.checklist_template_id );*/
+
                 }
             }
         }
@@ -308,6 +345,203 @@
             }
         }
     }
+    function populateChecklist( jsonResult ){
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var jsonResponseObj = varResponseObj.payload;
+                if(jsonResponseObj!=undefined) {
+                    // var varNumOfAllChecklistTemplates = jsonResponseObj.num_of_checklist_templates;
+                    var varEventChecklistBean = jsonResponseObj.event_checklist_bean;
+                    $('#checklist_name').val( varEventChecklistBean.name );
+
+                    var varNumberOfItems = jsonResponseObj.num_of_event_checklist_items;
+                    if(varNumberOfItems>0){
+                        var varNumOfItemWithTodos = jsonResponseObj.num_of_event_checklist_items_with_todos;
+                        var varItemsWithTodos = '';
+                        if(varNumOfItemWithTodos>0){
+                            varItemsWithTodos = jsonResponseObj.items_with_todos
+                        }
+                    }
+
+
+                    var varEventChecklisItems = jsonResponseObj.event_checklist_items;
+                    for( var varCount = 0; varCount<varNumberOfItems; varCount++ ){
+
+                        var varEventChecklistItemBean = varEventChecklisItems[varCount];
+                        var varEventChecklistItemId = varEventChecklistItemBean.event_checklist_item_id;
+                        if(varEventChecklistItemBean!=undefined){
+                            this.eventChecklistTemplateItemModel = new EventChecklistTemplateItemModel({
+                                'bb_event_checklist_item_sequence_number' : varCount,
+                                'bb_event_checklist_item_id' : varEventChecklistItemId,
+                                'bb_event_checklist_item_name' : varEventChecklistItemBean.name
+                            });
+                            var eventChecklistTemplateItemView = new EventChecklistTemplateItemView({model:this.eventChecklistTemplateItemModel});
+                            eventChecklistTemplateItemView.render();
+                            $("#sortable_chk_list").append(eventChecklistTemplateItemView.el);
+
+
+                            createEditItemEvent(varEventChecklistItemBean.event_checklist_id,varEventChecklistItemBean.event_checklist_item_id);
+                            addEventChecklistItemDeleteClickEvent(varEventChecklistItemBean.event_checklist_id,varEventChecklistItemBean.event_checklist_item_id, varCount);
+
+                            if( varItemsWithTodos!='' && varItemsWithTodos!=undefined){
+                                var varItemTodoList =  varItemsWithTodos[ varEventChecklistItemId ];
+
+                                if(varItemTodoList!=undefined){
+
+                                    this.eventChecklistTodoModel = new EventChecklistTodoModel({
+                                        'bb_item_todo_list' : varItemTodoList,
+                                        'bb_num_of_todos' : varItemTodoList.num_of_event_checklist_todos
+                                    });
+
+                                    var eventChecklistTodoView = new EventChecklistTodoView({model:this.eventChecklistTodoModel});
+                                    eventChecklistTodoView.render();
+                                    $("#event_checklist_todo_list_"+varEventChecklistItemId).append(eventChecklistTodoView.el);
+                                }
+                            }
+                        }
+
+                    }
+
+                    createIconEvents();
+                }
+            }
+        }
+    }
+    function addEventChecklistItemDeleteClickEvent(varEventChecklistId,varEventChecklistItemId, varRowNumber) {
+        var event_checklist_item_delete_obj = {
+            event_checklist_id: varEventChecklistId,
+            event_checklist_item_id: varEventChecklistItemId,
+            event_checklist_item_row_number:varRowNumber
+        }
+        $('#delete_event_checklist_item_'+varEventChecklistItemId).click({param_event_checklist_item_delete_obj:event_checklist_item_delete_obj},function(e){
+            displayConfirmBox(
+                    "Are you sure you want to delete this item?" ,
+                    "Delete Checklist Item",
+                    "Yes", "No", deleteEventChecklistItem,e.data.param_event_checklist_item_delete_obj);
+        });
+    }
+
+    function deleteEventChecklistItem( varEventChecklistItemObj){
+        $('#delete_event_checklist_id').val(varEventChecklistItemObj.event_checklist_id);
+        $('#delete_event_checklist_item_id').val(varEventChecklistItemObj.event_checklist_item_id);
+        $('#delete_event_checklist_item_row_number').val(varEventChecklistItemObj.event_checklist_item_row_number);
+
+        var actionUrl = "/proc_delete_event_checklist_item.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_delete_event_checklist_item").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,processEventChecklistItemDeletion);
+    }
+    function processEventChecklistItemDeletion (jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true) {
+
+                    var jsonResponseObj = varResponseObj.payload;
+                    if(jsonResponseObj!=undefined){
+                        var varIsEventChecklistItemDeleted = jsonResponseObj.is_deleted;
+
+                        if(varIsEventChecklistItemDeleted){
+                            var varEventChecklistItemId = jsonResponseObj.deleted_event_checklist_item_id;
+                            $('#delete_event_checklist_id').val('');
+                            $('#delete_event_checklist_item_id').val('');
+                            $('#delete_event_checklist_item_row_number').val('');
+
+                            var varEventChecklistItemRowNum = jsonResponseObj.row_number;
+                            $('#sort_tracker_event_checklist_item_'+varEventChecklistItemRowNum).remove();
+
+                        } else {
+                            displayMssgBoxAlert("The checklist item was not deleted. Please try again later.", true);
+                        }
+                    }
+                }
+            } else {
+                displayMssgBoxAlert("Please try again later (deleteRegistry - 1)", true);
+            }
+        } else {
+            displayMssgBoxAlert("Please try again later (deleteRegistry - 2)", true);
+        }
+    }
+
+    function createEditItemEvent(varEventChecklistId, varEventChecklistItemId ){
+        console.log('id : ' + varEventChecklistId + ' item : '+ varEventChecklistItemId);
+        $('#edit_event_checklist_item_'+varEventChecklistItemId).unbind('click');
+        $('#edit_event_checklist_item_'+varEventChecklistItemId).bind('click',function(){
+            $.colorbox({
+                href:'edit_event_checklist_item.jsp?event_checklist_id='+varEventChecklistId+'&event_checklist_item_id='+varEventChecklistItemId,
+                iframe:true,
+                innerWidth: '90%',
+                innerHeight: '85%',
+                scrolling: true,
+                onClosed : function() {
+                    $("#sortable_chk_list").empty();
+                    loadChecklist(populateChecklist);
+                }});
+        });
+    }
+
+    var EventChecklistTodoModel = Backbone.Model.extend({
+        defaults: {
+            bb_item_todo_list:undefined,
+            bb_num_of_todos: 0
+        }
+    });
+    var EventChecklistTodoView = Backbone.View.extend({
+        initialize: function(){
+            this.varBBEventChecklistItemTodoList = this.model.get('bb_item_todo_list');
+            this.varBBEventChecklistNumOfTodos = this.model.get('bb_num_of_todos');
+        },
+        template : Handlebars.compile( $('#template_event_checklist_item_todo').html() ),
+        render : function() {
+
+            if(this.varBBEventChecklistNumOfTodos>0){
+                for( var varTodoCount = 0; varTodoCount<this.varBBEventChecklistNumOfTodos; varTodoCount++ ){
+                    var varTodoBean = this.varBBEventChecklistItemTodoList[varTodoCount];
+
+                    var varTmpTodoBean = {
+                        "event_checklist_item_todo_id": varTodoBean.event_checklist_todo_id,
+                        "event_checklist_item_todo_name": varTodoBean.name
+                    }
+
+                    var checklistTodoRow = this.template(  eval( varTmpTodoBean )  );
+                    $(this.el).append( checklistTodoRow );
+                }
+            }
+
+
+        }
+    });
+
+    var EventChecklistTemplateItemModel = Backbone.Model.extend({
+        defaults: {
+            bb_event_checklist_item_sequence_number:undefined,
+            bb_event_checklist_item_id: undefined,
+            bb_event_checklist_item_name: undefined
+        }
+    });
+    var EventChecklistTemplateItemView = Backbone.View.extend({
+        initialize: function(){
+            this.varBBEventChecklistItemSequenceNumber = this.model.get('bb_event_checklist_item_sequence_number');
+            this.varBBEventChecklistItemId = this.model.get('bb_event_checklist_item_id');
+            this.varBBEventChecklistItemName = this.model.get('bb_event_checklist_item_name');
+        },
+        template : Handlebars.compile( $('#template_event_checklist_item').html() ),
+        render : function() {
+            var varTmpEventChecklistItemBean = {
+                "item_sequence_number" : this.varBBEventChecklistItemSequenceNumber,
+                "event_checklist_item_id"  : this.varBBEventChecklistItemId ,
+                "event_checklist_item_name"  : this.varBBEventChecklistItemName
+            }
+            var eventChecklistItemRow = this.template(  eval( varTmpEventChecklistItemBean )  );
+            $(this.el).append( eventChecklistItemRow );
+        }
+    });
 
     var ChecklistTemplateItemModel = Backbone.Model.extend({
         defaults: {
@@ -377,6 +611,7 @@
             toggleCollapseIcon(varIconId);
 
             var varCheckListId = $('#'+varIconId).attr('param');
+            console.log('varCheckListId -> '+varCheckListId);
             openCheckListDetail( varCheckListId )
         });
     }

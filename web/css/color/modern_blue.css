@@ -231,7 +231,7 @@ html ul.tabs li.active a:hover {
     background: #3F9CFF;
 }
 
-bootstrap-switch.bootstrap-switch-focused {
+.bootstrap-switch.bootstrap-switch-focused {
     border-color: #3F9CFF;
     outline: none;
     -webkit-box-shadow: #3F9CFF;
