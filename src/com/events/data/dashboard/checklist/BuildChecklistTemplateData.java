@@ -89,7 +89,25 @@ public class BuildChecklistTemplateData {
         return numOfRowsInserted;
     }
 
-
+    public Integer insertChecklistTemplateItems( ArrayList<ChecklistTemplateItemBean> arrChecklistTemplateItemBean ){
+        Integer numOfRowsInserted = 0;
+        if(arrChecklistTemplateItemBean!=null && !arrChecklistTemplateItemBean.isEmpty() ) {
+            String sQuery = "INSERT INTO GTCHECKLISTTEMPLATEITEM (CHECKLISTTEMPLATEITEMID, FK_CHECKLISTTEMPLATEID,NAME,   CREATEDATE,HUMANCREATEDATE,SORT_ORDER) VALUES (?,?,?,   ?,?,?)";
+            ArrayList< ArrayList<Object> > aBatchParams = new ArrayList<ArrayList<Object>>();
+            for(ChecklistTemplateItemBean checklistTemplateItemBean : arrChecklistTemplateItemBean ) {
+                ArrayList<Object> aParams = DBDAO.createConstraint(checklistTemplateItemBean.getChecklistTemplateItemId() , checklistTemplateItemBean.getChecklistTemplateId(), checklistTemplateItemBean.getName(),
+                        DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(), checklistTemplateItemBean.getSortOrder() );
+                aBatchParams.add( aParams );
+            }
+            int[] numOfRowsAffected = DBDAO.putBatchRowsQuery( sQuery, aBatchParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "insertChecklistTemplateItems() " );
+            if(numOfRowsAffected!=null && numOfRowsAffected.length > 0 ) {
+                for(int iCount : numOfRowsAffected ) {
+                    numOfRowsInserted = numOfRowsInserted + iCount;
+                }
+            }
+        }
+        return numOfRowsInserted;
+    }
 
     public Integer insertChecklistTemplateTodo( ArrayList<ChecklistTemplateTodoBean> arrChecklistTemplateTodoBean){
         Integer numOfRowsInserted = 0;
@@ -101,7 +119,7 @@ public class BuildChecklistTemplateData {
                         checklistTemplateTodoBean.getName(),DateSupport.getEpochMillis(),DateSupport.getUTCDateTime());
                 aBatchParams.add( aParams );
             }
-            int[] numOfRowsAffected = DBDAO.putBatchRowsQuery( sQuery, aBatchParams, EVENTADMIN_DB, "BuildConversationData.java", "insertChecklistTemplateTodo() " );
+            int[] numOfRowsAffected = DBDAO.putBatchRowsQuery( sQuery, aBatchParams, EVENTADMIN_DB, "BuildChecklistTemplateData.java", "insertChecklistTemplateTodo() " );
             if(numOfRowsAffected!=null && numOfRowsAffected.length > 0 ) {
                 for(int iCount : numOfRowsAffected ) {
                     numOfRowsInserted = numOfRowsInserted + iCount;

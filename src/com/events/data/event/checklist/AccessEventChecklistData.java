@@ -72,13 +72,28 @@ public class AccessEventChecklistData {
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventChecklistData.java", "getAllEventChecklistItems()");
 
             if(arrResult!=null && !arrResult.isEmpty()) {
+                Long lSortSequence = 0L;
                 for( HashMap<String, String> hmResult : arrResult ) {
                     EventChecklistItemBean eventChecklistItemBean = new EventChecklistItemBean( hmResult );
-                    hmEventChecklistItemBean.put( eventChecklistItemBean.getSortOrder(), eventChecklistItemBean );
+                    hmEventChecklistItemBean.put( lSortSequence, eventChecklistItemBean );
+                    lSortSequence++;
                 }
             }
         }
         return hmEventChecklistItemBean;
+    }
+
+    public Long getNumberOfChecklistItems( EventChecklistRequestBean eventChecklistRequestBean ){
+        Long lNumOfChecklistItems = 0L;
+        if(eventChecklistRequestBean!=null  && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistId())){
+            String sQuery = "SELECT * FROM GTEVENTCHECKLISTITEM WHERE FK_EVENTCHECKLISTID = ?";
+            ArrayList<Object> aParams = DBDAO.createConstraint( eventChecklistRequestBean.getChecklistId() );
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventChecklistData.java", "getAllEventChecklistItems()");
+            if(arrResult!=null && !arrResult.isEmpty()) {
+                lNumOfChecklistItems = ParseUtil.IToL(arrResult.size());
+            }
+        }
+        return lNumOfChecklistItems;
     }
 
     public HashMap<Long,EventChecklistItemBean> getEventChecklistItem( EventChecklistRequestBean eventChecklistRequestBean ){
@@ -90,9 +105,11 @@ public class AccessEventChecklistData {
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessEventChecklistData.java", "getEventChecklistItem()");
 
             if(arrResult!=null && !arrResult.isEmpty()) {
+                Long lItemSortOrder = 0L;
                 for( HashMap<String, String> hmResult : arrResult ) {
                     EventChecklistItemBean eventChecklistItemBean = new EventChecklistItemBean( hmResult );
-                    hmEventChecklistItemBean.put( eventChecklistItemBean.getSortOrder(), eventChecklistItemBean );
+                    hmEventChecklistItemBean.put( lItemSortOrder, eventChecklistItemBean );
+                    lItemSortOrder++;
                 }
             }
         }

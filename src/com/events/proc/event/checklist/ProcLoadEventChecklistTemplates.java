@@ -2,6 +2,7 @@ package com.events.proc.event.checklist;
 
 import com.events.bean.dashboard.checklist.ChecklistTemplateBean;
 import com.events.bean.dashboard.checklist.ChecklistTemplateRequestBean;
+import com.events.bean.dashboard.checklist.ChecklistTemplateResponseBean;
 import com.events.bean.users.ParentTypeBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Configuration;
@@ -11,6 +12,7 @@ import com.events.common.Utility;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
 import com.events.dashboard.checklist.AccessChecklistTemplate;
+import com.events.dashboard.checklist.BuildChecklistTemplate;
 import com.events.json.*;
 import com.events.users.AccessUsers;
 import org.json.JSONObject;
@@ -55,6 +57,15 @@ public class ProcLoadEventChecklistTemplates extends HttpServlet {
 
                     AccessChecklistTemplate accessChecklistTemplate = new AccessChecklistTemplate();
                     ArrayList<ChecklistTemplateBean> arrChecklistTemplateBean = accessChecklistTemplate.getAllChecklistTemplatesByVendor( checklistTemplateRequestBean );
+                    if(arrChecklistTemplateBean==null || (arrChecklistTemplateBean!=null && arrChecklistTemplateBean.isEmpty()) ) {
+                        // Create a default checklist.
+                        BuildChecklistTemplate buildChecklistTemplate = new BuildChecklistTemplate();
+                        ChecklistTemplateResponseBean checklistTemplateResponseBean = buildChecklistTemplate.createDefaultChecklistTemplate( checklistTemplateRequestBean );
+                        if(checklistTemplateResponseBean!=null && checklistTemplateResponseBean.getChecklistTemplateBean()!=null && !Utility.isNullOrEmpty(checklistTemplateResponseBean.getChecklistTemplateBean().getChecklistTemplateId() ) ){
+                            arrChecklistTemplateBean = new ArrayList<ChecklistTemplateBean>();
+                            arrChecklistTemplateBean.add( checklistTemplateResponseBean.getChecklistTemplateBean() );
+                        }
+                    }
                     JSONObject jsonAllChecklistTemplates = accessChecklistTemplate.getJsonAllChecklistTemplates(arrChecklistTemplateBean);
                     Long lNumberOfChecklistTemplates = 0L;
                     if(jsonAllChecklistTemplates!=null) {

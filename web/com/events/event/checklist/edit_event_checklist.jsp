@@ -114,7 +114,7 @@
 </div>
 </body>
 <form id="frm_load_checklist">
-    <input type="hidden" name="checklist_id" value="<%=sChecklistId%>"/>
+    <input type="hidden" name="checklist_id" id="load_event_checklist_id" value="<%=sChecklistId%>"/>
 </form>
 <form id="frm_load_checklist_template_items">
     <input type="hidden" name="checklist_template_id" id="load_checklist_template_id" value=""/>
@@ -172,7 +172,7 @@
 <script id="template_event_checklist_item_todo" type="text/x-handlebars-template">
     <div class="row">
         <div class="col-xs-offset-1 col-xs-11">
-            <input type="checkbox" id="update_checklist_item_todo_{{event_checklist_item_todo_id}}" name="event_checklist_item_todo_status" value="{{event_checklist_item_todo_id}}">&nbsp;&nbsp;<span>{{event_checklist_item_todo_name}}</span>
+            <span>{{event_checklist_item_todo_name}}</span>
         </div>
     </div>
 </script>
@@ -182,7 +182,19 @@
     <input type="hidden" id="delete_event_checklist_item_id" name="event_checklist_item_id"/>
     <input type="hidden" id="delete_event_checklist_item_row_number" name="event_checklist_item_row_number"/>
 </form>
+<form id="frm_sort_event_checklist_item">
+    <input type="hidden" name="event_checklist_id" id="sort_event_checklist_id" value="<%=sChecklistId%>"/>.
+    <input type="hidden" name="num_of_items" id="sort_num_of_items" value=""/>
+</form>
+<form id="frm_update_item_action">
+    <input type="hidden" name="item_action" id="item_action" value=""/>
+    <input type="hidden" name="event_checklist_item_id" id="update_event_checklist_item_id" value=""/>
+</form>
+<script id="template_checklist_item_sequence" type="text/x-handlebars-template">
+    <input type="hidden" name="{{sort_sequence_number}}" class="hidden_item_sequence" value="{{event_checklist_item_id}}"/>
+</script>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script src="/js/jquery.colorbox-min.js"></script>
 <script src="/js/jquery.ui.touch-punch.min.js"></script>
 <script src="/js/handlebars-v1.3.0.js"></script>
@@ -240,9 +252,37 @@
 
                     createAddItemEvent( varChecklistTemplateBean.checklist_template_id );*/
 
+                    var varEventChecklistBean = jsonResponseObj.event_checklist_bean;
+                    var varEventChecklistId =  varEventChecklistBean.event_checklist_id;
+                    $('#event_checklist_id').val( varEventChecklistId );
+                    $('#load_event_checklist_id').val( varEventChecklistId );
+                    if(varIsLoadLoadChecklist == false ){
+                        varIsLoadLoadChecklist = true;
+                        $("#sortable_chk_list").empty();
+                        $("#div_checklist_templates").hide();
+                        activateAddItemButton( varEventChecklistId );
+                        loadChecklist(populateChecklist);
+                    }
+
                 }
             }
         }
+    }
+    function activateAddItemButton(varEventChecklistId){
+        $('#div_add_checklist_item').show();
+        $('#btn_add_checklist_item').unbind('click');
+        $('#btn_add_checklist_item').bind('click',function(){
+            $.colorbox({
+                href:'edit_event_checklist_item.jsp?event_checklist_id='+varEventChecklistId,
+                iframe:true,
+                innerWidth: '90%',
+                innerHeight: '85%',
+                scrolling: true,
+                onClosed : function() {
+                    $("#sortable_chk_list").empty();
+                    loadChecklist(populateChecklist);
+                }});
+        });
     }
 
     function populateChecklistTemplateDropDown(jsonResult){
@@ -355,6 +395,7 @@
                 if(jsonResponseObj!=undefined) {
                     // var varNumOfAllChecklistTemplates = jsonResponseObj.num_of_checklist_templates;
                     var varEventChecklistBean = jsonResponseObj.event_checklist_bean;
+                    var varEventChecklistId = varEventChecklistBean.event_checklist_id;
                     $('#checklist_name').val( varEventChecklistBean.name );
 
                     var varNumberOfItems = jsonResponseObj.num_of_event_checklist_items;
@@ -382,9 +423,13 @@
                             eventChecklistTemplateItemView.render();
                             $("#sortable_chk_list").append(eventChecklistTemplateItemView.el);
 
+                            if(varEventChecklistItemBean.is_complete){
+                                $('#update_checklist_item_'+varEventChecklistItemId).prop('checked', true )
+                            }
 
                             createEditItemEvent(varEventChecklistItemBean.event_checklist_id,varEventChecklistItemBean.event_checklist_item_id);
                             addEventChecklistItemDeleteClickEvent(varEventChecklistItemBean.event_checklist_id,varEventChecklistItemBean.event_checklist_item_id, varCount);
+                            updateEventChecklistItemAction(varEventChecklistItemBean.event_checklist_item_id, getItemActionResult );
 
                             if( varItemsWithTodos!='' && varItemsWithTodos!=undefined){
                                 var varItemTodoList =  varItemsWithTodos[ varEventChecklistItemId ];
@@ -406,6 +451,59 @@
                     }
 
                     createIconEvents();
+                    activateAddItemButton(varEventChecklistId);
+                    $( "#sortable_chk_list" ).sortable( {
+                        stop: function( event, ui ) {
+                            finalizeSortChecklist( true );
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    function updateEventChecklistItemAction( varEventChecklistItemId , varCallback ) {
+
+        $('#update_checklist_item_'+varEventChecklistItemId).bind('change', function(event){
+
+            console.log( 'update_checklist_item_:'+ $('#update_checklist_item_'+varEventChecklistItemId).val()  )
+
+            var varIsChecked = $('#update_checklist_item_'+varEventChecklistItemId).prop('checked');
+            console.log( 'varIsChecked:'+ varIsChecked );
+            if( varIsChecked == true ){
+                $('#item_action').val('done');
+            } else {
+                $('#item_action').val('active');
+            }
+            console.log( 'item_action:'+ $('#item_action').val() );
+            $('#update_event_checklist_item_id').val( varEventChecklistItemId );
+            var actionUrl = "/proc_update_event_checklist_item_action.aeve";
+            var methodType = "POST";
+            var dataString = $("#frm_update_item_action").serialize();
+            makeAjaxCall(actionUrl,dataString,methodType,varCallback);
+        })
+
+    }
+    function getItemActionResult(  jsonResult  ){
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var jsonResponseObj = varResponseObj.payload;
+                if(jsonResponseObj!=undefined) {
+                    var varIsActionUpdated = jsonResponseObj.is_action_updated;
+                    if( varIsActionUpdated ) {
+
+                    } else {
+                        var varCurrentAction = jsonResponseObj.current_action;
+                        if(varCurrentAction == 'active'){
+
+                        } else if(varCurrentAction == 'done'){
+
+                        }
+                        displayMssgBoxAlert("We were unable to process your request. Please refresh and try again later.", true);
+                    }
                 }
             }
         }
@@ -470,7 +568,6 @@
     }
 
     function createEditItemEvent(varEventChecklistId, varEventChecklistItemId ){
-        console.log('id : ' + varEventChecklistId + ' item : '+ varEventChecklistItemId);
         $('#edit_event_checklist_item_'+varEventChecklistItemId).unbind('click');
         $('#edit_event_checklist_item_'+varEventChecklistItemId).bind('click',function(){
             $.colorbox({
@@ -611,7 +708,6 @@
             toggleCollapseIcon(varIconId);
 
             var varCheckListId = $('#'+varIconId).attr('param');
-            console.log('varCheckListId -> '+varCheckListId);
             openCheckListDetail( varCheckListId )
         });
     }
@@ -624,6 +720,87 @@
     function toggleCollapseIcon(varIcon) {
         $('#'+varIcon).toggleClass("fa-chevron-down").toggleClass("fa-chevron-right");
     }
+
+
+    var arrFinalSortedChkList = Array();
+    function finalizeSortChecklist( varExecuteSortDB){
+        var chkListElement = $('#sortable_chk_list').find('.sort_tracker');
+
+        var arrSortedChkList = Array();
+        $('#sortable_chk_list .sort_tracker').each(function(){
+            arrSortedChkList.push($(this).attr('id').replace('sort_tracker_event_checklist_item_', ''));
+        })
+
+        var resetSortArray = false;
+        for (var trackArrayIndex = 0; trackArrayIndex < arrSortedChkList.length; trackArrayIndex++ ) {
+            if( arrFinalSortedChkList[trackArrayIndex] != arrSortedChkList[trackArrayIndex]){
+                resetSortArray = true;
+            }
+        }
+        if(resetSortArray && varExecuteSortDB){
+            arrFinalSortedChkList = arrSortedChkList;
+
+            $('.hidden_item_sequence').remove();
+            for (var trackArrayIndex = 0; trackArrayIndex < arrFinalSortedChkList.length; trackArrayIndex++ ) {
+                if( arrFinalSortedChkList[trackArrayIndex] != arrFinalSortedChkList[trackArrayIndex]){
+                    resetSortArray = true;
+                }
+                this.sortChecklistTemplateItemModel = new SortChecklistTemplateItemModel({
+                    'bb_sort_sequence_number' : arrFinalSortedChkList[trackArrayIndex],
+                    'bb_event_checklist_item_id' : $('#sort_tracker_event_checklist_item_' + trackArrayIndex ).attr('param')
+                });
+
+                var sortChecklistTemplateItemView = new SortChecklistTemplateItemView({model:this.sortChecklistTemplateItemModel});
+                sortChecklistTemplateItemView.render();
+                $("#frm_sort_event_checklist_item").append(sortChecklistTemplateItemView.el);
+            }
+            $('#sort_num_of_items').val( arrFinalSortedChkList.length );
+            sortEventChecklistItem( getSortResult )
+        }
+    }
+    //
+    var SortChecklistTemplateItemModel = Backbone.Model.extend({
+        defaults: {
+            bb_sort_sequence_number:undefined,
+            bb_event_checklist_item_id: undefined
+        }
+    });
+    var SortChecklistTemplateItemView = Backbone.View.extend({
+        initialize: function(){
+            this.varBBSortSequenceNumber = this.model.get('bb_sort_sequence_number');
+            this.varBBEventChecklistId = this.model.get('bb_event_checklist_item_id');
+        },
+        template : Handlebars.compile( $('#template_checklist_item_sequence').html() ),
+        render : function() {
+            var varTmpSortItemBean = {
+                "sort_sequence_number" : this.varBBSortSequenceNumber,
+                "event_checklist_item_id"  : this.varBBEventChecklistId
+            }
+            var inputHiddenItemRow = this.template(  eval( varTmpSortItemBean )  );
+            $(this.el).append( inputHiddenItemRow );
+        }
+    });
+
+    function sortEventChecklistItem( callbackmethod ) {
+        var actionUrl = "/proc_sort_event_checklist_item.aeve";
+        var methodType = "POST";
+        var dataString = $("#frm_sort_event_checklist_item").serialize();
+        makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
+    }
+    function getSortResult(jsonResult) {
+        if(jsonResult!=undefined) {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                displayAjaxError(varResponseObj);
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                var jsonResponseObj = varResponseObj.payload;
+                if(jsonResponseObj!=undefined) {
+
+                }
+            }
+        }
+    }
+
 
 </script>
 <jsp:include page="/com/events/common/footer_bottom.jsp"/>

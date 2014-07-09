@@ -46,6 +46,65 @@ public class BuildEventChecklist {
         return eventChecklistResponseBean;
     }
 
+    public EventChecklistItemBean saveEventChecklistItem(EventChecklistRequestBean eventChecklistRequestBean) {
+        EventChecklistItemBean eventChecklistItemBean = new EventChecklistItemBean();
+        if(eventChecklistRequestBean!=null){
+            String sEventChecklistItemId = eventChecklistRequestBean.getChecklistItemId();
+            if(Utility.isNullOrEmpty(sEventChecklistItemId)){
+                eventChecklistItemBean = createEventChecklistItem( eventChecklistRequestBean );
+            } else {
+                eventChecklistItemBean = updateEventChecklistItem( eventChecklistRequestBean );
+            }
+
+            if(eventChecklistItemBean!=null && !Utility.isNullOrEmpty(eventChecklistItemBean.getEventChecklistItemId())
+                    && !Utility.isNullOrEmpty(eventChecklistItemBean.getEventChecklistId())   ){
+                eventChecklistRequestBean.setChecklistItemId( eventChecklistItemBean.getEventChecklistItemId() );
+                ArrayList<EventChecklistTodoBean> arrEventChecklistTodoBean = eventChecklistRequestBean.getArrEventChecklistTodoBean();
+
+                BuildEventChecklistData buildEventChecklistData = new BuildEventChecklistData();
+                buildEventChecklistData.createChecklistItemTodo(arrEventChecklistTodoBean , eventChecklistRequestBean) ;
+            }
+        }
+        return eventChecklistItemBean;
+    }
+
+    public EventChecklistItemBean createEventChecklistItem(EventChecklistRequestBean eventChecklistRequestBean){
+        EventChecklistItemBean eventChecklistItemBean = new EventChecklistItemBean();
+        if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistId())) {
+
+            AccessEventChecklist accessEventChecklist = new AccessEventChecklist();
+            Long lNumOfChecklistItems = accessEventChecklist.getNumberOfEventChecklistItems( eventChecklistRequestBean );
+
+            eventChecklistRequestBean.setChecklistItemId( Utility.getNewGuid());
+            eventChecklistRequestBean.setSortOrder( lNumOfChecklistItems+1 );
+            eventChecklistItemBean = generateEventChecklistItemBean( eventChecklistRequestBean );
+
+            ArrayList<EventChecklistItemBean> arrEventChecklistItemBean = new ArrayList<EventChecklistItemBean>();
+            arrEventChecklistItemBean.add(eventChecklistItemBean);
+
+            BuildEventChecklistData buildEventChecklistData = new BuildEventChecklistData();
+            Integer numOfRowsInserted = buildEventChecklistData.createEventChecklistItem( arrEventChecklistItemBean );
+            if(numOfRowsInserted<=0){
+                eventChecklistItemBean = new EventChecklistItemBean();
+            }
+        }
+        return eventChecklistItemBean;
+    }
+
+    public EventChecklistItemBean updateEventChecklistItem(EventChecklistRequestBean eventChecklistRequestBean){
+        EventChecklistItemBean eventChecklistItemBean = new EventChecklistItemBean();
+        if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistItemId())) {
+            eventChecklistItemBean = generateEventChecklistItemBean( eventChecklistRequestBean );
+
+            BuildEventChecklistData buildEventChecklistData = new BuildEventChecklistData();
+            Integer numOfRowsInserted = buildEventChecklistData.updateEventChecklistItem(eventChecklistItemBean);
+            if(numOfRowsInserted<=0){
+                eventChecklistItemBean = new EventChecklistItemBean();
+            }
+        }
+        return eventChecklistItemBean;
+    }
+
     public EventChecklistBean createEventChecklist(EventChecklistRequestBean eventChecklistRequestBean){
         EventChecklistBean eventChecklistBean = new EventChecklistBean();
         if( eventChecklistRequestBean!=null  && !Utility.isNullOrEmpty(eventChecklistRequestBean.getEventId()) ) {
@@ -123,6 +182,23 @@ public class BuildEventChecklist {
         return hmEventChecklistItemBean;
     }
 
+    public void sortEventChecklistItem(  EventChecklistRequestBean eventChecklistRequestBean  ){
+        if(eventChecklistRequestBean!=null){
+            HashMap<String,Long> hmSortEventChecklistItemId = eventChecklistRequestBean.getHmEventChecklistItemId();
+
+            if(hmSortEventChecklistItemId!=null && !hmSortEventChecklistItemId.isEmpty()) {
+                BuildEventChecklistData buildEventChecklistData = new BuildEventChecklistData();
+                for( Map.Entry<String,Long> mapSortChecklistItem : hmSortEventChecklistItemId.entrySet() ){
+                    EventChecklistItemBean eventChecklistItemBean = new EventChecklistItemBean();
+                    eventChecklistItemBean.setSortOrder( mapSortChecklistItem.getValue() );
+                    eventChecklistItemBean.setEventChecklistItemId( mapSortChecklistItem.getKey());
+
+                    buildEventChecklistData.updateEventChecklistItemSort( eventChecklistItemBean );
+                }
+            }
+        }
+    }
+
     public Integer deleteEventChecklist( EventChecklistRequestBean eventChecklistRequestBean ){
         Integer numOfRowsDeleted = 0;
         if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistId())){
@@ -136,7 +212,7 @@ public class BuildEventChecklist {
         Integer numOfRowsDeleted = 0;
         if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistItemId())){
             BuildEventChecklistData buildEventChecklistData = new BuildEventChecklistData();
-            numOfRowsDeleted = buildEventChecklistData.deleteEventChecklistItem( eventChecklistRequestBean );
+            numOfRowsDeleted = buildEventChecklistData.deleteEventChecklistItem(eventChecklistRequestBean);
         }
         return numOfRowsDeleted;
     }
@@ -144,7 +220,7 @@ public class BuildEventChecklist {
         Integer numOfRowsDeleted = 0;
         if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistTodoId())){
             BuildEventChecklistData buildEventChecklistData = new BuildEventChecklistData();
-            numOfRowsDeleted = buildEventChecklistData.deleteEventChecklistTodo( eventChecklistRequestBean );
+            numOfRowsDeleted = buildEventChecklistData.deleteEventChecklistTodo(eventChecklistRequestBean);
         }
         return numOfRowsDeleted;
     }
@@ -153,7 +229,16 @@ public class BuildEventChecklist {
         Integer numOfRowsUpdated = 0;
         if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistItemId())){
             BuildEventChecklistData buildEventChecklistData = new BuildEventChecklistData();
-            numOfRowsUpdated = buildEventChecklistData.updateEventChecklistItemAction( eventChecklistRequestBean );
+            numOfRowsUpdated = buildEventChecklistData.updateEventChecklistItemAction(eventChecklistRequestBean);
+        }
+        return numOfRowsUpdated;
+    }
+
+    public Integer updateEventChecklistTodoAction(   EventChecklistRequestBean eventChecklistRequestBean ){
+        Integer numOfRowsUpdated = 0;
+        if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistTodoId())){
+            BuildEventChecklistData buildEventChecklistData = new BuildEventChecklistData();
+            numOfRowsUpdated = buildEventChecklistData.updateEventChecklistTodoAction(eventChecklistRequestBean);
         }
         return numOfRowsUpdated;
     }
@@ -207,6 +292,18 @@ public class BuildEventChecklist {
             eventChecklistItemBean.setComplete( false );
             eventChecklistItemBean.setName( checklistTemplateItemBean.getName() );
             eventChecklistItemBean.setSortOrder( lSortOrder );
+        }
+        return eventChecklistItemBean;
+    }
+
+    private EventChecklistItemBean generateEventChecklistItemBean(  EventChecklistRequestBean eventChecklistRequestBean  ){
+        EventChecklistItemBean eventChecklistItemBean = new EventChecklistItemBean();
+        if(eventChecklistRequestBean!=null){
+            eventChecklistItemBean.setEventChecklistId( eventChecklistRequestBean.getChecklistId() );
+            eventChecklistItemBean.setEventChecklistItemId(eventChecklistRequestBean.getChecklistItemId());
+            eventChecklistItemBean.setName(  eventChecklistRequestBean.getChecklistItemName() );
+            eventChecklistItemBean.setComplete(  eventChecklistRequestBean.isComplete()  );
+            eventChecklistItemBean.setSortOrder(eventChecklistRequestBean.getSortOrder());
         }
         return eventChecklistItemBean;
     }

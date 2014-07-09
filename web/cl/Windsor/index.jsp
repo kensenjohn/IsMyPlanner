@@ -1271,9 +1271,9 @@
                                         sRegistryURL = "https://"+sRegistryURL;
                                     }
                                     if(iColumnCount == 0) {
-                                        %><div class="row"><div class="col-xs-4 col-xs-offset-1"><%
+                                        %><div class="row"><div class="col-xs-3 col-xs-offset-1"><%
                                     } else {
-                                        %><div class="col-xs-4"><%
+                                        %><div class="col-xs-3"><%
                                     }
                     %>
 

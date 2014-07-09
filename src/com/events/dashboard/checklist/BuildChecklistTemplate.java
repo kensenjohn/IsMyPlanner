@@ -117,6 +117,29 @@ public class BuildChecklistTemplate {
         }
     }
 
+    public ChecklistTemplateResponseBean createDefaultChecklistTemplate(ChecklistTemplateRequestBean checklistTemplateRequestBean){
+        ChecklistTemplateResponseBean checklistTemplateResponseBean = new ChecklistTemplateResponseBean();
+        if(checklistTemplateRequestBean!=null && !Utility.isNullOrEmpty(checklistTemplateRequestBean.getVendorId() ))  {
+            checklistTemplateResponseBean = generateDefaultWeddingChecklistTemplate( checklistTemplateRequestBean  );
+            Integer numOfRowsTemplateCreated = 0;
+            BuildChecklistTemplateData buildChecklistTemplateData = new BuildChecklistTemplateData();
+            if(checklistTemplateResponseBean!=null && checklistTemplateResponseBean.getChecklistTemplateBean()!=null){
+                ChecklistTemplateBean checklistTemplateBean = checklistTemplateResponseBean.getChecklistTemplateBean();
+                numOfRowsTemplateCreated = buildChecklistTemplateData.insertChecklistTemplate(checklistTemplateBean);
+                if(numOfRowsTemplateCreated<=0){
+                    checklistTemplateResponseBean.setChecklistTemplateBean( new ChecklistTemplateBean());
+                }
+            }
+
+            if(checklistTemplateResponseBean!=null && checklistTemplateResponseBean.getArrChecklistTemplateItemBean()!=null && numOfRowsTemplateCreated>0){
+                ArrayList<ChecklistTemplateItemBean> arrChecklistTemplateItemBean = checklistTemplateResponseBean.getArrChecklistTemplateItemBean();
+
+                buildChecklistTemplateData.insertChecklistTemplateItems(arrChecklistTemplateItemBean);
+            }
+        }
+        return checklistTemplateResponseBean;
+    }
+
     private ChecklistTemplateItemBean createChecklistTemplateItem(ChecklistTemplateRequestBean checklistTemplateRequestBean){
         ChecklistTemplateItemBean checklistTemplateItemBean = new ChecklistTemplateItemBean();
         if(checklistTemplateRequestBean!=null){
@@ -160,6 +183,95 @@ public class BuildChecklistTemplate {
             }
         }
         return checklistTemplateBean;
+    }
+    private ChecklistTemplateResponseBean generateDefaultWeddingChecklistTemplate(ChecklistTemplateRequestBean checklistTemplateRequestBean){
+        ChecklistTemplateResponseBean checklistTemplateResponseBean = new ChecklistTemplateResponseBean();
+
+
+        ChecklistTemplateRequestBean defaultChecklistTemplateRequestBean = new ChecklistTemplateRequestBean();
+        defaultChecklistTemplateRequestBean.setChecklistTemplateBean(Utility.getNewGuid(), checklistTemplateRequestBean.getVendorId(), true, "Wedding Checklist");
+
+        ChecklistTemplateBean checklistTemplateBean = generateChecklistTemplateBean( defaultChecklistTemplateRequestBean );
+        String sChecklistTemplateId = checklistTemplateBean.getChecklistTemplateId();
+
+        checklistTemplateResponseBean.setChecklistTemplateBean( checklistTemplateBean );
+
+        ArrayList<ChecklistTemplateItemBean>   arrChecklistTemplateItemBean = new ArrayList<ChecklistTemplateItemBean>();
+
+        ChecklistTemplateRequestBean defaultChecklistTemplateItemRequestBean = new ChecklistTemplateRequestBean();
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Determine your budget",100L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Select your guests",200L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Find a reception venue",300L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Find a ceremony venue",400L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Find an officiant",500L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Find a photographer and videographer",600L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Find a florist",700L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Find a band",800L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Find a DJ",900L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Find a baker and select a cake",1000L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Create your registry.",1100L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Create your website.",1200L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Send out invitations with RSVP deadlines",1300L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Dress Shopping for bridal party",1400L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Find a gown.",1500L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Find a make up and hair stylist.",1600L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Finalize guest list after all RSVP.",1700L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Finalize all booking and rentals.",1800L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Finalize all music selection.",1900L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Get your marriage licence.",2000L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Finalize and book your honeymoon.",2100L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Send all details to all your vendors.",2200L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        defaultChecklistTemplateItemRequestBean.setChecklistTemplateItemBean(Utility.getNewGuid(),sChecklistTemplateId,"Ensure all payments are complete",2300L );
+        arrChecklistTemplateItemBean.add( generateChecklistTemplateItemBean(defaultChecklistTemplateItemRequestBean) );
+
+        checklistTemplateResponseBean.setArrChecklistTemplateItemBean( arrChecklistTemplateItemBean );
+
+        return checklistTemplateResponseBean;
     }
     private ChecklistTemplateBean updateChecklistTemplate(ChecklistTemplateRequestBean checklistTemplateRequestBean){
         ChecklistTemplateBean checklistTemplateBean = new ChecklistTemplateBean();

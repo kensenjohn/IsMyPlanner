@@ -87,9 +87,11 @@ public class AccessChecklistTemplateData {
 
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessChecklistTemplateData.java", "getAllChecklistTemplateItemBean()");
             if(arrResult!=null && !arrResult.isEmpty()) {
+                Long lSortItemOrder = 0L;
                 for( HashMap<String, String> hmResult : arrResult ) {
                     ChecklistTemplateItemBean checklistTemplateItemBean = new ChecklistTemplateItemBean( hmResult );
-                    hmChecklistTemplateItemBean.put( checklistTemplateItemBean.getSortOrder(), checklistTemplateItemBean );
+                    hmChecklistTemplateItemBean.put( lSortItemOrder, checklistTemplateItemBean );
+                    lSortItemOrder++;
                 }
             }
         }

@@ -40,6 +40,14 @@ public class AccessEventChecklist {
         return jsonAllEventChecklist;
     }
 
+    public Long getNumberOfEventChecklistItems(  EventChecklistRequestBean eventChecklistRequestBean ){
+        Long lNumOfItems = 0L;
+        if(eventChecklistRequestBean!=null && !Utility.isNullOrEmpty(eventChecklistRequestBean.getChecklistId()) ) {
+            AccessEventChecklistData accessEventChecklistData = new AccessEventChecklistData();
+        }
+        return lNumOfItems;
+    }
+
 
     public EventChecklistResponseBean getEventChecklistItemDetails( EventChecklistRequestBean eventChecklistRequestBean ){
         EventChecklistResponseBean eventChecklistResponseBean = new EventChecklistResponseBean();

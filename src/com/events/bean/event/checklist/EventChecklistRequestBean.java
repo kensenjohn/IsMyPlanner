@@ -2,6 +2,9 @@ package com.events.bean.event.checklist;
 
 import com.events.common.Constants;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created with IntelliJ IDEA.
  * User: root
@@ -19,7 +22,44 @@ public class EventChecklistRequestBean {
     private String vendorId = Constants.EMPTY;
     private String checklistItemId = Constants.EMPTY;
     private String checklistTodoId = Constants.EMPTY;
+    private String checklistItemName = Constants.EMPTY;
     private boolean isComplete = false;
+    private ArrayList<EventChecklistTodoBean> arrEventChecklistTodoBean = new ArrayList<EventChecklistTodoBean>();
+    private Long sortOrder = 0L;
+    private HashMap<String,Long> hmEventChecklistItemId = new HashMap<String, Long>();
+
+
+    public HashMap<String, Long> getHmEventChecklistItemId() {
+        return hmEventChecklistItemId;
+    }
+
+    public void setHmEventChecklistItemId(HashMap<String, Long> hmEventChecklistItemId) {
+        this.hmEventChecklistItemId = hmEventChecklistItemId;
+    }
+
+    public Long getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(Long sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
+    public String getChecklistItemName() {
+        return checklistItemName;
+    }
+
+    public void setChecklistItemName(String checklistItemName) {
+        this.checklistItemName = checklistItemName;
+    }
+
+    public ArrayList<EventChecklistTodoBean> getArrEventChecklistTodoBean() {
+        return arrEventChecklistTodoBean;
+    }
+
+    public void setArrEventChecklistTodoBean(ArrayList<EventChecklistTodoBean> arrEventChecklistTodoBean) {
+        this.arrEventChecklistTodoBean = arrEventChecklistTodoBean;
+    }
 
     public boolean isComplete() {
         return isComplete;

@@ -113,7 +113,7 @@
             <div class="col-xs-12" id="chk_list_details_item_{{checklist_template_item_id}}" style="display:none">
                 <div class="row">
                     <div class="col-xs-offset-1 col-xs-5">
-                        <span style="font-weight: bold;">Todo</span>
+                        <span style="font-weight: bold;">Tasks</span>
                     </div>
                 </div>
                 <div id="checklist_template_todo_list_{{checklist_template_item_id}}">

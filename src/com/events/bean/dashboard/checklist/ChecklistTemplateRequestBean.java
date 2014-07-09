@@ -1,6 +1,7 @@
 package com.events.bean.dashboard.checklist;
 
 import com.events.common.Constants;
+import com.events.common.Utility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +27,19 @@ public class ChecklistTemplateRequestBean {
     private String checklistTemplateTodoId =  Constants.EMPTY;
     private String clientId = Constants.EMPTY;
 
+    public void setChecklistTemplateBean(String checklistTemplateId, String vendorId, boolean isDefault, String checklistTemplateName ){
+        this.checklistTemplateId = checklistTemplateId;
+        this.vendorId = vendorId ;
+        this.isDefault = isDefault;
+        this.checklistTemplateName = checklistTemplateName;
+    }
+
+    public void setChecklistTemplateItemBean( String checklistTemplateItemId, String checklistTemplateId, String checklistTemplateItemName, Long sortOrder  ){
+        this.checklistTemplateItemId = checklistTemplateItemId;
+        this.checklistTemplateId = checklistTemplateId;
+        this.sortOrder = sortOrder;
+        this.checklistTemplateItemName = checklistTemplateItemName;
+    }
     public String getClientId() {
         return clientId;
     }

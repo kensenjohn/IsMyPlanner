@@ -1262,14 +1262,30 @@
         <servlet-name>Process Update Event Checklist Item Action</servlet-name>
         <url-pattern>/proc_update_event_checklist_item_action.aeve</url-pattern>
     </servlet-mapping>
-
-
-
-
-
-
-
-
+    <servlet>
+        <servlet-name>Process Update Event Checklist Todo Action</servlet-name>
+        <servlet-class>com.events.proc.event.checklist.ProcUpdateEventChecklistTodoAction</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Update Event Checklist Todo Action</servlet-name>
+        <url-pattern>/proc_update_event_checklist_todo_action.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Save Event Checklist Item</servlet-name>
+        <servlet-class>com.events.proc.event.checklist.ProcSaveEventChecklistItem</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Event Checklist Item</servlet-name>
+        <url-pattern>/proc_save_event_checklist_item.aeve</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Process Sort Event Checklist Item</servlet-name>
+        <servlet-class>com.events.proc.event.checklist.ProcSortEventChecklistItem</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Sort Event Checklist Item</servlet-name>
+        <url-pattern>/proc_sort_event_checklist_item.aeve</url-pattern>
+    </servlet-mapping>
 
 
 

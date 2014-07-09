@@ -1,14 +1,14 @@
-package com.events.proc.dashboard;
+package com.events.proc.event.checklist;
 
-import com.events.bean.common.email.EmailQueueBean;
+import com.events.bean.event.checklist.EventChecklistRequestBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
-import com.events.common.email.send.QuickMailSendThread;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
+import com.events.event.checklist.BuildEventChecklist;
 import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -20,15 +20,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
  * User: root
- * Date: 5/21/14
- * Time: 2:17 PM
+ * Date: 7/7/14
+ * Time: 6:42 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ProcRequestDemo extends HttpServlet {
+public class ProcSortEventChecklistItem extends HttpServlet {
     private static final Logger appLogging = LoggerFactory.getLogger(Constants.APPLICATION_LOG);
     private static final Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
@@ -40,36 +41,39 @@ public class ProcRequestDemo extends HttpServlet {
         RespConstants.Status responseStatus = RespConstants.Status.ERROR;
         try{
             if( !DataSecurityChecker.isInsecureInputResponse(request) ) {
-                String sName = ParseUtil.checkNull(request.getParameter("demo_name"));
-                String sEmail = ParseUtil.checkNull( request.getParameter("demo_email") );
-                String sBestTime = ParseUtil.checkNull( request.getParameter("demo_time") );
+                UserBean loggedInUserBean = (UserBean)request.getSession().getAttribute(Constants.USER_LOGGED_IN_BEAN);
 
-                boolean isSuccess = false;
-                if(Utility.isNullOrEmpty(sEmail)){
-                    Text errorText = new ErrorText("Please use a valid email address.","err_mssg") ;
-                    arrErrorText.add(errorText);
-                    responseStatus = RespConstants.Status.ERROR;
+                if(loggedInUserBean!=null && !Utility.isNullOrEmpty(loggedInUserBean.getUserId()) ) {
+                    String sEventChecklistId = ParseUtil.checkNull(request.getParameter("event_checklist_id"));
+                    Long lNumOfItems = ParseUtil.sToL( request.getParameter("num_of_items") );
+
+                    if(lNumOfItems>0){
+                        HashMap<String,Long> hmEventChecklistItemId = new HashMap<String, Long>();
+                        for(Long lSortSequenceNumber = 0L; lSortSequenceNumber<lNumOfItems; lSortSequenceNumber++ ){
+                            String sChecklistTemplateItemId = ParseUtil.checkNull( request.getParameter( ParseUtil.LToS(lSortSequenceNumber) ));
+
+                            hmEventChecklistItemId.put(sChecklistTemplateItemId,lSortSequenceNumber);
+                        }
+
+                        EventChecklistRequestBean eventChecklistRequestBean = new EventChecklistRequestBean();
+                        eventChecklistRequestBean.setHmEventChecklistItemId( hmEventChecklistItemId );
+
+                        BuildEventChecklist buildEventChecklist = new BuildEventChecklist();
+                        buildEventChecklist.sortEventChecklistItem( eventChecklistRequestBean );
+
+
+                        Text okText = new OkText("Your changes were saved successfully.","status_mssg") ;
+                        arrOkText.add(okText);
+                        responseStatus = RespConstants.Status.OK;
+
+                    }
                 } else {
-                    EmailQueueBean emailQueueBean = new EmailQueueBean();
-                    emailQueueBean.setEmailSubject("IsMyPlanner.com : Demo Request ("+sEmail+")");
-                    emailQueueBean.setFromAddress( "webmaster@ismyplanner.com" );
-                    emailQueueBean.setFromAddressName( "webmaster@ismyplanner.com" );
+                    appLogging.info("Invalid request in Proc Page (loggedInUserBean)" + ParseUtil.checkNullObject(loggedInUserBean) );
+                    Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveChecklistTemplateItem - 002)","err_mssg") ;
+                    arrErrorText.add(errorText);
 
-                    emailQueueBean.setToAddress( "kjohn@smarasoft.com" );
-                    emailQueueBean.setToAddressName( "kjohn@smarasoft.com" );
-                    emailQueueBean.setHtmlBody("Demo request from : "+ sEmail + "<br> name : " + sName + "<br>Best Time : " + sBestTime );
-                    emailQueueBean.setTextBody("Demo request from : "+ sEmail + "\nname : " + sName + "\nBest Time : " + sBestTime);
-
-                    Thread quickEmail = new Thread(new QuickMailSendThread( emailQueueBean), "Quick Email Password Reset");
-                    quickEmail.start();
-
-                    Text okText = new OkText("Thank you. We will get in touch with you to schedule a demo.","status_mssg") ;
-                    arrOkText.add(okText);
-                    responseStatus = RespConstants.Status.OK;
-                    isSuccess = true;
-
+                    responseStatus = RespConstants.Status.ERROR;
                 }
-                jsonResponseObj.put("demo_request_complete",isSuccess);
 
             } else {
                 appLogging.info("Insecure Parameters used in this Proc Page " + Utility.dumpRequestParameters(request).toString()  + " --> " + this.getClass().getName());
@@ -79,7 +83,7 @@ public class ProcRequestDemo extends HttpServlet {
             }
         } catch(Exception e) {
             appLogging.info("An exception occurred in the Proc Page " + ExceptionHandler.getStackTrace(e) );
-            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveEventBudgetCategory - 001)","err_mssg") ;
+            Text errorText = new ErrorText("Oops!! We were unable to process your request at this time. Please try again later.(saveChecklistTemplate - 001)","err_mssg") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;
@@ -96,3 +100,4 @@ public class ProcRequestDemo extends HttpServlet {
         response.getWriter().write( responseObject.getJson().toString() );
     }
 }
+
