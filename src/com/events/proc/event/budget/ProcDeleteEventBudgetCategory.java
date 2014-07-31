@@ -71,7 +71,7 @@ public class ProcDeleteEventBudgetCategory extends HttpServlet {
                             ArrayList<EventBudgetCategoryItemBean> arrEventBudgetCategoryItemBean = accessEventBudget.getBudgetCategoryItemsByCategory(eventBudgetRequestBean);
 
                             if(arrEventBudgetCategoryItemBean!=null && !arrEventBudgetCategoryItemBean.isEmpty() ) {
-                                buildEventBudget.deleteEventBudgetCategoryItems(eventBudgetRequestBean);
+                                buildEventBudget.deleteAllEventBudgetCategoryItems(eventBudgetRequestBean);
                                 JSONObject jsonItems = accessEventBudget.getJsonBudgetItems(arrEventBudgetCategoryItemBean);
                                 Long lNumOfItems = 0L;
                                 if(jsonItems!=null){

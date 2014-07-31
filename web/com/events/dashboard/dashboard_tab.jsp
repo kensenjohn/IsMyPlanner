@@ -61,9 +61,18 @@
                     <li class="<%=sDashBoardFilesActive%>"><a href="/com/events/dashboard/files.jsp">Files</a></li>
                     <li class="<%=sDashBoardTodoActive%>"><a href="/com/events/dashboard/todos.jsp">Todo</a></li>
 
-                    <%if(checkPermission!=null && checkPermission.can(Perm.MANAGE_CHECKLIST_TEMPLATE_TAB)) {%>
-                        <!-- <li class="<%=sDashBoardChecklistManagementActive%>"><a href="/com/events/dashboard/manage_checklist.jsp">Checklist</a></li> -->
+                    <%if(checkPermission!=null &&  (checkPermission.can(Perm.MANAGE_CHECKLIST_TEMPLATE_TAB) || checkPermission.can(Perm.MANAGE_ITENARY_TEMPLATE_TAB) ) ) {%>
+                        <li class="dropdown <%=sDashBoardChecklistManagementActive%>">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Templates<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                            <%if(checkPermission!=null && checkPermission.can(Perm.MANAGE_CHECKLIST_TEMPLATE_TAB)) {%>
+                                <li class="<%=sDashBoardChecklistManagementActive%>"><a href="/com/events/dashboard/manage_checklist.jsp">Checklist</a></li>
+                            <% } %>
+                            </ul>
+                        </li>
                     <% } %>
+
+
                     <li class="<%=sDashBoardConversationsActive%>"><a href="/com/events/common/conversation/conversations.jsp">Conversations</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->

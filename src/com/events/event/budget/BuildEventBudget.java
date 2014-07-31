@@ -77,7 +77,7 @@ public class BuildEventBudget {
             if(eventBudgetCategoryBean!=null) {
                 eventBudgetRequestBean.setBudgetCategoryId( eventBudgetCategoryBean.getBudgetCategoryId() );
                 BuildEventBudgetData buildEventBudgetData = new BuildEventBudgetData();
-                buildEventBudgetData.deleteEventBudgetCategoryItems( eventBudgetRequestBean ) ;
+                buildEventBudgetData.deleteAllEventBudgetCategoryItems( eventBudgetRequestBean ) ;
                 ArrayList<EventBudgetCategoryItemBean> arrEventBudgetCategoryItemBeans = eventBudgetRequestBean.getArrEventBudgetCategoryItemBeans();
                 if(arrEventBudgetCategoryItemBeans!=null && !arrEventBudgetCategoryItemBeans.isEmpty()){
                     buildEventBudgetData.insertEventBudgetCategoryItems( eventBudgetRequestBean );
@@ -87,12 +87,27 @@ public class BuildEventBudget {
         }
         return eventBudgetResponseBean;
     }
-    public boolean deleteEventBudgetCategoryItems(EventBudgetRequestBean eventBudgetRequestBean){
+    public boolean deleteAllEventBudgetCategoryItems(EventBudgetRequestBean eventBudgetRequestBean){
         boolean isSuccess = false;
         if(eventBudgetRequestBean!=null && !Utility.isNullOrEmpty(eventBudgetRequestBean.getBudgetCategoryId() )) {
             BuildEventBudgetData buildEventBudgetData = new BuildEventBudgetData();
-            Integer iNumOfRowsDeleted = buildEventBudgetData.deleteEventBudgetCategoryItems( eventBudgetRequestBean ) ;
+            Integer iNumOfRowsDeleted = buildEventBudgetData.deleteAllEventBudgetCategoryItems( eventBudgetRequestBean ) ;
             isSuccess = true;
+        }
+        return isSuccess;
+    }
+    public boolean deleteEventBudgetCategoryItem(EventBudgetRequestBean eventBudgetRequestBean){
+        boolean isSuccess = false;
+        if(eventBudgetRequestBean!=null &&  eventBudgetRequestBean.getEventBudgetCategoryItemBean()!=null ) {
+            EventBudgetCategoryItemBean eventBudgetCategoryItemBean =  eventBudgetRequestBean.getEventBudgetCategoryItemBean();
+            if(eventBudgetCategoryItemBean!=null && !Utility.isNullOrEmpty(eventBudgetCategoryItemBean.getBudgetCategoryItemId())
+                    && !Utility.isNullOrEmpty(eventBudgetCategoryItemBean.getEventId())  ) {
+                BuildEventBudgetData buildEventBudgetData = new BuildEventBudgetData();
+                Integer iNumOfRowsDeleted = buildEventBudgetData.deleteEventBudgetCategoryItem( eventBudgetRequestBean ) ;
+                if(iNumOfRowsDeleted>0){
+                    isSuccess = true;
+                }
+            }
         }
         return isSuccess;
     }

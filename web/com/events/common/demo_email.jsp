@@ -22,12 +22,23 @@
                     <form class="form-horizontal" id="frm_save_demo_email">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="demo_name" class="form_label">Email:</label><span class="required"> *</span>
-                                <input type="text" class="form-control" id="demo_name" name="demo_name" />
+                                <label for="demo_email" class="form_label">Email:</label><span class="required"> *</span>
+                                <input type="text" class="form-control" id="demo_email" name="demo_email" />
                             </div>
                             <div class="col-md-6">
-                                <label for="demo_email" class="form_label">Name:</label>
-                                <input type="text" class="form-control" id="demo_email" name="demo_email" />
+                                <label for="demo_name" class="form_label">Name:</label>
+                                <input type="text" class="form-control" id="demo_name" name="demo_name" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="demo_time" class="form_label">Best day and time for you:</label>
+                                <input type="text" class="form-control" id="demo_time" name="demo_time" />
                             </div>
                         </div>
                     </form>

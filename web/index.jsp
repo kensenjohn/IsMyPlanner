@@ -177,20 +177,35 @@
           <div class="row " style="text-align: center;">
               <div class="col-sm-12">
                   <div class="row ">
-                      <div class="col-sm-4">
+                      <!--<div class="col-sm-4">
                           <h2><i class="fa fa-cloud"></i></h2>
                           <h5>Branding and Management</h5>
                           <p>Build a branded website for your business. Manage your clients, events, and vendors online. Track their progress and status from anywhere. </p>
+                      </div>-->
+                      <div class="col-sm-4">
+                          <h2><i class="fa fa-calendar"></i></h2>
+                          <h5>Todos and Reminders</h5>
+                          <p>Create and share Todos with clients and team members. Reminder emails sent out to all users responsible for an action item.  </p>
                       </div>
-                      <div class="col-sm-4 ">
+                      <%--<div class="col-sm-4 ">
                           <h2><i class="fa fa-wrench"></i></h2>
                           <h5>Custom URL</h5>
                           <p>URL with your business name in it. eg: https://{your_business_name}.ismyplanner.com </p>
+                      </div>--%>
+                      <div class="col-sm-4 ">
+                          <h2><i class="fa fa-list-alt"></i></h2>
+                          <h5>Checklists</h5>
+                          <p>Create custom checklists for each event. Create checklist templates for your clients to copy from or create their own checklist. </p>
                       </div>
-                      <div class="col-sm-4">
+                      <%--<div class="col-sm-4">
                           <h2><i class="fa fa-facebook"></i><i class="fa fa-twitter"></i><i class="fa fa-pinterest"></i></h2>
                           <h5>Social Media Marketing</h5>
                           <p>Create your custom landing pages with a targeted marketing message. Flaunt your social media feeds to attract for potential leads and clients. </p>
+                      </div>--%>
+                      <div class="col-sm-4 ">
+                          <h2><i class="fa fa-comments-o"></i></h2>
+                          <h5>Conversations</h5>
+                          <p>Messages to clients and team members can be viewed as an ongoing conversation. Easity add new users to a conversation without having to dig through inbox history. </p>
                       </div>
                   </div>
                   <div class="row">
@@ -206,20 +221,25 @@
                   </div>
 
                   <div class="row ">
-                      <div class="col-sm-4 ">
+                      <%--<div class="col-sm-4 ">
                           <h2><i class="fa fa-comments"></i></h2>
                           <h5>Client Tools and Collaboration</h5>
                           <p>Give access to clients to track and manage their event, vendors, guests, website. Collaborate with your clients and get notified of any changes during the event planning phase</p>
-                      </div>
-                      <div class="col-sm-4">
-                          <h2><i class="fa fa-users"></i></h2>
-                          <h5>Team Members</h5>
-                          <p>Give access to your team members to login and work with clients. Quickly assign roles and permissions for individuals to specific areas of your business.  </p>
+                      </div>--%>
+                      <div class="col-sm-4 ">
+                          <h2><i class="fa fa-share-alt"></i></h2>
+                          <h5>File Sharing</h5>
+                          <p>Share your plans, images and documents with your clients and team members. Group them under topics and give access to more than one user for download.</p>
                       </div>
                       <div class="col-sm-4 ">
                           <h2><i class="fa fa-dollar"></i>&nbsp;<i class="fa fa-shopping-cart"></i></h2>
                           <h5>Invoices</h5>
                           <p>Create branded invoices online with links to download and email to clients.  </p>
+                      </div>
+                      <div class="col-sm-4">
+                          <h2><i class="fa fa-users"></i></h2>
+                          <h5>Guest List</h5>
+                          <p>Create guest lists for events or upload an excel. Send out scheduled emails to invited guests, guests who sent in RSVP, guests who did not attend, thank you emails etc. </p>
                       </div>
                   </div>
 
@@ -238,8 +258,8 @@
                           &nbsp;
                       </div>
                       <div class="col-sm-6">
-                          <h2><i class="fa fa-gears"></i> New Features Coming Soon</h2>
-                          <p>Online Payments <br>Evernote Integration<br>RSVP by phone<br>Guest reminders by sms and emails<br>Surveys and Questionaires for Clients<br>And lots more..</p>
+                          <h2><i class="fa fa-spinner"></i></i> New Features Coming Soon</h2>
+                          <p>Big Calendar View<br>Paypal Integration so you can accept online payments <br>Surveys and Questionnaire for Clients<br>And lots more..</p>
                       </div>
                       <div class="col-sm-3 ">
                           &nbsp;

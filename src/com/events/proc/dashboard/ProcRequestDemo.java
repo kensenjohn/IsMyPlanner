@@ -42,6 +42,7 @@ public class ProcRequestDemo extends HttpServlet {
             if( !DataSecurityChecker.isInsecureInputResponse(request) ) {
                 String sName = ParseUtil.checkNull(request.getParameter("demo_name"));
                 String sEmail = ParseUtil.checkNull( request.getParameter("demo_email") );
+                String sBestTime = ParseUtil.checkNull( request.getParameter("demo_time") );
 
                 boolean isSuccess = false;
                 if(Utility.isNullOrEmpty(sEmail)){
@@ -50,14 +51,14 @@ public class ProcRequestDemo extends HttpServlet {
                     responseStatus = RespConstants.Status.ERROR;
                 } else {
                     EmailQueueBean emailQueueBean = new EmailQueueBean();
-                    emailQueueBean.setEmailSubject("IsMyPlanner.com : Demo Request");
+                    emailQueueBean.setEmailSubject("IsMyPlanner.com : Demo Request ("+sEmail+")");
                     emailQueueBean.setFromAddress( "webmaster@ismyplanner.com" );
                     emailQueueBean.setFromAddressName( "webmaster@ismyplanner.com" );
 
                     emailQueueBean.setToAddress( "kjohn@smarasoft.com" );
                     emailQueueBean.setToAddressName( "kjohn@smarasoft.com" );
-                    emailQueueBean.setHtmlBody("Demo request from : "+ sEmail + " name : " + sName );
-                    emailQueueBean.setTextBody("Demo request from : "+ sEmail + " name : " + sName );
+                    emailQueueBean.setHtmlBody("Demo request from : "+ sEmail + "<br> name : " + sName + "<br>Best Time : " + sBestTime );
+                    emailQueueBean.setTextBody("Demo request from : "+ sEmail + "\nname : " + sName + "\nBest Time : " + sBestTime);
 
                     Thread quickEmail = new Thread(new QuickMailSendThread( emailQueueBean), "Quick Email Password Reset");
                     quickEmail.start();

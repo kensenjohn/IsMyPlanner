@@ -627,15 +627,14 @@ public class BuildUsers {
                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     }
 
-                    appLogging.error("Html Email Writers: " + htmlWriter.toString());
-
                     emailQueueBean.setHtmlBody(htmlWriter.toString());
                     emailQueueBean.setTextBody(txtWriter.toString());
                     emailQueueBean.setEmailSubject( subjectWriter.toString() );
 
                     emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
+                    emailQueueBean.setBccAddress("kjohn@smarasoft.com");
+                    emailQueueBean.setBccAddressName("kjohn@smarasoft.com");
 
-                    appLogging.error("Using the Mustache API to generate Email Querue Bean : " + emailQueueBean);
                     // This will actually send the email. Spawning a thread and continue
                     // execution.
                     Thread quickEmail = new Thread(new QuickMailSendThread( emailQueueBean), "New Vendor Registered Access Email");
