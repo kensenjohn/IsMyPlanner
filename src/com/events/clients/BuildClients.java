@@ -92,7 +92,6 @@ public class BuildClients {
     public ClientResponseBean saveClient( ClientRequestBean clientRequestBean ) throws EditClientException {
         ClientResponseBean clientResponseBean = new ClientResponseBean();
         Integer iNumOfRecords = 0;
-        appLogging.info("Client Id : " + clientRequestBean.getClientId() );
         if(clientRequestBean!=null && !"".equalsIgnoreCase(clientRequestBean.getClientId()) ) {
             clientResponseBean = updateClient(clientRequestBean);
         } else {

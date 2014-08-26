@@ -1299,7 +1299,14 @@
     </servlet-mapping>
 
 
-
+    <servlet>
+        <servlet-name>Process Save Comment</servlet-name>
+        <servlet-class>com.events.proc.comments.ProcSaveComments</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Save Comment</servlet-name>
+        <url-pattern>/proc_save_comment.aeve</url-pattern>
+    </servlet-mapping>
 
 
 
@@ -1341,6 +1348,10 @@
         <init-param>
             <param-name>conversation_body</param-name>
             <param-value>conversation_body</param-value>
+        </init-param>
+        <init-param>
+            <param-name>comment_body</param-name>
+            <param-value>comment_body</param-value>
         </init-param>
     </filter>
     <filter-mapping>

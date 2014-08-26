@@ -153,10 +153,15 @@
                     &nbsp;
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-8">
+            <%if(!Utility.isNullOrEmpty(sClientId)) {%>
+                <div class="row">
+                    <div class="col-md-8">
+                        <jsp:include page="/com/events/common/comments/recent_comments.jsp">
+                            <jsp:param name="parent_comment_id" value="<%=sParentCommentId%>"/>
+                        </jsp:include>
+                    </div>
                 </div>
-            </div>
+            <%}%>
         </div>
     </div>
 </div>
@@ -171,8 +176,13 @@
     <input type="hidden" id="source" name="source" value="manual"/>
 </form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script src="/js/clients/clientcontactinfo.js"></script>
 <script src="/js/bootstrap-switch.min.js"></script>
+<script src="/js/tinymce/tinymce.min.js"></script>
+<script src="/js/upload/jquery.iframe-transport.js"></script>
+<script src="/js/upload/jquery.fileupload.js"></script>
+<script src="/js/comments.js"></script>
 <script   type="text/javascript">
     var varClientId = '<%=sClientId%>';
     $(window).load(function() {
@@ -201,6 +211,7 @@
 
 
         if(varClientId!='') {
+            loadingOverlay('show');
             loadClientDetail(varClientId, 'contact_info',populateClientDetail);
         }
 
@@ -208,17 +219,7 @@
             saveClient(getResult);
         });
 
-        /*tinymce.init({
-            selector: "#comment_body",
-            theme: "modern",
-            menubar: false,
-            plugins: [
-                "autolink link preview ",
-                "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-                "emoticons paste textcolor"
-            ],
-            toolbar1: "preview | undo redo |  bold italic | bullist numlist | link"
-        });*/
+
     });
 
     function updateLeadStatusAction( varCallback ) {

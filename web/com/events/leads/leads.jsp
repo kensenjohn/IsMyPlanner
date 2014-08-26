@@ -53,7 +53,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div  style="float:left"><a href="/com/events/leads/leads_account.jsp" class="btn btn-filled" id="btn_new_lead">
-                                <i class="fa fa-plus"></i> Add a Lead</a></div>
+                                <i class="fa fa-plus"></i> New Lead</a></div>
                         </div>
                     </div>
             <%

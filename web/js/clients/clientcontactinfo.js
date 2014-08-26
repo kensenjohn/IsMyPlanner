@@ -98,7 +98,7 @@ function processClientResponse(clientResponse) {
         $('#load_client_datatype').val('contact_info');
 
         //loadClients(populateClientList);
-        displayMssgBoxAlert('Your changes were successfully updated.(loading)', false);
+        displayMssgBoxAlert('Your changes were successfully updated.', false);
         $('#frm_load_client').submit();
 
     } else {
@@ -155,4 +155,6 @@ function processClientDetail(varClientBean,varUserBean, varUserInfoBean) {
         $('#clientCountry').val( varUserInfoBean.country);
         $('#userInfoId').val( varUserInfoBean.userinfo_id);
     }
+
+    loadingOverlay('hide');
 }
