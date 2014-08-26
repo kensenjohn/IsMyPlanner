@@ -19,9 +19,18 @@ public class ClientRequestBean {
     private String dataDetail = Constants.EMPTY;
     private boolean isCorporateClient = false;
     private UserRequestBean userRequestBean = new UserRequestBean();
+    private boolean isLead = false;
 
     private UserBean userBean = new UserBean();
     private UserInfoBean userInfoBean = new UserInfoBean();
+
+    public boolean isLead() {
+        return isLead;
+    }
+
+    public void setLead(boolean lead) {
+        isLead = lead;
+    }
 
     public String getDataDetail() {
         return dataDetail;

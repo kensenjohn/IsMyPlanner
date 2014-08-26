@@ -1289,7 +1289,14 @@
 
 
 
-
+    <servlet>
+        <servlet-name>Process Update Lead Status</servlet-name>
+        <servlet-class>com.events.proc.clients.ProcUpdateLeadStatus</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Process Update Lead Status</servlet-name>
+        <url-pattern>/proc_update_lead_status_action.aeve</url-pattern>
+    </servlet-mapping>
 
 
 

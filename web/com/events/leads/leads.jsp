@@ -20,27 +20,28 @@
         checkPermission = new CheckPermission(loggedInUserBean);
     }
 
-    boolean canEditClient = false;
-    boolean canDeleteClient = false;
+    boolean canEditLeads = false;
+    boolean canDeleteLeads = false;
     if(checkPermission!=null && checkPermission.can(Perm.EDIT_CLIENT)) {
-        canEditClient = true;
+        canEditLeads = true;
     }
 
     if(checkPermission!=null && checkPermission.can(Perm.DELETE_CLIENT)) {
-        canDeleteClient = true;
+        canDeleteLeads = true;
     }
 %>
+
 <body>
 <div class="page_wrap">
     <jsp:include page="/com/events/common/top_nav.jsp">
         <jsp:param name="AFTER_LOGIN_REDIRECT" value="index.jsp"/>
     </jsp:include>
     <jsp:include page="/com/events/common/menu_bar.jsp">
-        <jsp:param name="client_active" value="active"/>
+        <jsp:param name="lead_active" value="active"/>
     </jsp:include>
     <div class="breadcrumb_format">
         <div class="container">
-            <div class="page-title">Clients</div>
+            <div class="page-title">Leads</div>
         </div>
     </div>
 
@@ -49,18 +50,18 @@
             <%
                 if(checkPermission!=null && checkPermission.can(Perm.CREATE_NEW_CLIENT)) {
             %>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div  style="float:left"><a href="/com/events/clients/client_account.jsp" class="btn btn-filled" id="btn_new_client">
-                            <i class="fa fa-plus"></i> Add a Client</a></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div  style="float:left"><a href="/com/events/leads/leads_account.jsp" class="btn btn-filled" id="btn_new_lead">
+                                <i class="fa fa-plus"></i> Add a Lead</a></div>
+                        </div>
                     </div>
-                </div>
             <%
                 }
             %>
             <div class="row">
                 <div class="col-md-12">
-                    <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_client" >
+                    <table cellpadding="0" cellspacing="0" border="0" class="display table dataTable" id="every_lead" >
                         <thead>
                         <tr role="row">
                             <th role="columnheader">Name</th>
@@ -74,19 +75,19 @@
     </div>
 </div>
 </body>
-<form id="frm_delete_client">
-    <input type="hidden" id="delete_client_id" name="client_id"  value=""/>
+<form id="frm_delete_lead">
+    <input type="hidden" id="delete_lead_id" name="lead_id"  value=""/>
 </form>
-<form id="frm_load_clients">
-    <input type="hidden" name="load_leads"  value="false"/>
+<form id="frm_load_leads">
+    <input type="hidden" name="load_leads"  value="true"/>
 </form>
-<script id="template_client_row" type="text/x-handlebars-template">
+<script id="template_lead_row" type="text/x-handlebars-template">
     <tr id="row_{{client_id}}">
         <td>{{client_name}}</td>
         <td>
-            <a id="edit_{{client_id}}" href="/com/events/clients/client_account.jsp?client_id={{client_id}}&client_datatype=contact_info" class="btn btn-default btn-xs"> <%=canEditClient?"<i class=\"fa fa-pencil\"></i> Edit":"View"%></a>
+            <a id="edit_{{client_id}}" href="/com/events/leads/leads_account.jsp?client_id={{client_id}}&client_datatype=contact_info" class="btn btn-default btn-xs"> <%=canEditLeads?"<i class=\"fa fa-pencil\"></i> Edit":"View"%></a>
             &nbsp;&nbsp;
-            <a id="{{client_id}}" name="delete_client" class="btn btn-default btn-xs <%=canDeleteClient?"":"disabled"%>" row={{row_num}}><i class="fa fa-trash-o"></i> Delete</a>
+            <a id="{{client_id}}" name="delete_client" class="btn btn-default btn-xs <%=canDeleteLeads?"":"disabled"%>" row={{row_num}}><i class="fa fa-trash-o"></i> Delete</a>
         </td>
     </tr>
 </script>
@@ -98,15 +99,15 @@
 <script src="/js/jquery.dataTables.min.js"></script>
 <script   type="text/javascript">
     $(window).load(function() {
-        loadClients(populateClientList);
+        loadLeads(populateLeadsList);
     });
-    function loadClients(callbackmethod) {
+    function loadLeads(callbackmethod) {
         var actionUrl = "/proc_load_clients.aeve";
         var methodType = "POST";
-        var dataString = $('#frm_load_clients').serialize();
+        var dataString = $('#frm_load_leads').serialize();
         makeAjaxCall(actionUrl,dataString,methodType,callbackmethod);
     }
-    function populateClientList(jsonResult) {
+    function populateLeadsList(jsonResult) {
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
@@ -117,18 +118,18 @@
                     var jsonResponseObj = varResponseObj.payload;
                     var varNumOfClients = jsonResponseObj.num_of_clients;
                     if(varNumOfClients>0){
-                        this.clientsSummaryListModel = new ClientsSummaryListModel({
+                        this.leadsSummaryListModel = new LeadsSummaryListModel({
                             'bb_num_of_clients' : varNumOfClients,
                             'bb_client_list_summary' : jsonResponseObj.all_client_summary ,
                             'bb_can_delete_client': jsonResponseObj.can_delete_client
                         });
-                        var clientsSummaryView = new ClientsSummaryListView({model:this.clientsSummaryListModel});
-                        clientsSummaryView.render();
-                        $("#every_client").append(clientsSummaryView.el);
+                        var leadsSummaryListView = new LeadsSummaryListView({model:this.leadsSummaryListModel});
+                        leadsSummaryListView.render();
+                        $("#every_lead").append(leadsSummaryListView.el);
                     } else {
                         //displayMssgBoxAlert("Create a new client here.", true);
                     }
-                    initializeContactUsTable();
+                    initializeLeadsTable();
                 }
             } else {
                 displayMssgBoxAlert("Please try again later (populateClientList - 1)", true);
@@ -138,14 +139,14 @@
         }
     }
 
-    var ClientsSummaryListModel = Backbone.Model.extend({
+    var LeadsSummaryListModel = Backbone.Model.extend({
         defaults: {
             bb_num_of_clients: 0 ,
             bb_client_list_summary: undefined,
             bb_can_delete_client: false
         }
     });
-    var ClientsSummaryListView = Backbone.View.extend({
+    var LeadsSummaryListView = Backbone.View.extend({
         tagName: "tbody",
         id : "every_client_rows",
         initialize: function(){
@@ -153,7 +154,7 @@
             this.varClientListSummary = this.model.get('bb_client_list_summary');
             this.varCanDeleteClient = this.model.get('bb_can_delete_client');
         },
-        template : Handlebars.compile( $('#template_client_row').html() ),
+        template : Handlebars.compile( $('#template_lead_row').html() ),
         events : {
             "click a[name='delete_client']" : 'assignEventHandling'
         },
@@ -183,17 +184,18 @@
                 }
 
                 displayConfirmBox(
-                        "Are you sure you want to delete this client? ",
+                        "Are you sure you want to delete this lead? ",
                         "Delete Client",
-                        "Yes", "No", deleteClient,client_obj);
+                        "Yes", "No", deleteLead,client_obj);
             } else {
                 displayMssgBoxAlert("You are not authorized to perform this action.", true);
             }
         }
     });
-    function initializeContactUsTable(){
 
-        objEveryClientTable =  $('#every_client').dataTable({
+    function initializeLeadsTable(){
+
+        objEveryLeadTable =  $('#every_lead').dataTable({
             "bPaginate": false,
             "bInfo": false,
             "bFilter": true,
@@ -204,17 +206,16 @@
         });
     }
 
-
-    function deleteClient( varClientObj ){
+    function deleteLead( varClientObj ){
         $('#delete_client_id').val(varClientObj.client_id);
 
         var actionUrl = "/proc_delete_client.aeve";
         var methodType = "POST";
         var dataString = $("#frm_delete_client").serialize();
-        makeAjaxCall(actionUrl,dataString,methodType,processClientDeletion);
+        makeAjaxCall(actionUrl,dataString,methodType,processLeadDeletion);
 
     }
-    function processClientDeletion (jsonResult) {
+    function processLeadDeletion (jsonResult) {
         if(jsonResult!=undefined) {
             var varResponseObj = jsonResult.response;
             if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
@@ -234,7 +235,7 @@
                         objEveryClientTable.fnDeleteRow((objEveryClientTable.$('#row_'+varClientId))[0] );
 
                     } else {
-                        displayMssgBoxAlert("The client was not deleted. Please try again later.", true);
+                        displayMssgBoxAlert("The lead was not deleted. Please try again later.", true);
                     }
                 }
             } else {

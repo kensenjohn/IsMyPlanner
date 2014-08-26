@@ -20,6 +20,7 @@ public class ClientBean {
     private String userBeanId = Constants.EMPTY;
     private String vendorId = Constants.EMPTY;
     private boolean isCorporateClient = false;
+    private boolean isLead = false;
 
 
     public ClientBean() {}
@@ -29,6 +30,15 @@ public class ClientBean {
         this.isCorporateClient =  ParseUtil.sTob(hmClientRes.get("IS_CORPORATE_CLIENT"));
         this.userBeanId =  ParseUtil.checkNull(hmClientRes.get("FK_USERID"));
         this.vendorId =  ParseUtil.checkNull(hmClientRes.get("FK_VENDORID"));
+        this.isLead =  ParseUtil.sTob(hmClientRes.get("IS_LEAD"));
+    }
+
+    public boolean isLead() {
+        return isLead;
+    }
+
+    public void setLead(boolean lead) {
+        isLead = lead;
     }
 
     public String getVendorId() {
@@ -80,6 +90,7 @@ public class ClientBean {
             jsonObject.put("is_coporate_client", this.isCorporateClient );
             jsonObject.put("client_user_id", this.userBeanId);
             jsonObject.put("vendor_id", this.vendorId);
+            jsonObject.put("is_lead", this.isLead);
         } catch (JSONException e) {
             e.printStackTrace();
         }

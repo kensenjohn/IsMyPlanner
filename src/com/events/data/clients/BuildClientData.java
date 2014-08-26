@@ -1,9 +1,11 @@
 package com.events.data.clients;
 
 import com.events.bean.clients.ClientBean;
+import com.events.bean.clients.ClientRequestBean;
 import com.events.common.Configuration;
 import com.events.common.Constants;
 import com.events.common.DateSupport;
+import com.events.common.Utility;
 import com.events.common.db.DBDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +27,10 @@ public class BuildClientData {
     public Integer insertClientData(ClientBean clientBean) {
         int numOfRowsInserted = 0;
         if(clientBean!=null) {
-            String sQuery = "insert into GTCLIENT ( CLIENTID,CLIENTNAME,IS_CORPORATE_CLIENT,   CREATEDATE,HUMANCREATEDATE,FK_VENDORID) VALUES(?,?,?,  ?,?,?)";
+            String sQuery = "insert into GTCLIENT ( CLIENTID,CLIENTNAME,IS_CORPORATE_CLIENT,   CREATEDATE,HUMANCREATEDATE,FK_VENDORID,    IS_LEAD) VALUES(?,?,?,  ?,?,?,   ?)";
             ArrayList<Object> aParams = DBDAO.createConstraint(clientBean.getClientId(), clientBean.getClientName(), (clientBean.isCorporateClient()?"1":"0"),
-                    DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(), clientBean.getVendorId());
+                    DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(), clientBean.getVendorId(),
+                    clientBean.isLead()?"1":"0");
             numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildClientData.java", "insertClientData() ");
         }
         return  numOfRowsInserted;
@@ -36,12 +39,22 @@ public class BuildClientData {
     public Integer updateClientData(ClientBean clientBean) {
         int numOfRowsInserted = 0;
         if(clientBean!=null) {
-            String sQuery = "UPDATE GTCLIENT SET CLIENTID =?,CLIENTNAME =?,IS_CORPORATE_CLIENT =?,    MODIFIEDDATE =?,HUMANMODIFIEDDATE =?,FK_VENDORID = ? " +
-                    " WHERE CLIENTID =?";
+            String sQuery = "UPDATE GTCLIENT SET CLIENTID =?,CLIENTNAME =?,IS_CORPORATE_CLIENT =?,    MODIFIEDDATE =?,HUMANMODIFIEDDATE =?,FK_VENDORID = ?,     " +
+                    " IS_LEAD=? WHERE CLIENTID =?";
             ArrayList<Object> aParams = DBDAO.createConstraint(clientBean.getClientId(), clientBean.getClientName(), (clientBean.isCorporateClient()?"1":"0"),
                     DateSupport.getEpochMillis(), DateSupport.getUTCDateTime(),clientBean.getVendorId(),
-                    clientBean.getClientId());
-            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildClientData.java", "insertClientData() ");
+                    clientBean.isLead()?"1":"0", clientBean.getClientId());
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildClientData.java", "updateClientData() ");
+        }
+        return  numOfRowsInserted;
+    }
+
+    public Integer updateLeadStatusOfClient(ClientRequestBean clientRequestBean){
+        int numOfRowsInserted = 0;
+        if(clientRequestBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId())) {
+            String sQuery = "UPDATE GTCLIENT SET IS_LEAD=? WHERE CLIENTID =?";
+            ArrayList<Object> aParams = DBDAO.createConstraint( clientRequestBean.isLead()?"1":"0", clientRequestBean.getClientId());
+            numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, EVENTADMIN_DB, "BuildClientData.java", "updateLeadStatusOfClient() ");
         }
         return  numOfRowsInserted;
     }

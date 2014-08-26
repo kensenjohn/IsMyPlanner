@@ -62,6 +62,7 @@ public class BuildClients {
                 clientBean.setUserBeanId( userBean.getUserId() );
                 clientBean.setCorporateClient(clientRequestBean.isCorporateClient());
                 clientBean.setVendorId(clientRequestBean.getVendorId());
+                clientBean.setLead( clientRequestBean.isLead() );
 
                 BuildClientData buildClientData = new BuildClientData();
                 iNumOfRecords = buildClientData.insertClientData(clientBean);
@@ -128,6 +129,7 @@ public class BuildClients {
                 clientBean.setUserBeanId( userBean.getUserId() );
                 clientBean.setCorporateClient(clientRequestBean.isCorporateClient());
                 clientBean.setVendorId(clientRequestBean.getVendorId());
+                clientBean.setLead( clientRequestBean.isLead() );
 
                 BuildClientData buildClientData = new BuildClientData();
                 iNumOfRecords = buildClientData.updateClientData(clientBean);
@@ -159,6 +161,18 @@ public class BuildClients {
             BuildClientData buildClientData = new BuildClientData();
             Integer iNumOfRowsDeleted = buildClientData.deleteClientData(clientBean);
             if(iNumOfRowsDeleted>0) {
+                isSuccess = true;
+            }
+        }
+        return isSuccess;
+    }
+
+    public boolean updateLeadStatusForClient( ClientRequestBean clientRequestBean){
+        boolean isSuccess = false;
+        if(clientRequestBean!=null && !Utility.isNullOrEmpty(clientRequestBean.getClientId())) {
+            BuildClientData buildClientData = new BuildClientData();
+            Integer iNumOfRowsUpdated = buildClientData.updateLeadStatusOfClient(clientRequestBean);
+            if(iNumOfRowsUpdated>0) {
                 isSuccess = true;
             }
         }

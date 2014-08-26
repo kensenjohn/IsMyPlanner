@@ -54,8 +54,15 @@ public class ProcLoadClients   extends HttpServlet {
 
                 if(loggedInUserBean!=null && !"".equalsIgnoreCase(loggedInUserBean.getUserId())) {
 
+                    boolean isLoadLeads = ParseUtil.sTob( request.getParameter("load_leads"));
                     ClientRequestBean clientRequestBean = new ClientRequestBean();
                     clientRequestBean.setClientId( loggedInUserBean.getParentId());
+
+                    if(isLoadLeads){
+                        clientRequestBean.setLead( true );
+                    } else {
+                        clientRequestBean.setLead( false );
+                    }
 
                     AccessClients accessClients = new AccessClients();
                     if(!accessClients.isClient( clientRequestBean ) ){

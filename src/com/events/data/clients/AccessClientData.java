@@ -28,8 +28,8 @@ public class AccessClientData {
     public HashMap<Integer,ClientBean> getAllClientsSummary(ClientRequestBean clientRequestBean) {
         HashMap<Integer,ClientBean> hmClientBean = new HashMap<Integer, ClientBean>();
         if(clientRequestBean!=null) {
-            String sQuery  = "SELECT * FROM GTCLIENT WHERE FK_VENDORID = ? ORDER BY CREATEDATE DESC";
-            ArrayList<Object> aParams = DBDAO.createConstraint(clientRequestBean.getVendorId());
+            String sQuery  = "SELECT * FROM GTCLIENT WHERE FK_VENDORID = ? AND IS_LEAD = ? ORDER BY CREATEDATE DESC";
+            ArrayList<Object> aParams = DBDAO.createConstraint(clientRequestBean.getVendorId(), clientRequestBean.isLead()?"1":"0");
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(EVENTADMIN_DB, sQuery, aParams, false, "AccessUserData.java", "getUserDataByUserName()");
 
             int iNumOfClients = 0;

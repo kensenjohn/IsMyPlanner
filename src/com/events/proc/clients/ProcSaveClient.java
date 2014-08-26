@@ -67,8 +67,9 @@ public class ProcSaveClient  extends HttpServlet {
                 String sClientId = ParseUtil.checkNull(request.getParameter("client_id"));
                 String sUserId = ParseUtil.checkNull(request.getParameter("userId"));
                 String sUserInfoId = ParseUtil.checkNull(request.getParameter("userInfoId"));
+                boolean isLead = ParseUtil.sTob(request.getParameter("is_lead"));
 
-                if(  Utility.isNullOrEmpty(sClienttName) || Utility.isNullOrEmpty(sClientEmail) || Utility.isNullOrEmpty(sClientFirstName)) {
+                if( (!isLead&&Utility.isNullOrEmpty(sClienttName))  || Utility.isNullOrEmpty(sClientEmail) || Utility.isNullOrEmpty(sClientFirstName)) {
                     appLogging.info("Please fill in all required fields");
                     Text errorText = new ErrorText("Please fill in all required fields","account_num") ;
                     arrErrorText.add(errorText);
@@ -106,12 +107,16 @@ public class ProcSaveClient  extends HttpServlet {
                             userRequestBean.setUserType(Constants.USER_TYPE.CLIENT);
                             userRequestBean.setParentId(sClientId);
 
+                            if(isLead){
+                                sClienttName = sClientFirstName;
+                            }
                             ClientRequestBean clientRequestBean = new ClientRequestBean();
                             clientRequestBean.setClientName(sClienttName);
                             clientRequestBean.setCorporateClient(isCorporateClient);
                             clientRequestBean.setUserRequestBean(userRequestBean);
                             clientRequestBean.setClientId(sClientId);
                             clientRequestBean.setVendorId(vendorBean.getVendorId());
+                            clientRequestBean.setLead( isLead );
 
                             boolean isSaveClientAllowed = false;
                             UserBean userBean = accessUsers.getUserByEmail( userRequestBean );

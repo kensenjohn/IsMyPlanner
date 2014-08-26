@@ -47,6 +47,7 @@
 
                     String sHomeLinkCurrentlyActive = ParseUtil.checkNull(request.getParameter("home_active"));
                     String sDashBoardLinkCurrentlyActive = ParseUtil.checkNull(request.getParameter("dashboard_active"));
+                    String sLeadLinkCurrentlyActive = ParseUtil.checkNull(request.getParameter("lead_active"));
                     String sClientLinkCurrentlyActive = ParseUtil.checkNull(request.getParameter("client_active"));
                     String sEventLinkCurrentlyActive = ParseUtil.checkNull(request.getParameter("event_active"));
                     boolean isHideMenu = ParseUtil.sTob(request.getParameter("hide_menu"));
@@ -78,6 +79,13 @@
                             if(checkPermission!=null && checkPermission.can(Perm.ACCESS_DASHBOARD_TAB)) {
                         %>
                         <li class="<%=sDashBoardLinkCurrentlyActive%>"><a href="/com/events/dashboard/dashboard.jsp">Dashboard</a></li>
+                        <%
+                            }
+                        %>
+                        <%
+                            if(checkPermission!=null && checkPermission.can(Perm.ACCESS_CLIENTS_TAB)) {
+                        %>
+                        <li class="<%=sLeadLinkCurrentlyActive%>"><a href="/com/events/leads/leads.jsp">Leads</a></li>
                         <%
                             }
                         %>
