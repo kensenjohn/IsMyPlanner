@@ -30,7 +30,7 @@
             }
         }
     }
-    String sParentCommentId = "Kensen";
+    String sParentCommentId = sClientId;
 %>
 <body>
 <div class="page_wrap">

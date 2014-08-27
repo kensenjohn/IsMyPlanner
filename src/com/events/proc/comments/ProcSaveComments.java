@@ -1,12 +1,17 @@
 package com.events.proc.comments;
 
+import com.events.bean.common.comments.CommentsBean;
+import com.events.bean.common.comments.CommentsRequestBean;
+import com.events.bean.common.comments.CommentsResponseBean;
 import com.events.bean.users.UserBean;
 import com.events.common.Constants;
 import com.events.common.DateSupport;
 import com.events.common.ParseUtil;
 import com.events.common.Utility;
+import com.events.common.comments.BuildComments;
 import com.events.common.exception.ExceptionHandler;
 import com.events.common.security.DataSecurityChecker;
+import com.events.data.comments.BuildCommentsData;
 import com.events.json.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -48,11 +53,46 @@ public class ProcSaveComments  extends HttpServlet {
                     String sParentCommentId = ParseUtil.checkNull(request.getParameter("parent_comment_id"));
 
                     appLogging.info("sCommentBody . " + sCommentBody + " - " + loggedInUserBean.getUserId() + " - " + DateSupport.getUTCDateTime());
-                    // TODO: Send back username
-                    // TODO: Send back current time as well after extracting the Time Zone.
-                    Text okText = new OkText("Your comment was saved successfully.","status_mssg") ;
-                    arrOkText.add(okText);
-                    responseStatus = RespConstants.Status.OK;
+                    Long lCurrentTime = DateSupport.getEpochMillis();
+
+                    CommentsRequestBean commentsRequestBean = new CommentsRequestBean();
+                    commentsRequestBean.setComment( sCommentBody );
+                    commentsRequestBean.setCreateDate( lCurrentTime );
+                    commentsRequestBean.setHumanCreateDate( DateSupport.getUTCDateTime() );
+                    commentsRequestBean.setParentId( sParentCommentId );
+                    commentsRequestBean.setUserId( loggedInUserBean.getUserId() );
+
+                    BuildComments buildComments = new BuildComments();
+                    CommentsResponseBean commentsResponseBean = buildComments.saveComment( commentsRequestBean );
+
+                    if(commentsResponseBean!=null && commentsResponseBean.getCommentsBean()!=null){
+                        CommentsBean commentsBean = commentsResponseBean.getCommentsBean();
+
+                        if(commentsBean!=null && !Utility.isNullOrEmpty(commentsBean.getCommentsId())){
+
+                            commentsBean.setUserName( loggedInUserBean.getUserInfoBean().getEmail() );
+                            commentsBean.setFormattedHumanCreateDate( DateSupport.getUTCDateTime() );
+
+                            jsonResponseObj.put( "comments_bean", commentsBean.toJson() );
+
+                            Text okText = new OkText("Your comment was saved successfully.","status_mssg") ;
+                            arrOkText.add(okText);
+                            responseStatus = RespConstants.Status.OK;
+
+                        } else {
+                            Text errorText = new ErrorText("Oops!! We were unable to process your request. Please try again later.(saveComments - 002)","err_mssg") ;
+                            arrErrorText.add(errorText);
+
+                            responseStatus = RespConstants.Status.ERROR;
+                        }
+                    } else {
+                        Text errorText = new ErrorText("Oops!! We were unable to process your request. Please try again later.(saveComments - 001)","err_mssg") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
+                    }
+
+
 
                 } else {
                     appLogging.info("Could identify a logged on user . ");
