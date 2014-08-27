@@ -17,6 +17,15 @@ public class CommentsRequestBean {
     private Long createDate = 0L;
     private String humanCreateDate = Constants.EMPTY;
     private String comment = Constants.EMPTY;
+    private String timeZone = Constants.EMPTY;
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+    }
 
     public String getComment() {
         return comment;

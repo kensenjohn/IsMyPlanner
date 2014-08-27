@@ -13,6 +13,7 @@ public class CommentsResponseBean {
 
     private CommentsBean commentsBean = new CommentsBean();
     private HashMap<Long,CommentsBean> hmCommentsBean = new HashMap<Long, CommentsBean>();
+    private Long lNumberOfComments = 0L;
 
     public CommentsBean getCommentsBean() {
         return commentsBean;
@@ -28,5 +29,13 @@ public class CommentsResponseBean {
 
     public void setHmCommentsBean(HashMap<Long, CommentsBean> hmCommentsBean) {
         this.hmCommentsBean = hmCommentsBean;
+    }
+
+    public Long getlNumberOfComments() {
+        return lNumberOfComments;
+    }
+
+    public void setlNumberOfComments(Long lNumberOfComments) {
+        this.lNumberOfComments = lNumberOfComments;
     }
 }

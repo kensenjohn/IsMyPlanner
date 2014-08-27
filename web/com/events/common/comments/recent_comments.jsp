@@ -29,3 +29,29 @@
         <button type="button" class="btn btn-sm btn-default" id="btn_save_comment">Comment</button>
     </div>
 </div>
+<form id="frm_load_comments" >
+    <input type="hidden" id="load_parent_id" name="parent_id" value="<%=sParentCommentId%>"/>
+</form>
+<script id="template_comment_row" type="text/x-handlebars-template">
+    <div class="boxedcontent">
+        <div class="widget">
+            <div class="content" style="padding-top: 5px;padding-bottom: 5px;">
+                <div class="row">
+                    <div class="col-md-12">
+                        {{{comment_text}}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 col-md-push-3 text-right">
+                        {{comment_username}} at {{comment_date_time}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            &nbsp;
+        </div>
+    </div>
+</script>

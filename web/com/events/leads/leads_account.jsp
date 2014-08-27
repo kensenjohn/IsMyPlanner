@@ -178,6 +178,9 @@
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script src="/js/clients/clientcontactinfo.js"></script>
+<script src="/js/handlebars-v1.3.0.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 <script src="/js/bootstrap-switch.min.js"></script>
 <script src="/js/tinymce/tinymce.min.js"></script>
 <script src="/js/upload/jquery.iframe-transport.js"></script>
@@ -213,6 +216,7 @@
         if(varClientId!='') {
             loadingOverlay('show');
             loadClientDetail(varClientId, 'contact_info',populateClientDetail);
+            loadComments();
         }
 
         $('#btn_save_lead').click(function(){

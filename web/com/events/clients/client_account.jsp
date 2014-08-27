@@ -29,7 +29,7 @@
         }
     }
 
-
+    String sParentCommentId = sClientId;
 %>
 <body>
 <div class="page_wrap">
@@ -195,11 +195,15 @@
                     &nbsp;
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-8">
-                    &nbsp;
+            <%if(!Utility.isNullOrEmpty(sClientId)) {%>
+                <div class="row">
+                    <div class="col-md-8">
+                        <jsp:include page="/com/events/common/comments/recent_comments.jsp">
+                            <jsp:param name="parent_comment_id" value="<%=sParentCommentId%>"/>
+                        </jsp:include>
+                    </div>
                 </div>
-            </div>
+            <%}%>
         </div>
     </div>
 </div>
@@ -210,11 +214,18 @@
 </form>
 <jsp:include page="/com/events/common/footer_top.jsp"/>
 <script src="/js/clients/clientcontactinfo.js"></script>
+<script src="/js/handlebars-v1.3.0.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
+<script src="/js/bootstrap-switch.min.js"></script>
+<script src="/js/tinymce/tinymce.min.js"></script>
+<script src="/js/comments.js"></script>
 <script   type="text/javascript">
     var varClientId = '<%=sClientId%>';
     $(window).load(function() {
         if(varClientId!='') {
             loadClientDetail(varClientId, 'contact_info',populateClientDetail);
+            loadComments();
         }
 
 
